@@ -113,42 +113,41 @@ country.haul_species_length <- subset(dat,
 #                                     Country ==country.names[c],
                                       Year == year.no[y],
                                       haul.id %in% unlist(haulselection_length))
-plot(country.haul_species_length)
+plot(country.haul_species_length, col="blue")
 
 #filter dat on haul.id (and country and year) and plot
 country.haul_species <- subset(dat,
                                #                               Country ==country.names[c],
                                Year == year.no[y],
                                haul.id %in% unlist(haulselection_age_length))
-plot(country.haul_species, add=T, col="blue")
+plot(country.haul_species, add=T, col="red")
 
 #Number of hauls in the above plot:--------------------------------
 nrow(country.haul_species_length[["HH"]])
 
 
 
-country.haul_species_age <- subset(dat,
-#                                  Country ==country.names[c],
-                                   Year == year.no[y],
-                                   haul.id %in% unlist(haulselection_age))
-plot(country.haul_species_age, add=T, col="red")
-
-#Number of hauls in the above plot:------------------------------------
-nrow(country.haul_species_age[["HH"]])
+#country.haul_species_age <- subset(dat,
+##                                  Country ==country.names[c],
+#                                   Year == year.no[y],
+#                                   haul.id %in% unlist(haulselection_age))
+#plot(country.haul_species_age, add=T, col="red")
+#
+##Number of hauls in the above plot:------------------------------------
+#nrow(country.haul_species_age[["HH"]])
 
 
 
 ################################
 #YOUR PLOT
 ################################
-
 #Select the year of interest------------
 yearOfInterest = 2016
-d <- subset(dat1, Year == yearOfInterest)
+d <- subset(dat, Year == yearOfInterest)
 ca = d[["CA"]]
 hh = d[["HH"]]
 hl = d[["HL"]]
-
+#--------------------------------------
 
 #Select the species of interest--------
 speciesofInterest = "Gadus morhua"
@@ -156,24 +155,27 @@ ca = ca[ca$Species == speciesofInterest,]
 hl = hl[hl$Species == speciesofInterest,]
 #--------------------------------------
 
-
 #Find rawl hauls which are both in CA and HL---
-haulsWithAge = unique(ca$haul.id)
+haulsWithAge = unique(ca$haul.id[which(!is.na(ca$Age))])
 haulsWithAge = haulsWithAge[!is.na(haulsWithAge)]
-l = rep(NA,length(haulsWithAge))
+l1 = rep(NA,length(haulsWithAge))
 for(i in 1:length(haulsWithAge)){
-  l[i] = which(hh$haul.id==haulsWithAge[i])
+  l1[i] = which(hh$haul.id==haulsWithAge[i])
+}
+
+haulsWithLength = unique(hl$haul.id[which(!is.na(hl$LngtCm))])
+haulsWithLength = haulsWithLength[!is.na(haulsWithLength)]
+l2 = rep(NA,length(haulsWithLength))
+for(i in 1:length(haulsWithLength)){
+  l2[i] = which(hh$haul.id==haulsWithLength[i])
 }
 #--------------------------------------
 
-#--------------------------------------
-windows(height = 15, width = 25.5)
-
-plot(dat1,type = "n")
+x11()
+plot(dat,type = "n")
 title(main = "Title")
-points(hh$lon,hh$lat,col = 'blue', lwd = 2)
-points(hh$lon[l],hh$lat[l],col = 'red', lwd = 2) #These are the trawl hauls with age information
+points(hh$lon[l2],hh$lat[l2],col = 'blue', lwd = 2)
+points(hh$lon[l1],hh$lat[l1],col = 'red', lwd = 2) #These are the trawl hauls with age information
 
 legend("bottomright", pch = 1, legend = c("With age information","Only length information"), col= c("red","blue"))
-
 
