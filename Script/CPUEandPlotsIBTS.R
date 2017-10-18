@@ -33,13 +33,13 @@ require(mgcv)
 # downloadExchange("NS-IBTS",2004:2017)
 # print(table(ca$Year))
 # d <- readExchange("Exchange")
-#-9 = Missing Value 
-#.  = 1 mm length class, reporting units: mm 
-#0  = 0.5 cm length class, reporting units: mm 
-#1  = 1 cm length class, reporting units: cm 
-#2  = 2 cm length class, reporting units: cm 
-#5  = 5 cm length class, reporting units: cm 
-#9  = + group 
+#-9 = Missing Value
+#.  = 1 mm length class, reporting units: mm
+#0  = 0.5 cm length class, reporting units: mm
+#1  = 1 cm length class, reporting units: cm
+#2  = 2 cm length class, reporting units: cm
+#5  = 5 cm length class, reporting units: cm
+#9  = + group
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #To Download exchange data:
@@ -109,20 +109,18 @@ if (!all(haulselection_age %in% haulselection_age_length)){
 haulselection_length <- unlist(unique(dat[["HL"]][!is.na(dat[["HL"]]$Species) & dat[["HL"]]$Species=="Gadus morhua" & !is.na(dat[["HL"]]$LngtCm),"haul.id"]))
 
 
-#filter dat on haul.id (and country and year) and plot
-country.haul_species <- subset(dat,
-#                               Country ==country.names[c],
-                               Year == year.no[y], 
-                               haul.id %in% unlist(haulselection))
-plot(country.haul_species)
-
-
-
 country.haul_species_length <- subset(dat,
 #                                     Country ==country.names[c],
-                                      Year == year.no[y], 
+                                      Year == year.no[y],
                                       haul.id %in% unlist(haulselection_length))
-plot(country.haul_species_length, add=T, col="blue")
+plot(country.haul_species_length)
+
+#filter dat on haul.id (and country and year) and plot
+country.haul_species <- subset(dat,
+                               #                               Country ==country.names[c],
+                               Year == year.no[y],
+                               haul.id %in% unlist(haulselection_age_length))
+plot(country.haul_species, add=T, col="blue")
 
 #Number of hauls in the above plot:--------------------------------
 nrow(country.haul_species_length[["HH"]])
@@ -131,7 +129,7 @@ nrow(country.haul_species_length[["HH"]])
 
 country.haul_species_age <- subset(dat,
 #                                  Country ==country.names[c],
-                                   Year == year.no[y], 
+                                   Year == year.no[y],
                                    haul.id %in% unlist(haulselection_age))
 plot(country.haul_species_age, add=T, col="red")
 
