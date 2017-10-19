@@ -32,7 +32,16 @@ calculateALK = function(RFA,species,year,quarter,ca_hh)
     #------------------------------------------------------
 
     #Extrapolate the ALK to length calsses were we do not have data----
-    #TODO
+    for(i in 1:dim(alk)[1])
+    {
+      for(j in 1:dim(alk)[2])
+      {
+        if(is.na(alk[i,j]))
+        {
+          #fill in the ALK
+        }
+      }
+    }
     #------------------------------------------------------------------
 
     return(alk)
