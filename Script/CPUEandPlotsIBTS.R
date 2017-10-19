@@ -45,7 +45,9 @@ require(mgcv)
 #To Download exchange data:
 #downloadExchange("NS-IBTS",2004:2017)
 
-dat<- readExchangeDir()
+dataDir <<- system.file("data", package = "TestPackage")
+
+dat<- readExchangeDir(dataDir)
 
 
 #Get specific sub-dataframe from dataframe--------------
