@@ -72,12 +72,16 @@ head(Iarea2)
 
 
 a3 = as.data.frame(subset(hl_hh, Roundfish == 2 & Year==2017 & Quarter==1, select = c("haul.id" , "StatRec", "LngtCm", "SubFactor",
-                                                                                      "HLNoAtLngt", "NoMeas","Count", "TotalNo", "DataType", "HaulDur","Species")))
+                                                                             "HLNoAtLngt", "NoMeas","Count", "TotalNo", "DataType", "HaulDur","Species")))
 
 
 
+#############################################################################################
 
 # TWO-LEVEL DATAt BOOTSTRAP METHOD (Statrec - with replacement and hauls without replacemnt)---------------------------------------
+# Nonparametric bootstrap for hierarchical data - Ren et al 2010
+
+#############################################################################################
 
 B = 100
 mCpueArealist = list()
@@ -92,7 +96,7 @@ for (i in seq(1:B)) {
   ###   sampling with replacement from the clustering variable: sampling frame
   sf <- ct[!duplicated(ct[,c("StatRec", "haul.id")]),c("StatRec", "haul.id")]
 
-  ### sampling with replacement from "cluster". choose random sample size from 1: no.statrec, inclusive
+  ### sampling with replacement from "cluster"- statistical rectangle. choose random sample size from 1: no.statrec, inclusive
   resample_size <- sample(1:length(unique(sf$StatRec)), size=1)
 
   cls <- sample(unique(sf$StatRec), size=resample_size, replace=TRUE)
@@ -153,7 +157,7 @@ LogCI.2.5 <- cbind(exp(log(ag1[,2])- 1.96*(ag1[,3]/ag1[,2])))
 LogCI.9.75 <- cbind(exp(log(ag1[,2])+ 1.96*(ag1[,3]/ag1[,2])))
 
 
-# Burnham log-based Distance samplin pages 115-116
+#Burnham et al log-based confidence interval (Distance sampling pages 115-116)
 Co = exp(1.96*sqrt(log(1+ (ag1[,3]/ag1[,2])^2)))
 BurLogCI.2.5 <- cbind(ag1[,2]/Co)
 BurLogCI.9.75 <- cbind(ag1[,2]*Co)
