@@ -6,12 +6,10 @@
 #' @param quarter The quarter of the year which the ALK is calculated.
 #' @param data The data needed for calculating the ALK.
 #' @export
-#' @return Returns a matrix with the ALK
-#' @examples calculateALK(RFA = 2,species = "Gadus morhua", year = 2016, quarter = 1)
+#' @return Returns a matrix with the ALK for the given data, species, time and RFA
+#' @examples
 calculateALK = function(RFA,species,year,quarter,data)
 {
-    #TODO,
-
     #Extract the data of interest----------------------
     caInterest = data[which(data$Roundfish==RFA & data$Year==year &
                               data$Quarter == quarter & data$Species == species),]
@@ -19,16 +17,52 @@ calculateALK = function(RFA,species,year,quarter,data)
     caInterest = caInterest[which(!is.na(caInterest$Age) & !is.na(caInterest$LngtCm)),]
     #-----------------------------------------------------
 
-    #Construct the parts of the ALK were we have data-----
-    if(species=="Gadus morhua") #TODO: Differentiate between species since some of them are divided into finer lenght scale in the ALK.
-    {
-      alk = matrix(0,max(floor(caInterest$LngtCm)), max(caInterest$Age) + 1)
-      alk[,1] = 1:dim(alk)[1]
+    #Define variables used in the construction of the ALK--
+    maxAge = NULL
+    minLength = NULL
+    maxLength = NULL
+    lengthClassIntervallLengths = NULL
+    #------------------------------------------------------
 
+    if(species == "Gadus morhua")
+    {
+      maxAge = 6
+      minLength = 7
+      maxLength = 110
+      lengthClassIntervallLengths = 1
+      if(quarter == 1)
+      {
+        minLength = 15
+        maxLength = 90
+      }
+
+      alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+1)
+      alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+
+
+    }else{
+      #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
+    }
+
+
+    #Construct the parts of the ALK were we have data-----
+    if(species=="Gadus morhua")
+    {
       for(i in 1:dim(caInterest)[1])
       {
-        alk[floor(caInterest$LngtCm[i]),floor(caInterest$Age[i])+1] =
-          alk[floor(caInterest$LngtCm[i]),floor(caInterest$Age[i])+1] +1
+        if(floor(caInterest$LngtCm[i])< minLength)
+        {
+          alk[1,floor(caInterest$Age[i])+1] =
+          alk[1,floor(caInterest$Age[i])+1] +1
+        }else if(floor(caInterest$LngtCm[i])> maxLength)
+        {
+          alk[dim(alk)[1],floor(caInterest$Age[i])+1] =
+          alk[dim(alk)[1],floor(caInterest$Age[i])+1] +1
+        }else{
+          alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+1] =
+          alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+1] +1
+        }
+
       }
     }
     #------------------------------------------------------
@@ -40,10 +74,14 @@ calculateALK = function(RFA,species,year,quarter,data)
       {
         if(is.na(alk[i,j]))
         {
-          #fill in the ALK
+          #TODO: Fill in the ALK
         }
       }
     }
     #------------------------------------------------------------------
+
+
+    alk = as.data.frame(alk)
+    names(alk) = c("length", c(1:maxAge))
     return(alk)
 }
