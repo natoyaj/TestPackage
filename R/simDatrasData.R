@@ -38,7 +38,7 @@ simTrawlHaulsCA = function(RFA,year, quarter)
 #' @export
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
 #' @examples
-simTrawlHaulsHLSimple = function(RFA,year, quarter)
+simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&

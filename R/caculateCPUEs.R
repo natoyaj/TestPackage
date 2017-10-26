@@ -15,8 +15,7 @@
 calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
 {
   #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Species) & data$Species==species &
-                          !is.na(data$Year) & data$Year == year&
+  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
@@ -24,7 +23,7 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
   numberOfStatRectangles = length(statRects)
-  nLengthClass = max(floor(dataOfInterest$LngtCm)) #This is to be changed, e.g. find te lenght classes from ALK. TODO
+  nLengthClass = max(floor(dataOfInterest$LngtCm[which(dataOfInterest$Species ==species)])) #This is to be changed, e.g. find te lenght classes from ALK. TODO
   mCPUEstatRec = matrix(NA,nLengthClass,numberOfStatRectangles)
   #---------------------------------------------------------------
 
@@ -41,7 +40,7 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
   mCPUE = rep(NA,nLengthClass)
   for(i in 1:nLengthClass)
   {
-    mCPUE[i] = mean(mCPUEstatRec[i,])
+    mCPUE[i] = mean(mCPUEstatRec[i,])# TODO: We must multiply with the proportion of the area covered by deep enough water.
   }
   return(mCPUE)
   #------------------------------------------------------------
@@ -63,31 +62,37 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
 #' @examples
 calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,percentOfAreaRepresentative = NULL,nLengthClass)
 {
+  #Extract the number of hauls in the statistical area
+  nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
+
+
   #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Species) & data$Species==species &
+  dataWithTheSpecies = data[!is.na(data$Species) & data$Species==species &
                           !is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$StatRec) & data$StatRec == statRec ,]
   #-----------------------------------------------------
 
   #Calculates and returns mCPUE-----
-  nHauls = length(unique(dataOfInterest$haul.id))
-  subfactor = dataOfInterest$SubFactor
+  subfactor = dataWithTheSpecies$SubFactor
 
   CPUE = rep(0,nLengthClass)
 
-  for(i in 1:dim(dataOfInterest)[1])
+  if(dim(dataWithTheSpecies)[1]>0)
   {
-    if(dataOfInterest$DataType[i]=="R")
+    for(i in 1:dim(dataWithTheSpecies)[1])
     {
-      CPUE[floor(dataOfInterest$LngtCm[i])] =  CPUE[floor(dataOfInterest$LngtCm[i])] + (dataOfInterest$Count[i]*60/dataOfInterest$HaulDur[i])*subfactor[i]
-    }else if(dataOfInterest$DataType[i]=="C")
-    {
-      CPUE[floor(dataOfInterest$LngtCm[i])]  =  CPUE[floor(dataOfInterest$LngtCm[i])] + dataOfInterest$HLNoAtLngt[i]*subfactor[i]
+      if(dataWithTheSpecies$DataType[i]=="R")
+      {
+        CPUE[floor(dataWithTheSpecies$LngtCm[i])] =  CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
+      }else if(dataWithTheSpecies$DataType[i]=="C")
+      {
+        CPUE[floor(dataWithTheSpecies$LngtCm[i])]  =  CPUE[floor(dataWithTheSpecies$LngtCm[i])] + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]
+      }
     }
   }
-
   mCPUE = CPUE/nHauls
+
   return(mCPUE)
   #----------------------------------
 }
