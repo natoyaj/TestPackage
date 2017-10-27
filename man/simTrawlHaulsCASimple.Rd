@@ -4,7 +4,7 @@
 \alias{simTrawlHaulsCASimple}
 \title{simTrawlHaulsCASimple}
 \usage{
-simTrawlHaulsCASimple(RFA, year, quarter)
+simTrawlHaulsCASimple(RFA, year, quarter, data)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}

@@ -7,7 +7,7 @@
 #' @param data The data needed for calculating the ALK.
 #' @export
 #' @return Returns a matrix with the ALK for the given data, species, time and RFA
-#' @examples calculateALK(3,"Gadus morhua", 2012,3,ca_hh)
+#' @examples
 calculateALK = function(RFA,species,year,quarter,data)
 {
     #Extract the data of interest----------------------
