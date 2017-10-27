@@ -73,7 +73,27 @@ simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 #' @export
 #' @return Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
 #' @examples
-simTrawlHaulsCASimple = function(RFA,year, quarter)
+simTrawlHaulsCASimple = function(RFA,year, quarter,data)
 {
-  #TODO
+  #Extract the data of interest-------------------------
+  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
+                          !is.na(data$Quarter) & data$Quarter == quarter&
+                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+  #-----------------------------------------------------
+
+  #Simulate trawl hauls---------------------------------
+  haulsID = unique(dataOfInterest$haul.id)
+  nSim = length(haulsID)
+  simHauls = sample(haulsID,nSim,replace = T)
+
+  simData = list(NULL)
+
+  for(i in 1:nSim)
+  {
+    simData[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
+  }
+  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
+  #----------------------------------------------------
+
+  return(simDataToBeReturned)
 }

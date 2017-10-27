@@ -218,3 +218,49 @@ cpue
 
 #--------------------------------------------------------------
 
+
+
+#Reproduce CPUEs on age-level-----------------------------------------
+
+#Choose the time and RFA
+year = 2016
+RFA = 9
+quarter = 1
+species = "Gadus morhua"
+dataToSimulateFromHL = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
+                             !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
+                             !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
+dataToSimulateFromCA = ca_hh[!is.na(ca_hh$Year) & ca_hh$Year == year&
+                             !is.na(ca_hh$Quarter) & ca_hh$Quarter == quarter&
+                             !is.na(ca_hh$Roundfish) & ca_hh$Roundfish == RFA ,]
+
+#Estimate CPUEs with uncertainty
+
+ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
+B = 20
+simCPUEs = matrix(NA,length(cpueEst),B)
+for(i in 1:B)
+{
+  simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
+  simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
+  simALK = ALK#calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
+  sim = calcmCPUErfaWithALK(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = simDataHL,ALK = simALK)
+
+  simCPUEs[,i] = sim
+  print(i)
+}
+
+#Construct a data.frame with estimates and C.I.
+cpue = data.frame(cpueEst)
+cpue$lQ = rep(0,length(cpueEst))
+cpue$uQ = rep(0,length(cpueEst))
+for(i in 1:length(cpueEst))
+{
+  quantile = quantile(simCPUEs[i,],c(0.025,0.975))
+  cpue$lQ[i] = quantile[1]
+  cpue$uQ[i] = quantile[2]
+}
+cpue
+
+#--------------------------------------------------------------
