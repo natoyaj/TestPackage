@@ -1,4 +1,5 @@
 library(DATRAS)
+library(TestPackage)
 
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
@@ -73,7 +74,6 @@ head(Iarea2)
 
 a3 = as.data.frame(subset(hl_hh, Roundfish == 2 & Year==2017 & Quarter==1, select = c("haul.id" , "StatRec", "LngtCm", "SubFactor",
                                                                              "HLNoAtLngt", "NoMeas","Count", "TotalNo", "DataType", "HaulDur","Species")))
-
 
 
 #############################################################################################
@@ -151,10 +151,12 @@ ag <- aggregate(mcpue_pr_lngt_Roundfish_area ~  LngthClas, RF_area_result, funct
 #mCPPUE per roundfish area standard error and CI normal and log-bassed estimates
 
 ag1 <- do.call(data.frame, ag)
+ag2 = data.frame(ag)
+
 
 #log-based confidence intervals
-LogCI.2.5 <- cbind(exp(log(ag1[,2])- 1.96*(ag1[,3]/ag1[,2])))
-LogCI.9.75 <- cbind(exp(log(ag1[,2])+ 1.96*(ag1[,3]/ag1[,2])))
+LogCI.2.5 <- cbind(exp(log(ag1[,2])  -  1.96*(ag1[,3]/ag1[,2])))
+LogCI.9.75 <- cbind(exp(log(ag1[,2]) +  1.96*(ag1[,3]/ag1[,2])))
 
 
 #Burnham et al log-based confidence interval (Distance sampling pages 115-116)
@@ -169,3 +171,50 @@ ag1 <- do.call(data.frame, cbind(ag, LogCI.2.5, LogCI.9.75, BurLogCI.2.5, BurLog
 names(ag1) <- c("LngtClas", "MEAN.mcpueRF","SD.mcpueRF", "MEDIAN.mcpueRF", "SDLOG.mcpueRF", "CI.2.5%", "CI.97.5%",
                 "CIlog.2.5%", "CIlog.97.5%",  "ExpLogCI.2.5%", "ExpLogCI.97.5%","BurLogCI.2.5%", "BurLogCI.97.5%")
 ag1
+
+
+
+
+
+
+
+
+#Reproduce CPUEs with C.I.-----------------------------------------
+
+#Choose the time and RFA
+year = 2017
+RFA = 2
+quarter = 1
+dataToSimulateFrom = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
+                        !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
+                        !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
+
+#Estimate CPUEs with uncertainty
+cpueEst = calcmCPUErfa(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = dataToSimulateFrom)
+B = 100
+simCPUEs = matrix(NA,length(cpueEst),B)
+for(i in 1:B)
+{
+  data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
+  sim = calcmCPUErfa(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = data)
+
+  if(length(sim)!= dim(simCPUEs)[1]) sim = c(sim,rep(0, dim(simCPUEs)[1] - length(sim))) #TODO: define the length classes and include them such that we can remove this line.
+
+  simCPUEs[,i] = sim
+  print(i)
+}
+
+#Construct a data.frame with estimates and C.I.
+cpue = data.frame(cpueEst)
+cpue$lQ = rep(0,length(cpueEst))
+cpue$uQ = rep(0,length(cpueEst))
+for(i in 1:length(cpueEst))
+{
+  quantile = quantile(simCPUEs[i,],c(0.025,0.975))
+  cpue$lQ[i] = quantile[1]
+  cpue$uQ[i] = quantile[2]
+}
+cpue
+
+#--------------------------------------------------------------
+
