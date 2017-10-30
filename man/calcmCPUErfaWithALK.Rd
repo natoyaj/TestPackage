@@ -20,7 +20,7 @@ calcmCPUErfaWithALK(RFA, species, year, quarter, data, ALK)
 \item{ALK}{the ALK.}
 }
 \value{
-Returns the mCPUE per length class in the given roundfish area. TODO: include the ALK to return per age class given ALK instead
+Returns the mCPUE per length class in the given roundfish area.
 }
 \description{
 Calculates CPUE per length class in a given roundfish area.
