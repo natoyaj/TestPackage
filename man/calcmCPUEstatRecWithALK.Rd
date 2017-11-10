@@ -5,7 +5,7 @@
 \title{calcmCPUEstatRecWithALK}
 \usage{
 calcmCPUEstatRecWithALK(statRec, species, year, quarter, data, ALK,
-  percentOfAreaRepresentative = NULL, nAgeClasses)
+  percentOfAreaRepresentative = NULL)
 }
 \arguments{
 \item{statRec}{Statistical area.}
@@ -23,7 +23,7 @@ calcmCPUEstatRecWithALK(statRec, species, year, quarter, data, ALK,
 \item{percentOfAreaRepresentative}{the percentage of the statical recangle within sea depth intervall}
 }
 \value{
-Returns the mCPUE per length class in the given statistical rectangle TODO, include the ALK to return per age class given ALK instead
+Returns the mCPUE per length class in the given statistical rectangle
 }
 \description{
 Calculates CPUE per length class in a given statistical rectangle.

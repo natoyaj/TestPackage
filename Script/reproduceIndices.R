@@ -94,7 +94,6 @@ for (i in seq(1:B)) {
 
   species = "Gadus morhua"
 
-
   ###   sampling with replacement from the clustering variable: sampling frame
   sf <- ct[!duplicated(ct[,c("StatRec", "haul.id")]),c("StatRec", "haul.id")]
 
@@ -115,7 +114,6 @@ for (i in seq(1:B)) {
     rectsample <- sf[sf$StatRec==rect,]
     resample_size <- sample(1:nrow(rectsample), size=1)
     resample_indices <- sample(1:nrow(rectsample), size=resample_size, replace=F)
-
 
     ### Estimate for each subsample (hauls from a statistical rectangle), add result to d
     final <- merge(rectsample[resample_indices,], ct, by=c("StatRec", "haul.id"))
@@ -187,82 +185,22 @@ ag1
 year = 2017
 RFA = 2
 quarter = 1
-dataToSimulateFrom = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
-                        !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
-                        !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
-
-#Estimate CPUEs with uncertainty
-cpueEst = calcmCPUErfa(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = dataToSimulateFrom)
-B = 100
-simCPUEs = matrix(NA,length(cpueEst),B)
-for(i in 1:B)
-{
-  data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
-  sim = calcmCPUErfa(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = data)
-
-  if(length(sim)!= dim(simCPUEs)[1]) sim = c(sim,rep(0, dim(simCPUEs)[1] - length(sim))) #TODO: define the length classes and include them such that we can remove this line.
-
-  simCPUEs[,i] = sim
-  print(i)
-}
-
-#Construct a data.frame with estimates and C.I.
-cpue = data.frame(cpueEst)
-cpue$lQ = rep(0,length(cpueEst))
-cpue$uQ = rep(0,length(cpueEst))
-for(i in 1:length(cpueEst))
-{
-  quantile = quantile(simCPUEs[i,],c(0.025,0.975))
-  cpue$lQ[i] = quantile[1]
-  cpue$uQ[i] = quantile[2]
-}
-cpue
-
+species = "Gadus morhua"
+#Rprof()
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple")
+#Rprof(NULL)
+#summaryRprof()
 #--------------------------------------------------------------
 
 
 
 #Reproduce CPUEs on age-level-----------------------------------------
-
-#Choose the time and RFA
-year = 2016
+year = 2015
 RFA = 9
 quarter = 1
 species = "Gadus morhua"
-dataToSimulateFromHL = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
-                             !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
-                             !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
-dataToSimulateFromCA = ca_hh[!is.na(ca_hh$Year) & ca_hh$Year == year&
-                             !is.na(ca_hh$Quarter) & ca_hh$Quarter == quarter&
-                             !is.na(ca_hh$Roundfish) & ca_hh$Roundfish == RFA ,]
-
-#Estimate CPUEs with uncertainty
-
-ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
-cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
-B = 20
-simCPUEs = matrix(NA,length(cpueEst),B)
-for(i in 1:B)
-{
-  simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
-  simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-  simALK = ALK#calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
-  sim = calcmCPUErfaWithALK(RFA = RFA, species = "Gadus morhua", year = year, quarter = quarter, data = simDataHL,ALK = simALK)
-
-  simCPUEs[,i] = sim
-  print(i)
-}
-
-#Construct a data.frame with estimates and C.I.
-cpue = data.frame(cpueEst)
-cpue$lQ = rep(0,length(cpueEst))
-cpue$uQ = rep(0,length(cpueEst))
-for(i in 1:length(cpueEst))
-{
-  quantile = quantile(simCPUEs[i,],c(0.025,0.975))
-  cpue$lQ[i] = quantile[1]
-  cpue$uQ[i] = quantile[2]
-}
-cpue
-
+#Rprof()
+cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple")
+#Rprof(NULL)
+#summaryRprof()
 #--------------------------------------------------------------

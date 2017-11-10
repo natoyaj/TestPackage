@@ -9,7 +9,7 @@
 #' @param data the datras-data needed.
 #' @param ALK the ALK.
 #' @export
-#' @return Returns the mCPUE per length class in the given roundfish area. TODO: include the ALK to return per age class given ALK instead
+#' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
 calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
@@ -58,7 +58,7 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
 #' @param data the datras-data needed.
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @export
-#' @return Returns the mCPUE per length class in the given statistical rectangle TODO, include the ALK to return per age class given ALK instead
+#' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
 calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,percentOfAreaRepresentative = NULL,nLengthClass)
 {
@@ -110,7 +110,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #' @param data the datras-data needed.
 #' @param ALK the ALK.
 #' @export
-#' @return Returns the mCPUE per length class in the given roundfish area. TODO: include the ALK to return per age class given ALK instead
+#' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
 calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
@@ -132,7 +132,7 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
   if(numberOfStatRectangles==0) return("No observations in RFA")
   for(i in 1:numberOfStatRectangles)
   {
-    cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK , nAgeClasses = nAgeClasses)
+    cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
     mCPUEstatRec[,i] = as.double(cpueStatRec)
   }
   #---------------------------------------------------------------
@@ -160,9 +160,9 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param ALK the ALK.
 #' @export
-#' @return Returns the mCPUE per length class in the given statistical rectangle TODO, include the ALK to return per age class given ALK instead
+#' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL,nAgeClasses)
+calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL)
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -179,6 +179,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
   #Calculates and returns mCPUE-----
   subfactor = dataWithTheSpecies$SubFactor
 
+  nAgeClasses = dim(ALK)[2]-1
   CPUE = rep(0,nAgeClasses)
 
   if(dim(dataWithTheSpecies)[1]==0)return(CPUE)
