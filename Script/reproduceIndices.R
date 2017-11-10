@@ -1,5 +1,7 @@
-library(DATRAS)
+
 library(TestPackage)
+library(DATRAS)
+
 
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
