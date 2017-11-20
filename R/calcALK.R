@@ -66,13 +66,11 @@ calculateALK = function(RFA,species,year,quarter,data)
           alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+2] =
           alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+2] +1
         }
-
       }
     }
     #------------------------------------------------------
 
     #Extrapolate the ALK to length calsses were we do not have data-----------------------------------
-
     whichIsMissing = rep(FALSE, dim(alk)[1])
     for(i in 1:dim(alk)[1])
     {
@@ -95,7 +93,7 @@ calculateALK = function(RFA,species,year,quarter,data)
 
     #Routine for filling the not observed length classes, III) in datras procedure document for documentation
     distToNext = which(!whichIsMissing)[1]
-    distToPrevious = 99999
+    distToPrevious = 99999999
     nextValue = NA
 
     if(quarter ==1)start = 3
@@ -125,8 +123,8 @@ calculateALK = function(RFA,species,year,quarter,data)
           distToNext = which(!whichIsMissing[i:length(whichIsMissing)])[2]-2
           if(is.na(distToNext))
             {
-            distToNext = 99999
-            nextValue = -99999
+            distToNext = 999999999
+            nextValue = -999999999
           }else{
             nextValue = alk[i + distToNext + 1,j]
           }
@@ -139,5 +137,43 @@ calculateALK = function(RFA,species,year,quarter,data)
     alk = as.data.frame(alk)
     names(alk) = c("length", c(0:maxAge))
     return(alk)
+}
+
+
+
+#' simulateALK
+#' @description Simulate a given number of ALK-key-matrix for a given year, quarter, species and RFA.
+#' @param RFA Roundfish area number.
+#' @param species The species of interest.
+#' @param year The year which the ALK is calculated.
+#' @param quarter The quarter of the year which the ALK is calculated.
+#' @param data The data needed for calculating the ALK.
+#' @param B The number of simulated ALK to be returned.
+#' @export
+#' @return Returns a list with simulated ALK given data, species, time, RFA and simulation procedure
+#' @examples
+simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure = "simple", B = 10)
+{
+  #Extract the data of interest
+  dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
+                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
+                                  !is.na(dataCA$Roundfish) & dataCA$Roundfish == RFA ,]
+  #Estimate CPUEs with uncertainty
+  ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+
+  simALK = list()
+  for(i in 1:B)
+  {
+    if(bootstrapProcedure =="simple")
+    {
+      simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
+    }else{
+      return("Select a valid bootstrap procedure.")
+    }
+
+    simALK[[i]] = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
+    print(i)
+  }
+  return(simALK)
 }
 

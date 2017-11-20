@@ -198,7 +198,7 @@ RFA = 9
 quarter = 1
 species = "Gadus morhua"
 #Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple")
+cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 5)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------

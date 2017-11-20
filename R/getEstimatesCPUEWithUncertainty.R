@@ -88,6 +88,8 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     {
       simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
+    }else if(bootstrapProcedure =="hierarchical"){
+      #TODO
     }else{
       return("Select a valid bootstrap procedure.")
     }
@@ -101,6 +103,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
 
   #Construct a data.frame with estimates and C.I.
   cpue = data.frame(cpueEst)
+  cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$lQ = rep(0,length(cpueEst))
   cpue$uQ = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
@@ -108,6 +111,8 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     quantile = quantile(simCPUEs[i,],c(0.025,0.975))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
+    cpue$bootstrapMean[i] = mean(simCPUEs[i,])
+
   }
   return(cpue)
 }

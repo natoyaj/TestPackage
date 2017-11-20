@@ -115,6 +115,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #'
 calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
 {
+
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
