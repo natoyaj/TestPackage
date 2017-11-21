@@ -1,5 +1,6 @@
 library(DATRAS)
 library(TestPackage)
+library(dplyr)
 
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
@@ -180,12 +181,12 @@ ag1
 #Reproduce CPUEs with C.I.-----------------------------------------
 
 #Choose the time and RFA
-year = 2017
-RFA = 2
+year = 2005
+RFA = 1
 quarter = 1
 species = "Gadus morhua"
 #Rprof()
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple")
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple",B = 10)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------
@@ -193,12 +194,13 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 
 
 #Reproduce CPUEs on age-level-----------------------------------------
-year = 2015
-RFA = 9
-quarter = 1
+year = 2005
+RFA = 2
+quarter = 3
 species = "Gadus morhua"
 #Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 5)
+cpue1 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 10)
+cpue2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = 10)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------

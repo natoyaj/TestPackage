@@ -167,6 +167,9 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
     if(bootstrapProcedure =="simple")
     {
       simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
+    }else if(bootstrapProcedure =="stratified"){
+      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
+
     }else{
       return("Select a valid bootstrap procedure.")
     }

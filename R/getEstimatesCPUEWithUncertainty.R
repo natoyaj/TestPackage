@@ -61,7 +61,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @param dataHL datras-data with length
 #' @param dataCA datras-data with age
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
-#' @param bootstrapProcedure The bootstrap procedure ("simple", ...)
+#' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
@@ -88,8 +88,9 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     {
       simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-    }else if(bootstrapProcedure =="hierarchical"){
-      #TODO
+    }else if(bootstrapProcedure =="stratified"){
+      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
+      simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL)
     }else{
       return("Select a valid bootstrap procedure.")
     }

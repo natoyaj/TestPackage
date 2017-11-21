@@ -5,6 +5,7 @@ quarter = 1
 B = 20
 species = "Gadus morhua"
 simulatedALK = simulateALK(RFA = RFA, species = species, year = year, quarter = quarter, dataCA = ca_hh,bootstrapProcedure = "simple", B = B)
+simulatedALK = simulateALK(RFA = RFA, species = species, year = year, quarter = quarter, dataCA = ca_hh,bootstrapProcedure = "stratified", B = B)
 
 LQMatrix = simulatedALK[[1]]
 LQMatrix[,2:dim(LQMatrix)[2]]=0
