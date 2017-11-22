@@ -1,6 +1,9 @@
 library(DATRAS)
 library(TestPackage)
 library(dplyr)
+library(sp)
+library(rgeos)
+rm(list = ls())
 
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
@@ -19,6 +22,43 @@ ca_hl    <- merge(ca,hl, by=hl_keys, suffixes=c(".CA", ""))
 hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
 ca_hl_hh <- merge(ca, hl_hh, by=hl_keys, suffixes=c(".CA", ""))
 #---------------------------------------------------------
+
+
+#Reproduce CPUEs with C.I.-----------------------------------------
+
+#Choose the time and RFA
+year = 2005
+RFA = 1
+quarter = 1
+species = "Gadus morhua"
+#Rprof()
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple",B = 10)
+#Rprof(NULL)
+#summaryRprof()
+#--------------------------------------------------------------
+
+
+
+#Reproduce CPUEs on age-level-----------------------------------------
+year = 2005
+RFA = 1
+quarter = 3
+species = "Gadus morhua"
+#Rprof()
+cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 10)
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = 10)
+#Rprof(NULL)
+#summaryRprof()
+#--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
 
 
@@ -74,7 +114,7 @@ head(Iarea2)
 
 
 a3 = as.data.frame(subset(hl_hh, Roundfish == 2 & Year==2017 & Quarter==1, select = c("haul.id" , "StatRec", "LngtCm", "SubFactor",
-                                                                             "HLNoAtLngt", "NoMeas","Count", "TotalNo", "DataType", "HaulDur","Species")))
+                                                                                      "HLNoAtLngt", "NoMeas","Count", "TotalNo", "DataType", "HaulDur","Species")))
 
 
 #############################################################################################
@@ -174,33 +214,3 @@ ag1
 
 
 
-
-
-
-
-#Reproduce CPUEs with C.I.-----------------------------------------
-
-#Choose the time and RFA
-year = 2005
-RFA = 1
-quarter = 1
-species = "Gadus morhua"
-#Rprof()
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple",B = 10)
-#Rprof(NULL)
-#summaryRprof()
-#--------------------------------------------------------------
-
-
-
-#Reproduce CPUEs on age-level-----------------------------------------
-year = 2005
-RFA = 2
-quarter = 3
-species = "Gadus morhua"
-#Rprof()
-cpue1 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 10)
-cpue2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = 10)
-#Rprof(NULL)
-#summaryRprof()
-#--------------------------------------------------------------

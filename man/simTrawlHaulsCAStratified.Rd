@@ -16,7 +16,6 @@ simTrawlHaulsCAStratified(RFA, year, quarter, data, species = "Gadus morhua")
 \value{
 Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
 Sample stratisfied with respect to the length observed. This gives meaning since it is assumed that the ALK is similar in the whole roundfish area.
-TODO: Choose a procedure of how to simulate if there is only one observation of a length class. I suggest the same suggestion as for simulating HL-date when there is only one observation in the statistical area: include the closest length class in the simulation.
 }
 \description{
 Simulates trawl hauls with both length and age information used in the bootstrap procedure.

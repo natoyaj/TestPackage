@@ -77,9 +77,42 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
                                   !is.na(dataHL$Quarter) & dataHL$Quarter == quarter&
                                   !is.na(dataHL$Roundfish) & dataHL$Roundfish == RFA ,]
 
+  uniqueIDWith = unique(dataToSimulateFromHL$haul.id[dataToSimulateFromHL$Species==species])
+  uniqueID = unique(dataToSimulateFromHL$haul.id)
+  uniqueIDWithout = setdiff(uniqueID,uniqueIDWith)
+  dataToSimulateFromHL = dataToSimulateFromHL[which(dataToSimulateFromHL$Species==species),]
+  for(id in uniqueIDWithout)
+  {
+    dataToSimulateFromHL = rbind(dataToSimulateFromHL, dataHL[which(dataHL$haul.id == id)[1],])
+  }
+
+
   #Estimate CPUEs with uncertainty
   ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
   cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
+
+  if(bootstrapProcedure =="stratified"){
+    #Find shortest distance to a neigbour trawl location---
+    uniqueId = unique(dataToSimulateFromHL$haul.id)
+    loc = data.frame(uniqueId)
+    loc$lat = rep(-999,dim(loc)[1])
+    loc$lon = rep(-999,dim(loc)[1])
+
+    for(i in 1:length(uniqueId))
+    {
+      id = uniqueId[i]
+      indeks = which(dataToSimulateFromHL$haul.id== id)[1]
+      loc$lat[i] = dataToSimulateFromHL$lat[indeks]
+      loc$lon[i] = dataToSimulateFromHL$lon[indeks]
+    }
+
+    coordinates(loc) <- ~lon+lat
+    d <- gDistance(loc, byid=T)
+    min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
+    loc$shortesDist = uniqueId[min.d]
+    #-----------------------------------------------------
+  }
+
 
   simCPUEs = matrix(NA,length(cpueEst),B)
   for(i in 1:B)
@@ -90,7 +123,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
       simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
     }else if(bootstrapProcedure =="stratified"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
-      simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL)
+      simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
     }else{
       return("Select a valid bootstrap procedure.")
     }

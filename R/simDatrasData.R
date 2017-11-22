@@ -75,7 +75,7 @@ simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
 #' The simulated trawl hauls are simulated stratisfied on the statistical rectangles. TODO: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
 #' @examples
-simTrawlHaulsHLStratified = function(RFA,year, quarter,data)
+simTrawlHaulsHLStratified = function(RFA,year, quarter,data, loc = NULL)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -93,12 +93,18 @@ simTrawlHaulsHLStratified = function(RFA,year, quarter,data)
 
     if(length(trawls)==1)
     {
-      #TODO, combine with the closest observation perhaps?
-      sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
-      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
+      idClosest = loc$shortesDist[which(loc$uniqueId == trawls)]
+      toSample = c(toString(idClosest),toString(trawls[1]))
+      sampledTreawls = sample(toSample,1)
+      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
+      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here.
+      dTmp$StatRec = rec
+
     }else{
       sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
+      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here.
+
       for(j in 2:length(trawls))
       {
         add = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[j],]
@@ -159,7 +165,6 @@ simTrawlHaulsCASimple = function(RFA,year, quarter,data)
 #' @export
 #' @return Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
 #' Sample stratisfied with respect to the length observed. This gives meaning since it is assumed that the ALK is similar in the whole roundfish area.
-#' TODO: Choose a procedure of how to simulate if there is only one observation of a length class. I suggest the same suggestion as for simulating HL-date when there is only one observation in the statistical area: include the closest length class in the simulation.
 #' @examples
 simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus morhua")
 {
@@ -175,19 +180,40 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
   lengths = unique(sort(floor(dataOfInterest$LngtCm)))
   simData = list(NULL)
 
-  for(i in lengths){
-    n = sum(floor(dataOfInterest$LngtCm)==i)
+  for(i in 1:length(lengths)){
+    l = lengths[i]
+    n = sum(floor(dataOfInterest$LngtCm)==l)
     if(n ==1)
     {
-      #TODO, combine with the closest length perhaps?
-      dTmp = dataOfInterest[floor(dataOfInterest$LngtCm)==i,]
+      if(l<max(lengths) & l>min(lengths))
+      {
+        distDown = l-lengths[i-1]
+        distUp = lengths[i+1] -l
+        if(distUp == distDown) distDown = distDown + 0.5 - runif(1)
+
+        if(distDown<distUp)
+        {
+          extra = which(floor(dataOfInterest$LngtCm)==lengths[i-1])
+        }else{
+          extra = which(floor(dataOfInterest$LngtCm)==lengths[i+1])
+        }
+      }else if(l==min(lengths)){
+        extra = which(floor(dataOfInterest$LngtCm)==lengths[i-1])
+      }else if(l==max(lengths)){
+        extra = which(floor(dataOfInterest$LngtCm)==lengths[i+1])
+      }
+
+      whichToAdd = sample(length(extra),1)
+      dTmp = rbind(dataOfInterest[floor(dataOfInterest$LngtCm)==l,],
+                   dataOfInterest[extra[whichToAdd],])
+      dTmp$LngtCm = l
       dTmp = sample_n(dTmp, size = n,replace = TRUE)
 
     }else{
-      dTmp = dataOfInterest[floor(dataOfInterest$LngtCm)==i,]
+      dTmp = dataOfInterest[floor(dataOfInterest$LngtCm)==l,]
       dTmp = sample_n(dTmp, size = n,replace = TRUE)
     }
-    simData[[i]]= dTmp
+    simData[[l]]= dTmp
 
   }
   simDataToBeReturned  =   do.call(rbind.data.frame,simData)

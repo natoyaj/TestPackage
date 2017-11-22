@@ -4,7 +4,7 @@
 \alias{simTrawlHaulsHLStratified}
 \title{simTrawlHaulsHLStratified}
 \usage{
-simTrawlHaulsHLStratified(RFA, year, quarter, data)
+simTrawlHaulsHLStratified(RFA, year, quarter, data, loc = NULL)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
