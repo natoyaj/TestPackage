@@ -18,9 +18,9 @@ hh <- dat[["HH"]]
 hh_keys <- c("haul.id")
 hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
 ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
-ca_hl    <- merge(ca,hl, by=hl_keys, suffixes=c(".CA", ""))
+#ca_hl    <- merge(ca,hl, by=hl_keys, suffixes=c(".CA", ""))
 hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
-ca_hl_hh <- merge(ca, hl_hh, by=hl_keys, suffixes=c(".CA", ""))
+#ca_hl_hh <- merge(ca, hl_hh, by=hl_keys, suffixes=c(".CA", ""))
 #---------------------------------------------------------
 
 
@@ -45,12 +45,118 @@ RFA = 1
 quarter = 3
 species = "Gadus morhua"
 #Rprof()
-cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = 10)
-cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = 10)
+B = 20
+
+cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple", B = B)
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = B)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------
 
+
+
+#Investigate the sensitivity of removing parts of the HL-data and the CA-data---------
+year = 2005
+RFA = 1
+quarter = 3
+species= "Gadus morhua"
+B = 20 #Number of bootsrap samples in the outer bootstrap (simulating removal of observations)
+B2 = 10 #Number of bootsrap samples in the inner bootstrap (simulating P.I. given removal of observations)
+BFirst = 3*B #Number of bootsrap samples in the bootstrap for calculating the P.I. of CPUEs for comparison
+maxRemove = 0.9 #Max proportion to remove
+by = 0.9 #Step in the removal direction
+
+n1 = 7 #Number og age groups
+n2 = length(seq(by,maxRemove,by = by)) #number of unique proportions to remove
+
+
+CA = array(NA,dim= c(n1,4,B2*n2)) #Three dimesional arrays with the simulations of CPUEs
+HL = array(NA,dim= c(n1,4,B2*n2))
+CAHL = array(NA,dim= c(n1,4,B2*n2))
+
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "stratified", B = BFirst)
+neste = 1
+for(i in 1:length(seq(by,maxRemove,by = by)))
+{
+  remove = seq(by,maxRemove,by = by)[i]
+
+  dataCAoriginal = ca_hh[!is.na(ca_hh$Year) & ca_hh$Year == year&
+                                  !is.na(ca_hh$Quarter) & ca_hh$Quarter == quarter&
+                                  !is.na(ca_hh$Roundfish) & ca_hh$Roundfish == RFA ,]
+
+  dataHLoriginal = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
+                                  !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
+                                  !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
+
+  haulsToSimulateRemovalOf = hh[!is.na(hh$Year) & hh$Year == year&
+                                  !is.na(hh$Quarter) & hh$Quarter == quarter&
+                                  !is.na(hh$Roundfish) & hh$Roundfish == RFA ,]
+
+  uniqueID = unique(haulsToSimulateRemovalOf$haul.id)
+  removeID = rep(FALSE,length(uniqueID))
+
+  for(ii in 1:B2)
+  {
+    #Simulate HL-data----------------
+    q = runif(length(removeID))
+    uniqueIDKeep = uniqueID[which(q>remove)]
+    dataHL = dataHLoriginal
+    keep = rep(FALSE,dim(dataHL)[1])
+    for(kk in 1:length(uniqueIDKeep))
+    {
+      indeks = grepl(uniqueIDKeep[kk],dataHL$haul.id)
+      keep[indeks] = TRUE
+    }
+    dataHL = dataHL[which(keep),]
+    #----------------------------------
+
+    #Simulate CA-data------------------
+    q = runif(dim(dataCAoriginal)[1])
+    dataCA = dataCAoriginal[which(q>remove),]
+    #----------------------------------
+
+    #Calculate the CPUE per age estimates with simulated portions of the data-------------
+    cpueStratifiedRemovePercentCA = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dataHLoriginal, dataCA = dataCA,bootstrapProcedure = "stratified", B = B)
+    cpueStratifiedRemovePercentHL = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dataHL, dataCA = dataCAoriginal,bootstrapProcedure = "stratified", B = B)
+    cpueStratifiedRemovePercentCAHL = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dataHL, dataCA = dataCA,bootstrapProcedure = "stratified", B = B)
+    #----------------------------------
+
+    #Store the calulations of CPUEs----
+    CA[,,neste] = as.matrix(cpueStratifiedRemovePercentCA)
+    HL[,,neste] = as.matrix(cpueStratifiedRemovePercentHL)
+    CAHL[,,neste] = as.matrix(cpueStratifiedRemovePercentCAHL)
+    neste = neste + 1
+    #----------------------------------
+
+    print(cpueStratifiedRemovePercentHL)
+  }
+}
+#----------------------------------------------------------------------
+
+#Some plots regarding the senisitivy----------------
+par(mfrow=c(2,3))
+age = 3
+
+limit = 3
+plot(CA[age,limit,])
+abline(h = cpueStratified[age,limit])
+
+plot(HL[age,limit,])
+abline(h = cpueStratified[age,limit])
+
+plot(CAHL[age,limit,])
+abline(h = cpueStratified[age,limit])
+
+limit = 4
+plot(CA[age,limit,])
+abline(h = cpueStratified[age,limit])
+
+plot(HL[age,limit,])
+abline(h = cpueStratified[age,limit])
+
+plot(CAHL[age,limit,])
+abline(h = cpueStratified[age,limit])
+#----------------------------------------------------------------------
 
 
 

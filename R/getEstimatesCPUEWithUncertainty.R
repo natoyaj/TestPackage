@@ -66,30 +66,33 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
-getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL, bootstrapProcedure="simple", B = 10)
+getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL, bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0)
 {
 
-  #Extract the data of interest
+  #Extract the data of interest-------------
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
                                  !is.na(dataCA$Roundfish) & dataCA$Roundfish == RFA ,]
+
   dataToSimulateFromHL = dataHL[!is.na(dataHL$Year) & dataHL$Year == year&
                                   !is.na(dataHL$Quarter) & dataHL$Quarter == quarter&
                                   !is.na(dataHL$Roundfish) & dataHL$Roundfish == RFA ,]
 
-  uniqueIDWith = unique(dataToSimulateFromHL$haul.id[dataToSimulateFromHL$Species==species])
-  uniqueID = unique(dataToSimulateFromHL$haul.id)
-  uniqueIDWithout = setdiff(uniqueID,uniqueIDWith)
-  dataToSimulateFromHL = dataToSimulateFromHL[which(dataToSimulateFromHL$Species==species),]
-  for(id in uniqueIDWithout)
-  {
-    dataToSimulateFromHL = rbind(dataToSimulateFromHL, dataHL[which(dataHL$haul.id == id)[1],])
-  }
+#  #Try to remove some data fram HL-file to reduce the computation time
+#  uniqueIDWith = unique(dataToSimulateFromHL$haul.id[dataToSimulateFromHL$Species==species])
+#  uniqueID = unique(dataToSimulateFromHL$haul.id)
+#  uniqueIDWithout = setdiff(uniqueID,uniqueIDWith)
+#  dataToSimulateFromHL = dataToSimulateFromHL[which(dataToSimulateFromHL$Species==species),]
+#  for(id in uniqueIDWithout)
+#  {
+#    dataToSimulateFromHL = rbind(dataToSimulateFromHL, dataHL[which(dataHL$haul.id == id)[1],])
+#  }
+  #------------------------------------------
 
-
-  #Estimate CPUEs with uncertainty
+  #Estimate CPUEs----------------------------
   ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
   cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
+  #------------------------------------------
 
   if(bootstrapProcedure =="stratified"){
     #Find shortest distance to a neigbour trawl location---
@@ -114,6 +117,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   }
 
 
+  #Simulate CPUES per age B times-------------------------
   simCPUEs = matrix(NA,length(cpueEst),B)
   for(i in 1:B)
   {
@@ -128,14 +132,38 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
       return("Select a valid bootstrap procedure.")
     }
 
+#    if(removeProportionsOfCA>0)
+#    {
+#      remove = rep(FALSE,dim(simDataCA)[1])
+#      q = runif(remove)
+#      simDataCA = simDataCA[which(q>removeProportionsOfCA),]
+#    }
+#    if(removeProportionsOfHL>0)
+#    {
+#      uniqueID = unique(simDataHL$haul.id)
+#      remove = rep(FALSE,length(uniqueID))
+#      q = runif(remove)
+#      uniqueIDKeep = uniqueID[which(q>removeProportionsOfHL)]
+#
+#      keep = rep(FALSE,dim(simDataHL)[1])
+#      for(kk in 1:length(uniqueIDKeep))
+#      {
+#        indeks = grepl(uniqueIDKeep[kk],simDataHL$haul.id)
+#        keep[indeks] = TRUE
+#      }
+#      simDataHL = simDataHL[which(keep),] #this is wrong since the haul.id's are changed in simTrawlsHauls..()
+#    }
+
     simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
     sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK)
 
     simCPUEs[,i] = sim
     print(i)
-  }
 
-  #Construct a data.frame with estimates and C.I.
+  }
+  #-----------------------------------------------------
+
+  #Construct a data.frame with estimates and P.I. of CPUEs per age----
   cpue = data.frame(cpueEst)
   cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$lQ = rep(0,length(cpueEst))
@@ -148,6 +176,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     cpue$bootstrapMean[i] = mean(simCPUEs[i,])
 
   }
+  #-----------------------------------------------------
   return(cpue)
 }
 
