@@ -26,7 +26,7 @@ getEstimatesCPUElength(RFA, species, year, quarter, dataHL,
 \item{B}{The number of simulations in the selected bootstrap procedure}
 }
 \value{
-Returns the mCPUE per length class in the given RFA with uncertainty
+Returns the estimated mCPUE per length class in the given RFA with uncertainty
 }
 \description{
 .

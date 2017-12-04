@@ -6,7 +6,7 @@
 \usage{
 getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
-  B = 10)
+  B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -23,7 +23,7 @@ getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
 
 \item{percentOfAreaRepresentative}{the percentage of the statical recangle within sea depth intervall}
 
-\item{bootstrapProcedure}{The bootstrap procedure ("simple", ...)}
+\item{bootstrapProcedure}{The bootstrap procedure ("simple", "stratisfied", ...)}
 
 \item{B}{The number of simulations in the selected bootstrap procedure}
 }
