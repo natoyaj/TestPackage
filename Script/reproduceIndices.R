@@ -204,3 +204,150 @@ cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = 
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------
+
+
+
+
+
+#+++++++++++++++++++++++++++++++++++++++++
+# Plots
+#example filtering by info in CA or HL
+
+#Pleuronectes platessa = plaice,        Clupea harengus = herring
+#Scomber scombrus = atlantic mackerel   Gadus morhua   = atlantic cod
+#Merlangius merlangus  = whiting        Trisopterus esmarkii = norway pout
+#Melanogrammus aeglefinus = haddock     Sprattus sprattus = sprats
+#Pollachius virens = saithe             Scyliorhinus canicula = morgay
+#Myxine glutinosa  = hagfish            Galeus melastomus =  blackmouth catshark
+
+#aggregate(b1[,names(b1)!=" mcpue_pr_lngtClas"], by=list(b1$LngthClas), FUN =sum)
+#data.frame(unlist(lapply(b, function(x) sum(x))))
+#aggregate(b1, by = list(b1$LngthClas, b1$mcpue_pr_lngtClas), sum)
+
+#++++++++++++++++++++++++++++++++++++++++++
+
+#Assumption: 1)length samples are collected from all hauls
+#            2)if age samples are collected length is also collected
+
+country.names <- unique(dat$Country)
+year.no       <- unique(dat$Year)
+roundfish     <- unique(dat$Roundfish[!is.na(dat$Roundfish)])[order(unique(dat$Roundfish[!is.na(dat$Roundfish)]))]
+haulsAge      <- length(roundfish)
+haulsLength   <- length(roundfish)
+quarter       <- unique(dat$Quarter)[order(unique(dat$Quarter))]
+
+yearvec <- c("2004", "2005","2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015","2016", "2017")
+RFvec <- c("1", "2","3", "4", "5", "6", "7", "8", "9", "10")
+c = 1
+y = 14
+q = 1
+#R = 1
+q1 <- c("Q1", "Q3")
+
+windows(height = 19, width = 25.5)
+par(mfrow=c(3,4), tcl=-0.9, family="serif", omi=c(0.3,0.2,0.2,0.3)) #, mar = c(5,7,4,2) + 0.1) #, oma=c(4.5, 4, 4, 2.5), mar=rep(.1, 4), cex=1, las=1)
+
+
+
+for(R in 1:length(roundfish))
+{
+
+  species = "Gadus morhua"
+
+  print(R)
+
+  #Extract the haul.id s you want. Here selection by species--------------------------
+  haulselection <- unlist(unique(dat[["HL"]][!is.na(dat[["HL"]]$Species) & dat[["HL"]]$Species==species,"haul.id"]))
+
+
+  #.. species and age samples-------------------------------
+  haulselection_age <- unlist(unique(dat[["CA"]][!is.na(dat[["CA"]]$Species) & dat[["CA"]]$Species==species & !is.na(dat[["CA"]]$Age),"haul.id"]))
+
+
+  #extract haul id s with age and length for species-----------------------------------
+  haulselection_age_length <- unlist(unique(dat[["CA"]][!is.na(dat[["CA"]]$Species) & dat[["CA"]]$Species==species & !is.na(dat[["CA"]]$Age) & !is.na(dat[["CA"]]$LngtCm),"haul.id"]))
+
+
+
+  #if all age dont have lengths return warning-------------------------------
+
+  if (!all(haulselection_age %in% haulselection_age_length)){
+    warning("Not all age readings have length")
+  }
+
+
+  #.. species and length samples------------------------------------------
+  haulselection_length <- unlist(unique(dat[["HL"]][!is.na(dat[["HL"]]$Species) & dat[["HL"]]$Species==species & !is.na(dat[["HL"]]$LngtCm),"haul.id"]))
+
+
+  #filter dat on haul.id (and country and year) and plot
+  country.haul_species <- subset(dat,
+                                 #                              Country ==country.names[c],
+                                 Roundfish ==roundfish[R],
+                                 Year == year.no[y],
+                                 Quarter == quarter[q],
+                                 haul.id %in% unlist(haulselection))
+  plot(country.haul_species)
+
+
+
+  country.haul_species_length <- subset(dat,
+                                        #                                     Country ==country.names[c],
+                                        Roundfish ==roundfish[R],
+                                        Year == year.no[y],
+                                        Quarter == quarter[q],
+                                        haul.id %in% unlist(haulselection_length))
+  plot(country.haul_species_length, add=T, col="blue")
+
+  #Number of hauls in the above plot:--------------------------------
+  haulsLength[R] <- nrow(country.haul_species_length[["HH"]])
+
+
+
+  country.haul_species_age <- subset(dat,
+                                     #                                  Country ==country.names[c],
+                                     Roundfish ==roundfish[R],
+                                     Year == year.no[y],
+                                     Quarter == quarter[q],
+                                     haul.id %in% unlist(haulselection_age))
+
+  plot(country.haul_species_age, add=T, col="red" )
+
+  #Number of hauls in the above plot:------------------------------------
+  haulsAge[R] <-  nrow(country.haul_species_age[["HH"]])
+
+
+
+  title(main=paste(yearvec[y], q1[1], ":", species, "in RFA", RFvec[R]), line = 2.5)# , sub = paste(haulsLength[R],  haulsAge[R]), cex.sub=1)
+  mtext(paste("HWL =", haulsLength[R], " ", " ",  "HWA =", haulsAge[R]), side=1, line=4, cex =0.6, font = 1)
+
+
+  #"2017 Q1:"
+  ###labels on axes
+  labelsZ=parse(text=paste(seq(30,62,1), sep=""))
+  axis(side = 4, at = seq(30, 62, by =1), labels =labelsZ)
+
+  axis(side = 3, at = seq(-4, 13, by =1)-0.35, labels=c("E5", "E6", "E7", "E8", "E9", "F0",
+                                                        "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "G0","G1", "G2"), tick =FALSE)
+  #axis(side = 3, at = seq(-4, 13, by =1), labels=FALSE, tick =TRUE)
+
+
+  # axis(side = 3, at = seq(-5, 13, by =1))
+
+  ticks=parse(text=paste(abs(seq(-4, 13, 1)), "^o ", sep=""))
+  # axis(side = 1, at = seq(-4, 12, 2), labels = ticks)
+
+  labelsY=parse(text=paste(seq(30,62,5), "^o ", sep=""))
+  # axis(side = 2, at = seq(50, 62, by =2),  labels =  labelsY)
+
+}
+
+plot_colors <- c("red","blue", "white", "white")
+text <- c("Hauls with age and length data","Hauls with length data", "HWL: No. Hauls with length data", "HWA: No. Hauls with age data")
+plot.new()
+par(xpd=TRUE)
+legend("center", legend = text,col=plot_colors, pch=16, cex=1,horiz = FALSE)
+par(xpd=FALSE)
+
+dev.print(pdf, file="Gadus morhua1.pdf");
+#dev.off()
