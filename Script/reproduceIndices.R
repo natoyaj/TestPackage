@@ -18,8 +18,66 @@ hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
 ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
 ca_hl    <- merge(ca,hl, by=hl_keys, suffixes=c(".CA", ""))
 hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
-ca_hl_hh <- merge(ca, hl_hh, by=hl_keys, suffixes=c(".CA", ""))
+#ca_hl_hh <- merge(ca, hl_hh, by=hl_keys, suffixes=c(".CA", ""))
 #---------------------------------------------------------
+
+#Read weights describing the proportion of statrecs of interest-----
+weightStatRec = readRDS(paste(dataDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
+#-------------------------------------------------------------------
+
+
+#Reproduce CPUEs with C.I.-----------------------------------------
+
+#Choose the time and RFA
+year = 2015
+RFA = 7
+quarter = 1
+species = "Gadus morhua"
+#Rprof()
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple")
+#Rprof(NULL)
+#summaryRprof()
+#--------------------------------------------------------------
+
+#Reproduce CPUEs on age-level-----------------------------------------
+year = 2015
+RFA = 7
+quarter = 1
+species = "Gadus morhua"
+#Rprof()
+cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple")
+#Rprof(NULL)
+#summaryRprof()
+#--------------------------------------------------------------
+
+
+
+
+
+
+
+
+#Work in progress
+#Reproduce CPUEs on age-level-----------------------------------------
+year = 2015
+RFA = 7
+quarter = 1
+species = "Gadus morhua"
+#Rprof()
+CAFill = fillCA(ca_hh)
+cpue = getEstimatesCPUEageOurProcedure(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = CAFill,bootstrapProcedure = "simple")
+#Rprof(NULL)
+#summaryRprof()
+#--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
 
 
@@ -176,34 +234,6 @@ ag1
 
 
 
-
-
-
-#Reproduce CPUEs with C.I.-----------------------------------------
-
-#Choose the time and RFA
-year = 2017
-RFA = 2
-quarter = 1
-species = "Gadus morhua"
-#Rprof()
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple")
-#Rprof(NULL)
-#summaryRprof()
-#--------------------------------------------------------------
-
-
-
-#Reproduce CPUEs on age-level-----------------------------------------
-year = 2015
-RFA = 9
-quarter = 1
-species = "Gadus morhua"
-#Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple")
-#Rprof(NULL)
-#summaryRprof()
-#--------------------------------------------------------------
 
 
 
