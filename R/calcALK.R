@@ -57,14 +57,14 @@ calculateALK = function(RFA,species,year,quarter,data)
         if(floor(caInterest$LngtCm[i])< minLength)
         {
           alk[1,floor(caInterest$Age[i])+2] =
-          alk[1,floor(caInterest$Age[i])+2] +1
+          alk[1,floor(caInterest$Age[i])+2] +caInterest$NoAtALK[i] #!!! SEEMS THAT IT CAN BE MORE THAN ONE FISH PER ROW!!! THIS IS NOT REPORTED ANYWHERE AS I OLAV SEE
         }else if(floor(caInterest$LngtCm[i])> maxLength)
         {
           alk[dim(alk)[1],floor(caInterest$Age[i])+2] =
-          alk[dim(alk)[1],floor(caInterest$Age[i])+2] +1
+          alk[dim(alk)[1],floor(caInterest$Age[i])+2] +caInterest$NoAtALK[i]
         }else{
           alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+2] =
-          alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+2] +1
+          alk[which(alk[,1]==floor(caInterest$LngtCm[i])),floor(caInterest$Age[i])+2] +caInterest$NoAtALK[i]
         }
       }
     }
