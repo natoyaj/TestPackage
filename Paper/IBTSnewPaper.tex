@@ -80,6 +80,10 @@
 
 \newcommand\longitude[1]{\directlua{ longitude ( \luastring{#1} ) }}
 
+
+\usepackage{lineno}
+\linenumbers
+
  
 \begin{document}
 \title{Variance Estimators of North Sea International Bottom Trawl Survey Indices}
@@ -162,30 +166,30 @@ Sweden  &  Dana &  January-February  &  Dana &  August                  \\[0.5ex
 \end{table}
 
 
-\begin{figure}[h!]
-  \centering
- {\includegraphics[width=17cm]{icesroundfishmap.jpg}}   
- \captionsetup{font= footnotesize, width=15cm}{
- \caption{Standard roundfish areas used for roundfish since 1980, for all standard species since 1991. Additional RFA 10 added in 2009. For example, the number 1 indicates ICES Index Area 1, and an ICES Statitical rectangle (ST) in IA 1 is 43F1.}\label{icesroufismap}}
-\end{figure}
+%\begin{figure}[h!]
+%  \centering
+% {\includegraphics[width=17cm]{icesroundfishmap.jpg}}   
+% \captionsetup{font= footnotesize, width=15cm}{
+% \caption{Standard roundfish areas used for roundfish since 1980, for all standard species since 1991. Additional RFA 10 added in 2009. For example, the number 1 indicates ICES Index Area 1, and an ICES Statitical rectangle (ST) in IA 1 is 43F1.}\label{icesroufismap}}
+%\end{figure}
 
 
 
-\begin{figure}[h!]
-  \centering
- {\includegraphics[width=18.5cm]{IBTSQ1.jpg}}   
- \captionsetup{font= footnotesize, width=15cm}{
- \caption{Spatial distribution of the ICES-rectangles in the IBTS Q1 over the participating countries. SC = Scotland, GE = Germany, NO = Norway, DK = Denmark, FR = France, NL = The Netherlands, S = Sweden (ICES 2016). }\label{ibtsq1}}
-\end{figure}
+%\begin{figure}[h!]
+%  \centering
+% {\includegraphics[width=18.5cm]{IBTSQ1.jpg}}   
+% \captionsetup{font= footnotesize, width=15cm}{
+% \caption{Spatial distribution of the ICES-rectangles in the IBTS Q1 over the participating countries. SC = Scotland, GE = Germany, NO = Norway, DK = Denmark, FR = France, NL = The Netherlands, S = Sweden (ICES 2016). }\label{ibtsq1}}
+%\end{figure}
 
 
 
-\begin{figure}[h!]
-  \centering
- {\includegraphics[width=17.5cm]{recWeightings.jpg}}   
- \captionsetup{font= footnotesize, width=15cm}{
- \caption{}\label{weightings11}}
-\end{figure}
+%\begin{figure}[h!]
+%  \centering
+% {\includegraphics[width=17.5cm]{recWeightings.jpg}}   
+% \captionsetup{font= footnotesize, width=15cm}{
+% \caption{}\label{weightings11}}
+%\end{figure}
 
 \clearpage
 
@@ -196,16 +200,17 @@ Sweden  &  Dana &  January-February  &  Dana &  August                  \\[0.5ex
 The mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl (ICES 2012) is the recommended standard gear of the IBTS and has been used on all participating vessels since 1992, while different {\bf pelagic and bottom trawls} suitable for fishing finfish species were used before 1992. Standardized trawling protocols were adopted with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. GOV with standard groundrope with rubber discs (groundgear A) for normal bottom conditions has been used throughout the survey area by all nations, except Scotland who since 1985 have used a hard ground gear for rough ground (groundgear B) on all stations north of   $52^\circ  \ 30''$ North  (ICES 2012). During the tow it is imperative that the net geometry of the gear is within the acceptable limits for the depth of water (Figure \ref{fig:test}). The trawls are towed in waters at a maximum depth of 200$\m$ in the North Sea and 250$\m$ in {\bf Division IIIa} with help of an ``Exocet"  kite and five floats attached to this kite. Rigging and trawl operation are described in (ICES 2012). The catching efficiency of the gear is assumed to be identical for every vessel. The tow duration was standardized to 30 minutes in {\bf 1978-2014} for all nations, except Scotland who maintained the tow duration of 60 minutes until 1998 (ICES 2015). Though the reduced time allows more hauls to be conducted during the survey time, and does not have a significant affect  on the length composition of catches, mean lengths of fish and catch per unit effort (God$ø$ et al. 1990, Walsh, 1991), Ehrich and Stransky (2001) found that the reduced time resulted in a slight decrease in the number of observed species but this was comparable with the reduced mean number of observed species from subsampling of very large hauls.\\
 \indent  In the third quarter (Q3) of 2015, an experiment on tow duration of NS-IBTS hauls was conducted in the North Sea to investigate the effect on the composition of catches, and which continued into the first quarter of 2016 (ICES 2015). In this paper we have not consider the NS-IBTS dataset for these periods.\\
 \indent Trawling is done during the day by all participating vessels from 2000-2017 while countries who did not participate in the sampling of herring larvae in Q1 trawled at night before 2000. Daylight hours are considered 15 minutes before sunrise to 15 minutes  after sunset. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species) are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 75 fish is selected. If a representative subsample cannot be selected further sorting of the species into two or more size grades or categories is necessary (ICES 2015). Otoliths are collected on board from a small fraction of all the target species from all RFA (Figure \ref{icesroufismap}) to retrieve age reading.\\ 
-\begin{figure}[h!]
-\begin{tabular}{ll}
-\includegraphics[scale=0.5]{headlineHeight.jpg}
-&
-\includegraphics[scale=0.5]{doorspead.jpg}
-\end{tabular}
-\caption{Left: Expected upper and lower limits of Headline height for water depth (ICES 2012). 
-Right: Expected upper and lower limits of Door spread for water depth (ICES 2012).}
-\label{fig:test}
-\end{figure}
+
+%\begin{figure}[h!]
+%\begin{tabular}{ll}
+%\includegraphics[scale=0.5]{headlineHeight.jpg}
+%&
+%\includegraphics[scale=0.5]{doorspead.jpg}
+%\end{tabular}
+%\caption{Left: Expected upper and lower limits of Headline height for water %depth (ICES 2012). 
+%Right: Expected upper and lower limits of Door spread for water depth (ICES %2012).}
+%\label{fig:test}
+%\end{figure}
 
 
 \section{\large METHODS}
@@ -319,17 +324,55 @@ An estimator of the mean catch per unit effort for length class $l$ in superstra
 
 
 \clearpage
-\subsection{Bootstrap variance estimation}
+\subsection{Variance estimation}
 \label{bootall}
+The variance of the estimated CPUEs are calculated with bootstrap procedures. In this section we elaborate the bootstrap procedures used in this paper. We have implemented two procedures for simulating the data for uncertainty quantification. The first procedure is called the \textit{simple bootstrap procedure} and is based on simple random sampling from the RFA. The second procedure is called the \textit{stratified bootstrap procedure} and is based on stratified sampling of the data. Note that the statified bootstrap procedure do not account for that the ALK may be trawl dependent, e.g. due to fine spatial or spatio-temporal structure in the ALK, and thereby may this procedure underestimate the variance.
+
 
 \subsubsection{Simple bootstrap}
 \label{simpleboot}
+\textit{Note: When I now looked trough the code I saw that we bootstrapped a little bit different from what I remember I implemented in November/December last year. So this is a little bit different from what I wrote in the documentation previous week. I advise you to also read the code to understand what is being done, I have tried to document the code while I wrote it so that it shall be easy to read and to jump to the parts of interest without understanding every line. Some lines may however be difficult to understand, but just skip a lot of lines in the beginning, the important thing is to get an overall picture of what is done in the code.}
+
+In this subsection we describe the simple bootstrap procedure used to quantify the uncertainty of the CPUEs estimates in a given RFA. Assume there are $N_{\text{RFA}}$ trawl hauls in the given RFA, where $N_{\text{RFA}}^{\text{age}}$ of them consists of age information. The simple bootstrap procedure works like this:
+
+
+\begin{enumerate}
+\item sample with replacement $N_{\text{RFA}}$ of the trawl hauls in the RFA, and define ${\bf T}_{\text{sim}}^{\text{length}}$ to be that sample.
+\item Sample with replacement $N_{\text{RFA}}^{\text{age}}$ of the trawl hauls with age information and define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample.
+\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$. 
+\item Repeat step 1-3 $B$ times.
+\end{enumerate}  
+
+\textit{Note: In the R-code I see that I let $N_{\text{RFA}}$ be the number of trawl hauls with positive number of the species of interest, and simulate ${\bf T}_{\text{sim}}^{\text{length}}$ only based on those trawl hauls. This is a minor issue, and we should probably also included the trawl hauls with zero catch.}
+
 
 
 \subsubsection{Stratified bootstrap}
 \label{stratboot}
+The IBTS struggle to sample trawl fish from every statistical rectangle and from every length class. Because of this I constructed the stratified bootstrap procedure in the following way: 
 
+\begin{enumerate}
+\item Assume there are $N_{\text{RFA}}^{(i)}$ trawl hauls in the $i$th statistical rectangle.  Sample with replacement $N_{\text{RFA}}^{(i)}$ of the trawl hauls in the statistical rectangle. If there is only one trawl haul in the statistical rectangle, sample either that trawl haul or the closest in air distance. 
+\item Repeat step 1 for each statistical rectangle with trawl hauls. 
+\item Define ${\bf T}_{\text{sim}}^{\text{length}}$ to be the sample constructed with step 1-2.
+\item Assume $O_i$ is the number of age observations from $i$te length class in the RFA. Sample with replacement $O_i$ of these observations. If there are only one observed age in that length class, sample either that fish or one which is closest in "length class distance".
+\item Repeat step 4 for each length class with observed age. 
+\item Define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample constructed with step 4-5.
+\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$. 
+\item Repeat step 1-7 $B$ times.
+\end{enumerate}  
 
+The stratified bootstrap procedure preserves both the number of trawl hauls within each statistical rectangle and the age observations within each length class. I believe that this is important to do since IBTS struggle to distribute the observations to every statistical rectangle and length class. Given that the ALK is trawl dependent (e.g. has a spatial structure on finer scale than the RFA), this procedure will underestimate the uncertainty. 
+
+\textit{Note: We could have sampled the age data differently and tried to accommodate for that the ALK is trawl dependent. For example by sampling the age data with the same procedure as in the simple procedure. However, the calculation of the CPUE assumes that the ALK is not trawl dependent. I find it a bit unintuitive to assume that the ALK is trawl dependent when doing the simulations, and not while doing the calculations. 
+Here is an idea of simulating the ALK trawl dependent I just got: 
+\begin{enumerate}
+\item Sample one trawl haul with age information
+\item Repeat 1 with replacement and accept the new sample as a sample if the number observation of any length class does not exceed the two (e.g.) times the number of observation of that length class in the real data.
+\item Repeat 1-2 until we have enough observations defined in some way.
+\item Repeat 1-3 B times.
+\end{enumerate}
+}
 \subsubsection{Hierarchical bootstrap}
 \label{hierarboot}
 
@@ -385,21 +428,38 @@ An estimator of the mean catch per unit effort for length class $l$ in superstra
 \end{table}
 
 \clearpage
-\begin{figure}[h!]
-  \centering
- {\includegraphics[width=17.5cm]{"Pollachius virens1".pdf}}   
- \captionsetup{font= footnotesize, width=15cm}{
- \caption{Plots of RFAs with trawl hauls having length and age information of Saithe in the first quarter of 2017. }\label{saithe}}
-\end{figure}
+%\begin{figure}[h!]
+%  \centering
+% {\includegraphics[width=17.5cm]{"Pollachius virens1".pdf}}   
+% \captionsetup{font= footnotesize, width=15cm}{
+% \caption{Plots of RFAs with trawl hauls having length and age information %of Saithe in the first quarter of 2017. }\label{saithe}}
+%\end{figure}
+
+%\clearpage
+%\begin{figure}[h!]
+%  \centering
+% {\includegraphics[width=17.5cm]{"Gadus morhua1".pdf}}   
+% \captionsetup{font= footnotesize, width=15cm}{
+% \caption{Plots of RFAs with trawl hauls having length and age information %of Cod in the first quarter of 2017. }\label{saithe}}
+%\end{figure}
 
 \clearpage
-\begin{figure}[h!]
-  \centering
- {\includegraphics[width=17.5cm]{"Gadus morhua1".pdf}}   
- \captionsetup{font= footnotesize, width=15cm}{
- \caption{Plots of RFAs with trawl hauls having length and age information of Cod in the first quarter of 2017. }\label{saithe}}
-\end{figure}
-\clearpage
+
 \section{DISCUSSION}
- \bibliography{ibtsBib}
+
+In \citet{berg2014evaluation} the authors combined a GAM-model and a SAM-model to estimate abundance at age. This is almost my idea was when I wrote the documentation last week. My suggestion is to do this and also include a spatio-temporal-age term in the linear predictor for the GAM, and use SAM. If it works we may extend it to use XSAM instead of SAM. I suggest to estimate the parameters in GAM and SAM simultaneously in TMB. It seems that \citet{berg2014evaluation} estimates the GAM and SAM model separately (just as I understnad ECA, STOCS ans XSAM are estimated separately as described at the XSAM-course). I must think more on this, but I believe this could utilize a loot of the structure in the data!
+
+
+%@article{berg2014evaluation,
+%  title={Evaluation of alternative age-based methods for estimating relative %abundance from survey data in relation to assessment models},
+%  author={Berg, Casper W and Nielsen, Anders and Kristensen, Kasper},
+%  journal={Fisheries Research},
+%  volume={151},
+%  pages={91--99},
+%  year={2014},
+%  publisher={Elsevier}
+%}
+
+\bibliographystyle{apalike}
+\bibliography{ibtsBib}
 \end{document}
