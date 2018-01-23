@@ -139,10 +139,18 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
   #---------------------------------------------------------------
 
   #Average over the statistical recangles and return mCPUE-----
-  mCPUE = rep(NA,nAgeClasses)
+  weightUsed = rep(0,numberOfStatRectangles)
+  for(i in 1:numberOfStatRectangles){
+    weightUsed[i] = 1 #TODO: find weights for cod and make this parte species dependent
+   # weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+  }
+
+  mCPUE = rep(0,nAgeClasses)
   for(i in 1:nAgeClasses)
   {
-    mCPUE[i] = mean(mCPUEstatRec[i,])# TODO: We must multiply with the proportion of the area covered by deep enough water.
+    for(j in 1:numberOfStatRectangles){
+      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+    }
   }
   return(mCPUE)
   #------------------------------------------------------------
