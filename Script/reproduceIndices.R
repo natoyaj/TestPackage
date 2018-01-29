@@ -44,10 +44,29 @@ year = 2015
 RFA = 7
 quarter = 1
 species = "Gadus morhua"
+bootstrapProcedure = "simple"
+bootstrapProcedure = "almost the datras procedure"
+bootstrapProcedure = "stratified"
 #Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,bootstrapProcedure = "simple")
+cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 10)
 #Rprof(NULL)
 #summaryRprof()
+
+
+bootstrapProcedure = "simple"
+cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+
+bootstrapProcedure = "almost the datras procedure"
+cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                           bootstrapProcedure = bootstrapProcedure, B = 20)
+
+bootstrapProcedure = "stratified"
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+
+
 #--------------------------------------------------------------
 
 

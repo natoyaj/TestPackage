@@ -42,7 +42,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
   cpue$uQ = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
-    quantile = quantile(simCPUEs[i,],c(0.025,0.975))
+    quantile = quantile(simCPUEs[i,],c(0.1,0.9))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
   }
@@ -90,6 +90,9 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   #------------------------------------------
 
   #Estimate CPUEs----------------------------
+
+#  ALK = calculateALKForHaul(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, idHaul = ..)
+
   ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
   cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
   #------------------------------------------
@@ -128,6 +131,9 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     }else if(bootstrapProcedure =="stratified"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+    }else if(bootstrapProcedure =="almost the datras procedure"){
+      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
+      simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
     }else{
       return("Select a valid bootstrap procedure.")
     }
@@ -170,7 +176,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   cpue$uQ = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
-    quantile = quantile(simCPUEs[i,],c(0.025,0.975))
+    quantile = quantile(simCPUEs[i,],c(0.1,0.9))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
     cpue$bootstrapMean[i] = mean(simCPUEs[i,])

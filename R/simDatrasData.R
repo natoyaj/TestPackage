@@ -65,6 +65,51 @@ simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 }
 
 
+#' simTrawlHaulsHLdatras
+#' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
+#' Keep the number of trawl ahuls within each statistical rectangle fixed, and sample them with replacement from the whole RFA.
+#' @param RFA Roundfish area number.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @export
+#' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
+#' @examples
+simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
+{
+  #Extract the data of interest-------------------------
+  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
+                          !is.na(data$Quarter) & data$Quarter == quarter&
+                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+  #-----------------------------------------------------
+
+  #Simulate trawl hauls---------------------------------
+  haulsID = unique(dataOfInterest$haul.id)
+  nSim = length(haulsID)
+  simHauls = sample(haulsID,nSim,replace = T)
+
+
+  #Define a help variable for keeping the number of trawl hauls within each statistical rectangle fixed----
+  rectangleID = rep(NA,nSim)
+  for(i in 1:nSim)
+  {
+    rectangleID[i] = unique(dataOfInterest$StatRec[dataOfInterest$haul.id== haulsID[i]])
+  }
+  #-----------------------------------------------------
+
+  simData = list(NULL)
+  for(i in 1:nSim)
+  {
+    simData[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
+    simData[[i]]$haul.id = paste(simData[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
+
+    simData[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
+  }
+  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
+  #----------------------------------------------------
+
+  return(simDataToBeReturned)
+}
+
 
 #' simTrawlHaulsHLStratified
 #' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
@@ -136,7 +181,7 @@ simTrawlHaulsCASimple = function(RFA,year, quarter,data)
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+                          !is.na(data$Roundfish) & data$Roundfish == RFA,]
   #-----------------------------------------------------
 
   #Simulate trawl hauls---------------------------------
