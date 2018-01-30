@@ -13,6 +13,18 @@ ca <- dat[["CA"]]
 hl <- dat[["HL"]]
 hh <- dat[["HH"]]
 
+remove = c("RecordType", "GearExp", "DoorType", "SpecCode","AreaType","Valid_Aphia","Survey",
+           "Stratum","HaulVal","HydroStNo","StdSpecRecCode","BycSpecRecCode","Rigging",
+           "Tickler","Warplngt", "Warpdia","WarpDen","DoorSurface","DoorSpread","WingSpread",
+           "Buoyancy","KiteDim","WgtGroundRope","TowDir","SurCurDir","SpeedWater","SurCurSpeed","BotCurDir","BotCurSpeed",
+           "WindDir","WindSpeed","SwellDir","SwellHeight","SurTemp","BotTemp","SurSal","BotSal",
+           "ThermoCline","ThClineDepth","DoorWgt","GroundSpeed","Distance","Netopening","Depth","abstime",
+           "timeOfYear","DateofCalculation","SweepLngt","Maturity","Ship","Gear","StNo","HaulNo",
+           "SpecCodeType","PlusGr","CatCatchWgt","Sex","DayNight","HaulLong","TimeShotHour")
+ca = ca[,which(!(names(ca) %in% remove))]
+hl = hl[,which(!(names(hl) %in% remove))]
+hh = hh[,which(!(names(hh) %in% remove))]
+
 hh_keys <- c("haul.id")
 hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
 ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
@@ -47,24 +59,24 @@ species = "Gadus morhua"
 bootstrapProcedure = "simple"
 bootstrapProcedure = "almost the datras procedure"
 bootstrapProcedure = "stratified"
-#Rprof()
+Rprof()
 cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                      bootstrapProcedure = bootstrapProcedure, B = 10)
-#Rprof(NULL)
-#summaryRprof()
+Rprof(NULL)
+summaryRprof()
 
 
 bootstrapProcedure = "simple"
 cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+                                     bootstrapProcedure = bootstrapProcedure, B = 50)
 
 bootstrapProcedure = "almost the datras procedure"
 cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                           bootstrapProcedure = bootstrapProcedure, B = 20)
+                           bootstrapProcedure = bootstrapProcedure, B = 50)
 
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+                                     bootstrapProcedure = bootstrapProcedure, B = 50)
 
 
 #--------------------------------------------------------------
