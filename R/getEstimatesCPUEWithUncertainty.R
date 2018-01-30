@@ -22,7 +22,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 
   if(bootstrapProcedure =="stratified"){
     #Find shortest distance to a neigbour trawl location---
-    uniqueId = unique(dataToSimulateFromHL$haul.id)
+    uniqueId = unique(dataToSimulateFrom$haul.id)
     loc = data.frame(uniqueId)
     loc$lat = rep(-999,dim(loc)[1])
     loc$lon = rep(-999,dim(loc)[1])
@@ -30,9 +30,9 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     for(i in 1:length(uniqueId))
     {
       id = uniqueId[i]
-      indeks = which(dataToSimulateFromHL$haul.id== id)[1]
-      loc$lat[i] = dataToSimulateFromHL$lat[indeks]
-      loc$lon[i] = dataToSimulateFromHL$lon[indeks]
+      indeks = which(dataToSimulateFrom$haul.id== id)[1]
+      loc$lat[i] = dataToSimulateFrom$lat[indeks]
+      loc$lon[i] = dataToSimulateFrom$lon[indeks]
     }
 
     coordinates(loc) <- ~lon+lat
@@ -50,9 +50,9 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     {
       data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
     }else if(bootstrapProcedure =="stratified"){
-      data = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+      data = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFrom,loc = loc)
     }else if(bootstrapProcedure =="almost the datras procedure"){
-      data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
+      data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFrom)
     }else{
       return("Select a valid bootstrap procedure.")
     }
