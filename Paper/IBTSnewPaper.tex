@@ -329,6 +329,7 @@ An estimator of the mean catch per unit effort for length class $l$ in superstra
 The variance of the estimated CPUEs are calculated with bootstrap procedures. In this section we elaborate the bootstrap procedures used in this paper. We have implemented two procedures for simulating the data for uncertainty quantification. The first procedure is called the \textit{simple bootstrap procedure} and is based on simple random sampling from the RFA. The second procedure is called the \textit{stratified bootstrap procedure} and is based on stratified sampling of the data. Note that the statified bootstrap procedure do not account for that the ALK may be trawl dependent, e.g. due to fine spatial or spatio-temporal structure in the ALK, and thereby may this procedure underestimate the variance.
 
 
+
 \subsubsection{Simple bootstrap}
 \label{simpleboot}
 \textit{Note: When I now looked trough the code I saw that we bootstrapped a little bit different from what I remember I implemented in November/December last year. So this is a little bit different from what I wrote in the documentation previous week. I advise you to also read the code to understand what is being done, I have tried to document the code while I wrote it so that it shall be easy to read and to jump to the parts of interest without understanding every line. Some lines may however be difficult to understand, but just skip a lot of lines in the beginning, the important thing is to get an overall picture of what is done in the code.}
@@ -365,14 +366,19 @@ The IBTS struggle to sample trawl fish from every statistical rectangle and from
 The stratified bootstrap procedure preserves both the number of trawl hauls within each statistical rectangle and the age observations within each length class. I believe that this is important to do since IBTS struggle to distribute the observations to every statistical rectangle and length class. Given that the ALK is trawl dependent (e.g. has a spatial structure on finer scale than the RFA), this procedure will underestimate the uncertainty. 
 
 \textit{Note: We could have sampled the age data differently and tried to accommodate for that the ALK is trawl dependent. For example by sampling the age data with the same procedure as in the simple procedure. However, the calculation of the CPUE assumes that the ALK is not trawl dependent. I find it a bit unintuitive to assume that the ALK is trawl dependent when doing the simulations, and not while doing the calculations. 
-Here is an idea of simulating the ALK trawl dependent I just got: 
-\begin{enumerate}
-\item Sample one trawl haul with age information
-\item Repeat 1 with replacement and accept the new sample as a sample if the number observation of any length class does not exceed the two (e.g.) times the number of observation of that length class in the real data.
-\item Repeat 1-2 until we have enough observations defined in some way.
-\item Repeat 1-3 B times.
-\end{enumerate}
 }
+
+\subsubsection{Bootstrap similar to something suggested by datras}
+\label{datrasboot}
+Here is what i interpret was datras suggest as a bootstrap procedure in the 2006 report. This is implemented in the package as "almost the datras procedure". It seems to be something in between of the simple and the stratified procedure. 
+\begin{enumerate}
+\item  Assume there is $n_{rec}$ trawl hauls in the $i$th statistical rectangle. Sample with replacement $n_{rec}$ trawl hauls from the whole RFA and put them in the $i$te statistical rectangle.
+\item Repeat step 1 for every statistical recangle in the RFA.
+\item Sample the CA-data with the same procedure as used in the stratified procedure. It seems that datras suggest to merge length classes so that there is more then one observed fish inside each interval, but I don't find any clear documentation of what they think is the best way to merge length classes. 
+\item Calculate CPUEs
+\item Repetat step 1-4 B times.
+\end{enumerate}
+
 \subsubsection{Hierarchical bootstrap}
 \label{hierarboot}
 

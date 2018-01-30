@@ -15,7 +15,7 @@ calculateALK = function(RFA,species,year,quarter,data)
                               data$Quarter == quarter & data$Species == species),]
 
     caInterest = caInterest[which(!is.na(caInterest$Age) & !is.na(caInterest$LngtCm)),]
-    #-----------------------------------------------------
+    #---------------------------------------------------
 
     if(dim(caInterest)[1]==0)return("No observations in period given")
 
@@ -24,7 +24,7 @@ calculateALK = function(RFA,species,year,quarter,data)
     minLength = NULL
     maxLength = NULL
     lengthClassIntervallLengths = NULL
-    #------------------------------------------------------
+    #----------------------------------------------------
 
     if(species == "Gadus morhua")
     {
