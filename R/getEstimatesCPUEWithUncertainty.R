@@ -19,12 +19,40 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 
   #Estimate CPUEs with uncertainty
   cpueEst = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = dataToSimulateFrom)
+
+  if(bootstrapProcedure =="stratified"){
+    #Find shortest distance to a neigbour trawl location---
+    uniqueId = unique(dataToSimulateFromHL$haul.id)
+    loc = data.frame(uniqueId)
+    loc$lat = rep(-999,dim(loc)[1])
+    loc$lon = rep(-999,dim(loc)[1])
+
+    for(i in 1:length(uniqueId))
+    {
+      id = uniqueId[i]
+      indeks = which(dataToSimulateFromHL$haul.id== id)[1]
+      loc$lat[i] = dataToSimulateFromHL$lat[indeks]
+      loc$lon[i] = dataToSimulateFromHL$lon[indeks]
+    }
+
+    coordinates(loc) <- ~lon+lat
+    d <- gDistance(loc, byid=T)
+    min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
+    loc$shortesDist = uniqueId[min.d]
+    #-----------------------------------------------------
+  }
+
+
   simCPUEs = matrix(NA,length(cpueEst),B)
   for(i in 1:B)
   {
     if(bootstrapProcedure=="simple")
     {
       data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
+    }else if(bootstrapProcedure =="stratified"){
+      data = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+    }else if(bootstrapProcedure =="almost the datras procedure"){
+      data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
     }else{
       return("Select a valid bootstrap procedure.")
     }
