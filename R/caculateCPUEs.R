@@ -100,7 +100,6 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 
 
 
-
 #' calcmCPUErfaWithALK
 #' @description Calculates CPUE per length class in a given roundfish area.
 #' @param RFA Roundfish area number.
@@ -225,4 +224,131 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 
 
 
+
+#' calcmCPUErfaWithALKNew
+#' @description Calculates CPUE per length class in a given roundfish area with  a new procedure TODO:document.
+#' @param RFA Roundfish area number.
+#' @param species The species of interest.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @param data the datras-data needed.
+#' @param ALK A list with the ALKs. Id to trawl haul is given in the first coumn of each element in the list.
+#' @export
+#' @return
+#' @examples
+#'
+calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew)
+{
+
+  #Extract the data of interest-------------------------
+  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
+                          !is.na(data$Quarter) & data$Quarter == quarter&
+                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+  #-----------------------------------------------------
+
+  #Construct a matrix with mCPUEs for each statistical rectangel---
+  statRects = unique(dataOfInterest$StatRec)
+  numberOfStatRectangles = length(statRects)
+  nAgeClasses = dim(ALKNew[[1]])[2]-2
+  mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
+  #---------------------------------------------------------------
+
+  #Calculate the mCPUEs for each statistical rectangangle---------
+  if(numberOfStatRectangles==0) return("No observations in RFA")
+  for(i in 1:numberOfStatRectangles)
+  {
+    cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew)
+    mCPUEstatRec[,i] = as.double(cpueStatRec)
+  }
+  #---------------------------------------------------------------
+
+  #Average over the statistical recangles and return mCPUE-----
+  weightUsed = rep(0,numberOfStatRectangles)
+  for(i in 1:numberOfStatRectangles){
+    weightUsed[i] = 1 #TODO: find weights for cod and make this parte species dependent
+    # weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+  }
+
+  mCPUE = rep(0,nAgeClasses)
+  for(i in 1:nAgeClasses)
+  {
+    for(j in 1:numberOfStatRectangles){
+      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+    }
+  }
+  return(mCPUE)
+  #------------------------------------------------------------
+}
+
+#' calcmCPUEstatRecWithALKNew
+#' @description Calculates CPUE per length class in a given statistical rectangle with the new procedure. TODO: document.
+#' @param statRec Statistical area.
+#' @param species The species of interest.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @param data the datras-data needed.
+#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
+#' @param ALK List with the ALKs for each trawl haul.
+#' @export
+#' @return Returns the mCPUE per length class in the given statistical rectangle
+#' @examples
+calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNew,percentOfAreaRepresentative = NULL)
+{
+  #Extract the number of hauls in the statistical area
+  nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
+
+
+  #Extract the data of interest-------------------------
+  dataWithTheSpecies = data[!is.na(data$Species) & data$Species==species &
+                              !is.na(data$Year) & data$Year == year&
+                              !is.na(data$Quarter) & data$Quarter == quarter&
+                              !is.na(data$StatRec) & data$StatRec == statRec ,]
+  #-----------------------------------------------------
+
+
+  #Calculates and returns mCPUE-----
+  subfactor = dataWithTheSpecies$SubFactor
+
+  nAgeClasses = dim(ALKNew[[1]])[2]-2
+  CPUE = rep(0,nAgeClasses)
+
+  if(dim(dataWithTheSpecies)[1]==0)return(CPUE)
+
+  if(dim(dataWithTheSpecies)[1]>0)
+  {
+    for(i in 1:dim(dataWithTheSpecies)[1])
+    {
+      trawlId = dataWithTheSpecies$haul.id[i]
+      whichALK =NA
+      for(indeksALK in 1:length(ALKNew))
+      {
+        if(ALKNew[[indeksALK]]$ID[1]==trawlId)whichALK = indeksALK
+      }
+      ALK = ALKNew[[whichALK]]
+
+      lineInAlkToUse = NA
+      if(min(ALK$Length)>dataWithTheSpecies$LngtCm[i])
+      {
+        lineInAlkToUse = 1
+      }else if(max(ALK$Length)<dataWithTheSpecies$LngtCm[i])
+      {
+        lineInAlkToUse = length(ALK$Length)
+      }else{
+        lineInAlkToUse = min(which(ALK$Length>=dataWithTheSpecies$LngtCm[i]))
+      }
+
+      if(dataWithTheSpecies$DataType[i]=="R")
+      {
+        CPUE =  CPUE + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
+      }else if(dataWithTheSpecies$DataType[i]=="C")
+      {
+        CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
+      }
+    }
+  }
+  mCPUE = CPUE/nHauls
+
+  return(mCPUE)
+  #----------------------------------
+}
 

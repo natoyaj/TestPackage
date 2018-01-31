@@ -386,6 +386,12 @@ Here is what i interpret was datras suggest as a bootstrap procedure in the 2006
 \subsection{Sampling strategies for age sampling based on (simulated data or empirical?)}
 
 
+\section{Proposed new estimator}
+The ALK is space dependent \citep{berg2012spatial}. Such a spatial dependence have an unknown impact on the CPUE per age estimates. To accomondate for the spatial dependence in the ALK we propose a new estimator for the CPUE per age, and compare it with the one used by datras. We denote the new estimate with a star and define it as follows. Let
+\begin{align}\label{cpueageNew}
+\mathrm{CPUE}^*_{h,a,l} =  \displaystyle \frac{\mathrm{CPUE}_{h,l} \times \mathrm{ALK}_{a,l,h}^*}{\displaystyle \sum\limits_{a \in A} \mathrm{ALK_{a,l,h}^*}},
+\end{align}
+where $\mathrm{ALK_{a,l,h}^*}$ is defined as a the ALK corresponding to the $h$ trawl haul with an fish of length $l$. We define $\mathrm{ALK_{a,l,h}^*}$ similar to $\mathrm{ALK_{a,l}}$, but on haul level instead.  Since there are typically few or none observations of ages for each length class in an trawl haul, we pool the length classes in increasing order such that there are five length classes in each pooled length class. The $\mathrm{ALK_{a,l,h}^*}$ is constructed just as $\mathrm{ALK_{a,l}}$ for those pooled length classes were we have an observed ages in the corresponding trawl haul. For those pooled length classes we do not have an observed age, we investigate if the trawl haul closest in air distance within the same RFA has an observed age in the pooled length class. If that is the case, the age observations from the closest trawl haul are used to construct the corresponding row $\mathrm{ALK_{.,l,h}^*}$. If the closest trawl haul do not have an observed age in the pooled length class, we investigate the second closest trawl haul in the RFA, and so on. If there are no observed ages in the pooled length class in the RFA, we fill the missing row of the ALK with the same procedure as used by datras.
 \clearpage
 \section{RESULTS}
 

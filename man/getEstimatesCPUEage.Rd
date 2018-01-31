@@ -6,7 +6,8 @@
 \usage{
 getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
-  B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0)
+  B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
+  newProcedure = FALSE)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -26,6 +27,8 @@ getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
 \item{bootstrapProcedure}{The bootstrap procedure ("simple", "stratisfied", ...)}
 
 \item{B}{The number of simulations in the selected bootstrap procedure}
+
+\item{newPeocedure}{Logical if we use the new procedure (defaul = false)}
 }
 \value{
 Returns the mCPUE per age class in the given RFA with uncertainty
