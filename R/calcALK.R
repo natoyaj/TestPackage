@@ -180,3 +180,261 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
   return(simALK)
 }
 
+
+
+#' calculateALKNew
+#' @description
+#' @param RFA Roundfish area number.
+#' @param species The species of interest.
+#' @param year The year which the ALKs are calculated.
+#' @param quarter The quarter of the year which the ALKs are calculated.
+#' @param data The CA needed for calculating the ALKs.
+#' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
+#' @param dfLength The length of the pooled length class. Default is 5, e.g. 5 length classes in each pooled length class.
+#' @export
+#' @return Returns a list with ALK for each trawl haul
+#' @examples
+calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5){
+
+  #Define the list which shall be filled with the ALKs and returned-----
+  alkToReturn = list()
+  #----------------------------------------------------
+
+  #Extract the data of interest----------------------
+  caInterest = data[which(data$Roundfish==RFA & data$Year==year &
+                            data$Quarter == quarter & data$Species == species),]
+
+  caInterest = caInterest[which(!is.na(caInterest$Age) & !is.na(caInterest$LngtCm)),]
+
+  hlInterest = data_hl[!is.na(data_hl$Year) & data_hl$Year == year&
+                        !is.na(data_hl$Quarter) & data_hl$Quarter == quarter&
+                        !is.na(data_hl$Roundfish) & data_hl$Roundfish == RFA ,]
+
+  hlInterest = hlInterest[which(!is.na(hlInterest$LngtCm)),]
+  #---------------------------------------------------
+
+  #Find distance between trawl locations--------------
+  id1 = as.character(caInterest$haul.id)
+  id2 = as.character(hlInterest$haul.id)
+  uniqueId = unique(c(id1,id2))
+  loc = data.frame(uniqueId)
+  loc$lat = rep(-999,dim(loc)[1])
+  loc$lon = rep(-999,dim(loc)[1])
+
+  for(i in 1:length(uniqueId))
+  {
+    id = uniqueId[i]
+    indeks = which(caInterest$haul.id== id)[1]
+    if(!is.na(indeks)){
+      loc$lat[i] = caInterest$lat[indeks]
+      loc$lon[i] = caInterest$lon[indeks]
+    }else{
+      indeks = which(hlInterest$haul.id== id)[1]
+      loc$lat[i] = hlInterest$lat[indeks]
+      loc$lon[i] = hlInterest$lon[indeks]
+    }
+
+  }
+  coordinates(loc) <- ~lon+lat
+  d <- gDistance(loc, byid=T) #This is a matrix with distances between the relevant trawl hauls
+  #-----------------------------------------------------
+
+  #Abort the calculations if no age information is given in the RFA----
+  if(dim(caInterest)[1]==0)return("No observations in period given")
+  #-----------------------------------------------------
+
+
+  #Define variables used in the construction of the ALK--
+  maxAge = NULL
+  minLength = NULL
+  maxLength = NULL
+  lengthClassIntervallLengths = NULL
+  #----------------------------------------------------
+
+  #Define the skelleton of the ALK---------------------
+  if(species == "Gadus morhua")
+  {
+    maxAge = 6
+    minLength = 7
+    maxLength = 110
+    lengthClassIntervallLengths = dfLength
+    if(quarter == 1)
+    {
+      minLength = 15
+      maxLength = 90
+    }
+
+    alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
+    alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+
+
+  }else{
+    #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
+  }
+  #----------------------------------------------------
+
+  #Set old fish to belong to the pluss group-----------
+  caInterest$Age[caInterest$Age > maxAge] = maxAge
+  #----------------------------------------------------
+
+
+  #Construct each element of the ALK-list----------------------------------------------------------------------
+  haulId = uniqueId
+  neste = 1
+  for(id in haulId){
+
+    #Construct the parts of the ALK were we have data--------------------
+    if(species=="Gadus morhua")
+    {
+      idTmp = as.character(id)
+      alkThis = as.data.frame(alk)
+      names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
+      alkThis$ID[1] = idTmp
+
+      dataThisTrawl = caInterest[caInterest$haul.id == id,]
+
+      if(dim(dataThisTrawl)[1]>0){
+        for(i in 1:dim(dataThisTrawl)[1])
+        {
+          if(floor(dataThisTrawl$LngtCm[i])< (minLength+dfLength-1))
+          {
+            alkThis[1,floor(dataThisTrawl$Age[i])+3] =
+              alkThis[1,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i] #!!! SEEMS THAT IT CAN BE MORE THAN ONE FISH PER ROW!!! THIS IS NOT REPORTED ANYWHERE AS I OLAV SEE
+          }else if(floor(dataThisTrawl$LngtCm[i])> maxLength)
+          {
+            alkThis[dim(alkThis)[1],floor(dataThisTrawl$Age[i])+3] =
+              alkThis[dim(alkThis)[1],floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
+          }else{
+            hvilke = min(which(alkThis[,2]> floor(dataThisTrawl$LngtCm[i]-dfLength+1)))
+
+            alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] =
+              alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
+          }
+        }
+      }
+    }
+    #------------------------------------------------------
+
+    #Extrapolate the ALK to length calsses were we do not have data-----------------------------------
+    whichIsMissing = rep(FALSE, dim(alkThis)[1])
+    for(i in 1:dim(alkThis)[1])
+    {
+      if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing[i] = TRUE
+    }
+    #Routine for filling the not observed length classes
+    if(quarter ==1)start = 3
+    if(quarter >1)start = 2
+
+    for(i in 1:dim(alkThis)[1])
+    {
+      if(whichIsMissing[i])
+      {
+        sortedShortestDist = order(d[,i])[-1]
+
+        closestSorted = haulId[sortedShortestDist]
+        for(closesId in closestSorted)
+        {
+          closestData = caInterest[caInterest$haul.id == closesId,]
+          if(i==dim(alkThis)[1]){
+            hvilke = which(closestData$LngtCm >= alkThis[i,2])
+          }else if(i==1){
+            hvilke = which(closestData$LngtCm < alkThis[2,2])
+          }else if(i< dim(alkThis)[1]){
+            hvilke = which(closestData$LngtCm >= alkThis[i,2] & closestData$LngtCm < alkThis[i+1,2] )
+          }
+
+          if(length(hvilke)>0)
+          {
+            row = rep(0,maxAge+1)
+            for(l in hvilke)
+            {
+              row[closestData$Age[l]+1] = row[closestData$Age[l]+1] +closestData$Age[l]
+            }
+            alkThis[i,3:dim(alkThis)[2]] = row
+          }else{
+            #Did not information in this trawl haul, go to next trawl haul.
+          }
+        }
+      }
+    }
+    #------------------------------------------------------
+
+
+    #Check if there are zero observed ages in the pooled length class.
+    #In that case we fill them as datras suggest---------------------------
+    whichIsMissing2 = rep(FALSE, dim(alkThis)[1])
+    for(i in 1:dim(alkThis)[1])
+    {
+      if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing2[i] = TRUE
+    }
+
+    #Set the smallest length groops to age 0 or 1 if there are no observations of them-----------------
+    first = which(!whichIsMissing2)[1]
+    if(first>1)
+    {
+      if(quarter==1)
+      {
+        alkThis[1:(first-1),4] = 1
+      }else if(quarter>1)
+      {
+        alkThis[1:(first-1),3] = 1
+      }
+      whichIsMissing2[1:first] = FALSE
+    }
+    #------------------------------------------------------
+
+    distToNext = which(!whichIsMissing2)[1]
+    distToPrevious = 99999999
+    nextValue = NA
+
+    if(quarter ==1)start = 3
+    if(quarter >1)start = 2
+
+    for(j in start:dim(alkThis)[2])
+    {
+      for(i in 1:dim(alkThis)[1])
+      {
+        if(whichIsMissing2[i])
+        {
+          if(distToPrevious<distToNext)
+          {
+            alkThis[i,j]= alkThis[i-1,j]
+          }else if(distToPrevious == distToNext)
+          {
+            alkThis[i,j]= (alkThis[i-1,j] + nextValue)/2
+          }else if(distToPrevious > distToNext)
+          {
+            alkThis[i,j]= nextValue
+          }
+          distToNext  = distToNext -1
+          distToPrevious =distToPrevious +1
+
+        }else{
+          distToPrevious = 1
+          distToNext = which(!whichIsMissing2[i:length(whichIsMissing2)])[2]-2
+          if(is.na(distToNext))
+          {
+            distToNext = 999999999
+            nextValue = -999999999
+          }else{
+            nextValue = alkThis[i + distToNext + 1,j]
+          }
+        }
+      }
+      #------------------------------------------------------
+    }
+    #--------------------------------------------------------------------------------------------
+
+
+
+
+    #Store the ALK for this trawl haul in the list to be returned
+    alkToReturn[[neste]] = alkThis
+    neste = neste+1
+  }
+  #------------------------------------------------------------------------------------------------------------------------
+
+  #Return the list with ALKs------
+  return(alkToReturn)
+  #-------------------------------
+}

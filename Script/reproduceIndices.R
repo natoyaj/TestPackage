@@ -34,7 +34,7 @@ hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
 #---------------------------------------------------------
 
 #Read weights describing the proportion of statrecs of interest-----
-weightStatRec = readRDS(paste(dataDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
+#weightStatRec = readRDS(paste(dataDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
 #-------------------------------------------------------------------
 
 
@@ -45,8 +45,11 @@ year = 2015
 RFA = 7
 quarter = 1
 species = "Gadus morhua"
+bootstrapProcedure = "stratified"
+bootstrapProcedure = "simple"
+
 #Rprof()
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = "simple")
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = bootstrapProcedure)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------
@@ -59,24 +62,31 @@ species = "Gadus morhua"
 bootstrapProcedure = "simple"
 bootstrapProcedure = "almost the datras procedure"
 bootstrapProcedure = "stratified"
+newProcedure = TRUE
 Rprof()
 cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 10)
+                                     bootstrapProcedure = bootstrapProcedure, B = 10,newProcedure = newProcedure)
 Rprof(NULL)
 summaryRprof()
 
 
 bootstrapProcedure = "simple"
 cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 50)
+                                     bootstrapProcedure = bootstrapProcedure, B = 200)
+bootstrapProcedure = "simple2"
+cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 200)
+bootstrapProcedure = "simple3"
+cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                  bootstrapProcedure = bootstrapProcedure, B = 200)
 
 bootstrapProcedure = "almost the datras procedure"
 cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                           bootstrapProcedure = bootstrapProcedure, B = 50)
+                           bootstrapProcedure = bootstrapProcedure, B = 200)
 
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 50)
+                                     bootstrapProcedure = bootstrapProcedure, B = 200)
 
 
 #--------------------------------------------------------------
