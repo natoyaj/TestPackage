@@ -68,11 +68,13 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
   cpue = data.frame(cpueEst)
   cpue$lQ = rep(0,length(cpueEst))
   cpue$uQ = rep(0,length(cpueEst))
+  cpue$sd = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
     quantile = quantile(simCPUEs[i,],c(0.1,0.9))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
+    cpue$sd[i] = sd(simCPUEs[i,])
   }
   return(cpue)
 }
@@ -222,11 +224,13 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$lQ = rep(0,length(cpueEst))
   cpue$uQ = rep(0,length(cpueEst))
+  cpue$sd = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
     quantile = quantile(simCPUEs[i,],c(0.1,0.9))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
+    cpue$sd[i] = sd(simCPUEs[i,])
     cpue$bootstrapMean[i] = mean(simCPUEs[i,])
 
   }
