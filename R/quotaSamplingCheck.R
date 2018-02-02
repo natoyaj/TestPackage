@@ -1,3 +1,4 @@
+library(DATRAS)
 library(rgdal)
 library(rworldxtra)
 library(mapplots)
@@ -85,6 +86,7 @@ plotStations <- function(hh=HH, ca=CA, hl=HL, species = "Gadus morhua", lengthGr
 
 }
 
+tab<-tabulateMissingAgeSamples()
 tt<-tab[order(tab$missing, decreasing=T),]
 tt[1:6,]
 
