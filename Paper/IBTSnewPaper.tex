@@ -106,14 +106,30 @@
 
 \clearpage
 \section{\large INTRODUCTION}
-Fish stock assessments are relied on heavily by fishery managers for making management decisions regarding catch quotas. The assessments, which utilize many parameters provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the many parameters used in fish stock assessment is the uncertainty about their estimates, which cannot be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the ICES, provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by estimates of measurement error variance. The NS-IBTS estimates of abundance indices are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. \\
-\indent Indices of abundance at age are estimated using an age-length key (ALK) \citep{fridriksson1934calculation}. An ALK  
+Fish stock assessments are relied on heavily by fishery managers for making management decisions regarding catch quotas. The assessments, which utilize many parameters provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the many parameters used in fish stock assessment is the uncertainty about their estimates, which cannot be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the ICES, provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by estimates of measurement error variance. Indices of abundance at age from the NS-IBTS  are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. Currently, abundance indices from the NS-IBTS are estimated using an age-length key (ALK) method \citep{fridriksson1934calculation}, .... 
+
+
+%The NS-IBTS estimates of abundance indices are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. \\
+%\indent Indices of abundance at age are estimated using an age-length key (ALK) \citep{fridriksson1934calculation}. An ALK  
 
  \begin{itemize}
  \item objectives of paper (including species of interest)
  \item indices and current estimators
  \item structure of paper
  \end{itemize}
+ 
+ 
+ 
+% Fish stock assessments are relied on heavily by fishery managers for making management decisions regarding catch quotas. The assessments, which utilize many parameters provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the many parameters used in fish stock assessment is the uncertainty about their estimates, which cannot be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the ICES, provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by estimates of measurement error variance. The NS-IBTS estimates of abundance indices are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. \\
+%\indent Indices of abundance at age are estimated using an age-length key (ALK) \citep{fridriksson1934calculation}. An ALK  
+%
+% \begin{itemize}
+% \item objectives of paper (including species of interest)
+% \item indices and current estimators
+% \item structure of paper
+% \end{itemize}
+ 
+ 
 
 %An ALK defines the proportion of fish in a length bin that fall into a particular age-class. It is common to derive the ALK from a small.sample of fish cross-classified by age and length and apply it to a length distribution derived from a second independent sample from the same population. An appealing feature about the ALK method is that it can utilize additional length samples as a supplement to the more costly age samples in the estimation of age compositions.
 
@@ -498,25 +514,62 @@ The stratified bootstrap procedure preserves both the number of trawl hauls with
 \section{RESULTS}
 Estimates of abundance indices are computed using 200 bootstrap replicates.
 
-\begin{sidewaystable}[h!]
+%\begin{table}[h!]
+%\centering
+%\scriptsize
+%\setlength\tabcolsep{3.5pt} 
+%\captionsetup{font=small, width = 18.5cm}{
+%\caption{Estimates of abundance indices for cod in RFA 7 in Q1 of year 2015. Estimated average standard error estimates, and $95 \%$ confidence intervals (CI) for the simple, DATRAS and stratified bootstrap procedures are also given.}\label{countries}}
+%\begin{tabular}{ccccccccccccccc}
+%\hline \\[0.1ex]
+%  & \multicolumn{2}{c}{\bf Estimated abundance indices} & \multicolumn{3}{c}{\bf Estimated standard error} & \multicolumn{3}{c}{\bf $95 \%$ CI from bootstrap procedures }\\[1.5ex]
+%{\bf Age ($a$) }  & $\mathrm{mCPUE}_{7,a}$  & $\mathrm{mCPUE}^*_{7,a}$ & $Se_{sim}$ & $Se_{DAT}$  & $Se_{stra}$& simple & DATRAS & stratified \\[0.5ex]
+%\cmidrule(lr{0.5em}){1-1}  \cmidrule(lr{0.5em}){2-3}  \cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}\\ [0.1ex]
+%1  & 0 & &   0     & 0     & 0     & (0,0)          &(0, 0)         & (0, 0)    \\[1ex]
+%2  & 2.316 & &   0.759 & 0.909 & 0.454 & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231)  \\[1ex]
+%3  & 4.262 & &   1.532 & 2.218 & 0.836 & (0.687, 6.878) &(0.614, 8.975) &(2.651, 5.908)  \\[1ex]
+%4  & 2.023 & &   0.685 & 0.732 & 0.440 & (0.945, 3.273) &(0.712, 3.437) &(1.176, 2.783)  \\[1ex]
+%5  & 1.769 & &   0.816 & 0.819 & 0.626 & (0.544, 3.336) &(0.385, 3.270) &(0.640, 2.889) \\[1ex]
+%6  & 1.124 & &   0.491 & 0.477 & 0.316 & (0.462, 2.529) &(0.440, 2.259) &(0.660, 1.902) \\[1ex]
+%7  & 0.355 & &   0.271 & 0.176 & 0.157 & (0.066, 0.969) &(0.128, 0.737) &(0.138, 0.708) \\[1ex]
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+
+\begin{table}[h!]
 \centering
-\captionsetup{font=small, width = 18.5cm}{
-\caption{Estimates of abundance indices for cod in RFA 7 in Q1 of year 2015. Estimated average standard error estimates, and $95 \%$ confidence intervals (CI) for the simple, DATRAS and stratified bootstrap procedures are also given.}\label{countries}}
+\scriptsize
+\setlength\tabcolsep{3.5pt} 
+\captionsetup{font=small, width = 15.5cm}{
+\caption{Estimates of abundance indices for cod in RFA 7 in Q1 of year 2015. Estimated average standard error estimates ($Se$), and $95 \%$ confidence intervals (CI) for the simple, DATRAS and stratified bootstrap procedures are also given.}\label{countries}}
 \begin{tabular}{ccccccccccccccc}
 \hline \\[0.1ex]
-  & \multicolumn{2}{c}{\bf Estimated abundance indices} & \multicolumn{3}{c}{\bf Estimated standard error} & \multicolumn{3}{c}{\bf $95 \%$ CI from bootstrap procedures }\\[1.5ex]
+  & \multicolumn{2}{c}{\bf Abundance indices} & \multicolumn{3}{c}{\thead{\bf Standard error for  $\mathrm{mCPUE}_{7,a}$ }} & \multicolumn{3}{c}{\thead{\bf Standard error for $\mathrm{mCPUE}^*_{7,a}$}}\\[1.5ex]
 {\bf Age ($a$) }  & $\mathrm{mCPUE}_{7,a}$  & $\mathrm{mCPUE}^*_{7,a}$ & $Se_{sim}$ & $Se_{DAT}$  & $Se_{stra}$& simple & DATRAS & stratified \\[0.5ex]
 \cmidrule(lr{0.5em}){1-1}  \cmidrule(lr{0.5em}){2-3}  \cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}\\ [0.1ex]
-1  & 0 (0) & &   0     & 0     & 0     & (0,0)          &(0, 0)         & (0, 0)    \\[1ex]
-2  & 2.316 & &   0.759 & 0.909 & 0.454 & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231)  \\[1ex]
-3  & 4.262 & &   1.532 & 2.218 & 0.836 & (0.687, 6.878) &(0.614, 8.975) &(2.651, 5.908)  \\[1ex]
-4  & 2.023 & &   0.685 & 0.732 & 0.440 & (0.945, 3.273) &(0.712, 3.437) &(1.176, 2.783)  \\[1ex]
-5  & 1.769 & &   0.816 & 0.819 & 0.626 & (0.544, 3.336) &(0.385, 3.270) &(0.640, 2.889) \\[1ex]
-6  & 1.124 & &   0.491 & 0.477 & 0.316 & (0.462, 2.529) &(0.440, 2.259) &(0.660, 1.902) \\[1ex]
-7  & 0.355 & &   0.271 & 0.176 & 0.157 & (0.066, 0.969) &(0.128, 0.737) &(0.138, 0.708) \\[1ex]
+1  & 0 & 0 &   0 & 0     & 0     &  0     & 0     & 0   \\[1ex]
+2  & 2.316 & 2.316 & 0.759 & 0.909 & 0.454 & 0.759 & 0.909 & 0.454 \\[1ex]
+3  & 4.262 &  4.262 & 1.532 & 2.218 & 0.836 & 1.532 & 2.218 & 0.836 \\[1ex]
+4  & 2.023 & 2.023  &   0.685 & 0.732 & 0.440 & 0.685 & 0.732 & 0.440   \\[1ex]
+5  & 1.769 & 1.769 &   0.816 & 0.819 & 0.626 & 0.816 & 0.819 & 0.626 \\[1ex]
+6  & 1.124 & 1.124  &   0.491 & 0.477 & 0.316 & 0.491 & 0.477 & 0.316\\[1ex]
+7  & 0.355 & 0.355  &   0.271 & 0.176 & 0.157 & 0.271 & 0.176 & 0.157\\[4.5ex]
+
+
+ &&& \multicolumn{5}{c}{\bf $95 \%$ CI from bootstrap procedures} \\[1.5ex]
+1  & 0 & 0 &   0   & 0  & 0   & (0,0)   &(0, 0)  & (0, 0)    \\[1ex]
+2  & 2.316 & 2.316 &  (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231) & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231)  \\[1ex]
+3  & 4.262 & 4.262 & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231)& (0.687, 6.878) &(0.614, 8.975) &(2.651, 5.908)  \\[1ex]
+4  & 2.023 & 2.023  & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231) & (0.945, 3.273) &(0.712, 3.437) &(1.176, 2.783)  \\[1ex]
+5  & 1.769 & 1.769 &  (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231) & (0.544, 3.336) &(0.385, 3.270) &(0.640, 2.889) \\[1ex]
+6  & 1.124 & 1.124 & (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231) & (0.462, 2.529) &(0.440, 2.259) &(0.660, 1.902) \\[1ex]
+7  & 0.355 & 0.355 &  (0.896, 3.612) &(0.692, 4.171) &(1.380, 3.231) & (0.066, 0.969) &(0.128, 0.737) &(0.138, 0.708) \\[1ex]
 \hline
 \end{tabular}
-\end{sidewaystable}
+\end{table}
+
 
 
 %\begin{sidewaystable}[h!]
