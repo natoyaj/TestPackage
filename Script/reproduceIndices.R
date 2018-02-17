@@ -1,11 +1,15 @@
 
 library(TestPackage)
 library(DATRAS)
-
+library(TMB)
 
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
 dat<- readExchangeDir(dataDir)
+#-------------------------------------------------------
+
+#Path to fitted model-----------------------------------------
+modelDir <<- system.file("modelFit", package = "TestPackage")
 #-------------------------------------------------------
 
 #Extract the data frames from IBTS-data and merge them---
@@ -56,38 +60,31 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 
 #Reproduce CPUEs on age-level-----------------------------------------
 year = 2015
-RFA = 7
+RFA = 1
 quarter = 1
 species = "Gadus morhua"
-bootstrapProcedure = "simple"
-bootstrapProcedure = "almost the datras procedure"
 bootstrapProcedure = "stratified"
-newProcedure = TRUE
-Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 10,newProcedure = newProcedure)
-Rprof(NULL)
-summaryRprof()
+load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
+load(paste(modelDir,"/cod2015.rda",sep = ""))
+procedure = "modelBased"
+#Rprof()
+cpueModel = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                              bootstrapProcedure = bootstrapProcedure, B = 20,procedure = procedure)
+#Rprof(NULL)
+#summaryRprof()
 
+bootstrapProcedure = "stratifiedNewALK"
+procedure = "haulBased"
+cpueNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                              bootstrapProcedure = bootstrapProcedure, B = 20,procedure = procedure)
 
-bootstrapProcedure = "simple"
-cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
-bootstrapProcedure = "simple2"
-cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 200)
-bootstrapProcedure = "simple3"
-cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                  bootstrapProcedure = bootstrapProcedure, B = 200)
-
-bootstrapProcedure = "almost the datras procedure"
-cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                           bootstrapProcedure = bootstrapProcedure, B = 200)
 
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
-
+                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+bootstrapProcedure = "almost the datras procedure"
+cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 20)
 
 #--------------------------------------------------------------
 

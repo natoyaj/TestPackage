@@ -77,7 +77,7 @@ simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
 {
   #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
+    dataOfInterest = data[!is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
@@ -135,24 +135,25 @@ simTrawlHaulsHLStratified = function(RFA,year, quarter,data, loc = NULL)
   {
     rec = statRec[i]
     trawls = unique(dataOfInterest$haul.id[dataOfInterest$StatRec==rec])
-
     if(length(trawls)==1)
     {
       idClosest = loc$shortesDist[which(loc$uniqueId == trawls)]
       toSample = c(toString(idClosest),toString(trawls[1]))
       sampledTreawls = sample(toSample,1)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
-      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here.
+      dTmp$haul.idReal = trawls[1] #The id to the real trawl taken at that location
+      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here. Used in the model based approach
       dTmp$StatRec = rec
-
     }else{
       sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
-      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here.
+      dTmp$haul.idReal = trawls[1] #The id to the real trawl taken at that location
+      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here. Used in the model based approach
 
       for(j in 2:length(trawls))
       {
         add = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[j],]
+        add$haul.idReal = trawls[j] #The id to the real trawl taken at that location. Used in the model based approach
         add$haul.id = paste(add$haul.id ,"i:",i," j:",j,sep = "") #Needs unique haul.id, which is achived here.
         dTmp = rbind(dTmp,add)
       }
@@ -266,3 +267,66 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
 
   return(simDataToBeReturned)
 }
+
+
+
+
+
+
+
+
+
+#' simCaHlSimultaniousyStratified
+#' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
+#' @param RFA Roundfish area number.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @export
+#' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
+#' The simulated trawl hauls are simulated stratisfied on the statistical rectangles. TODO: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
+#' @examples
+simCaHlSimultaniousyStratified = function(RFA,year, quarter,data, loc = NULL)
+{
+  #Extract the data of interest-------------------------
+  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
+                          !is.na(data$Quarter) & data$Quarter == quarter&
+                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+  #-----------------------------------------------------
+
+
+
+  #Simulate trawl hauls---------------------------------
+  statRec = unique(dataOfInterest$StatRec)
+  simData = list(NULL)
+  for(i in 1:length(statRec))
+  {
+    rec = statRec[i]
+    trawls = unique(dataOfInterest$haul.id[dataOfInterest$StatRec==rec])
+
+    if(length(trawls)==1)
+    {
+      idClosest = loc$shortesDist[which(loc$uniqueId == trawls)]
+      toSample = c(toString(idClosest),toString(trawls[1]))
+      sampledTreawls = sample(toSample,1)
+      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
+      dTmp$StatRec = rec
+
+    }else{
+      sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
+      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
+
+      for(j in 2:length(trawls))
+      {
+        add = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[j],]
+        dTmp = rbind(dTmp,add)
+      }
+    }
+    simData[[i]]= dTmp
+
+  }
+  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
+  #----------------------------------------------------
+  return(simDataToBeReturned)
+
+}
+

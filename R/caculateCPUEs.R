@@ -237,7 +237,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 #' @return
 #' @examples
 #'
-calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew)
+calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
 {
 
   #Extract the data of interest-------------------------
@@ -288,11 +288,11 @@ calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew)
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
-#' @param ALK List with the ALKs for each trawl haul.
+#' @param ALK List with the ALKs for each trawl haul. First element of each ALK in the list is a vector with the first element eual the haulId. This haulId is used when finding which of the ALK which are used.
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNew,percentOfAreaRepresentative = NULL)
+calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -319,6 +319,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
     for(i in 1:dim(dataWithTheSpecies)[1])
     {
       trawlId = dataWithTheSpecies$haul.id[i]
+      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i]
       whichALK =NA
       for(indeksALK in 1:length(ALKNew))
       {
@@ -351,4 +352,3 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
   return(mCPUE)
   #----------------------------------
 }
-

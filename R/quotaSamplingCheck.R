@@ -1,18 +1,25 @@
-library(rgdal)
-library(rworldxtra)
-library(mapplots)
+if(FALSE){ #This code is run every time the package is installed
 
-dataDir <<- system.file("Data", package = "TestPackage")
-dat<- readExchangeDir(dataDir)
-#-------------------------------------------------------
+  library(rgdal)
+  library(rworldxtra)
+  library(mapplots)
+  library(DATRAS)
 
-#Extract the data frames from IBTS-data and merge them---
-CA <- dat[["CA"]]
-HL <- dat[["HL"]]
-HH <- dat[["HH"]]
+  dataDir <<- system.file("Data", package = "TestPackage")
+  dat<- readExchangeDir(dataDir)
+  #-------------------------------------------------------
 
-#Read shape file for roundfish areas
-rfa <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "Roundfish_shapefiles"))
+  #Extract the data frames from IBTS-data and merge them---
+  CA <- dat[["CA"]]
+  HL <- dat[["HL"]]
+  HH <- dat[["HH"]]
+
+  #Read shape file for roundfish areas
+  rfa <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "Roundfish_shapefiles"))
+  #rfa <- readOGR("Roundfish_shapefiles")
+
+
+}
 
 #' Get stations with age measurement for the given species and length group
 #' @param hh the HH table for the survey
@@ -85,12 +92,15 @@ plotStations <- function(hh=HH, ca=CA, hl=HL, species = "Gadus morhua", lengthGr
 
 }
 
-tt<-tab[order(tab$missing, decreasing=T),]
-tt[1:6,]
+if(FALSE){
+  tt<-tab[order(tab$missing, decreasing=T),]
+  tt[1:6,]
 
-dev.new()
-par(mfrow=c(2,2))
-plotStations(lengthGroup = 16)
-plotStations(lengthGroup = 25)
-plotStations(lengthGroup = 27)
-plotStations(lengthGroup = 14)
+  dev.new()
+  par(mfrow=c(2,2))
+  plotStations(lengthGroup = 16)
+  plotStations(lengthGroup = 25)
+  plotStations(lengthGroup = 27)
+  plotStations(lengthGroup = 14)
+}
+

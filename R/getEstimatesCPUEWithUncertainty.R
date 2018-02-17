@@ -42,7 +42,6 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     #-----------------------------------------------------
   }
 
-
   simCPUEs = matrix(NA,length(cpueEst),B)
   for(i in 1:B)
   {
@@ -99,8 +98,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @examples
 getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL,
                                bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               newProcedure = FALSE)
-{
+                               procedure = ""){
   #Extract the data of interest-------------
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
@@ -125,16 +123,19 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
 
 #  ALK = calculateALKForHaul(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, idHaul = ..)
 
-  if(newProcedure){
+  if(procedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew)
+  }else if(procedure == "modelBased"){
+    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure)
   }else{
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
   }
   #------------------------------------------
 
-  if(bootstrapProcedure =="stratified"){
+  if(bootstrapProcedure =="stratified"| bootstrapProcedure =="stratifiedNewALK"){
     #Find shortest distance to a neigbour trawl location---
     uniqueId = unique(dataToSimulateFromHL$haul.id)
     loc = data.frame(uniqueId)
@@ -177,6 +178,29 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     }else if(bootstrapProcedure =="almost the datras procedure"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
+    }else if(bootstrapProcedure =="stratifiedNewALK"){
+      simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, data = hh,loc = loc)
+      simDataCA = dataToSimulateFromCA[1,]
+      simDataHL = dataToSimulateFromHL[1,]
+
+      for(j in 1:dim(simHauls)[1]){
+        tmpCA = dataToSimulateFromCA[which(dataToSimulateFromCA$haul.id== simHauls$haul.id[j]),]
+        tmpHL = dataToSimulateFromHL[which(dataToSimulateFromHL$haul.id== simHauls$haul.id[j]),]
+
+        if(dim(tmpCA)[1]>0){
+          tmpCA$StatRec = simHauls$StatRec[j]
+          tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataCA = rbind(simDataCA,tmpCA)
+        }
+        if(dim(tmpHL)[1]>0){
+          tmpHL$StatRec = simHauls$StatRec[j]
+          tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataHL = rbind(simDataHL,tmpHL)
+        }
+      }
+      simDataCA = simDataCA[-1,]
+      simDataHL = simDataHL[-1,]
+
     }else{
       return("Select a valid bootstrap procedure.")
     }
@@ -203,9 +227,13 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
 #      simDataHL = simDataHL[which(keep),] #this is wrong since the haul.id's are changed in simTrawlsHauls..()
 #    }
 
-    if(newProcedure){
+    if(procedure == "haulBased"){
       simALK = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
-     sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK)
+      sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK)
+    }else if(procedure == "modelBased"){
+      #TODO: Simulate ALK model based
+      simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
+      sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = simALK)
     }else{
       simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
       sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK)
