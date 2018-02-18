@@ -216,7 +216,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
   #Find distance between trawl locations--------------
   id1 = as.character(caInterest$haul.id)
   id2 = as.character(hlInterest$haul.id)
-  uniqueId = unique(c(id1,id2))
+  uniqueId = unique(c(id1,id2)) #Need ALK for every trawl haul. TODO: use hh-data instead.
   loc = data.frame(uniqueId)
   loc$lat = rep(-999,dim(loc)[1])
   loc$lon = rep(-999,dim(loc)[1])
@@ -236,7 +236,8 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
 
   }
   coordinates(loc) <- ~lon+lat
-  d <- gDistance(loc, byid=T) #This is a matrix with distances between the relevant trawl hauls
+  proj4string(loc) ="+proj=longlat"
+  d = spDists(loc)
   #-----------------------------------------------------
 
   #Abort the calculations if no age information is given in the RFA----
@@ -296,16 +297,16 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
       if(dim(dataThisTrawl)[1]>0){
         for(i in 1:dim(dataThisTrawl)[1])
         {
-          if(floor(dataThisTrawl$LngtCm[i])< (minLength+dfLength-1))
+          if(floor(dataThisTrawl$LngtCm[i])< (minLength+dfLength))
           {
             alkThis[1,floor(dataThisTrawl$Age[i])+3] =
-              alkThis[1,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i] #!!! SEEMS THAT IT CAN BE MORE THAN ONE FISH PER ROW!!! THIS IS NOT REPORTED ANYWHERE AS I OLAV SEE
-          }else if(floor(dataThisTrawl$LngtCm[i])> maxLength)
+              alkThis[1,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
+          }else if(floor(dataThisTrawl$LngtCm[i])>= maxLength)
           {
             alkThis[dim(alkThis)[1],floor(dataThisTrawl$Age[i])+3] =
               alkThis[dim(alkThis)[1],floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
           }else{
-            hvilke = min(which(alkThis[,2]> floor(dataThisTrawl$LngtCm[i]-dfLength+1)))
+            hvilke = min(which(alkThis[,2]> floor(dataThisTrawl$LngtCm[i]-dfLength)))
 
             alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] =
               alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
@@ -356,11 +357,8 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
             foundAge = TRUE
           }else{
             nesteHal = nesteHal+1
-            if(nesteHal>length(closestSorted)){
-              row[3] = -1 #Set the sum to 0 so that the age composition is owerrited after this for loop
-              row[4] = 1
-              alkThis[i,3:dim(alkThis)[2]] = row
-              foundAge = TRUE
+            if(nesteHal>length(closestSorted)){#We have now looked in all hauls in the RFA
+              foundAge = TRUE#The age will be filled with datars-procedure
               nesteHal = 1
               }
             closesId = closestSorted[nesteHal]
@@ -373,14 +371,14 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
 
 
     #Check if there are zero observed ages in the pooled length class.
-    #In that case we fill them as datras suggest---------------------------
+    #In that case we fill them as datras suggest-----------------------------------
     whichIsMissing2 = rep(FALSE, dim(alkThis)[1])
     for(i in 1:dim(alkThis)[1])
     {
       if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing2[i] = TRUE
     }
 
-    #Set the smallest length groops to age 0 or 1 if there are no observations of them-----------------
+    #Set the smallest length groops to age 0 or 1 if there are no observations of them
     first = which(!whichIsMissing2)[1]
     if(first>1)
     {
@@ -393,7 +391,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
       }
       whichIsMissing2[1:first] = FALSE
     }
-    #------------------------------------------------------
+
 
     distToNext = which(!whichIsMissing2)[1]
     distToPrevious = 99999999

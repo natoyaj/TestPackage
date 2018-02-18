@@ -335,9 +335,8 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
       {
         lineInAlkToUse = length(ALK$Length)
       }else{
-        lineInAlkToUse = min(which(ALK$Length>=dataWithTheSpecies$LngtCm[i]))
+        lineInAlkToUse = max(which(ALK$Length <= dataWithTheSpecies$LngtCm[i]))
       }
-
       if(dataWithTheSpecies$DataType[i]=="R")
       {
         CPUE =  CPUE + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])

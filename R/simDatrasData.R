@@ -285,12 +285,12 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
 #' The simulated trawl hauls are simulated stratisfied on the statistical rectangles. TODO: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
 #' @examples
-simCaHlSimultaniousyStratified = function(RFA,year, quarter,data, loc = NULL)
+simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 {
   #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
-                          !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+  dataOfInterest = dataHH[!is.na(dataHH$Year) & dataHH$Year == year&
+                          !is.na(dataHH$Quarter) & dataHH$Quarter == quarter&
+                          !is.na(dataHH$Roundfish) & dataHH$Roundfish == RFA ,]
   #-----------------------------------------------------
 
 

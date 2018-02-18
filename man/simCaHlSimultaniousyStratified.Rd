@@ -4,7 +4,7 @@
 \alias{simCaHlSimultaniousyStratified}
 \title{simCaHlSimultaniousyStratified}
 \usage{
-simCaHlSimultaniousyStratified(RFA, year, quarter, data, loc = NULL)
+simCaHlSimultaniousyStratified(RFA, year, quarter, dataHH, loc = NULL)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
