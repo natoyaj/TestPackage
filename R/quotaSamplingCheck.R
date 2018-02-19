@@ -1,3 +1,4 @@
+library(DATRAS)
 library(rgdal)
 library(rworldxtra)
 library(mapplots)
@@ -13,6 +14,7 @@ HH <- dat[["HH"]]
 
 #Read shape file for roundfish areas
 rfa <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "Roundfish_shapefiles"))
+ices <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "ICES_AREA_shapefiles"))
 
 #' Get stations with age measurement for the given species and length group
 #' @param hh the HH table for the survey
@@ -85,6 +87,7 @@ plotStations <- function(hh=HH, ca=CA, hl=HL, species = "Gadus morhua", lengthGr
 
 }
 
+tab <- tabulateMissingAgeSamples()
 tt<-tab[order(tab$missing, decreasing=T),]
 tt[1:6,]
 
