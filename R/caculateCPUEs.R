@@ -257,7 +257,8 @@ calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,proced
   if(numberOfStatRectangles==0) return("No observations in RFA")
   for(i in 1:numberOfStatRectangles)
   {
-    cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew)
+    cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
+
     mCPUEstatRec[,i] = as.double(cpueStatRec)
   }
   #---------------------------------------------------------------
@@ -351,3 +352,4 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
   return(mCPUE)
   #----------------------------------
 }
+
