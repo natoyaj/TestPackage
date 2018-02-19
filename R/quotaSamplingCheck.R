@@ -1,20 +1,38 @@
+<<<<<<< HEAD
 library(DATRAS)
 library(rgdal)
 library(rworldxtra)
 library(mapplots)
+=======
+if(FALSE){ #This code is run every time the package is installed
+>>>>>>> 5f3eead8b8667087b9b6800548baf3c9bcf7c6d1
 
-dataDir <<- system.file("Data", package = "TestPackage")
-dat<- readExchangeDir(dataDir)
-#-------------------------------------------------------
+  library(rgdal)
+  library(rworldxtra)
+  library(mapplots)
+  library(DATRAS)
 
-#Extract the data frames from IBTS-data and merge them---
-CA <- dat[["CA"]]
-HL <- dat[["HL"]]
-HH <- dat[["HH"]]
+  dataDir <<- system.file("Data", package = "TestPackage")
+  dat<- readExchangeDir(dataDir)
+  #-------------------------------------------------------
 
+<<<<<<< HEAD
 #Read shape file for roundfish areas
 rfa <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "Roundfish_shapefiles"))
 ices <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "ICES_AREA_shapefiles"))
+=======
+  #Extract the data frames from IBTS-data and merge them---
+  CA <- dat[["CA"]]
+  HL <- dat[["HL"]]
+  HH <- dat[["HH"]]
+
+  #Read shape file for roundfish areas
+  rfa <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "Roundfish_shapefiles"))
+  #rfa <- readOGR("Roundfish_shapefiles")
+
+
+}
+>>>>>>> 5f3eead8b8667087b9b6800548baf3c9bcf7c6d1
 
 #' Get stations with age measurement for the given species and length group
 #' @param hh the HH table for the survey
@@ -87,13 +105,21 @@ plotStations <- function(hh=HH, ca=CA, hl=HL, species = "Gadus morhua", lengthGr
 
 }
 
+<<<<<<< HEAD
 tab <- tabulateMissingAgeSamples()
 tt<-tab[order(tab$missing, decreasing=T),]
 tt[1:6,]
+=======
+if(FALSE){
+  tt<-tab[order(tab$missing, decreasing=T),]
+  tt[1:6,]
 
-dev.new()
-par(mfrow=c(2,2))
-plotStations(lengthGroup = 16)
-plotStations(lengthGroup = 25)
-plotStations(lengthGroup = 27)
-plotStations(lengthGroup = 14)
+  dev.new()
+  par(mfrow=c(2,2))
+  plotStations(lengthGroup = 16)
+  plotStations(lengthGroup = 25)
+  plotStations(lengthGroup = 27)
+  plotStations(lengthGroup = 14)
+}
+>>>>>>> 5f3eead8b8667087b9b6800548baf3c9bcf7c6d1
+
