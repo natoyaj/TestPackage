@@ -145,13 +145,14 @@ plotStations <-
   }
 
 
-
+tab <- tabulateMissingAgeSamples()
 tt <- tab[order(tab$missing, decreasing = T), ]
 tt[1:6, ]
 
-dev.new()
+par.pre <- par(no.readonly = T)
 par(mfrow = c(2, 2))
 plotStations(lengthGroup = 16)
 plotStations(lengthGroup = 25)
 plotStations(lengthGroup = 27)
 plotStations(lengthGroup = 14)
+par(par.pre)
