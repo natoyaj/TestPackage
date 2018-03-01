@@ -36,12 +36,12 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     }
 
     coordinates(loc) <- ~lon+lat
-    d <- gDistance(loc, byid=T)
+    proj4string(loc) ="+proj=longlat"
+    d = spDists(loc)
     min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
     loc$shortesDist = uniqueId[min.d]
     #-----------------------------------------------------
   }
-
 
   simCPUEs = matrix(NA,length(cpueEst),B)
   for(i in 1:B)
@@ -71,7 +71,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
   cpue$sd = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
-    quantile = quantile(simCPUEs[i,],c(0.1,0.9))
+    quantile = quantile(simCPUEs[i,],c(0.025,0.975))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
     cpue$sd[i] = sd(simCPUEs[i,])
@@ -99,8 +99,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @examples
 getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL,
                                bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               newProcedure = FALSE)
-{
+                               procedure = ""){
   #Extract the data of interest-------------
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
@@ -109,32 +108,22 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   dataToSimulateFromHL = dataHL[!is.na(dataHL$Year) & dataHL$Year == year&
                                   !is.na(dataHL$Quarter) & dataHL$Quarter == quarter&
                                   !is.na(dataHL$Roundfish) & dataHL$Roundfish == RFA ,]
-
-#  #Try to remove some data fram HL-file to reduce the computation time
-#  uniqueIDWith = unique(dataToSimulateFromHL$haul.id[dataToSimulateFromHL$Species==species])
-#  uniqueID = unique(dataToSimulateFromHL$haul.id)
-#  uniqueIDWithout = setdiff(uniqueID,uniqueIDWith)
-#  dataToSimulateFromHL = dataToSimulateFromHL[which(dataToSimulateFromHL$Species==species),]
-#  for(id in uniqueIDWithout)
-#  {
-#    dataToSimulateFromHL = rbind(dataToSimulateFromHL, dataHL[which(dataHL$haul.id == id)[1],])
-#  }
-  #------------------------------------------
+  dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
 
   #Estimate CPUEs----------------------------
-
-#  ALK = calculateALKForHaul(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, idHaul = ..)
-
-  if(newProcedure){
+  if(procedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew)
+  }else if(procedure == "modelBased"){
+    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure)
   }else{
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK)
   }
   #------------------------------------------
 
-  if(bootstrapProcedure =="stratified"){
+  if(bootstrapProcedure =="stratified"| bootstrapProcedure =="stratifiedNewALK"){
     #Find shortest distance to a neigbour trawl location---
     uniqueId = unique(dataToSimulateFromHL$haul.id)
     loc = data.frame(uniqueId)
@@ -150,7 +139,8 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     }
 
     coordinates(loc) <- ~lon+lat
-    d <- gDistance(loc, byid=T)
+    proj4string(loc) ="+proj=longlat"
+    d = spDists(loc)
     min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
     loc$shortesDist = uniqueId[min.d]
     #-----------------------------------------------------
@@ -165,56 +155,59 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     {
       simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-    }else if(bootstrapProcedure =="simple2"){
-      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
-      simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-    }else if(bootstrapProcedure =="simple3"){
-      simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
-      simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL)
     }else if(bootstrapProcedure =="stratified"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
     }else if(bootstrapProcedure =="almost the datras procedure"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
+    }else if(bootstrapProcedure =="stratifiedNewALK"){
+      simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = hh,loc = loc)
+      simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
+      simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
+
+      for(j in 1:dim(simHauls)[1]){
+        tmpCA = dataToSimulateFromCA[which(dataToSimulateFromCA$haul.id== simHauls$haul.id[j]),]
+        tmpHL = dataToSimulateFromHL[which(dataToSimulateFromHL$haul.id== simHauls$haul.id[j]),]
+
+        if(dim(tmpCA)[1]>0){
+          tmpCA$StatRec = simHauls$StatRec[j]
+          tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataCA = rbind(simDataCA,tmpCA)
+        }
+        if(dim(tmpHL)[1]>0){
+          tmpHL$StatRec = simHauls$StatRec[j]
+          tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataHL = rbind(simDataHL,tmpHL)
+        }
+      }
+      simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+      simDataHL = simDataHL[-1,]#Removes the first line which was created for defining the structure of the data
+
     }else{
       return("Select a valid bootstrap procedure.")
     }
 
-#    if(removeProportionsOfCA>0)
-#    {
-#      remove = rep(FALSE,dim(simDataCA)[1])
-#      q = runif(remove)
-#      simDataCA = simDataCA[which(q>removeProportionsOfCA),]
-#    }
-#    if(removeProportionsOfHL>0)
-#    {
-#      uniqueID = unique(simDataHL$haul.id)
-#      remove = rep(FALSE,length(uniqueID))
-#      q = runif(remove)
-#      uniqueIDKeep = uniqueID[which(q>removeProportionsOfHL)]
-#
-#      keep = rep(FALSE,dim(simDataHL)[1])
-#      for(kk in 1:length(uniqueIDKeep))
-#      {
-#        indeks = grepl(uniqueIDKeep[kk],simDataHL$haul.id)
-#        keep[indeks] = TRUE
-#      }
-#      simDataHL = simDataHL[which(keep),] #this is wrong since the haul.id's are changed in simTrawlsHauls..()
-#    }
 
-    if(newProcedure){
+    if(procedure == "haulBased"){
       simALK = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
-     sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK)
+      sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK)
+    }else if(procedure == "modelBased"){
+      simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
+      sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = procedure)
+      #sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = simALK)
     }else{
       simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
       sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK)
     }
-
     simCPUEs[,i] = sim
-    print(i)
 
+
+    #Print the progress------------------
+    print(i)
     print(sim)
+    #------------------------------------
+
     if(is.na(sum(sim)))break
   }
   #-----------------------------------------------------
@@ -227,7 +220,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   cpue$sd = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
-    quantile = quantile(simCPUEs[i,],c(0.1,0.9))
+    quantile = quantile(simCPUEs[i,],c(0.025,0.975))
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
     cpue$sd[i] = sd(simCPUEs[i,])

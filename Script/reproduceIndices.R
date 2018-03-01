@@ -71,8 +71,12 @@ summaryRprof()
 
 
 bootstrapProcedure = "simple"
-cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
+cpueSimpleNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = T)
+cpueSimpleOld = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = F)
+
+
 bootstrapProcedure = "simple2"
 cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                  bootstrapProcedure = bootstrapProcedure, B = 200)
