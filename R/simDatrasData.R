@@ -266,3 +266,131 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
 
   return(simDataToBeReturned)
 }
+
+
+#'
+#' resampling for hiearchical bootstrap. Strucutre is a bit different from the above to ensure that haul selection is consistent between the different tables.
+#' simTrawlHaulsHiearchical could probably be modified to make parameters quite similar to the ones above.
+#'
+
+#' selectHaulIdsHiearchical
+#' @description Makes hiearchical selection of haul ids for bootstrap estimation.
+#' @param hh Data set of hauls, formatted as the DATRAS table (could be HH, CA or HL)
+#' @param levels vector with names of columns in hh that represents levels in the hiearchical sampling. levels[1] identifies the primary sampling unit, levels[2] the secondary, and so on.
+#' @param selection codes for how selection is done: "R" selection with replacement (sample size: the number of available samples), "S" selection without replacement with sample size a selected as a random integer between 1 and the number of available samples (inclusive), "N": No selection or selection without replacement with sample size: the number of available samples
+#' @param idname the name of a column that identifies samples
+#' @param seed seed for selection, if NULL seed will not be set.
+#' @return a vector of haul ids, possibly repeating. Note: Does not return a data structure suitable for feeding into functions for CPUE-estimates
+#' @keywords internal
+selectHaulIdsHiearchical <-
+  function(hh,
+           levels,
+           selection,
+           seed = NULL) {
+    if (length(levels) != length(selection)) {
+      stop("selection codes must match the number of levels in hiearchy")
+    }
+    if (length(levels) < 1) {
+      stop("Must provide at least one level")
+    }
+
+    idname = "haul.id"
+
+    #
+    # make selection at level
+    #
+    levelcolumn <- levels[1]
+    selectionmethod <- selection[1]
+    levelvalues <- unique(hh[, levelcolumn])
+    if (!is.null(seed)) {
+      set.seed(seed)
+    }
+    if (selectionmethod == "R") {
+      levelvalues <- sample(levelvalues, size=length(levelvalues), replace=T)
+    }
+    else if (selectionmethod == "S") {
+      n <- sample(1:length(levelvalues), size=1, replace=F)
+      levelvalues <- sample(levelvalues, size=n, replace=F)
+    }
+    else if (selectionmethod == "N") {
+      levelvalues <- sample(levelvalues, size=length(levelvalues), replace=F)
+    }
+    else{
+      stop(paste("Invalid selection method", selectionmethod))
+    }
+
+    #
+    # make selection on lower levels
+    #
+    ids <- c()
+
+    #base case, no lower levels exists
+    if (length(levels) == 1) {
+      for (v in levelvalues) {
+        ids <- c(ids, as.vector(hh[hh[, levelcolumn] == v, idname]))
+      }
+    }
+
+    #recursive case, lower levels exists
+    else if (length(levels) > 1) {
+      sublevels <- levels[2:length(levels)]
+      subselection <- selection[2:length(selection)]
+      for (v in levelvalues) {
+        ids <-
+          c(ids,
+            selectHaulIdsHiearchical(hh[hh[, levelcolumn] == v,], sublevels, subselection, NULL))
+      }
+    }
+    else{
+      stop("ERROR: Recursed past base case")
+    }
+
+    return(ids)
+  }
+
+#' simTrawlHaulsBySelection
+#' @description selects a possibly repeating sample with generated unique ids for bootstrap
+#' @param data data frame to resample, e.g. CA or HL table from DATRAS
+#' @param idvalues values of the column haul.id that defines the selection
+#' @param oldidname column name where original haul ids should be stored
+#' @return data frame with the specified selection of samples, with column haul.id populated with unqiue identifiers in stead of the original identifiers, and the original identifiers stored in the column oldidname. idvalues not in data will be represented by NAs
+#' @keywords internal
+simTrawlHaulsBySelection <- function(data, idvalues, oldidname="original.id"){
+  idname="haul.id"
+  if (any(!(idvalues %in% data[,idname]))){
+    stop("Some ids in selection not in data.")
+  }
+
+  hauls <- data.frame(oldid=idvalues, newid=as.factor(1:length(idvalues)))
+  hauls[,oldidname] <- hauls$oldid
+
+  simdata <- merge(data, hauls, by.x=idname, by.y="oldid")
+  simdata[,idname] <- simdata$newid
+  simdata$newid <- NULL
+
+  return(simdata)
+}
+
+#' simTrawlHaulsHiearchical
+#' @description Simulates selection of hauls by selection of StatRec without replacement, and selection of haul.id with replacement
+#' @param hh data formated as DATRAS HH table
+#' @param hl data formated as DATRAS HL table
+#' @param ca data formated as DATRAS CA table
+#' @returns list of tables with formatted the same way, but with artificial haul.ids, original haul.id is preserved in column original.id
+simTrawlHaulsHiearchical <- function(hh, hl, ca, hierarchy=c("StatRec", "haul.id"), selection=c("S","R")){
+  if (!all(hl$haul.id %in% hh$haul.id) || !all(hh$haul.id %in% hl$haul.id)){
+    stop("haul.ids from HH and HL can not all be matched.")
+  }
+  if (any(!(ca$haul.id %in% hl$haul.id))){
+    stop("Age measurements does not have corresponding length measurements")
+  }
+  haul.ids.length <- selectHaulIdsHiearchical(hh, hierarchy, selection)
+  haul.ids.age <- haul.ids.length[haul.ids.length %in% ca$haul.id]
+
+  ret <- list()
+  ret$simHH <- simTrawlHaulsBySelection(hh, haul.ids.length, oldidname="original.id")
+  ret$simCA <- simTrawlHaulsBySelection(ca, haul.ids.age, oldidname="original.id")
+  ret$simHL <- simTrawlHaulsBySelection(hl, haul.ids.length, oldidname="original.id")
+
+  return(ret)
+}
