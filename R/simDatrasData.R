@@ -275,7 +275,7 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
 
 #' selectHaulIdsHiearchical
 #' @description Makes hiearchical selection of haul ids for bootstrap estimation.
-#' @param hh Data set of hauls, formatted as the DATRAS table (could be HH, CA or HL)
+#' @param hh Data set of hauls, formatted as the DATRAS table (could be HH, CA or HL), but containing at most one row pr. haul.
 #' @param levels vector with names of columns in hh that represents levels in the hiearchical sampling. levels[1] identifies the primary sampling unit, levels[2] the secondary, and so on.
 #' @param selection codes for how selection is done: "R" selection with replacement (sample size: the number of available samples), "S" selection without replacement with sample size a selected as a random integer between 1 and the number of available samples (inclusive), "N": No selection or selection without replacement with sample size: the number of available samples
 #' @param idname the name of a column that identifies samples
@@ -295,6 +295,10 @@ selectHaulIdsHiearchical <-
     }
 
     idname = "haul.id"
+    if (any(duplicated(hh[,c(idname, levels)]))){
+      stop(paste("levels and ", idname, "does not uniquely identify rows."))
+    }
+
 
     #
     # make selection at level
@@ -353,16 +357,21 @@ selectHaulIdsHiearchical <-
 #' @param data data frame to resample, e.g. CA or HL table from DATRAS
 #' @param idvalues values of the column haul.id that defines the selection
 #' @param oldidname column name where original haul ids should be stored
+#' @param removeMIssing indicates whether idvalues with no corresponding entries in data should be rmeoved. If FALSE, this case halts execution
 #' @return data frame with the specified selection of samples, with column haul.id populated with unqiue identifiers in stead of the original identifiers, and the original identifiers stored in the column oldidname. idvalues not in data will be represented by NAs
 #' @keywords internal
-simTrawlHaulsBySelection <- function(data, idvalues, oldidname="original.id"){
+simTrawlHaulsBySelection <- function(data, idvalues, oldidname="original.id", removeMissing=F){
   idname="haul.id"
-  if (any(!(idvalues %in% data[,idname]))){
-    stop("Some ids in selection not in data.")
-  }
 
   hauls <- data.frame(oldid=idvalues, newid=as.factor(1:length(idvalues)))
   hauls[,oldidname] <- hauls$oldid
+
+  if (!all(hauls$oldid %in% data[,idname]) & removeMissing){
+    hauls <- hauls[hauls$oldid %in% data[,idname],]
+  }
+  else if (!all(hauls$oldid %in% data[,idname]) & !removeMissing){
+    stop("Not all idvalues found in data")
+  }
 
   simdata <- merge(data, hauls, by.x=idname, by.y="oldid")
   simdata[,idname] <- simdata$newid
@@ -373,24 +382,22 @@ simTrawlHaulsBySelection <- function(data, idvalues, oldidname="original.id"){
 
 #' simTrawlHaulsHiearchical
 #' @description Simulates selection of hauls by selection of StatRec without replacement, and selection of haul.id with replacement
-#' @param hh data formated as DATRAS HH table
 #' @param hl data formated as DATRAS HL table
 #' @param ca data formated as DATRAS CA table
 #' @returns list of tables with formatted the same way, but with artificial haul.ids, original haul.id is preserved in column original.id
-simTrawlHaulsHiearchical <- function(hh, hl, ca, hierarchy=c("StatRec", "haul.id"), selection=c("S","R")){
-  if (!all(hl$haul.id %in% hh$haul.id) || !all(hh$haul.id %in% hl$haul.id)){
-    stop("haul.ids from HH and HL can not all be matched.")
-  }
+#' @export
+simTrawlHaulsHiearchical <- function(hl, ca, hierarchy=c("StatRec", "haul.id"), selection=c("S","R")){
   if (any(!(ca$haul.id %in% hl$haul.id))){
     stop("Age measurements does not have corresponding length measurements")
   }
-  haul.ids.length <- selectHaulIdsHiearchical(hh, hierarchy, selection)
-  haul.ids.age <- haul.ids.length[haul.ids.length %in% ca$haul.id]
+
+  hlframe <- hl[!duplicated(hl[,c(hierarchy, "haul.id")]),]
+
+  haul.ids <- selectHaulIdsHiearchical(hlframe, hierarchy, selection)
 
   ret <- list()
-  ret$simHH <- simTrawlHaulsBySelection(hh, haul.ids.length, oldidname="original.id")
-  ret$simCA <- simTrawlHaulsBySelection(ca, haul.ids.age, oldidname="original.id")
-  ret$simHL <- simTrawlHaulsBySelection(hl, haul.ids.length, oldidname="original.id")
+  ret$simCA <- simTrawlHaulsBySelection(ca, haul.ids, oldidname="original.id", removeMissing=T)
+  ret$simHL <- simTrawlHaulsBySelection(hl, haul.ids, oldidname="original.id", removeMissing=F)
 
   return(ret)
 }
