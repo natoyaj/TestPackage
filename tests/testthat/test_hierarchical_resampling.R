@@ -11,7 +11,7 @@ hh <- dat[["HH"]]
 
 #trim down set for faster execution of tests
 
-hh <- hh[50:100,]
+hh <- hh[1:200,]
 ca <- ca[ca$haul.id %in% hh$haul.id,]
 hl <- hl[hl$haul.id %in% hh$haul.id,]
 
@@ -31,12 +31,12 @@ hh_keys <- c("haul.id")
 ca_hh <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
 hl_hh <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
 
-expect_error(simTrawlHaulsHiearchical(ca_hh, hl_hh)) #CA and HL reversed
-expect_error(simTrawlHaulsHiearchical(hl_hh, ca_hh, c(), c())) #No levels given
-expect_error(simTrawlHaulsHiearchical(hl_hh, ca_hh, c("StatRec", "haul.id"), c("N"))) #Selection misspecified
+expect_error(simTrawlHaulsHiearchical(3, 2015, 1, ca_hh, hl_hh)) #CA and HL reversed
+expect_error(simTrawlHaulsHiearchical(3, 2015, 1, hl_hh, ca_hh, c(), c())) #No levels given
+expect_error(simTrawlHaulsHiearchical(3, 2015, 1, hl_hh, ca_hh, c("StatRec", "haul.id"), c("N"))) #Selection misspecified
 
 #default parameters
-sim <- simTrawlHaulsHiearchical(hl_hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("S","R"))
+sim <- simTrawlHaulsHiearchical(3, 2015, 1, hl_hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("S","R"))
 
 #check set consistency
 expect_true(all(sim$simCA$haul.id %in% sim$simHL$haul.id))
@@ -71,13 +71,13 @@ for (nid in unique(sim$simHL$haul.id)){
 #alk <- calculateALKNew(3, "Gadus morhua", 2015, 1, merge(sim$simHH[,c("haul.id", "lon", "lat", "Roundfish")], sim$simCA), merge(sim$simHH[,c("haul.id", "lon", "lat", "Roundfish")], sim$simHL))
 
 #check some other parameters
-sim <- simTrawlHaulsHiearchical(hl_hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("N","N"))
-expect_equal(nrow(hl), nrow(sim$simHL))
-expect_equal(nrow(ca), nrow(sim$simCA))
+sim <- simTrawlHaulsHiearchical(3, 2015, 1, hl_hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("N","N"))
+expect_equal(nrow(hl_hh[hl_hh$Year==2015 & hl_hh$Quarter==1 & hl_hh$Roundfish==3,]), nrow(sim$simHL))
+expect_equal(nrow(ca_hh[ca_hh$Year==2015 & ca_hh$Quarter==1 & ca_hh$Roundfish==3,]), nrow(sim$simCA))
 
 #some tests on hh, which has one row pr haul, so nrow should be equal for sellection w replacement
-sim <- simTrawlHaulsHiearchical(hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("N","R"))
-expect_equal(nrow(hh), nrow(sim$simHL))
+sim <- simTrawlHaulsHiearchical(3, 2015, 1, hh, ca_hh, hierarchy=c("StatRec", "haul.id"), selection=c("N","R"))
+expect_equal(nrow(hh[hh$Year==2015 & hh$Quarter==1 & hh$Roundfish==3,]), nrow(sim$simHL))
 
-sim <- simTrawlHaulsHiearchical(hh, ca_hh, hierarchy=c("haul.id"), selection=c("R"))
-expect_equal(nrow(hh), nrow(sim$simHL))
+sim <- simTrawlHaulsHiearchical(3, 2015, 1, hh, ca_hh, hierarchy=c("haul.id"), selection=c("R"))
+expect_equal(nrow(hh[hh$Year==2015 & hh$Quarter==1 & hh$Roundfish==3,]), nrow(sim$simHL))

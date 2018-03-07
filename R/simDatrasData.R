@@ -382,13 +382,26 @@ simTrawlHaulsBySelection <- function(data, idvalues, oldidname="original.id", re
 
 #' simTrawlHaulsHiearchical
 #' @description Simulates selection of hauls by selection of StatRec without replacement, and selection of haul.id with replacement
+#' @param RFA Roundfish area number.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
 #' @param hl data formated as DATRAS HL table
 #' @param ca data formated as DATRAS CA table
 #' @returns list of tables with formatted the same way, but with artificial haul.ids, original haul.id is preserved in column original.id
 #' @export
-simTrawlHaulsHiearchical <- function(hl, ca, hierarchy=c("StatRec", "haul.id"), selection=c("S","R")){
+simTrawlHaulsHiearchical <- function(RFA, year, quarter, hl, ca, hierarchy=c("StatRec", "haul.id"), selection=c("S","R")){
+
+  dataOfInterest <- function(data){
+    return(data[!is.na(data$Year) & data$Year == year&
+           !is.na(data$Quarter) & data$Quarter == quarter&
+           !is.na(data$Roundfish) & data$Roundfish == RFA ,])
+  }
+
+  hl <- dataOfInterest(hl)
+  ca <- dataOfInterest(ca)
+
   if (any(!(ca$haul.id %in% hl$haul.id))){
-    stop("Age measurements does not have corresponding length measurements")
+    stop("Some age measurements does not have corresponding length measurements")
   }
 
   hlframe <- hl[!duplicated(hl[,c(hierarchy, "haul.id")]),]
@@ -396,8 +409,8 @@ simTrawlHaulsHiearchical <- function(hl, ca, hierarchy=c("StatRec", "haul.id"), 
   haul.ids <- selectHaulIdsHiearchical(hlframe, hierarchy, selection)
 
   ret <- list()
-  ret$simCA <- simTrawlHaulsBySelection(ca, haul.ids, oldidname="original.id", removeMissing=T)
   ret$simHL <- simTrawlHaulsBySelection(hl, haul.ids, oldidname="original.id", removeMissing=F)
+  ret$simCA <- simTrawlHaulsBySelection(ca, haul.ids, oldidname="original.id", removeMissing=T)
 
   return(ret)
 }

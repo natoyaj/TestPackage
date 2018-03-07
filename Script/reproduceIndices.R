@@ -64,8 +64,9 @@ bootstrapProcedure = "almost the datras procedure"
 bootstrapProcedure = "stratified"
 newProcedure = TRUE
 Rprof()
+
 cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 10,newProcedure = newProcedure)
+                                     bootstrapProcedure = bootstrapProcedure, B = 10, newProcedure = newProcedure)
 Rprof(NULL)
 summaryRprof()
 
