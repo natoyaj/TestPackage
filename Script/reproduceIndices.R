@@ -1,11 +1,18 @@
 
 library(TestPackage)
 library(DATRAS)
-
-
+library(TMB)
+library(Matrix)
+library(sp)
+library(dplyr)
+library(sparseMVN)
 #Read IBTS-data-----------------------------------------
 dataDir <<- system.file("Data", package = "TestPackage")
 dat<- readExchangeDir(dataDir)
+#-------------------------------------------------------
+
+#Path to fitted model-----------------------------------------
+modelDir <<- system.file("modelFit", package = "TestPackage")
 #-------------------------------------------------------
 
 #Extract the data frames from IBTS-data and merge them---
@@ -18,8 +25,8 @@ remove = c("RecordType", "GearExp", "DoorType", "SpecCode","AreaType","Valid_Aph
            "Tickler","Warplngt", "Warpdia","WarpDen","DoorSurface","DoorSpread","WingSpread",
            "Buoyancy","KiteDim","WgtGroundRope","TowDir","SurCurDir","SpeedWater","SurCurSpeed","BotCurDir","BotCurSpeed",
            "WindDir","WindSpeed","SwellDir","SwellHeight","SurTemp","BotTemp","SurSal","BotSal",
-           "ThermoCline","ThClineDepth","DoorWgt","GroundSpeed","Distance","Netopening","Depth","abstime",
-           "timeOfYear","DateofCalculation","SweepLngt","Maturity","Ship","Gear","StNo","HaulNo",
+           "timeOfYear","DateofCalculation","ThermoCline","ThClineDepth","DoorWgt","GroundSpeed","Distance","Netopening","Depth","abstime",
+           "SweepLngt","Maturity","Ship","Gear","StNo","HaulNo",
            "SpecCodeType","PlusGr","CatCatchWgt","Sex","DayNight","HaulLong","TimeShotHour")
 ca = ca[,which(!(names(ca) %in% remove))]
 hl = hl[,which(!(names(hl) %in% remove))]
@@ -42,7 +49,7 @@ hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
 
 #Choose the time and RFA
 year = 2015
-RFA = 7
+RFA = 1
 quarter = 1
 species = "Gadus morhua"
 bootstrapProcedure = "stratified"
@@ -56,37 +63,66 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 
 #Reproduce CPUEs on age-level-----------------------------------------
 year = 2015
-RFA = 7
+RFA = 1
 quarter = 1
 species = "Gadus morhua"
-bootstrapProcedure = "simple"
-bootstrapProcedure = "almost the datras procedure"
 bootstrapProcedure = "stratified"
-newProcedure = TRUE
-Rprof()
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 10,newProcedure = newProcedure)
-Rprof(NULL)
-summaryRprof()
+load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
+load(paste(modelDir,"/cod2015.rda",sep = ""))
+procedure = "modelBased"
+cpueModel = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                              bootstrapProcedure = bootstrapProcedure, B = 100,procedure = procedure)
 
 
-bootstrapProcedure = "simple"
-cpueSimple = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
-bootstrapProcedure = "simple2"
-cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 200)
-bootstrapProcedure = "simple3"
-cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                  bootstrapProcedure = bootstrapProcedure, B = 200)
+bootstrapProcedure = "stratifiedNewALK"
+procedure = "haulBased"
+cpueNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                              bootstrapProcedure = bootstrapProcedure, B = 100,procedure = procedure)
 
-bootstrapProcedure = "almost the datras procedure"
-cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                           bootstrapProcedure = bootstrapProcedure, B = 200)
 
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
+                                     bootstrapProcedure = bootstrapProcedure, B = 100)
+bootstrapProcedure = "almost the datras procedure"
+cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 100)
+
+
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Extracting data to plot overlapping age length compositions
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sum(!is.na(ca_hl[ca_hl$Species=="Gadus morhua",]$NoMeas))
+sum(!is.na(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==7,]$NoMeas))
+age1 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==1,]$LngtCm))
+age2 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==2,]$LngtCm))
+age3 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==3,]$LngtCm))
+age4 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==4,]$LngtCm))
+age5 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==5,]$LngtCm))
+age6 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==6,]$LngtCm))
+age7 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==7,]$LngtCm))
+
+#Reduce(function(x, y) merge(x, y, all=TRUE), list(age1,age2,age3,age4,age5,age6,age7))
+
+age1.2 <- merge.data.frame(age1,age2, by=c("Var1"))
+age1.2 <- cbind(age1.2, rowSums(age1.2[, c("Freq.x", "Freq.y")]))
+age1.2.3 <- merge.data.frame(age1.2,age3, by=c("Var1"))
+cbind(age1.2, rowSums(age1.2[, c("Freq.x", "Freq.y")]))
+ #do the same for other ages
+
+
+age3.4 <- do.call(rbind,list(age3,age4))
+sum(duplicated(age3.4))
+
+sap <- sapply(seq(nrow(age3)), function(i){
+  all(age4[i, ] %in% age3[i, ])})
+sum(sap)
+
+
 
 
 #--------------------------------------------------------------
