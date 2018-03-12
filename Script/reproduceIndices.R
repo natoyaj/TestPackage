@@ -67,6 +67,7 @@ RFA = 1
 quarter = 1
 species = "Gadus morhua"
 bootstrapProcedure = "stratified"
+<<<<<<< HEAD
 load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
 load(paste(modelDir,"/cod2015.rda",sep = ""))
 procedure = "modelBased"
@@ -78,6 +79,30 @@ bootstrapProcedure = "stratifiedNewALK"
 procedure = "haulBased"
 cpueNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                               bootstrapProcedure = bootstrapProcedure, B = 100,procedure = procedure)
+=======
+newProcedure = TRUE
+Rprof()
+
+cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 10, newProcedure = newProcedure)
+Rprof(NULL)
+summaryRprof()
+
+
+bootstrapProcedure = "simple"
+cpueSimpleNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = T)
+cpueSimpleOld = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = F)
+
+
+bootstrapProcedure = "simple2"
+cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = 200)
+bootstrapProcedure = "simple3"
+cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                  bootstrapProcedure = bootstrapProcedure, B = 200)
+>>>>>>> 8b4fed59e85b5aeb182d1dbdd71dfd1211d25fcd
 
 
 bootstrapProcedure = "stratified"

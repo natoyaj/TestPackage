@@ -51,7 +51,11 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
       data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
     }else if(bootstrapProcedure =="stratified"){
       data = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFrom,loc = loc)
-    }else if(bootstrapProcedure =="almost the datras procedure"){
+    }else if(bootstrapProcedure =="hiearchical"){
+      sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFrom, dataToSimulateFrom)
+      data <- sim$simHL
+    }
+    else if(bootstrapProcedure =="almost the datras procedure"){
       data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFrom)
     }else{
       return("Select a valid bootstrap procedure.")
@@ -155,7 +159,12 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     {
       simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-    }else if(bootstrapProcedure =="stratified"){
+    }else if(bootstrapProcedure =="hiearchical"){
+      sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFromHL, dataToSimulateFromCA)
+      simDataCA = sim$simCA
+      simDataHL = sim$simHL
+    }
+    else if(bootstrapProcedure =="stratified"){
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA)
       simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
     }else if(bootstrapProcedure =="almost the datras procedure"){
