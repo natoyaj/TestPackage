@@ -27,6 +27,12 @@ CA <- dat[["CA"]]
 HL <- dat[["HL"]]
 HH <- dat[["HH"]]
 
+#temporary fix for selecting years: we should create an automatic download from DATRAS
+year=2015
+CA<-CA[CA$Year==year,]
+HL<-HL[HL$Year==year,]
+HH<-HH[HH$Year==year,]
+
 #Read shape file for roundfish areas
 rfa <-
   readOGR(file.path(
@@ -116,13 +122,15 @@ tabulateMissingAgeSamples <-
 #' @param scientific name of species
 #' @param lngtCM the lengthgroup as identified by column lngtCM in CA and HL
 #' @param polygons SpatialPolygonsDataFrame object for drawing on the map. Map be NULL.
+#' @param labelcol column i SpatioalPolygon specifying labels for polugons. Not plotted if NULL
 plotStations <-
   function(hh = HH,
            ca = CA,
            hl = HL,
+           lengthGroup,
            species = "Gadus morhua",
-           lengthGroup = 38,
-           polygons = rfa) {
+           polygons = rfa,
+           labelcol="AreaName") {
     age <- getStationsWithAge(hh, ca, species, lengthGroup)
     length <- getStationsWithLength(hh, hl, species, lengthGroup)
     length <- length[!length$haul.id %in% unique(age$haul.id), ]
@@ -138,10 +146,14 @@ plotStations <-
     plot(map, col = "grey", add = T)
     if (!is.null(polygons)) {
       plot(polygons, add = T)
+      if (!is.null(labelcol)){
+        text(coordinates(polygons), as.character(polygons@data[[labelcol]]))
+      }
     }
     points(age$lon, age$lat, col = "green", pch = 3)
     points(length$lon, length$lat, col = "red", pch = 3)
 
+    title(paste(species, unique(ca$Year)))
   }
 
 
@@ -156,3 +168,11 @@ plotStations(lengthGroup = 25)
 plotStations(lengthGroup = 27)
 plotStations(lengthGroup = 14)
 par(par.pre)
+
+
+library(geosphere)
+rfa$areas.sqm<-areaPolygon(rfa)
+print(rfa@data)
+
+
+
