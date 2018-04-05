@@ -121,8 +121,8 @@ plotStations <-
   function(hh = HH,
            ca = CA,
            hl = HL,
+           lengthGroup,
            species = "Gadus morhua",
-           lengthGroup = 38,
            polygons = rfa,
            labels=T) {
     age <- getStationsWithAge(hh, ca, species, lengthGroup)
