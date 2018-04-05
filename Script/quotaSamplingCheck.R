@@ -116,7 +116,7 @@ tabulateMissingAgeSamples <-
 #' @param scientific name of species
 #' @param lngtCM the lengthgroup as identified by column lngtCM in CA and HL
 #' @param polygons SpatialPolygonsDataFrame object for drawing on the map. Map be NULL.
-#' @param labels logical controlling whether labels should be plotted on polygons
+#' @param labelcol column i SpatioalPolygon specifying labels for polugons. Not plotted if NULL
 plotStations <-
   function(hh = HH,
            ca = CA,
@@ -124,7 +124,7 @@ plotStations <-
            lengthGroup,
            species = "Gadus morhua",
            polygons = rfa,
-           labels=T) {
+           labelcol="AreaName") {
     age <- getStationsWithAge(hh, ca, species, lengthGroup)
     length <- getStationsWithLength(hh, hl, species, lengthGroup)
     length <- length[!length$haul.id %in% unique(age$haul.id), ]
@@ -140,8 +140,8 @@ plotStations <-
     plot(map, col = "grey", add = T)
     if (!is.null(polygons)) {
       plot(polygons, add = T)
-      if (labels){
-        text(coordinates(polygons), row.names(polygons))
+      if (!is.null(labelcol)){
+        text(coordinates(polygons), as.character(polygons@data[[labelcol]]))
       }
     }
     points(age$lon, age$lat, col = "green", pch = 3)
