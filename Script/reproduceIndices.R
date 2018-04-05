@@ -67,19 +67,59 @@ RFA = 1
 quarter = 1
 species = "Gadus morhua"
 bootstrapProcedure = "stratified"
-<<<<<<< HEAD
+
 load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
 load(paste(modelDir,"/cod2015.rda",sep = ""))
+
+##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
+n=100
+
+#DATRAS ALK estimator
+bootstrapProcedure = "almost the datras procedure"
+cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                 bootstrapProcedure = bootstrapProcedure, B = n)
+bootstrapProcedure = "stratified"
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = n)
+
+
+#Haul based ALK estimator
+bootstrapProcedure = "hierarchical"
+cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                                bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased")
+#Error in d[, i] : subscript out of bounds: restrict sample size?
+
+bootstrapProcedure = "stratifiedNewALK"
+cpueHaulBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased")
+
+#Model-based ALK estimator
+bootstrapProcedure = "stratified"
+cpueModelBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased")
+
+bootstrapProcedure = "hierarchical"
+cpueModelBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased")
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
 procedure = "modelBased"
 cpueModel = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                              bootstrapProcedure = bootstrapProcedure, B = 100,procedure = procedure)
+                              bootstrapProcedure = bootstrapProcedure, B = 10,procedure = procedure)
 
 
 bootstrapProcedure = "stratifiedNewALK"
 procedure = "haulBased"
 cpueNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                              bootstrapProcedure = bootstrapProcedure, B = 100,procedure = procedure)
-=======
+                              bootstrapProcedure = bootstrapProcedure, B = 10,procedure = procedure)
+
 newProcedure = TRUE
 Rprof()
 
@@ -91,26 +131,22 @@ summaryRprof()
 
 bootstrapProcedure = "simple"
 cpueSimpleNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = T)
+                                     bootstrapProcedure = bootstrapProcedure, B = 20, procedure="haulBased")
+
 cpueSimpleOld = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 20, newProcedure = F)
+                                 bootstrapProcedure = bootstrapProcedure, B = 20, procedure="")
 
 
 bootstrapProcedure = "simple2"
 cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 200)
+                                 bootstrapProcedure = bootstrapProcedure, B = 10)
 bootstrapProcedure = "simple3"
 cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                  bootstrapProcedure = bootstrapProcedure, B = 200)
->>>>>>> 8b4fed59e85b5aeb182d1dbdd71dfd1211d25fcd
+                                  bootstrapProcedure = bootstrapProcedure, B = 10)
 
 
-bootstrapProcedure = "stratified"
-cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 100)
-bootstrapProcedure = "almost the datras procedure"
-cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 100)
+#++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 
@@ -121,8 +157,55 @@ cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quar
 # Extracting data to plot overlapping age length compositions
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-sum(!is.na(ca_hl[ca_hl$Species=="Gadus morhua",]$NoMeas))
-sum(!is.na(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==7,]$NoMeas))
+# Subset data in R
+#PineTreeGrade3Data<-subset(StudentData, SchoolName=="Pine Tree Elementary" & Grade==3)
+#Gadus morhua
+
+age1.1 <- ca_hl[ca_hl$Species=="Pollachius virens" &  ca_hl$Age =="1"  & ca_hl$Quarter=="1",]
+age1.1
+sort(unique(age1.1$LngtCm))
+
+sum(!is.na(ca_hl[ca_hl$Species=="Pollachius virens" &  ca_hl$Age =="2" & ca_hl$Quarter=="1",]$NoAtALK))
+
+
+
+age1.1 <- ca[ca$Species=="Gadus morhua" &  ca$Age =="8"  & ca$Quarter=="1",]
+age1.1
+sort(unique(age1.1$LngtCm))
+sum(!is.na(ca[ca$Species=="Gadus morhua" &  ca$Age =="8" & ca$Quarter=="1",]$NoAtALK))
+
+
+
+age1.1 <- ca[ca$Species=="Gadus morhua" &  ca$Age =="1"  & ca$Year =="2015" & ca$Quarter=="1",]
+age1.1
+sort(unique(age1.1$LngtCm))
+sum(!is.na(ca[ca$Species=="Gadus morhua" &  ca$Age =="1"  & ca$Year =="2015" & ca$Quarter=="1",]$NoAtALK))
+
+
+
+
+sum(!is.na(ca_hl[ca_hl$Species=="Pollachius virens" &  ca_hl$Age =="18" & ca_hl$Year =="2015" & ca_hl$Quarter=="1",]$NoAtALK))
+age1.1 <- ca[ca$Species=="Pollachius virens" &  ca$Age =="18" & ca$Year =="2015" & ca$Quarter=="1",]
+age1.1
+sort(unique(age1.1$LngtCm))
+
+
+
+
+length(unique(hh[hh$Roundfish=="10",]$StatRec))
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sum(!is.na(ca_hl[ca_hl$Species=="Pollachius virens",]$NoMeas))
+sum(!is.na(ca_hl[ca_hl$Species=="Pollachius virens" &  ca_hl$Age =="1" & ca_hl$Year =="2015" & ca_hl$Quarter=="1",]$NoAtALK))
+sum(!is.na(ca_hl[ca_hl$Species=="Pollachius virens" &  ca_hl$Age =="1" & ca_hl$Year =="2015" & ca_hl$Quarter=="1",]$NoMeas))
+
+unique(ca-hl[ca_hl$Species == "Gadus morhua" & ca_hl$Age =="1" & ca_hl$Year== "2015" & ca$Quarter=="1",])
+
+
+!is.na(ca_hl[ca_hl$Species=="Gadus morhua" &  ca_hl$Age =="1" & ca_hl$Year =="2015" & ca_hl$Quarter=="1",])
+
+
 age1 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==1,]$LngtCm))
 age2 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==2,]$LngtCm))
 age3 <- as.data.frame(table(ca_hl[ca_hl$Species=="Gadus morhua" & ca_hl$Age==3,]$LngtCm))
@@ -149,7 +232,7 @@ sum(sap)
 
 
 
-
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #--------------------------------------------------------------
 
 

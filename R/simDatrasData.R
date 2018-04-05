@@ -269,7 +269,7 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
 }
 
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 
 
 
@@ -331,7 +331,7 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 
 }
 
-=======
+#=======
 #'
 #' resampling for hiearchical bootstrap. Strucutre is a bit different from the above to ensure that haul selection is consistent between the different tables.
 #' simTrawlHaulsHiearchical could probably be modified to make parameters quite similar to the ones above.
@@ -478,4 +478,4 @@ simTrawlHaulsHiearchical <- function(RFA, year, quarter, hl, ca, hierarchy=c("St
 
   return(ret)
 }
->>>>>>> 8b4fed59e85b5aeb182d1dbdd71dfd1211d25fcd
+#>>>>>>> 8b4fed59e85b5aeb182d1dbdd71dfd1211d25fcd
