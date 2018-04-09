@@ -91,8 +91,13 @@ cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quar
 
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 200)
+                                     bootstrapProcedure = bootstrapProcedure, B = 20)
 
+
+
+bootstrapProcedure = "hiearchical"
+cpueHierachical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                     bootstrapProcedure = bootstrapProcedure, B = 40)
 
 #--------------------------------------------------------------
 
