@@ -11,10 +11,6 @@ dataDir <<- system.file("Data", package = "TestPackage")
 dat<- readExchangeDir(dataDir)
 #-------------------------------------------------------
 
-#Path to fitted model-----------------------------------------
-modelDir <<- system.file("modelFit", package = "TestPackage")
-#-------------------------------------------------------
-
 #Extract the data frames from IBTS-data and merge them---
 ca <- dat[["CA"]]
 hl <- dat[["HL"]]
@@ -41,7 +37,8 @@ hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
 #---------------------------------------------------------
 
 #Read weights describing the proportion of statrecs of interest-----
-#weightStatRec = readRDS(paste(dataDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
+weightsDir <<- system.file("weightsSaithe", package = "TestPackage")
+weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
 #-------------------------------------------------------------------
 
 
@@ -56,7 +53,7 @@ bootstrapProcedure = "stratified"
 bootstrapProcedure = "simple"
 
 #Rprof()
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = bootstrapProcedure)
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh,bootstrapProcedure = bootstrapProcedure, weightStatRec)
 #Rprof(NULL)
 #summaryRprof()
 #--------------------------------------------------------------
@@ -66,41 +63,41 @@ year = 2015
 RFA = 1
 quarter = 1
 species = "Gadus morhua"
-bootstrapProcedure = "stratified"
-
-load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
-load(paste(modelDir,"/cod2015.rda",sep = ""))
+species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
-n=100
+n=1 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
 cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = n)
+                                 bootstrapProcedure = bootstrapProcedure, B = n,weightStatRec = weightStatRec)
 bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = n)
+                                     bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec = weightStatRec)
 
 
 #Haul based ALK estimator
 bootstrapProcedure = "hierarchical"
 cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                                bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased")
-#Error in d[, i] : subscript out of bounds: restrict sample size?
+                                                bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec = weightStatRec)
 
 bootstrapProcedure = "stratifiedNewALK"
 cpueHaulBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased")
+                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
 
 #Model-based ALK estimator
+#Load data, currently only estimated for cod in year 2015
+modelDir <<- system.file("modelFit", package = "TestPackage")
+load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
+load(paste(modelDir,"/cod2015.rda",sep = ""))
 bootstrapProcedure = "stratified"
 cpueModelBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased")
+                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
 
 bootstrapProcedure = "hierarchical"
 cpueModelBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased")
+                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
 
 
 
@@ -110,45 +107,19 @@ cpueModelBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, y
 
 
 
-procedure = "modelBased"
-cpueModel = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                              bootstrapProcedure = bootstrapProcedure, B = 10,procedure = procedure)
 
 
-bootstrapProcedure = "stratifiedNewALK"
-procedure = "haulBased"
-cpueNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                              bootstrapProcedure = bootstrapProcedure, B = 10,procedure = procedure)
-
-newProcedure = TRUE
-Rprof()
-
-cpue = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 10, newProcedure = newProcedure)
-Rprof(NULL)
-summaryRprof()
 
 
-bootstrapProcedure = "simple"
-cpueSimpleNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 20, procedure="haulBased")
-
-cpueSimpleOld = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 20, procedure="")
 
 
-bootstrapProcedure = "simple2"
-cpueSimple2 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = 10)
-bootstrapProcedure = "simple3"
-cpueSimple3 = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                  bootstrapProcedure = bootstrapProcedure, B = 10)
 
 
-#++++++++++++++++++++++++++++++++++++++++++++
-bootstrapProcedure = "stratified"
-cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = 20)
+
+
+
+
+
 
 
 
