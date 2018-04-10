@@ -49,17 +49,17 @@
 % \footnotemark}
 \author{}
 \date{}
-%\@addtoreset{equation}{section}
-%\renewcommand{\sp}{\vspace{0.2 in}}
-%\renewcommand{\theequation} {\arabic{section}.\arabic{equation}}
+\@addtoreset{equation}{section}
+\renewcommand{\sp}{\vspace{0.2 in}}
+\renewcommand{\theequation} {\arabic{section}.\arabic{equation}}
 %\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
-%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-%\newtheorem{theorem}{Theorem}
-%\newtheorem{lemma}{Lemma}[section]
-%\newtheorem{remark}{Remark}[section]
-%\newtheorem{corollary}{Corollary}[section]
-%\newtheorem{exam}{Example}[section]
-%\newtheorem{proposition}{Proposition}[section]
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{exam}{Example}[section]
+\newtheorem{proposition}{Proposition}[section]
 
 \newcommand{\Bigskip}{\vspace{0.3 in}}
 
@@ -96,82 +96,27 @@
 \begin{abstract}
 
 \end{abstract}
-%Fisheries managers rely heavily on fish stock assessments to provide them with a foundation for their management decisions.\\
-%A major conclusion of Walters and Ludwig is that estimates of numbers of spawners and recruits are (of little value unless the accuracy of the estimates is also assessed. There is a parallel principle in the statistical estimation of model param- eters: the statistical estimates are of little value unless they are accompanied by estimates of their accuracy. A similar prin-ciple applies to management decisions which are based (in part) upon parameter estimates: uncertainty about parameter values cannot be ignored in forn~ulating management policy. These principles are valid even if observations are made with perfect accuracy. However, large observation errors (which are present in most fisheries data) result in substantial uncer- tainty in parameter estimates. The parameter uncertainty fre- quently overwhelms effects of density dependence in the stock-recruitment relationship. 111 such situations. more information is required before a rational strategy can be deter- mined. Then the first task of the manager is to obtain such information. This will usually require purposeful manipu- lation of the number of spawners.  
-%uncertainty about parameter values cannot be ignored in formulating management policy
-%The parameters used in stock assessment are known to have uncertainties associated with the stock  \\
-%Estimates of parameters relating to stock size are of little value their accuracy is not assessed.
-%\citep{walters1981effects}
-%The North Sea International Bottom Trawl Surveys (NS-IBTS) dataset, coordinated by the International Council for Exploration of the Sea (ICES) is one such survey which provide information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by estimates of measurement error variance. Estimates of abundance indices from the NS-IBTS are based on data from multistage sampling \\
+
 
 \clearpage
 \section{\large INTRODUCTION}
-Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the ICES, provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by uncertainty estimates. 
+Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the International Centre for Estimating Stock (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by uncertainty estimates. \\
+\indent Indices of abundance at age from the NS-IBTS  are based on data from a stratified cluster sampling approach,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. Currently, abundance indices from the NS-IBTS are estimated using an age-length key (ALK) method \citep{fridriksson1934calculation}, which is assumed to be constant  over relatively large areas. In this paper we give a strong case for assuming variation in the ALK within these areas (see Figure \ref{fig:40cmCod2015}, which shows the estimated age probabilities of a 30 cm cod (\emph{Gadhus morhua}) in the first quarter of 2014). Figure \ref{fig:40cmCod2015} shows that the age distribution clearly varies for a 40 cm cod within Central North Sea and Southern North Sea. We propose two ALK estimators, which consider spatial variation: 1) a nonparametric  ALK estimator, and 2) a spatial model-based ALK estimator, which we describe in Section (\ref{methods}). Section \ref{overview} gives an  overview of the  North Sea International Bottom Trawl Surveys. A brief description of the data is given in Section \ref{sec:data}. The current estimators for ALK and catch per unit effort (CPUE) used by ICES in their database for trawl surveys (DATRAS) and our proposed ALK estimators are given in Section \ref{sec:methods}. The results are given in Section \ref{results} and a discussion is given in Section \ref{sec:discussion}.
 
-Indices of abundance at age from the NS-IBTS  are based on data from a stratified cluster sampling approach,  and  it is essential to account for the sampling approach to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. Currently, abundance indices from the NS-IBTS are estimated using an age-length key (ALK) which is assumed constant over relative large areas. In this paper we give a strong case for that the ALK varies within these areas by investigating a spatial model for the ALK. Because of the spatial variation we further investigate use of two different ALK which varies with space.
-
-Figure \ref{fig:30cmCod2014} shows estimated age probabilities of a 30 cm long cod in the first quarter of 2014. The details of the model is given in section \ref{sec:spatialModelALK}. As an example we can see that the age distribution for a 30 cm cod varied clearly in area mid and southern areas. 
-
-\begin{figure}
-\includegraphics[scale=0.4]{30cm2014.png}
-\caption{Estimated probability of age of a 30 cm long cod in the first quarter of year 2014. The probability of age three or older is approximately zero. The polygones marked 1 to 10 is the areas where the ALK is assumed constant in the currently used procedure for reporting official CPUEs.}\label{fig:30cmCod2014}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{Allcode40cm2015.png}
+\caption{Estimated probability of age of a 30 cm long cod in the first quarter of year 2014. The probability of age three or older is approximately zero. The polygones marked 1 to 10 is the round fish areas (RFAs) where the ALK is assumed constant in the currently used estimators of the official CPUEs.}\label{fig:40cmCod2015}
 \end{figure}
 
-The objective of the paper is to compare the official reported CPUEs with similar CPUEs calculated with spatial varying ALK. We include two different spatial varying ALKs. One which is non parametric as used in the official estimates, and one spatial model based ALK.
 
-The paper is organized as follows. Section \ref{sec:trawlproto} give an overview of the sampling procedure used by NS-IBTS. in section \ref{sec:methods} we document the current procedure for calculating ALK and CPUE, and define our proposed ALKs. Section \ref{sec:inference} documents the bootstrap procedures and the inference procedure for our model based ALK. In section \ref{sec:results} and \ref{sec:discussion} we include the results and discussion.
-
-%The NS-IBTS estimates of abundance indices are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. \\
-%\indent Indices of abundance at age are estimated using an age-length key (ALK) \citep{fridriksson1934calculation}. An ALK  
-
- 
- 
-% Fish stock assessments are relied on heavily by fishery managers for making management decisions regarding catch quotas. The assessments, which utilize many parameters provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the many parameters used in fish stock assessment is the uncertainty about their estimates, which cannot be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Surveys (NS-IBTS) data, coordinated by the ICES, provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by estimates of measurement error variance. The NS-IBTS estimates of abundance indices are based on data from a complex multi-stage stratified cluster sampling approach,  and  it is essential to account for the sampling complexities so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters could be substantial. In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. \\
-%\indent Indices of abundance at age are estimated using an age-length key (ALK) \citep{fridriksson1934calculation}. An ALK  
-%
-% \begin{itemize}
-% \item objectives of paper (including species of interest)
-% \item indices and current estimators
-% \item structure of paper
-% \end{itemize}
- 
- 
-
-%An ALK defines the proportion of fish in a length bin that fall into a particular age-class. It is common to derive the ALK from a small.sample of fish cross-classified by age and length and apply it to a length distribution derived from a second independent sample from the same population. An appealing feature about the ALK method is that it can utilize additional length samples as a supplement to the more costly age samples in the estimation of age compositions.
-
-%For a series of rather narrow length intervals the age composition is computed as a fraction or percentage of the total fish of that length. These age compositions are then applied to the length-frequency distributions of samples collected at other times or in other area and age distributions are obtained by summation
-
-%qNyIn this paper the focus will be on the analysis of fishery-independent survey data to create age-disaggregated indices ofabundance, as well as on the subsequent use of these as input for astock assessment model.Several quite different ap
- %and acocuntign for the sampling complexities is essential for reliable estimation and analysis \citep{lehtonen2004practical} \\
-%For abundance at age composition an ALK approch is used....define ALK, which ALK procedure and the disadvantages (The second evaluation undertaken in
-%this work is to assess the impact of borrowing ALKs for imputation.
-%This practice is common in analysis of both fishery independent
-%and fishery-dependent monitoring data, although
-%the resulting impacts in terms of bias and overall accuracy is not
-%well established.) of this procedure. What procedure we propose and the method of variance estimation is used (Variances are estimated nonparametrically using bootstrapping methods.)\\
-%\indent The North Sea International Bottom Trawl Surveys uses a multistage \\
-%
-%
-%In this paper we provide estimates of abundance at age and uncertainties for the NS-IBTS focusing on two species: \emph{Gadus morhua} (cod) and \emph{Pollachius virens} (saithe). The uncertainty is determined using non-parametric bootstrap \\
-%
-% \begin{itemize}
-% \item objectives of paper (including species of interest)
-% \item indices and current estimators
-% \item structure of paper
-% \end{itemize}
-
-%Clustered samples are not as statistically efficient as simple random samples. Similarities among subjects in clusters can reduce the variability of responses from a cluster compared with those expected from a simple random sample. If statistics meant for simple random samples are used to design and analyze clustered studies, they will result in overestimation of the effective sample size
-%The intracluster correlation coefficient (ICC) ,or ρ (the Greek rho), is a measure of the relatedness of clustered data. It accounts for the relatedness of clustered data by comparing the variance within clusters with the variance between clusters. Mathematically, it is the between-cluster variability divided by the sum of the within-cluster and between-cluster variabilities.
-%In accounting for the similarities among clustered subjects, there is a net loss of independent data. The effective sample size is the term used to describe the sample size in clustered samples compared with the number of subjects actually enrolled in the study. For example, if you have 4 physicians’ offices (from the case study above) enrolling 32 patients each, you have 128 subjects in your study. Depending on the intracluster correlation coefficient and the design effect, however, you may effectively have far fewer subjects enrolled in your trial from a statistical perspective.
-%Kimura (1977) alluded to it recently when he observed that "the age-length key will give biased results if applied to a population where the age composition differs from that of the population from which the age-length key was drawn." 
-\subsection{History of the North Sea International Bottom Trawl Surveys}
+\subsection{Overview of the North Sea International Bottom Trawl Surveys}
+\label{overview}
 \indent The North Sea International Bottom Trawl Surveys (NS-IBTS) was formed in 1991, which is a combination of the International Young Herring Survey (IYHS) and eight national surveys in the North Sea, Skagerrak and Kattegat areas. These surveys began in the 1960's, and the 1970's and 1980's, respectively. The IYHS was developed with the aim of obtaining annual recruitment indices for the combined North Sea herring \emph{Clupea harengus} stock (ICES 2012), but yielded valuable information on other fish species such as cod \emph{Gadus morhua} and haddock \emph{Melanogrammus aeglefinus}.\\
 \indent The NS-IBTS began with quarterly surveys providing information on seasonal distribution of stocks sampled, hydrography and the environment, which allow changes in fish stock to be monitored and abundance of all fish species  (Table \ref{fishspecies}) to be determined. These quarterly surveys, however became difficult to sustain as countries experienced budget cuts making it impossible to maintain high levels of research vessel effort. As such, in 1997 countries carried out a survey only twice a year; a first quarter survey (January-February) and a third quarter survey (August-September). Table \ref{fishspecies} gives the scientific names (common names in parentheses) of the target species that are sampled during the quarterly North Sea International Bottom Trawl Surveys. The common names of the species in parentheses will be used in the rest of paper.\\
 
-% spring and autumn of 1960 and 1961 with the aim of obtaining annual recruitment indices for the combined North Sea herring \emph{Clupea harengus} stock (ICES 2012), while the national surveys were developed in 1970's and 1980's.\\
-%\indent The NS-IBTS began with quarterly surveys providing information on seasonal distribution of stocks sampled, which is necessary for monitoring changes in stock and determining abundance of all fish species (Table \ref{fishspecies}), and information on hydrography and the environment. However, these quarterly surveys became difficult to sustain as countries experienced budget cuts making it impossible to maintain high levels of research vessel effort, and in 1997 countries carried out a survey only twice a year; a first quarter survey (January-February) and a third quarter survey (August-September).\\
-
 %\clearpage
+\begin{small}
 \begin{table}[h!]
 \centering
 \setlength\tabcolsep{1.5pt} 
@@ -193,133 +138,47 @@ Mackerel (Scomber scombrus) & Norway Pout (Trisopterus esmarkii) & Trisopterus m
 \hline
 \end{tabular}
 \end{table}
+\end{small}
 
-%\subsection{Survey Vessels, Timing and Geographic Coverage}
-\indent Research vessels from seven  nations in the first quarter (Q1) and six nations in the third quarter (Q3) are used for conducting surveys on all finfish species in the North Sea during January-February and July-August, respectively, in 1997-2017 (Table \ref{countries}). The sampling frame is defined by the ICES index or roundfish areas (RFA) as shown in Figure \ref{icesroufismap}, which we refer to as superstrata \citep{nottestad2015quantifying, fuller2011sampling}. These roundfish areas were substratified into small strata defined by non-overlapping statistical rectangles of roughly $30 \times 30$ nautical miles ($1^{o} \  \mathrm{Longitude} \ \times  \  0.5^{o} \ \mathrm{Latitude}$), and were convenient to use for NS-IBTS as they were already being used for fisheries management purposes. Most statistical rectangles contain a number of possible tows that are deemed free of obstructions, and vessels are free to choose any position in the rectangles as long as the hauls are separated by at least 10 nautical miles within and between rectangles. In some rectangles, sampling may be further stratified due to significant changes in seabed depth which may, in turn, cause variations in the fish population. In particular, the NS-IBTS herring, saithe and sprat data are weighted by depth strata in the statistical rectangle (Table \ref{weightings11}). It is also a requirement that countries avoid clustering their stations between adjacent rectangles in order to reduce positive serial correlation, and thereby maximize survey precision. \\
-\indent The latest major reallocation of rectangles occurred in 1991, but since then the survey has tried to keep at least one vessel in every subarea in which it had fished in the most recent years. Minor reallocation of rectangles between Norway, Scotland and Germany was done in 2013. Each rectangle was  typically sampled twice by two different countries before 1997, but after that target coverage of two trawl hauls per rectangle per survey (Figure \ref{ibtsq1}) was introduced because of national financial constraints (ICES 2017). But in some rectangles in the Eastern English Channel, Southern North Sea and Central North Sea intensified sampling is carried out: at least 3 hauls per rectangle are taken in statistical rectangles  31F1, 31F2, 32F1, 33F4, 34F2, 34F3, 34F4, 35F3, 35F4; while six or more hauls per rectangle are taken in statistical rectangles  30F1, 32F2, 32F3, 33F2, 33F3 (ICES 1999). {\bf OLAV: SUGGEST TO MOVE ALL SUCH DETAILS TO THE APPENDIX, AND HAVE THIS SUBSECTION AS SHORT AND PRECISE AS WE MANAGE.} The Skagerrak and Kattegat is fished solely by Sweden, who sample more than once in every rectangle while the west of Shetland (in Q1 and Q3) and inshore areas (Q3) is fished solely by Scotland. The edge of the Norwegian Trench is fished solely by Norway, but inshore areas near Denmark is fished by Denmark. The southern North Sea is fished by Denmark, Germany and England. France, typically, is the only country that surveys the western English Channel. Areas are surveyed by a single country because of the large proportion of untrawalable area (and subsequent gear damage issues experienced by other nations)  for efficient logistical purposes.\\
-\indent In principle, the trawl tow locations are selected using a  semi-random approach with at least two primary sampling units (PSU) per stratum, where PSUs are standardized {\bf swept-area trawl hauls}. {\bf Prior to 2012}, all countries, except England (in Q3) and Norway (in Q1 and Q3) randomly select hauling positions from a list of ``clear" (and in many circumstances previously visited) haul positions. The same haul positions were used by Norway and England every year. However, {\bf from 2012-2018} sampling locations for all countries are proposed in advance in order to increase the randomisation of sampling. These locations are based on a random selection on a random selection of valid tows with start and end position executed in the period 2000-2017. In the unusual event that no ``clear" tow exists the cruise leader, who select the haul positions, may select to undertake a ``blind" tow on unknown ground after checking the proposed trawl track for hazardous seadbed obstructions with acoustic methods. \\
-
-%\clearpage 
-
-\begin{table}[h!]
-\centering
-\captionsetup{font=small, width = 15.5cm}{
-\caption{Survey country, vessel name, and period research vessels participating in first quarter (Q1) and third quarter (Q3) during 1997-2017.}\label{countries}}
-\begin{tabular}{cccccccc}
-\hline \\[0.1ex]
-  & \multicolumn{2}{c}{\bf First Quarter (Q1)} & \multicolumn{2}{c}{\bf Third Quarter (Q3)}\\[1.5ex]
-{\bf Country }  & Vessel name & Period    & Vessel name & Period  \\[0.5ex]
-\hline \\[0.5ex]
-Denmark  &   Dana   &   January-February  & Dana & July-August    \\[1ex]
-France  & Thalassa II & January-February & - & -   \\[1ex]
-Germany   &  Walther  Herwig III & January-February   &   Walther  Herwig III & July-August \\[1ex]
-Netherlands &  Tridens 2 &  January-February   & - & -     \\[1ex]
-Norway  &   G.O. Sars  & January-February &    Johan Hjort  & July   \\[1ex]
-UK England &- & -&  Endeavour &  August-September  \\[1ex]
-UK Scotland   &  Scotia III &  January-February & Scotia III &  July-August \\[1ex]
-Sweden  &  Dana &  January-February  &  Dana &  August                  \\[0.5ex]
-\hline
-\end{tabular}
-\end{table}
-
-%
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{1.5pt} 
-%\captionsetup{font=small, width = 8.5cm}{
-%\caption{Statistical rectangles with intensified sampling.}\label{rectangles}}
-%\begin{tabular}{cccccccccccccccccc}
-%\hline \\[0.1ex]
-%\multicolumn{2}{c}{} \\[0.1ex]
-%Trawl hauls & \multicolumn{9}{c}{Statistical Rectangles}       \\[1.5ex]
-%%\cmidrule(lr{0.5em}){1-1} \cmidrule(lr{0.5em}){2-2}\cmidrule(lr{0.5em}){3-3} \\ [0.1ex]
-%\hline \\[0.1ex]
-% $ \geq 3$ &  31F1 & 31F2 & 32F1 & 33F4 & 34F2 & 34F3 & 34F4 & 35F3 & 35F4      \\[1.5ex]
-% $ \geq 6$ &  30F1 & 32F2 & 32F3 & 33F2 & 33F3      \\[1.5ex]
-%\hline
-%\end{tabular}
-%\end{table}
+\indent Research vessels from seven nations in the first quarter (Q1) and six nations in the third quarter (Q3) are used for conducting surveys on all finfish species in the North Sea during January-February and July-August, respectively, in 1997-2017 (see Table \ref{countries} in Appendix....). The sampling frame is defined by the ICES index or roundfish areas (RFA) as shown in first plot in Figure \ref{fig:30cmCod2015} above numbered 1 to 10, and which we refer to as superstrata \citep{nottestad2015quantifying, fuller2011sampling}. These  roundfish areas were substratified into small strata defined by non-overlapping statistical rectangles of roughly $30 \times 30$ nautical miles ($1^{o} \  \mathrm{Longitude} \ \times  \  0.5^{o} \ \mathrm{Latitude}$), and were convenient to use for NS-IBTS as they were already being used for fisheries management purposes (Figure  \ref{icesroufismap} in Appendix ....). Most statistical rectangles contain a number of possible tows that are deemed free of obstructions, and vessels are free to choose any position in the rectangles as long as the hauls are separated by at least 10 nautical miles within and between rectangles. In some rectangles, sampling may be further stratified due to significant changes in seabed depth which may, in turn, cause variations in the fish population. In particular, the NS-IBTS herring, saithe and sprat data are weighted by depth strata in the statistical rectangle (Table \ref{weightings11}). It is also a requirement that countries avoid clustering their stations between adjacent rectangles in order to reduce positive serial correlation, and thereby maximize survey precision.  The latest major reallocation of rectangles occurred in 1991, but since then the survey has tried to keep at least one vessel in every subarea in which it had fished in the most recent years. Minor reallocation of rectangles between Norway, Scotland and Germany was done in 2013. Each rectangle was  typically sampled twice by two different countries before 1997, but after that target coverage of two trawl hauls per rectangle per survey  was introduced because of national financial constraints (ICES 2017). But in some rectangles in the Eastern English Channel, Southern North Sea and Central North Sea intensified sampling is carried out.\\
+\indent The trawl tow locations are selected using a  semi-random approach with at least two primary sampling units (PSU) per stratum, where PSUs are standardized {\bf swept-area trawl hauls}. {\bf Prior to 2012}, all countries, except England (in Q3) and Norway (in Q1 and Q3) randomly select hauling positions from a list of ``clear" (and in many circumstances previously visited) haul positions. The same haul positions were used by Norway and England every year. However, {\bf from 2012-2018} sampling locations for all countries are proposed in advance in order to increase the randomisation of sampling. These locations are based on a random selection on a random selection of valid tows with start and end position executed in the period 2000-2017. In the unusual event that no ``clear" tow exists the cruise leader, who select the haul positions, may select to undertake a ``blind" tow on unknown ground after checking the proposed trawl track for hazardous seadbed obstructions with acoustic methods. \\
+\indent The recommended standard trawling gear of the NS-IBTS is the mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl (ICES 2012), which has been on all participating vessels since 1992, while different pelagic and bottom trawls suitable for fishing finfish species were used before 1992. Standardized trawling protocols were adopted with with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. From 2000-2018 trawling is done during the daylight hours, which are considered 15 minutes before sunrise to 15 minutes  after sunset. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species) are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 100 fish is selected. Otoliths are collected on board from a small fraction of all the target species from all RFA (Figure \ref{icesroufismap}) to retrieve age reading. Table \ref{otolithsTable} in Appendix.... gives the minimum sampling levels of otoliths for the target species.
 
 
-
-%\clearpage
-\subsection{Trawl Sampling and Protocols}
-\label{sec:trawlproto}
-The mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl (ICES 2012) is the recommended standard gear of the NS-IBTS and has been used on all participating vessels since 1992, while different pelagic and bottom trawls suitable for fishing finfish species were used before 1992. Since 1977, sampling of pelagic larvae during the International Bottom Trawl Survey in Q1 is also conducted using a  standard Midwater Ring Net, commonly known as MIK. Standardized trawling protocols were adopted with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. GOV with standard groundrope with rubber discs (groundgear A) for normal bottom conditions has been used throughout the survey area by all nations, except Scotland who since 1985 have used a hard ground gear for rough ground (groundgear B) on all stations north of   $52^\circ  \ 30''$ North  (ICES 2012). During the tow it is imperative that the net geometry of the gear is within the acceptable limits for the depth of water (Figure \ref{fig:test}). The trawls are towed in waters at a maximum depth of 200$\m$ in the North Sea and 250$\m$ in Division IIIa (Figure ....{\bf insert figure showing map of NS-IBTS with RFA and divisions and hauls with age and lengths for a given year for example?}) with help of an ``Exocet"  kite and five floats attached to this kite. Rigging and trawl operation are described in (ICES 2012). The catching efficiency of the gear is assumed to be identical for every vessel. The tow duration was standardized to 30 minutes in 1978-2014 for all nations, except Scotland who maintained the tow duration of 60 minutes until 1998 (ICES 2015).  \\
-\indent  In the third quarter (Q3) of 2015, an experiment on tow duration of NS-IBTS hauls was conducted in the North Sea to investigate the effect on the composition of catches, and, which continued into the first quarter of 2016 (ICES 2015). {\bf In this paper we have not consider the NS-IBTS dataset for these periods}.\\
-\indent Trawling is done during the day by all participating vessels from 2000-2017 while countries who did not participate in the sampling of herring larvae in Q1 trawled at night before 2000. Daylight hours are considered 15 minutes before sunrise to 15 minutes  after sunset. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species) are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 75 fish is selected. If a representative subsample cannot be selected further sorting of the species into two or more size grades or categories is necessary (ICES 2015). Otoliths are collected on board from a small fraction of all the target species from all RFA (Figure \ref{icesroufismap}) to retrieve age reading. However, from 2013 Norway has been sampling one otolith per length class from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species). Table \ref{otolithsTable} gives the minimum sampling levels of otoliths for the target species. However, for the smallest size groups, that presumably contain only one age group, the number of otoliths per length class may be reduced, and more otoliths per length are required for the larger length classes.\\ 
-%Studies conducted by \citet{godo1990effect} and \citet{walsh1991diel} \citet{ehrich2001influence}
-%Though the reduced time allows more hauls to be conducted during the survey time, and does not have a significant affect  on the length composition of catches, mean lengths of fish and catch per unit effort (God$ø$ et al. 1990, Walsh, 1991), Ehrich and Stransky (2001) found that the reduced time resulted in a slight decrease in the number of observed species but this was comparable with the reduced mean number of observed species from subsampling of very large hauls.\\
-
-%\clearpage
-\begin{table}[h!]
-\centering
-\caption{Minimum sampling levels of otoliths by species for RFA or per trawl haul.}
-\label{otolithsTable}
-\begin{tabularx}{\linewidth}{r l l l l X}
-\toprule 
-Period &  Species  & Minimum sampling levels of otoliths per length class    \\[0.7ex]
-\midrule \\[0.5ex]
-{\bf 1991-2017} & & {\bf Number of otoliths per length class in a RFA}  \\[1.8ex]
-     & herring  &  $8$  otolihts per $\frac{1}{2}$ cm group \\[0.8ex]
-     & sprat    & $16$  otoliths per $\frac{1}{2}$ cm length class  $8.0 -11.0$ cm\\[0.8ex]
-              & & $12$  otoliths per $\frac{1}{2}$ cm length class  $\geq 11.0$ cm\\[0.8ex]
-& mackerel      & $8$  otoliths per $\frac{1}{2}$ cm length class \\[0.8ex]
-& cod       	  & $8$  otoliths per $1$ cm length class\\[0.8ex]
-&haddock   	  & $8$  otoliths per $1$ cm length class \\[0.8ex]
-&whiting    	  & $8$  otolihts per $1$ cm length class \\[0.8ex]
-&Norway pout   & $8$  otolihts per $1$ cm length class\\[0.8ex]
-&saithe        & $8$  otolihts per $1$ cm length class \\[2ex] 
-
-& All target species      & from 2013 Norway has been sampling 1 otolith per length class  \\[0.7ex] 
-&& from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below  \\[0.7ex] 
-&& for herring and sprat and to 1$\cm$ below for all other species).\\[2.7ex] 
-
-{\bf 2018} & & {\bf Number of otoliths per length class per trawl haul}  \\[1.8ex]
-& whiting & $2$  otoliths per $5$ cm length class $11 -15, \ 16-20, \ 21-25, \ 26-30$ cm \\[1.8ex]
-             & & $2$  otolihts per $1$ cm length class $> 30$ cm\\[1.5ex]
- & Norway pout & $2$  otoliths per $5$ cm length class $5 -10, \ 11-15$ cm\\[0.8ex]
-               & & $2$  otolihts per $1$ cm length class $> 15$ cm\\[1.8ex]
- & All other target species  &  1 otolith per length class (to 0.1$\cm$   below for shellfish, to 0.5$\cm$ \\[0.8ex]
- && below for herring and sprat and to 1$\cm$ below for all other species)\\[0.7ex] 
-\bottomrule         
-\end{tabularx}
-\end{table}
-
-\section{Data}
-\label{sec:data}
+\section{The Data}
+\label{data}
 Suggest we have a section with descriptive statistic of the IBTS data. E.g. The data used in this paper was collected in the first quarter of 2015. Table \ref{tab:data2015} gives an overview of the data used.
 
 \begin{small}
-\begin{table}[t!]
+\begin{table}[h!]
+\caption{Summary of data NS-IBTS data for first quarter of 2015.}
 \begin{tabular}{llllll}
 \toprule
 \bf Data&\bf Description \\
 \midrule
-Trawl hauls  & Total of 387 trawl hauls (303 with age information of cod)  \\
-Age &The age of cod varied between 1 to 9 years. \\
-Length & Length information in cm of each cod varied between 9 to 113 cm\\
+Trawl hauls  & Total of 387 trawl hauls (303 with age information of cod)  \\[1.5ex]
+Age &The age of cod varied between 1 to 9 years. \\[1.5ex]
+Length & Length information in cm of each cod varied between 9 to 113 cm\\[1.5ex]
 Date&Date of catch varied between 13.01.2015 to 19.02.2015 \\
-Coordinates & Coordinates of each trawl haul\\
-Location & Information of which statistical rectangle and RFA the haul belongs to\\
-Duration of haul & Mean duration is 25.9 minutes, with 15  to 30 minutes as 90\% coverage interval. \\
+Coordinates & Coordinates of each trawl haul\\[1.5ex]
+Location & Information of which statistical rectangle and RFA the haul belongs to\\[1.5ex]
+Duration of haul & Mean duration is 25.9 minutes, with 15  to 30 minutes as 90\% coverage interval. \\[1.5ex]
 \bottomrule
 \end{tabular}
-\caption{\textit{Summary of data NS-IBTS data for first quarter of 2015.}}
 \label{tab:data2015}
 \end{table}
 \end{small}
 
-
 The NS-IBTS data is registered as follows: 1) data calculated as catch in  numbers per hour trawled (denoted as C type), 2) data by haul (denoted as R type), and 3) sub-sampled data (denoted as S type). \textit{(moved this from methods, Olav)}
+
 
 
 \section{\large METHODS}
 \label{sec:methods}
-In this section we introduce the estimation procedrue for the ALK and CPUEs. First we define the CPUE estimate before we define the ALK used in the CPUE estimate.
+%In this section we introduce the estimation procedrue for the ALK and CPUEs. First we define the catch per unit effort (CPUE) estimate before we define the ALK used in the CPUE estimate.
 
 
-\subsection{CPUE estimates}
+\subsection{CPUE Estimators}
 For a given species of interest, define $n_{h,l}$ to be the number of fish with length $l$ caught by the $h$th trawl haul. Define the CPUE for a given trawl $h$ to be 
 \begin{equation}\label{eq:cpueHaul}
 \mathrm{CPUE}_{h,l} =\frac{n_{h,l}}{d_h},
@@ -337,20 +196,21 @@ where $S_{p}$ is the set of all statistical rectangles in $p$th RFA and $|S_{p}|
 
 The cpue per age class is further defined as
 \begin{equation}\label{eq:cpueALK}
-\mathrm{CPUE}_{h,a} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h,l}*ALK_{a,l,h},
+\mathrm{CPUE}_{h,a} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h,l} \times ALK_{a,l,h},
 \end{equation}
 where $ALK_{a,l,h}$ is an age length key which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$, and ${\bf L}$ is the set of all length classes. The mean CPUE per age in the statistical rectangles and roundfish areas are defines as \ref{eq:cpueRec} and \ref{eq:cpueRFA} with $\mathrm{CPUE}_{h,l}$ substituted by $\mathrm{CPUE}_{h,a}$. The purpose of this paper is to investigate different methods for calculating $ALK_{a,l,h}$. The different methods investigated is given in the next subsection.
 
-\subsection*{ALK}
+\subsection{ALK Estimators}
 In this subsection we document the different procedures for calculating the ALK investigated in this paper.
 
-\subsubsection*{ALK used by DATRAS}
+\subsubsection{DATRAS ALK Estimator }
 Let $ALK^{\text{D}}$ be the ALK used by DATRAS, which is currently used for producing offical CPUE per age estimates. 
 The $ALK^{\text{D}}_{a,l,h}$ is defined as the proportion of observed fish with age $a$ in length class $l$ in the RFA. If there are no observed fish in length class $l$ in the RFA, ages from length classes close to $l$ is used. The details of the procedure for borowing strength from neighbouring length classes is given in appendix \ref{secAp:DATRASborrow}. 
 
 The underlying assumption of this ALK approach is that age-length compositions are homogeneous within the RFAs. This is a rather strong assumption, and any violation have an unknown impact on the estimates of abundance indices. In fact, \citet{kimura1977statistical} showed that the application of an age-length key  to a population where the age composition differs from that of the population from which the age-length key was drawn will give bias results. Because the ALK may be haul dependent we propose an ALK method that is based on trawl hauls, which we denote by $\mathrm{ALK}^{H}$. %Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. 
 
-\subsubsection*{Haul dependent ALK}
+\subsubsection{Haul Dependent ALK Estimator}
+\label{sec:haulestimator}
 We will now define a haul dependent ALK, denoted  $ALK^{H}$, investigated in this paper. The $ALK^{H}_{a,l^*,h}$ is defined as the average proportion of observed fish with age $a$ in a pooled length class $l^*$ in haul $h$. We use pooled length classes for this estimate since there typically are few observed length classes in a single haul {\bf TODO, this is not implemented in our package yet}. We define a pooled length class to consist of five length classes, the first pooled length class consist of the five smallest length classes and so on.  If there are no observed ages of fish in a pooled length class $l$ in the haul, ages from the same pooled length class in the haul closest in air distance from the $h$th haul is used. If there are observed none fish within the pooled length class in the closes haul, the next closes haul is used and so on.  The details of borrowing strength from length classes in hauls close in space is given in appendix \ref{secAp:oursBorrow}. 
 
 %So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in spatial distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure in step 1 above.  \\
@@ -359,7 +219,7 @@ We will now define a haul dependent ALK, denoted  $ALK^{H}$, investigated in thi
 
 
 
-\subsubsection*{Spatial model based ALK}
+\subsubsection{Spatial Model-Based ALK Estimator}
 \label{sec:spatialModelALK}
 We will now define a model for the probabilities of a fish to be of age $a$ given length, which is quite similar with the one introduced in \citep{berg2012spatial}. The ALK is then obtained by maximizing the likelihood of the model. Let $y(l,{\bf s},h)$ be the age of a fish with length $l$, caught at location ${\bf s}$ by trawl haul $h$. Assume the probability of age $a$ in a given year and quarter is given by:
 
@@ -385,6 +245,16 @@ We assume that the spatially correlated Gaussian field in (\ref{eq:linearPred}),
 \end{align}
 where $\sigma^2_{\gamma}$ is the marginal variance, $||\cdot||$ is the Euclidean distance measure in kilometres, $\nu$ is a smoothing parameter, $\kappa_{\gamma}$ is a spatial scale parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$. The spatial range parameter and marginal variances in the spatial fields are assumed to be equal across ages.
 
+
+
+\section{Inference}
+\label{sec:inference}
+The maximum likelihood estimates of the age given length model in section \ref{sec:spatialModelALK} is calculated with use of the R-package TMB \citep{kristensen2015tmb} combined with the optimizing function \textit{nlminb} in R. Advantages of using TMB in this application is that it utilizes the sparse structure in the precision matrix for the spatial field, it utilizes the Laplace approximation for the latent fields (both the spatial and the haul effect) for fast optimization of the hyperparameters, and it utilizes automatic derivation.  Using such theory makes a good starting point for modeling of age distribution.  A laptop with  processor intel(R) Core(TM) i5-6300 CPU @ 2,40 GHz, used approximately 10 minutes to find the maximum likelihood estimate of the age given length model. 
+
+The spatial random field in the linear predictor for the age given length model (\ref{eq:linearPred}) is estimated with the SPDE procedure described in \citep{lindgren2011explicit}. The theory behind the SPDE procedure is based on that the precision matrix of a spatial field with Matern covariance function can be approximated by a sparse matrix. This matrix is found by usage R-INLA package \citep{rue2009approximate}, and we further extracted the relevant parts needed from INLA to estimate the model in TMB.
+
+
+
 \begin{itemize}
 \item {\bf what is the estimator for age composition in the whole North Sea? - is it the average of $\mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}$ in the 10 RFAs? and how is the variance computed?} \textit{Olav: I also guess the average, and I have not seen any suggestion for how to calculate the variance of mCPUE in the whole North Sea. I would suggeste to combine all the bootstrap samples from all the RFAs.}
 
@@ -395,177 +265,18 @@ where $\sigma^2_{\gamma}$ is the marginal variance, $||\cdot||$ is the Euclidean
 \end{itemize}
 
 
-\section{Uncertainty estimates}
+\section{Uncertainty estimation}
+\label{sec:uncertaintyestimation}
 {\bf Olav: It gets a bit confusing with all the bootstrap procedures, perhaps it is best to discard the simple and the stratified, only use their suggestion and one bootstrap procedure suited for our new ALK procedure.}
 
 
 Uncertainty estimates of CPUEs is achieved by nonparametric bootstrap procedures \citep{carpenter2000bootstrap}, and for the model based ALK the likelihood function is used directly for defining the uncertainty in the ALK.  Three bootstrap procedures for simulating the data for uncertainty quantification are investigated: 1) A \textit{simple procedure}, which is based on simple random sampling from the RFA. 2) A procedure suggested by DATRAS. 3) A \textit{stratified procedure}, which is based on stratified/hierarchical sampling of the data.
 
-\subsection{Simple bootstrap}
-\label{simpleboot}
-In this subsection we describe the simple bootstrap procedure used to quantify the uncertainty of the CPUE estimates in a given RFA. Assume there are $N_{\text{RFA}}$ trawl hauls in the given RFA, where $N_{\text{RFA}}^{\text{age}}$ of them consists of age information. The simple bootstrap procedure is as follows:
-
-\begin{enumerate}
-\item sample with replacement $N_{\text{RFA}}$ of the trawl hauls in the RFA, and define ${\bf T}_{\text{sim}}^{\text{length}}$ to be that sample.
-\item Sample with replacement $N_{\text{RFA}}^{\text{age}}$ of the trawl hauls with age information and define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample.
-\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$. For uncertainty estimate using the model based ALK, the age is is sampled from the maximum likelihood estimate. 
-\item Repeat step 1-3 $B$ times.
-\end{enumerate}  
-
-
-
-\subsection{Stratified bootstrap}
-\label{stratboot}
-The IBTS try to sample trawl fish from every statistical rectangle and from every length class. Because of this we constructed the stratified bootstrap procedure in the following way: 
-
-\begin{enumerate}
-\item Assume there are $N_{\text{RFA}}^{(i)}$ trawl hauls in the $i$th statistical rectangle.  Sample with replacement $N_{\text{RFA}}^{(i)}$ of the trawl hauls in the statistical rectangle. If there is only one trawl haul in the statistical rectangle, sample either that trawl haul or the closest in air distance. 
-\item Repeat step 1 for each statistical rectangle with trawl hauls. 
-\item Define ${\bf T}_{\text{sim}}^{\text{length}}$ to be the sample constructed with step 1-2.
-\item Assume $O_i$ is the number of age observations from $i$te length class in the RFA. Sample with replacement $O_i$ of these observations. If there are only one observed age in that length class, sample either that fish or one which is closest in "length class distance".
-\item Repeat step 4 for each length class with observed age. 
-\item Define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample constructed with step 4-5. 
-\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$.  For uncertainty estimate using the model based ALK, the age is is sampled from the maximum likelihood estimate. 
-\item Repeat step 1-7 $B$ times.
-\end{enumerate}  
- 
-
-\subsubsection{Bootstrap similar as suggested by DATRAS} 
-\label{datrasboot} 
-
-
-
-\emph{Here is what I interpret was datras suggest as a bootstrap procedure in the 2006 report. TODO:double check that this is what they mean. } 
-
-The bootstrap procedure outlined by DATRAS (ICES 2006 or 2013) is as follows:
- \begin{enumerate} 
-\item  Assume there is $n_{rec}$ trawl hauls in the $i$th statistical rectangle. Sample with replacement $n_{rec}$ trawl hauls from the whole RFA and put them in the $i$th statistical rectangle. 
-\item Repeat step 1 for every statistical recangle in the RFA. 
-\item Sample the trawl hauls with age data with the same procedure as used in the stratified procedure. It seems that datras suggest to merge length classes so that there is more then one observed fish inside each interval, but I don't find any clear documentation of what they think is the best way to merge length classes.   
-\item Calculate CPUEs 
-\item Repetat step 1-4 B times. 
- \end{enumerate} 
- 
 
 
 
 
-%(Table \ref{symbols}). ICES (2006) provides a nonparametric bootstrap variance estimator for equation (\ref{mcpuelengthrfa}), which we describe in Section \ref{simpleboot}. \\
-
-
-
-
-
-\subsection{tmp}
-
-The estimators used for the NS-IBTS data are haul time-based for computing catch per unit effort (CPUE) indices. The indices are computed per roundfish area, which are specific for each species. Indices are computed as mean per stratum (statistical rectangle) and then as mean of the strata  over the superstrata.  In this paper we account for the uncertainty in abundance at age in the North Sea. Two estimators based on ALKs are considered to determine which estimator provides the most accurate estimates of precision given that the data are collected using a multistage sampling design. The first is an ALK, which is an aggregation of individual samples from a trawl haul combined over the round fish area (RFA) and which is the approach outlined by DATRAS. The second estimator uses an ALK method based on the trawl hauls, accounting for the variation in age-length composition between trawl hauls in a RFA. For this method, an ALK is produced for each trawl haul and abundance indices are estimated. The uncertainty in abundance at age is estimated using three bootstrap procedures: 1) a \emph{simple nonparametric bootstrap} approach (Section \ref{simpleboot}), 2) \emph{semi-stratified nonparametric bootstrap}  proposed by DATRAS, but which has never been implemented. The second is a \emph{stratified noparametric bootstrap} approach (Section \ref{stratboot}), which accounts for the clustering effect in the multistage sampling design. 
-
-%\begin{itemize}
-%\item ALK estimator - how is it tested, efficient estimator (using the variance of both estimators- ratio?)
-%\item Borrowing closest neighbour ALK for imputation? 
-%\item how efficiency of estimator is tested?
-%\item compare methods of variance estimation - nonparameteric bootstrap methods (simple, stratified, hierarchical?)
-%\end{itemize}
-
-\subsection{Imputation for missing age samples}
-\label{imputation}
-\textbf{OLAV: I SUGGEST TO MOVE ALL THIS TO THE APPENDIX, SEE \ref{secAp:DATRASborrow} and \ref{secAp:oursBorrow}}.
-
-Catches of the target species are sampled (or subsampled with a size of 75 if the catches are too large) for length, and otoliths are typically collected from a subsample of the individuals sampled for length in the RFA,  or per trawl haul as in the case of Norway for determining age of the fish (see Table \ref{otolithsTable}). In the case of Norway where all trawl hauls are sampled for otoliths, missing age samples would still occur for the following two reasons: 1) the fish is below minimum length for otolith sampling or 2) otoliths are misplaced. \textbf{OLAV: MISSING AGE INFORMATION OCCUR JUST BECAUSE THEY DO NOT TAKE OTHOLITS SAMPLE OF A FISH? I DID NOT UNDERSTAND THESE TWO REASONS.}  Abundance indices by age group are estimated based on two age-length-keys (ALK). The first is an ALK proposed by DATRAS (ICES 2013), which is an aggregation of individual samples from a haul combined over a round fish area (RFA), and missing age samples are imputed as follows: 
-
-\begin{enumerate}
-\item If there is no ALK for a length in the CPUE dataframe, age information is obtained accordingly.
-\begin{itemize}
-\item If length class (CPUE) $<$ minimum length class (ALK), then age=1 for the first quarter and age=0 for all other quarters
-\item  If minimum length class (ALK) $<$ length class (CPUE) $<$ maximum length (ALK) then age is set to the nearest ALK. If the ALK file contains values at equal distance, a mean is taken from both values. 
-\end{itemize}
-
-\item If length class (CPUE) $>$ maximum length (ALK) age is set to the plus group.
-\end{enumerate}
-The underlying assumption of this ALK approach is that age-length compositions are homogeneous within the superstrata. This is a rather strong assumption, and any violation would have serious impact on the estimates of abundance indices. In fact, \citet{kimura1977statistical} showed that the application of an age-length key  to a population where the age composition differs from that of the population from which the age-length key was drawn will give bias results. We therefore propose an ALK method that is based on trawl hauls, which we denote by $\mathrm{ALK}^{*}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{*}$ is produced. Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in spatial distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure in step 1 above.  \\
- {\bf do we have overlapping of ages in grouped length bins in our ALK approach? If so bias would be introduced. According to \citet{westrheim1978bias} ALK will have no bias only when ages do not overlap between length bins.}
- 
-% so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters
-% would have an impact 
-%\begin{itemize}
-%\item Datras ALK approach (imputation approach) - does not account for variation in age-length groups within trawl hauls as length samples are trawl dependent - assume age-length groups are the same across hauls  
-%\item {\bf what is the ALK approach taken for the stratified bootstrap sampling method?}
-%\item ALk for each trawl haul (imputation approach) - considers haul to haul variaiton in age-lenght groups (explains the variance, improve estimation precision)
-%\item {\bf what is the estimator for age composition in the whole North Sea? - is it the average of $\mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}$ in the 10 RFA? and how is the variance computed?}
-%\end{itemize}
-
-
-%\clearpage
-\begin{table}[h!]
-\centering
-\caption{List of symbols and parameters used.}
-\label{symbols}
-\begin{tabularx}{\linewidth}{r l X}
-\toprule 
-Symbol   	&  & Definition                  \\[0.7ex]
-\midrule
-$L$        	&  & The set of length classes    \\[0.7ex]
-$A$        	&  & The set of age groups       \\[0.7ex]
-$|A|$      	&  & The number of age groups    \\[0.7ex]
-$P$        	&  & The set of superstrata      \\[0.7ex]
-$|P|$       &  & The number of superstrata   \\[0.7ex]
-$S_{p}$     &  & The set of strata in superstrata $p$  \\[0.7ex]
-$|S_{p}|$   &  & The number of strata in $p$  \\[0.7ex]
-$H_{s}$     &  & The set of hauls in strata $s$  \\[0.7ex]
-$|H_{s}|$   &  & The number of hauls in $s$  \\[0.7ex]
-$U_{h}$     &  & The set of subsamples from haul $h$  \\[0.7ex]
-$|f_{u}|$   &  & The subfactor for the subsample $u$. The subfactor $|f_{u}|$ is always 1 for C-type data  \\[0.7ex]
-$n_{u,l}$   &  & The number of fish of target species in length class $l$ in subsample $u$  \\[0.7ex]
-$d_{h}$   &  & The duration (minutes) for haul $h$  \\[0.7ex]
-ALK  & & The age-length key for the target species {\bf in a given population -further explanation?}.\\
-\bottomrule         
-\end{tabularx}
-\end{table}
-
-%
-%\begin{table}[h!]
-%\centering
-%\caption{Summary of estimators.}
-%\label{estimators}
-%\begin{tabularx}{\linewidth}{r l l l  X}
-%\toprule 
-%Estimator   	&  & Definition && Comment                  \\[0.7ex]
-%\midrule
-%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
-%
-%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
-%
-%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
-%\bottomrule         
-%\end{tabularx}
-%\end{table}
-
-
-
-%\subsection{Bootstrap variance estimation}
-%\label{bootall}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Inference}
-\label{sec:inference}
-The maximum likelihood estimates of the age given length model in section \ref{sec:spatialModelALK} is calculated with use of the R-package TMB \citep{kristensen2015tmb} combined with the optimizing function \textit{nlminb} in R. Advantages of using TMB in this application is that it utilizes the sparse structure in the precision matrix for the spatial field, it utilizes the Laplace approximation for the latent fields (both the spatial and the haul effect) for fast optimization of the hyperparameters, and it utilizes automatic derivation.  Using such theory makes a good starting point for modeling of age distribution.  A laptop with  processor intel(R) Core(TM) i5-6300 CPU @ 2,40 GHz, used approximately 10 minutes to find the maximum likelihood estimate of the age given length model. 
-
-The spatial random field in the linear predictor for the age given length model (\ref{eq:linearPred}) is estimated with the SPDE procedure described in \citep{lindgren2011explicit}. The theory behind the SPDE procedure is based on that the precision matrix of a spatial field with Matern covariance function can be approximated by a sparse matrix. This matrix is found by usage R-INLA package \citep{rue2009approximate}, and we further extracted the relevant parts needed from INLA to estimate the model in TMB.
+\clearpage
 
 
 
@@ -711,7 +422,8 @@ Estimates of abundance indices are computed using 200 bootstrap replicates.
 
 \section{DISCUSSION}
 \label{sec:discussion}
-%In \citet{berg2014evaluation} the authors combined a GAM-model and a SAM-model to estimate abundance at age. This is almost my idea was when I wrote the documentation last week. My suggestion is to do this and also include a spatio-temporal-age term in the linear predictor for the GAM, and use SAM. If it works we may extend it to use XSAM instead of SAM. I suggest to estimate the parameters in GAM and SAM simultaneously in TMB. It seems that \citet{berg2014evaluation} estimates the GAM and SAM model separately (just as I understnad ECA, STOCS ans XSAM are estimated separately as described at the XSAM-course). I must think more on this, but I believe this could utilize a loot of the structure in the data!
+
+In \citet{berg2014evaluation} the authors combined a GAM-model and a SAM-model to estimate abundance at age. This is almost my idea was when I wrote the documentation last week. My suggestion is to do this and also include a spatio-temporal-age term in the linear predictor for the GAM, and use SAM. If it works we may extend it to use XSAM instead of SAM. I suggest to estimate the parameters in GAM and SAM simultaneously in TMB. It seems that \citet{berg2014evaluation} estimates the GAM and SAM model separately (just as I understnad ECA, STOCS ans XSAM are estimated separately as described at the XSAM-course). I must think more on this, but I believe this could utilize a loot of the structure in the data!
 
 
 %@article{berg2014evaluation,
@@ -732,14 +444,6 @@ Estimates of abundance indices are computed using 200 bootstrap replicates.
 %\appendix
 
 
-\section{Missing ages}
-\subsection{$ALK^{D}$}
-\label{secAp:DATRASborrow}
-
-\subsection{$ALK^{H}$}
-\label{secAp:oursBorrow}
-
-\section{ }
 \begin{figure}[h!]
   \centering
  {\includegraphics[width=18.5cm]{IBTSQ1.jpg}}   
@@ -760,12 +464,15 @@ Estimates of abundance indices are computed using 200 bootstrap replicates.
 
 %\section{Map of ICES Round Fish Areas}
 
+Intensified sampling is carried out: at least 3 hauls per rectangle are taken in statistical rectangles  31F1, 31F2, 32F1, 33F4, 34F2, 34F3, 34F4, 35F3, 35F4; while six or more hauls per rectangle are taken in statistical rectangles  30F1, 32F2, 32F3, 33F2, 33F3 (ICES 1999).  The Skagerrak and Kattegat is fished solely by Sweden, who sample more than once in every rectangle while the west of Shetland (in Q1 and Q3) and inshore areas (Q3) is fished solely by Scotland. The edge of the Norwegian Trench is fished solely by Norway, but inshore areas near Denmark is fished by Denmark. The southern North Sea is fished by Denmark, Germany and England. France, typically, is the only country that surveys the western English Channel. Areas are surveyed by a single country because of the large proportion of untrawalable area (and subsequent gear damage issues experienced by other nations)  for efficient logistical purposes.\\
 \begin{figure}[h!]
   \centering
  {\includegraphics[width=17cm]{icesroundfishmap.jpg}}   
  \captionsetup{font= footnotesize, width=15cm}{
  \caption{Standard roundfish areas used for roundfish since 1980, for all standard species since 1991. Additional RFA 10 added in 2009. For example, the number 1 indicates ICES Index Area 1, and an ICES Statitical rectangle (ST) in IA 1 is 43F1.}\label{icesroufismap}}
 \end{figure}
+
+
 
 \clearpage
 
@@ -799,6 +506,306 @@ Right: Expected upper and lower limits of Door spread for water depth (ICES 2012
  \captionsetup{font= footnotesize, width=15cm}{
  \caption{Plots of RFAs with trawl hauls having length and age information of Cod in the first quarter of 2017. }\label{saithe}}
 \end{figure}
+
+
+\begin{table}[h!]
+\centering
+\captionsetup{font=small, width = 15.5cm}{
+\caption{Survey country, vessel name, and period research vessels participating in first quarter (Q1) and third quarter (Q3) during 1997-2017.}\label{countries}}
+\begin{tabular}{cccccccc}
+\hline \\[0.1ex]
+  & \multicolumn{2}{c}{\bf First Quarter (Q1)} & \multicolumn{2}{c}{\bf Third Quarter (Q3)}\\[1.5ex]
+{\bf Country }  & Vessel name & Period    & Vessel name & Period  \\[0.5ex]
+\hline \\[0.5ex]
+Denmark  &   Dana   &   January-February  & Dana & July-August    \\[1ex]
+France  & Thalassa II & January-February & - & -   \\[1ex]
+Germany   &  Walther  Herwig III & January-February   &   Walther  Herwig III & July-August \\[1ex]
+Netherlands &  Tridens 2 &  January-February   & - & -     \\[1ex]
+Norway  &   G.O. Sars  & January-February &    Johan Hjort  & July   \\[1ex]
+UK England &- & -&  Endeavour &  August-September  \\[1ex]
+UK Scotland   &  Scotia III &  January-February & Scotia III &  July-August \\[1ex]
+Sweden  &  Dana &  January-February  &  Dana &  August                  \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\clearpage
+\subsection{Trawl Sampling and Protocols}
+\label{trawlproto}
+The mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl (ICES 2012) is the recommended standard gear of the NS-IBTS and has been used on all participating vessels since 1992, while different pelagic and bottom trawls suitable for fishing finfish species were used before 1992. Since 1977, sampling of pelagic larvae during the International Bottom Trawl Survey in Q1 is also conducted using a  standard Midwater Ring Net, commonly known as MIK. Standardized trawling protocols were adopted with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. GOV with standard groundrope with rubber discs (groundgear A) for normal bottom conditions has been used throughout the survey area by all nations, except Scotland who since 1985 have used a hard ground gear for rough ground (groundgear B) on all stations north of   $52^\circ  \ 30''$ North  (ICES 2012). During the tow it is imperative that the net geometry of the gear is within the acceptable limits for the depth of water (Figure \ref{fig:test}). The trawls are towed in waters at a maximum depth of 200$\m$ in the North Sea and 250$\m$ in Division IIIa (Figure ....{\bf insert figure showing map of NS-IBTS with RFA and divisions and hauls with age and lengths for a given year for example?}) with help of an ``Exocet"  kite and five floats attached to this kite. Rigging and trawl operation are described in (ICES 2012). The catching efficiency of the gear is assumed to be identical for every vessel. The tow duration was standardized to 30 minutes in 1978-2014 for all nations, except Scotland who maintained the tow duration of 60 minutes until 1998 (ICES 2015).  \\
+\indent  In the third quarter (Q3) of 2015, an experiment on tow duration of NS-IBTS hauls was conducted in the North Sea to investigate the effect on the composition of catches, and, which continued into the first quarter of 2016 (ICES 2015). {\bf In this paper we have not consider the NS-IBTS dataset for these periods}.\\
+\indent Trawling is done during the day by all participating vessels from 2000-2017 while countries who did not participate in the sampling of herring larvae in Q1 trawled at night before 2000. Daylight hours are considered 15 minutes before sunrise to 15 minutes  after sunset. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species) are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 75 fish is selected. If a representative subsample cannot be selected further sorting of the species into two or more size grades or categories is necessary (ICES 2015). Otoliths are collected on board from a small fraction of all the target species from all RFA (Figure \ref{icesroufismap}) to retrieve age reading. However, from 2013 Norway has been sampling one otolith per length class from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species). Table \ref{otolithsTable} gives the minimum sampling levels of otoliths for the target species. However, for the smallest size groups, that presumably contain only one age group, the number of otoliths per length class may be reduced, and more otoliths per length are required for the larger length classes.\\ 
+%Studies conducted by \citet{godo1990effect} and \citet{walsh1991diel} \citet{ehrich2001influence}
+%Though the reduced time allows more hauls to be conducted during the survey time, and does not have a significant affect  on the length composition of catches, mean lengths of fish and catch per unit effort (God$ø$ et al. 1990, Walsh, 1991), Ehrich and Stransky (2001) found that the reduced time resulted in a slight decrease in the number of observed species but this was comparable with the reduced mean number of observed species from subsampling of very large hauls.\\
+
+%\clearpage
+\begin{table}[h!]
+\centering
+\caption{Minimum sampling levels of otoliths by species for RFA or per trawl haul.}
+\label{otolithsTable}
+\begin{tabularx}{\linewidth}{r l l l l X}
+\toprule 
+Period &  Species  & Minimum sampling levels of otoliths per length class    \\[0.7ex]
+\midrule \\[0.5ex]
+{\bf 1991-2017} & & {\bf Number of otoliths per length class in a RFA}  \\[1.8ex]
+     & herring  &  $8$  otolihts per $\frac{1}{2}$ cm group \\[0.8ex]
+     & sprat    & $16$  otoliths per $\frac{1}{2}$ cm length class  $8.0 -11.0$ cm\\[0.8ex]
+              & & $12$  otoliths per $\frac{1}{2}$ cm length class  $\geq 11.0$ cm\\[0.8ex]
+& mackerel      & $8$  otoliths per $\frac{1}{2}$ cm length class \\[0.8ex]
+& cod       	  & $8$  otoliths per $1$ cm length class\\[0.8ex]
+&haddock   	  & $8$  otoliths per $1$ cm length class \\[0.8ex]
+&whiting    	  & $8$  otolihts per $1$ cm length class \\[0.8ex]
+&Norway pout   & $8$  otolihts per $1$ cm length class\\[0.8ex]
+&saithe        & $8$  otolihts per $1$ cm length class \\[2ex] 
+
+& All target species      & from 2013 Norway has been sampling 1 otolith per length class  \\[0.7ex] 
+&& from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below  \\[0.7ex] 
+&& for herring and sprat and to 1$\cm$ below for all other species).\\[2.7ex] 
+
+{\bf 2018} & & {\bf Number of otoliths per length class per trawl haul}  \\[1.8ex]
+& whiting & $2$  otoliths per $5$ cm length class $11 -15, \ 16-20, \ 21-25, \ 26-30$ cm \\[1.8ex]
+             & & $2$  otolihts per $1$ cm length class $> 30$ cm\\[1.5ex]
+ & Norway pout & $2$  otoliths per $5$ cm length class $5 -10, \ 11-15$ cm\\[0.8ex]
+               & & $2$  otolihts per $1$ cm length class $> 15$ cm\\[1.8ex]
+ & All other target species  &  1 otolith per length class (to 0.1$\cm$   below for shellfish, to 0.5$\cm$ \\[0.8ex]
+ && below for herring and sprat and to 1$\cm$ below for all other species)\\[0.7ex] 
+\bottomrule         
+\end{tabularx}
+\end{table}
+
+
+
+
+
+\section{\large METHODS}
+\label{methods}
+The estimators used for the NS-IBTS data are haul time-based for computing catch per unit effort (CPUE) indices. The indices are computed per roundfish area (superstrata), which are specific for each species. Indices are computed as mean per stratum (statistical rectangle) and then as mean of the strata  over the superstrata. The NS-IBTS data is registered as follows: 1) data calculated as catch in  numbers per hour trawled (denoted as C type), 2) data by haul (denoted as R type), and 3) sub-sampled data (denoted as S type). In this paper we account for the uncertainty in abundance at age in the North Sea. Two estimators based on ALKs are considered to determine which estimator provides the most accurate estimates of precision given that the data are collected using a multistage sampling design. The first is an ALK, which is an aggregation of individual samples from a trawl haul combined over the round fish area (RFA) and which is the approach outlined by DATRAS. The second estimator uses an ALK method based on the trawl hauls, accounting for the variation in age-length composition between trawl hauls in a RFA. For this method, an ALK is produced for each trawl haul and abundance indices are estimated. The uncertainty in abundance at age is estimated using three bootstrap procedures: 1) a \emph{simple nonparametric bootstrap} approach (Section \ref{simpleboot}), 2) \emph{semi-stratified nonparametric bootstrap}  proposed by DATRAS, but which has never been implemented. The second is a \emph{stratified noparametric bootstrap} approach (Section \ref{stratboot}), which accounts for the clustering effect in the multistage sampling design. 
+
+%\begin{itemize}
+%\item ALK estimator - how is it tested, efficient estimator (using the variance of both estimators- ratio?)
+%\item Borrowing closest neighbour ALK for imputation? 
+%\item how efficiency of estimator is tested?
+%\item compare methods of variance estimation - nonparameteric bootstrap methods (simple, stratified, hierarchical?)
+%\end{itemize}
+
+\subsection{Imputation for missing age samples}
+\label{imputation}
+Catches of the target species are sampled (or subsampled with a size of 75 if the catches are too large) for length, and otoliths are typically collected from a subsample of the individuals sampled for length in the RFA,  or per trawl haul as in the case of Norway for determining age of the fish (see Table \ref{otolithsTable}). In the case of Norway where all trawl hauls are sampled for otoliths, missing age samples would still occur for the following two reasons: 1) the fish is below minimum length for otolith sampling or 2) otoliths are misplaced.  Abundance indices by age group are estimated based on two age-length-keys (ALK). The first is an ALK proposed by DATRAS (ICES 2013), which is an aggregation of individual samples from a haul combined over a round fish area (RFA), and missing age samples are imputed as follows: 
+
+\begin{enumerate}
+\item If there is no ALK for a length in the CPUE dataframe, age information is obtained accordingly
+\begin{itemize}
+\item If length class (CPUE) $<$ minimum length class (ALK), then age=1 for the first quarter and age=0 for all other quarters
+\item  If minimum length class (ALK) $<$ length class (CPUE) $<$ maximum length (ALK) then age is set to the nearest ALK. If the ALK file contains values at equal distance, a mean is taken from both values. 
+\end{itemize}
+
+\item If length class (CPUE) $>$ maximum length (ALK) age is set to the plus group.
+\end{enumerate}
+The underlying assumption of this ALK approach is that age-length compositions are homogeneous within the superstrata. This is a rather strong assumption, and any violation would have serious impact on the estimates of abundance indices. In fact, \citet{kimura1977statistical} showed that the application of an age-length key  to a population where the age composition differs from that of the population from which the age-length key was drawn will give bias results. We therefore propose an ALK method that is based on trawl hauls, which we denote by $\mathrm{ALK}^{*}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{*}$ is produced. Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in spatial distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure in step 1 above.  \\
+ {\bf do we have overlapping of ages in grouped length bins in our ALK approach? If so bias would be introduced. According to \citet{westrheim1978bias} ALK will have no bias only when ages do not overlap between length bins.}
+ 
+% so as to produce reliable estimation and analysis \citep{lehtonen2004practical}. If the sampling complexities is ignored, the effect on the variance  of the parameters
+% would have an impact 
+%\begin{itemize}
+%\item Datras ALK approach (imputation approach) - does not account for variation in age-length groups within trawl hauls as length samples are trawl dependent - assume age-length groups are the same across hauls  
+%\item {\bf what is the ALK approach taken for the stratified bootstrap sampling method?}
+%\item ALk for each trawl haul (imputation approach) - considers haul to haul variaiton in age-lenght groups (explains the variance, improve estimation precision)
+%\item {\bf what is the estimator for age composition in the whole North Sea? - is it the average of $\mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}$ in the 10 RFA? and how is the variance computed?}
+%\end{itemize}
+
+\subsection{Estimators of length composition of fish}
+\label{estimatorsoflength}
+An estimator for the catch in numbers of fish per unit effort for a target species   per haul $h$ in length class $l$ by quarter, year, and stratum $s$ is expressed as the sum of the product of the number of fish in length class $l$ in a subsample $u$ and subfactor ($f_{u}$), multiplied by the trawling effort
+
+\begin{equation}
+\mathrm{CPUE}_{h,l} = \displaystyle \left(\sum\limits_{u \in U_{h}} n_{u,l}f_{u} \right) \times \frac{60}{d_{h}}
+\label{cpuelength}
+\end{equation}
+
+\noindent where $n_{u} $, $f_{u}$ and $d_{h}$ are defined in Table \ref{symbols}. An estimator for the mean catch per unit effort for length class $l$ over hauls $H_{s}$ in stratum $s$  can be expressed as 
+
+\begin{equation}
+\mathrm{mCPUE}_{s,l} = \displaystyle\sum\limits_{h \in H_{s}} \frac{\mathrm{CPUE}_{h,l}}{|H_{s}|}.
+\label{mcpuelength}
+\end{equation}
+\noindent where $|H_{s}|$ is the number of hauls in $s$. Similarly, an estimator for the mean catch per unit for length class $l$ in superstratum $p$ can be expressed as
+
+\begin{equation}
+\mathrm{mCPUE}_{p,l} = \sum\limits_{s \in S_{p}} \frac{\mathrm{CPUE}_{s,l}}{|S_{p}|}.
+\label{mcpuelengthrfa}
+\end{equation}
+
+where $|S_{p}|$ is the number of strata in $p$ (Table \ref{symbols}). ICES (2006) provides a nonparametric bootstrap variance estimator for equation (\ref{mcpuelengthrfa}), which we describe in Section \ref{simpleboot}. \\
+
+%\clearpage
+\begin{table}[h!]
+\centering
+\caption{List of symbols and parameters used.}
+\label{symbols}
+\begin{tabularx}{\linewidth}{r l X}
+\toprule 
+Symbol   	&  & Definition                  \\[0.7ex]
+\midrule
+$L$        	&  & The set of length classes    \\[0.7ex]
+$A$        	&  & The set of age groups       \\[0.7ex]
+$|A|$      	&  & The number of age groups    \\[0.7ex]
+$P$        	&  & The set of superstrata      \\[0.7ex]
+$|P|$       &  & The number of superstrata   \\[0.7ex]
+$S_{p}$     &  & The set of strata in superstrata $p$  \\[0.7ex]
+$|S_{p}|$   &  & The number of strata in $p$  \\[0.7ex]
+$H_{s}$     &  & The set of hauls in strata $s$  \\[0.7ex]
+$|H_{s}|$   &  & The number of hauls in $s$  \\[0.7ex]
+$U_{h}$     &  & The set of subsamples from haul $h$  \\[0.7ex]
+$|f_{u}|$   &  & The subfactor for the subsample $u$. The subfactor $|f_{u}|$ is always 1 for C-type data  \\[0.7ex]
+$n_{u,l}$   &  & The number of fish of target species in length class $l$ in subsample $u$  \\[0.7ex]
+$d_{h}$   &  & The duration (minutes) for haul $h$  \\[0.7ex]
+ALK  & & The age-length key for the target species {\bf in a given population -further explanation?}.\\
+\bottomrule         
+\end{tabularx}
+\end{table}
+
+%
+%\begin{table}[h!]
+%\centering
+%\caption{Summary of estimators.}
+%\label{estimators}
+%\begin{tabularx}{\linewidth}{r l l l  X}
+%\toprule 
+%Estimator   	&  & Definition && Comment                  \\[0.7ex]
+%\midrule
+%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
+%
+%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
+%
+%$\mathrm{CPUE}_{h,l}$   &  & \thead{Catch in numbers per hour trawled (CPUE)\\  of target species in length class $l$ in haul $h$}  \\[0.7ex]
+%\bottomrule         
+%\end{tabularx}
+%\end{table}
+
+
+\subsection{Estimators of age composition of fish}
+\label{agecom}
+In this section we give the two estimators based on ALKs as described in Section \ref{imputation}: the first is estimator based on the age-lengths  composition (ALK) aggregated over the RFA as proposed by DATRAS, and the second estimator based on the $\mathrm{ALK}^*$ which we have proposed that accounts for the spatial dependence in the age-length compositions. The estimator of the catch per unit effort for length class $l$ and age group $a$ in haul $h$ is expressed as the ratio
+\begin{equation}
+\mathrm{CPUE}_{h,a,l} =  \displaystyle \frac{\mathrm{CPUE}_{h,l} \times \mathrm{ALK}_{a,l}}{\displaystyle \sum\limits_{a \in A} \mathrm{ALK_{a,l}}}.
+\label{cpueage}
+\end{equation}
+\noindent where $\mathrm{ALK}_{a,l} $ is the number of fish at age $a$ in length class $l$, and $\mathrm{CPUE}_{h,l} $ is the catch per unit effort for length class $l$ in haul $h$ in stratum $s$ defined in equation (\ref{cpuelength}).  When spatial dependence in age-length compositions within a RFA is accounted for,  the catch per unit effort for length class $l$ and age group $a$ in haul $h$ is defined as
+\begin{align}\label{cpueageNew}
+\mathrm{CPUE}^*_{h,a,l} =  \displaystyle \frac{\mathrm{CPUE}_{h,l} \times \mathrm{ALK}_{a,l,h}^*}{\displaystyle \sum\limits_{a \in A} \mathrm{ALK_{a,l,h}^*}},
+\end{align}
+where $\mathrm{ALK_{a,l,h}^*}$ is defined as an age-length key corresponding to the trawl haul $h$  with a fish of length $l$. For both of these estimators in (\ref{cpueage}) and (\ref{cpueageNew}) the mean catch per unit effort within  strata and superstrata follows the same procedures. \\
+\indent An estimator for the mean catch per unit effort for length class $l$ over hauls $H_{s}$ in stratum $s$ by year and quarter is therefore expressed as 
+ \begin{equation}
+\mathrm{mCPUE}_{s,a,l} = \sum\limits_{h \in H_{s}} \frac{\mathrm{CPUE}_{h,a,l}}{|H_{s}|}.
+\label{mcpueage}
+\end{equation} 
+The mean catch per unit effort for length class $l$ in superstratum $p$ is expressed as
+\begin{equation}
+\mathrm{mCPUE}_{p,a,l} =  \sum\limits_{s \in S_{p}} \frac{\mathrm{mCPUE}_{s,a,l}}{|S_{p}|}.
+\label{mcpueagerfa}
+\end{equation}
+
+\noindent An index of abundance by age is computed by taking the sum of the length classes for a given age within the round fish area. This is the mean catch per unit effort for age $a$ in superstratum $p$, which is expressed as
+\begin{equation}
+\mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}.
+\label{ageIndex}
+\end{equation}
+
+\begin{itemize}
+\item {\bf what is the estimator for age composition in the whole North Sea? - is it the average of $\mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}$ in the 10 RFAs? and how is the variance computed?}
+
+\item {\bf for the CPUE and CPUE* above if the ALKs are different, wouldn't the estimates be different? If both ALKs give the same estimates of the CPUE then we shouldn't distinguish between the two by calling one CPUE and the other $CPUE^*$, but instead just call the estimator CPUE?}
+
+\item {\bf the stratified bootstrap procedure should also be different for the new ALK approach since it's at the haul level and not at the RFA? see step 4 in the stratified bootstrap procedure}
+
+\end{itemize}
+
+\subsection{Bootstrap variance estimation}
+\label{bootall}
+we use nonparametric bootstrapping \citep{carpenter2000bootstrap} to estimate the variance of age compositions for all estimators. Three bootstrap procedures for simulating the data for uncertainty quantification are implemented: 1) the \textit{simple bootstrap procedure}, which is based on simple random sampling from the RFA, 2) the DATRAS bootstrap procedure,..... and 3) the \textit{stratified bootstrap procedure}, which is based on stratified sampling of the data ({\bf more explanation, e.g. hierarchical structure of the design?}). Note that the stratified bootstrap procedure does not account for the fact that the ALK may be trawl dependent, e.g. due to fine spatial or spatio-temporal structure in the ALK, which may underestimate the variance.
+
+\subsubsection{Simple bootstrap}
+\label{simpleboot}
+%\textit{Note: When I now looked trough the code I saw that we bootstrapped a little bit different from what I remember I implemented in November/December last year. So this is a little bit different from what I wrote in the documentation previous week. I advise you to also read the code to understand what is being done, I have tried to document the code while I wrote it so that it shall be easy to read and to jump to the parts of interest without understanding every line. Some lines may however be difficult to understand, but just skip a lot of lines in the beginning, the important thing is to get an overall picture of what is done in the code.}
+
+In this subsection we describe the simple bootstrap procedure used to quantify the uncertainty of the CPUE estimates in a given RFA. Assume there are $N_{\text{RFA}}$ trawl hauls in the given RFA, where $N_{\text{RFA}}^{\text{age}}$ of them consists of age information. The simple bootstrap procedure is as follows:
+
+\begin{enumerate}
+\item sample with replacement $N_{\text{RFA}}$ of the trawl hauls in the RFA, and define ${\bf T}_{\text{sim}}^{\text{length}}$ to be that sample.
+\item Sample with replacement $N_{\text{RFA}}^{\text{age}}$ of the trawl hauls with age information and define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample.
+\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$. 
+\item Repeat step 1-3 $B$ times.
+\end{enumerate}  
+
+\textit{Note: In the R-code I see that I let $N_{\text{RFA}}$ be the number of trawl hauls with positive number of the species of interest, and simulate ${\bf T}_{\text{sim}}^{\text{length}}$ only based on those trawl hauls. This is a minor issue, and we should probably also included the trawl hauls with zero catch.}
+
+
+\subsubsection{Bootstrap similar to something suggested by datras} 
+\label{datrasboot} 
+
+%\emph{Here is what i interpret was datras suggest as a bootstrap procedure in the 2006 report. This is implemented in the package as "almost the datras procedure". It seems to be something in between of the simple and the stratified procedure. } 
+
+The bootstrap procedure outlined by DATRAS (ICES 2006 or 2013) is as follows:
+ \begin{enumerate} 
+\item  Assume there is $n_{rec}$ trawl hauls in the $i$th statistical rectangle. Sample with replacement $n_{rec}$ trawl hauls from the whole RFA and put them in the $i$th statistical rectangle. 
+\item Repeat step 1 for every statistical recangle in the RFA. 
+\item Sample the CA-data with the same procedure as used in the stratified procedure. It seems that datras suggest to merge length classes so that there is more then one observed fish inside each interval, but I don't find any clear documentation of what they think is the best way to merge length classes.   
+\item Calculate CPUEs 
+\item Repetat step 1-4 B times. 
+ \end{enumerate} 
+ 
+
+\subsubsection{Stratified bootstrap}
+\label{stratboot}
+The IBTS struggle to sample trawl fish from every statistical rectangle and from every length class. Because of this I constructed the stratified bootstrap procedure in the following way: 
+
+\begin{enumerate}
+\item Assume there are $N_{\text{RFA}}^{(i)}$ trawl hauls in the $i$th statistical rectangle.  Sample with replacement $N_{\text{RFA}}^{(i)}$ of the trawl hauls in the statistical rectangle. If there is only one trawl haul in the statistical rectangle, sample either that trawl haul or the closest in air distance. 
+\item Repeat step 1 for each statistical rectangle with trawl hauls. 
+\item Define ${\bf T}_{\text{sim}}^{\text{length}}$ to be the sample constructed with step 1-2.
+\item Assume $O_i$ is the number of age observations from $i$te length class in the RFA. Sample with replacement $O_i$ of these observations. If there are only one observed age in that length class, sample either that fish or one which is closest in "length class distance".
+\item Repeat step 4 for each length class with observed age. 
+\item Define ${\bf T}_{\text{sim}}^{\text{age}}$ to be the sample constructed with step 4-5.
+\item Calculate the CPUE based on ${\bf T }_{\text{sim}}^{\text{length}}$ and ${\bf T}_{\text{sim}}^{\text{age}}$. 
+\item Repeat step 1-7 $B$ times.
+\end{enumerate}  
+
+The stratified bootstrap procedure preserves both the number of trawl hauls within each statistical rectangle and the age observations within each length class. I believe that this is important to do since IBTS struggle to distribute the observations to every statistical rectangle and length class. Given that the ALK is trawl dependent (e.g. has a spatial structure on finer scale than the RFA), this procedure will underestimate the uncertainty. 
+
+\textit{Note: We could have sampled the age data differently and tried to accommodate for that the ALK is trawl dependent. For example by sampling the age data with the same procedure as in the simple procedure. However, the calculation of the CPUE assumes that the ALK is not trawl dependent. I find it a bit unintuitive to assume that the ALK is trawl dependent when doing the simulations, and not while doing the calculations.} 
+
+%\subsubsection{Bootstrap similar to something suggested by datras}
+% \label{datrasboot}
+% Here is what i interpret was datras suggest as a bootstrap procedure in the 2006 report. This is implemented in the package as "almost the datras procedure". It seems to be something in between of the simple and the stratified procedure.
+%  
+%  \begin{enumerate}
+% \item Sample one trawl haul with age information
+% \item Repeat 1 with replacement and accept the new sample as a sample if the number observation of any length class does not exceed the two (e.g.) times the number of observation of that length class in the real data.
+% \item Repeat 1-2 until we have enough observations defined in some way.
+% \item Repeat 1-3 B times.
+% \item  Assume there is $n_{rec}$ trawl hauls in the $i$th statistical rectangle. Sample with replacement $n_{rec}$ trawl hauls from the whole RFA and put them in the $i$th statistical rectangle.
+% \item Repeat step 1 for every statistical recangle in the RFA.
+% \item Sample the CA-data with the same procedure as used in the stratified procedure. It seems that datras suggest to merge length classes so that there is more then one observed fish inside each interval, but I don't find any clear documentation of what they think is the best way to merge length classes. 
+% \item Calculate CPUEs
+% \item Repetat step 1-4 B times.
+%  \end{enumerate}
+%  
+  
+%\subsubsection{Hierarchical bootstrap}
+%\label{hierarboot}
+
+
+%\subsection{Sampling strategies for age sampling based on (simulated data or empirical?)}
+
+%\section{Proposed new estimator}
+%The ALK is space dependent \citep{berg2012spatial}. Such a spatial dependence have an unknown impact on the CPUE per age estimates. To accomondate for the spatial dependence in the ALK we propose a new estimator for the CPUE per age, and compare it with the one used by datras. We denote the new estimate with a star and define it as follows. Let
+%\begin{align}\label{cpueageNew}
+%\mathrm{CPUE}^*_{h,a,l} =  \displaystyle \frac{\mathrm{CPUE}_{h,l} \times \mathrm{ALK}_{a,l,h}^*}{\displaystyle \sum\limits_{a \in A} \mathrm{ALK_{a,l,h}^*}},
+%\end{align}
+%where $\mathrm{ALK_{a,l,h}^*}$ is defined as a the ALK corresponding to the $h$ trawl haul with an fish of length $l$. We define $\mathrm{ALK_{a,l,h}^*}$ similar to $\mathrm{ALK_{a,l}}$, but on haul level instead.  Since there are typically few or none observations of ages for each length class in an trawl haul, we pool the length classes in increasing order such that there are five length classes in each pooled length class. The $\mathrm{ALK_{a,l,h}^*}$ is constructed just as $\mathrm{ALK_{a,l}}$ for those pooled length classes were we have an observed ages in the corresponding trawl haul. For those pooled length classes we do not have an observed age, we investigate if the trawl haul closest in air distance within the same RFA has an observed age in the pooled length class. If that is the case, the age observations from the closest trawl haul are used to construct the corresponding row $\mathrm{ALK_{.,l,h}^*}$. If the closest trawl haul do not have an observed age in the pooled length class, we investigate the second closest trawl haul in the RFA, and so on. If there are no observed ages in the pooled length class in the RFA, we fill the missing row of the ALK with the same procedure as used by datras.
 
 
 \end{appendices}
