@@ -72,7 +72,7 @@ load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
 load(paste(modelDir,"/cod2015.rda",sep = ""))
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
-n=100
+n=25
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
