@@ -210,6 +210,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
       sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = procedure, weightStatRec = weightStatRec)
     }else if(procedure == "modelBased"){
       simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
+      sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = procedure, weightStatRec = weightStatRec)
     }else{
       simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
       sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = weightStatRec)
