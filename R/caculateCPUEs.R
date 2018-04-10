@@ -12,13 +12,15 @@
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
+calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatRec = NULL)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
+
+
 
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
@@ -37,13 +39,26 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL)
   #---------------------------------------------------------------
 
   #Average over the statistical recangles and return mCPUE-----
-  mCPUE = rep(NA,nLengthClass)
+  weightUsed = rep(0,numberOfStatRectangles)
+  for(i in 1:numberOfStatRectangles){
+    if(species =="Pollachius virensTODO"){
+      weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+    }else{
+      weightUsed[i] = 1
+    }
+  }
+
+  mCPUE = rep(0,nLengthClass)
   for(i in 1:nLengthClass)
   {
-    mCPUE[i] = mean(mCPUEstatRec[i,])# TODO: We must multiply with the proportion of the area covered by deep enough water.
+    for(j in 1:numberOfStatRectangles){
+      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+    }
   }
   return(mCPUE)
   #------------------------------------------------------------
+
+
 }
 
 
@@ -112,7 +127,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
+calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL)
 {
 
   #Extract the data of interest-------------------------
@@ -137,11 +152,15 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK)
   }
   #---------------------------------------------------------------
 
+
   #Average over the statistical recangles and return mCPUE-----
   weightUsed = rep(0,numberOfStatRectangles)
   for(i in 1:numberOfStatRectangles){
-    weightUsed[i] = 1 #TODO: find weights for cod and make this parte species dependent
-   # weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+    if(species =="Pollachius virensTODO"){
+      weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+    }else{
+      weightUsed[i] = 1
+    }
   }
 
   mCPUE = rep(0,nAgeClasses)
@@ -237,7 +256,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 #' @return
 #' @examples
 #'
-calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
+calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL, weightStatRec = NULL)
 {
 
   #Extract the data of interest-------------------------
@@ -266,8 +285,11 @@ calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,proced
   #Average over the statistical recangles and return mCPUE-----
   weightUsed = rep(0,numberOfStatRectangles)
   for(i in 1:numberOfStatRectangles){
-    weightUsed[i] = 1 #TODO: find weights for cod and make this parte species dependent
-    # weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+    if(species =="Pollachius virensTODO"){
+      weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+    }else{
+      weightUsed[i] = 1
+      }
   }
 
   mCPUE = rep(0,nAgeClasses)

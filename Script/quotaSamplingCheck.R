@@ -29,9 +29,10 @@ HH <- dat[["HH"]]
 
 #temporary fix for selecting years: we should create an automatic download from DATRAS
 year=2015
-CA<-CA[CA$Year==year,]
-HL<-HL[HL$Year==year,]
-HH<-HH[HH$Year==year,]
+quarter = 1
+CA<-CA[CA$Year==year & CA$Quarter ==quarter,]
+HL<-HL[HL$Year==year & HL$Quarter ==quarter,]
+HH<-HH[HH$Year==year & HH$Quarter ==quarter,]
 
 #Read shape file for roundfish areas
 rfa <-
@@ -150,7 +151,7 @@ plotStations <-
         text(coordinates(polygons), as.character(polygons@data[[labelcol]]))
       }
     }
-    points(age$lon, age$lat, col = "green", pch = 3)
+    points(age$lon, age$lat, col = "blue", pch = 3)
     points(length$lon, length$lat, col = "red", pch = 3)
 
     title(paste(species, unique(ca$Year)))
@@ -161,18 +162,25 @@ tab <- tabulateMissingAgeSamples()
 tt <- tab[order(tab$missing, decreasing = T), ]
 tt[1:6, ]
 
-par.pre <- par(no.readonly = T)
-par(mfrow = c(2, 2))
-plotStations(lengthGroup = 16)
-plotStations(lengthGroup = 25)
-plotStations(lengthGroup = 27)
-plotStations(lengthGroup = 14)
-par(par.pre)
+quantile(sort(unique(tt$LngtCM)))
+sort(unique(tt$LngtCM))
 
+par.pre <- par(no.readonly = T)
+par(mfrow = c(2, 3))
+plotStations(lengthGroup = 14)
+plotStations(lengthGroup = 16)
+plotStations(lengthGroup = 27)
+plotStations(lengthGroup = 38)
+plotStations(lengthGroup = 60)
+plotStations(lengthGroup = 88)
+par(par.pre)
+#legend("topleft", legend=c("Hauls with missing age ", "Hauls with length and age"),
+#       col=c("red", "blue"), pch= c(3,3), cex=0.8)
 
 library(geosphere)
 rfa$areas.sqm<-areaPolygon(rfa)
+rfa$areas.sqkm<-rfa$areas.sqm/(1000*1000)
 print(rfa@data)
 
-
-
+unique(CA[CA$Species=="Gadus morhua",]$LngtCm)
+sort(unique(CA[CA$Species=="Gadus morhua" &  CA$Age =="1",]$LngtCm))
