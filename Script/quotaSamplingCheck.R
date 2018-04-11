@@ -206,6 +206,9 @@ sort(unique(CA[CA$Species=="Gadus morhua" &  CA$Age =="1",]$LngtCm))
 
 # new approach to missing age plotting
 
+#for grouping lengths
+#nages <- tabulate_ages_pr_length_pr_haul(lengthresCM = 5)
+
 nages <- tabulate_ages_pr_length_pr_haul()
 
 plotStations(nages)
@@ -215,4 +218,11 @@ plotStations(nages[nages$lengthgroup=="(15,16]",])
 plotStations(nages[nages$lengthgroup=="(24,25]",])
 plotStations(nages[nages$lengthgroup=="(26,27]",])
 plotStations(nages[nages$lengthgroup=="(13,14]",])
+par(par.pre)
 
+#get fraction of length registrations with missing age
+sum(nages$agesamples==0)/(nrow(nages))
+
+#get fraction of hauls with some length group that is missing age registrations:
+hauls_missing <- aggregate(list(has_missing=nages$agesamples), by=list(haul.id=nages$haul.id), FUN=function(x){any(x==0)})
+sum(hauls_missing$has_missing)/nrow(hauls_missing)
