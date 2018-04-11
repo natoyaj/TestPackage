@@ -6,7 +6,7 @@
 \usage{
 getEstimatesCPUElength(RFA, species, year, quarter, dataHL,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
-  B = 10)
+  B = 10, weightStatRec = NULL)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
