@@ -5,7 +5,12 @@
 \title{calcmCPUErfaWithALKNew}
 \usage{
 calcmCPUErfaWithALKNew(RFA, species, year, quarter, data, ALKNew,
+<<<<<<< HEAD
+  procedure = "", percentOfAreaRepresentative = NULL,
+  weightStatRec = NULL)
+=======
   procedure = "", percentOfAreaRepresentative = NULL)
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
