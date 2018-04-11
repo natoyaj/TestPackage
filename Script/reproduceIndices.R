@@ -66,7 +66,8 @@ species = "Gadus morhua"
 species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
-n=10 #Number of samples in the bootstrap.
+
+n=25 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"

@@ -97,7 +97,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
-#' @param newPeocedure Logical if we use the new procedure (defaul = false)
+#' @param procedure Logical if we use the new procedure (defaul = false). Call ALK-procedure ?
 #' @param weightStatRec The weights for the statistical rectangles for Saithe
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
@@ -122,9 +122,14 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   }else if(procedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
+  }else if(procedure == ""){
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
   }else{
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = weightStatRec)
+  }
+  else{
+    stop("Unkown procedure.")
   }
   #------------------------------------------
 
