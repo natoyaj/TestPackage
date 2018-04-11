@@ -60,13 +60,13 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 
 #Reproduce CPUEs on age-level-----------------------------------------
 year = 2015
-RFA = 1
+RFA = 7
 quarter = 1
 species = "Gadus morhua"
 species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
-n=1 #Number of samples in the bootstrap.
+n=10 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
@@ -85,6 +85,7 @@ cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, ye
 bootstrapProcedure = "stratifiedNewALK"
 cpueHaulBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
+
 
 #Model-based ALK estimator
 #Load data, currently only estimated for cod in year 2015
