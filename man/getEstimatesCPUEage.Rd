@@ -7,7 +7,11 @@
 getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
   B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
-  newProcedure = FALSE)
+<<<<<<< HEAD
+  procedure = "")
+=======
+  procedure = "", weightStatRec = NULL)
+>>>>>>> 717c68bd375e468881ef41026fcce19137cd0dad
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -27,6 +31,8 @@ getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
 \item{bootstrapProcedure}{The bootstrap procedure ("simple", "stratisfied", ...)}
 
 \item{B}{The number of simulations in the selected bootstrap procedure}
+
+\item{weightStatRec}{The weights for the statistical rectangles for Saithe}
 
 \item{newPeocedure}{Logical if we use the new procedure (defaul = false)}
 }

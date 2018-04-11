@@ -42,6 +42,21 @@ calculateALK = function(RFA,species,year,quarter,data)
       alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
 
 
+    }else if(species == "Pollachius virens"){
+      maxAge = 6
+      minLength = 7
+      maxLength = 110
+      lengthClassIntervallLengths = 1
+      if(quarter == 1)
+      {
+        minLength = 25
+        maxLength = 90
+      }
+
+      alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
+      alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+
+
     }else{
       #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
     }
@@ -50,7 +65,7 @@ calculateALK = function(RFA,species,year,quarter,data)
 
 
     #Construct the parts of the ALK were we have data-----
-    if(species=="Gadus morhua")
+    if(species=="Gadus morhua"|species == "Pollachius virens")
     {
       for(i in 1:dim(caInterest)[1])
       {
@@ -175,7 +190,6 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
     }
 
     simALK[[i]] = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
-    print(i)
   }
   return(simALK)
 }
@@ -194,7 +208,7 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5){
+calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -267,6 +281,19 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
 
     alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
     alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+  }else if(species == "Pollachius virens"){
+    maxAge = 6
+    minLength = 7
+    maxLength = 110
+    lengthClassIntervallLengths = dfLength
+    if(quarter == 1)
+    {
+      minLength = 25
+      maxLength = 90
+    }
+
+    alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
+    alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
 
 
   }else{
@@ -280,12 +307,13 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
 
 
   #Construct each element of the ALK-list----------------------------------------------------------------------
+  print("We are now calculating the haul based ALK, this takes some time due to that there are many missing ages")
   haulId = uniqueId
   neste = 1
   for(id in haulId){
 
     #Construct the parts of the ALK were we have data--------------------
-    if(species=="Gadus morhua")
+    if(species=="Gadus morhua" | species=="Pollachius virens")
     {
       idTmp = as.character(id)
       alkThis = as.data.frame(alk)
@@ -330,7 +358,8 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
     {
       if(whichIsMissing[i])
       {
-        sortedShortestDist = order(d[,i])[-1]
+        #sortedShortestDist = order(d[,i])[-1]
+        sortedShortestDist = order(d[,which(loc$uniqueId== id)[1]])[-1]
 
         closestSorted = haulId[sortedShortestDist]
         foundAge = FALSE
@@ -378,60 +407,66 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
       if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing2[i] = TRUE
     }
 
-    #Set the smallest length groops to age 0 or 1 if there are no observations of them
-    first = which(!whichIsMissing2)[1]
-    if(first>1)
-    {
-      if(quarter==1)
+    #Set those we do not find any age  equal the original ALK from datras, this works only if dfLength = 1
+    tmp = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
+    alkThis[whichIsMissing2,2:(maxAge+3)] = tmp[whichIsMissing2,]
+
+    if(FALSE){ #Olav suggest to remove this part. This part extrapolates ages of no observed similar as the datras procedure, but on haul level.
+      #Set the smallest length groops to age 0 or 1 if there are no observations of them
+      first = which(!whichIsMissing2)[1]
+      if(!is.na(first) &first>1)
       {
-        alkThis[1:(first-1),4] = 1
-      }else if(quarter>1)
-      {
-        alkThis[1:(first-1),3] = 1
-      }
-      whichIsMissing2[1:first] = FALSE
-    }
-
-
-    distToNext = which(!whichIsMissing2)[1]
-    distToPrevious = 99999999
-    nextValue = NA
-
-    if(quarter ==1)start = 3
-    if(quarter >1)start = 2
-
-    for(j in start:dim(alkThis)[2])
-    {
-      for(i in 1:dim(alkThis)[1])
-      {
-        if(whichIsMissing2[i])
+        if(quarter==1)
         {
-          if(distToPrevious<distToNext)
-          {
-            alkThis[i,j]= alkThis[i-1,j]
-          }else if(distToPrevious == distToNext)
-          {
-            alkThis[i,j]= (alkThis[i-1,j] + nextValue)/2
-          }else if(distToPrevious > distToNext)
-          {
-            alkThis[i,j]= nextValue
-          }
-          distToNext  = distToNext -1
-          distToPrevious =distToPrevious +1
+          alkThis[1:(first-1),4] = 1
+        }else if(quarter>1)
+        {
+          alkThis[1:(first-1),3] = 1
+        }
+        whichIsMissing2[1:first] = FALSE
+      }
 
-        }else{
-          distToPrevious = 1
-          distToNext = which(!whichIsMissing2[i:length(whichIsMissing2)])[2]-2
-          if(is.na(distToNext))
+
+      distToNext = which(!whichIsMissing2)[1]
+      distToPrevious = 99999999
+      nextValue = NA
+
+      if(quarter ==1)start = 3
+      if(quarter >1)start = 2
+
+      for(j in start:dim(alkThis)[2])
+      {
+        for(i in 1:dim(alkThis)[1])
+        {
+          if(whichIsMissing2[i])
           {
-            distToNext = 999999999
-            nextValue = -999999999
+            if(distToPrevious<distToNext)
+            {
+              alkThis[i,j]= alkThis[i-1,j]
+            }else if(distToPrevious == distToNext)
+            {
+              alkThis[i,j]= (alkThis[i-1,j] + nextValue)/2
+            }else if(distToPrevious > distToNext)
+            {
+              alkThis[i,j]= nextValue
+            }
+            distToNext  = distToNext -1
+            distToPrevious =distToPrevious +1
+
           }else{
-            nextValue = alkThis[i + distToNext + 1,j]
+            distToPrevious = 1
+            distToNext = which(!whichIsMissing2[i:length(whichIsMissing2)])[2]-2
+            if(is.na(distToNext))
+            {
+              distToNext = 999999999
+              nextValue = -999999999
+            }else{
+              nextValue = alkThis[i + distToNext + 1,j]
+            }
           }
         }
+        #------------------------------------------------------
       }
-      #------------------------------------------------------
     }
     #--------------------------------------------------------------------------------------------
 
@@ -481,7 +516,6 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
 #' @param quarter The quarter of the year which the ALKs are calculated.
 #' @param data The CA needed for calculating the ALKs.
 #' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
-#' @param dfLength The length of the pooled length class. Default is 5, e.g. 5 length classes in each pooled length class.
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
@@ -615,7 +649,6 @@ calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHa
 #' @param quarter The quarter of the year which the ALKs are calculated.
 #' @param data The CA needed for calculating the ALKs.
 #' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
-#' @param dfLength The length of the pooled length class. Default is 5, e.g. 5 length classes in each pooled length class.
 #' @export
 #' @return Returns a list with simulated model based ALK for each trawl haul
 #' @examples

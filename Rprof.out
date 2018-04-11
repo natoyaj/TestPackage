@@ -1,4 +1,5 @@
 sample.interval=20000
+<<<<<<< HEAD
 "any" "prettyNum" "format.default" "format" "format.fun" "paste" "nchar" "maybe_truncate" "formObj" "cat" "str.default" "str" "<Anonymous>" "do.call" "strSub" "str.default" "NextMethod" "str.data.frame" "str" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "eval" "eval" "withVisible" "evalVis" "capture.output" "eval" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" ".rs.withTimeLimit" ".rs.valueFromStr" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" ".rs.valueContents" "<Anonymous>" 
 ".Call" ".rs.getKnitParamsForDocument" ".rs.injectKnitrParamsObject" "<Anonymous>" 
 "substring" ".rs.startsWith" ".rs.fuzzyMatches" ".rs.getCompletionsSearchPath" "Reduce" "<Anonymous>" 
@@ -555,3 +556,6 @@ sample.interval=20000
 "::" 
 "::" 
 "length" "tryCatchList" "tryCatch" "ls" "rm" "withCallingHandlers" "suppressWarnings" "<Anonymous>" 
+=======
+"tryCatchOne" "tryCatchList" "tryCatch" "withCallingHandlers" ".rs.callAs" "Rprof" 
+>>>>>>> 8dac1c420ad5a870f0d45d364235b2899834e81e

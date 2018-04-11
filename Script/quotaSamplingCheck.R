@@ -29,9 +29,10 @@ HH <- dat[["HH"]]
 
 #temporary fix for selecting years: we should create an automatic download from DATRAS
 year=2015
-CA<-CA[CA$Year==year,]
-HL<-HL[HL$Year==year,]
-HH<-HH[HH$Year==year,]
+quarter = 1
+CA<-CA[CA$Year==year & CA$Quarter ==quarter,]
+HL<-HL[HL$Year==year & HL$Quarter ==quarter,]
+HH<-HH[HH$Year==year & HH$Quarter ==quarter,]
 
 #Read shape file for roundfish areas
 rfa <-
@@ -171,7 +172,7 @@ plotStations <-
         text(coordinates(polygons), as.character(polygons@data[[labelcol]]))
       }
     }
-    points(age$lon, age$lat, col = "green", pch = 3)
+    points(age$lon, age$lat, col = "blue", pch = 3)
     points(length$lon, length$lat, col = "red", pch = 3)
 
     if (is.null(main)){
@@ -182,6 +183,29 @@ plotStations <-
     }
   }
 
+
+tab <- tabulateMissingAgeSamples()
+tt <- tab[order(tab$missing, decreasing = T), ]
+tt[1:6, ]
+
+quantile(sort(unique(tt$LngtCM)))
+sort(unique(tt$LngtCM))
+
+par(par.pre)
+#legend("topleft", legend=c("Hauls with missing age ", "Hauls with length and age"),
+#       col=c("red", "blue"), pch= c(3,3), cex=0.8)
+
+
+library(geosphere)
+rfa$areas.sqm<-areaPolygon(rfa)
+rfa$areas.sqkm<-rfa$areas.sqm/(1000*1000)
+print(rfa@data)
+
+unique(CA[CA$Species=="Gadus morhua",]$LngtCm)
+sort(unique(CA[CA$Species=="Gadus morhua" &  CA$Age =="1",]$LngtCm))
+
+# new approach to missing age plotting
+
 nages <- tabulate_ages_pr_length_pr_haul()
 
 plotStations(nages)
@@ -191,14 +215,4 @@ plotStations(nages[nages$lengthgroup=="(15,16]",])
 plotStations(nages[nages$lengthgroup=="(24,25]",])
 plotStations(nages[nages$lengthgroup=="(26,27]",])
 plotStations(nages[nages$lengthgroup=="(13,14]",])
-par(par.pre)
-
-
-
-
-library(geosphere)
-rfa$areas.sqm<-areaPolygon(rfa)
-print(rfa@data)
-
-
 

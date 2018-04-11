@@ -4,7 +4,8 @@
 \alias{calcmCPUErfaWithALK}
 \title{calcmCPUErfaWithALK}
 \usage{
-calcmCPUErfaWithALK(RFA, species, year, quarter, data, ALK)
+calcmCPUErfaWithALK(RFA, species, year, quarter, data, ALK,
+  weightStatRec = NULL)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
