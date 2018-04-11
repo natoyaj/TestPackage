@@ -544,7 +544,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHa
   #----------------------------------------------------
 
   #Define the skelleton of the ALK---------------------
-  if(species == "Gadus morhua")
+  if(species == "Gadus morhua"| species=="Pollachius virens")
   {
     maxAge = 6
     minLength = 7
@@ -567,7 +567,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHa
 
 
   #Extract the spatial latent fields---------------------------
-  if(species=="Gadus morhua")
+  if(species=="Gadus morhua" | species=="Pollachius virens")
   { #TODO, 0 year old cod is not included
     x1 = which(names(fitModel$par.random)=="x1")
     x2 = which(names(fitModel$par.random)=="x2")
@@ -591,7 +591,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHa
 
     omr = keyIdMeshHaul$meshID[which(keyIdMeshHaul$haulID==as.character(id))]
     #Construct the parts of the ALK were we have data-------------------
-    if(species=="Gadus morhua")
+    if(species=="Gadus morhua" | species=="Pollachius virens")
     {
       reportLengthStart = 10-1 #TODO change to zero in the model part and here.
       idTmp = as.character(id)
