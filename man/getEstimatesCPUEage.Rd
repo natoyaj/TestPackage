@@ -7,7 +7,11 @@
 getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
   B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
+<<<<<<< HEAD
+  procedure = "")
+=======
   procedure = "", weightStatRec = NULL)
+>>>>>>> 717c68bd375e468881ef41026fcce19137cd0dad
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}

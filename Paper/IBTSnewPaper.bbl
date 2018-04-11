@@ -7,10 +7,18 @@ Aanes, S. and V{\o}lstad, J.~H. (2015).
 \newblock {\em Canadian journal of fisheries and aquatic sciences},
   72(6):938--953.
 
+<<<<<<< HEAD
 \bibitem[Berg and Kristensen, 2012]{berg2012spatial}
 Berg, C.~W. and Kristensen, K. (2012).
 \newblock Spatial age-length key modelling using continuation ratio logits.
 \newblock {\em Fisheries Research}, 129:119--126.
+=======
+\bibitem[Berg et~al., 2014]{berg2014evaluation}
+Berg, C.~W., Nielsen, A., and Kristensen, K. (2014).
+\newblock Evaluation of alternative age-based methods for estimating relative
+  abundance from survey data in relation to assessment models.
+\newblock {\em Fisheries research}, 151:91--99.
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 
 \bibitem[Carpenter and Bithell, 2000]{carpenter2000bootstrap}
 Carpenter, J. and Bithell, J. (2000).
@@ -25,6 +33,17 @@ Ehrhardt, N.~M. and Legault, C.~M. (1997).
   of mexico.
 \newblock {\em Fisheries research}, 29(2):145--158.
 
+<<<<<<< HEAD
+=======
+\bibitem[Fridriksson, 1934]{fridriksson1934calculation}
+Fridriksson, A. (1934).
+\newblock On the calculation of age-distribution within a stock of cod by means
+  of relatively few age-determinations as a key to measurements on a large
+  scale.
+\newblock {\em Rapports Et Proces-Verbaux Des Reunions, Conseil International
+  Pour l’Exploration De La Mer}, 86:1--5.
+
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 \bibitem[Fuller, 2011]{fuller2011sampling}
 Fuller, W.~A. (2011).
 \newblock {\em Sampling statistics}, volume 560.
@@ -35,16 +54,20 @@ Kimura, D.~K. (1977).
 \newblock Statistical assessment of the age--length key.
 \newblock {\em Journal of the Fisheries Board of Canada}, 34(3):317--324.
 
+<<<<<<< HEAD
 \bibitem[Kristensen et~al., 2015]{kristensen2015tmb}
 Kristensen, K., Nielsen, A., Berg, C.~W., Skaug, H., and Bell, B. (2015).
 \newblock Tmb: automatic differentiation and laplace approximation.
 \newblock {\em arXiv preprint arXiv:1509.00660}.
 
+=======
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 \bibitem[Lehtonen and Pahkinen, 2004]{lehtonen2004practical}
 Lehtonen, R. and Pahkinen, E. (2004).
 \newblock {\em Practical methods for design and analysis of complex surveys}.
 \newblock John Wiley \& Sons.
 
+<<<<<<< HEAD
 \bibitem[Lindgren et~al., 2011]{lindgren2011explicit}
 Lindgren, F., Rue, H., and Lindstr{\"o}m, J. (2011).
 \newblock An explicit link between {G}aussian fields and {G}aussian {M}arkov
@@ -52,6 +75,8 @@ Lindgren, F., Rue, H., and Lindstr{\"o}m, J. (2011).
 \newblock {\em {Journal of the Royal Statistical Society: Series B (Statistical
   Methodology)}}, 73(4):423--498.
 
+=======
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 \bibitem[Ludwig and Walters, 1981]{ludwig1981measurement}
 Ludwig, D. and Walters, C.~J. (1981).
 \newblock Measurement errors and uncertainty in parameter estimates for stock
@@ -59,15 +84,23 @@ Ludwig, D. and Walters, C.~J. (1981).
 \newblock {\em Canadian Journal of Fisheries and Aquatic Sciences},
   38(6):711--720.
 
+<<<<<<< HEAD
 \bibitem[N{o}ttestad et~al., 2015]{nottestad2015quantifying}
 N{o}ttestad, L., Utne, K.~R., {'O}skarsson, G.~J., J{'o}nsson, S.~T., Jacobsen,
   J.~A., Tangen, O., Anthonypillai, V., Aanes, S., V{\o}lstad, J.~H.,
   Bernasconi, M., et~al. (2015).
+=======
+\bibitem[N{\o}ttestad et~al., 2015]{nottestad2015quantifying}
+N{\o}ttestad, L., Utne, K.~R., {\'O}skarsson, G.~J., J{\'o}nsson, S.~{\TH}.,
+  Jacobsen, J.~A., Tangen, {\O}., Anthonypillai, V., Aanes, S., V{\o}lstad,
+  J.~H., Bernasconi, M., et~al. (2015).
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 \newblock Quantifying changes in abundance, biomass, and spatial distribution
   of northeast atlantic mackerel (scomber scombrus) in the nordic seas from
   2007 to 2014.
 \newblock {\em ICES Journal of Marine Science}, 73(2):359--373.
 
+<<<<<<< HEAD
 \bibitem[Rue et~al., 2009]{rue2009approximate}
 Rue, H., Martino, S., and Chopin, N. (2009).
 \newblock Approximate {B}ayesian inference for latent {G}aussian models by
@@ -75,6 +108,8 @@ Rue, H., Martino, S., and Chopin, N. (2009).
 \newblock {\em {Journal of the Royal Statistical Society: Series B (Statistical
   Methodology)}}, 71(2):319--392.
 
+=======
+>>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 \bibitem[Walters and Ludwig, 1981]{walters1981effects}
 Walters, C.~J. and Ludwig, D. (1981).
 \newblock Effects of measurement errors on the assessment of stock--recruitment
