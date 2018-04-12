@@ -66,6 +66,33 @@ getStationsWithLength <- function(hh, hl, species, lngtCM) {
   return(hh[hh$haul.id %in% unique(lengths$haul.id), ])
 }
 
+#' computes a table of the number of age samples pr haul and length group
+#' @param ca DATRAS CA table
+#' @param hl DATRAS HL table
+#' @param species scientific name of species, to be mathed with DATRAS Species
+#' @param lengthresCM length resolution for length groups. Must exceed resolution of measurement, but this is not enforced.
+#' @return
+tabulate_ages_pr_length_pr_haul <- function(ca=CA, hl=HL, species="Gadus morhua", lengthresCM=1){
+  ca <- ca[!is.na(ca$Species) & ca$Species==species,]
+  hl <- hl[!is.na(hl$Species) & hl$Species==species,]
+
+  maxl <- max(max(ca$LngtCm, na.rm=T), max(hl$LngtCm, na.rm=T))
+  breaks <- seq(0,maxl+lengthresCM, lengthresCM)
+
+  ca$lengthgroup <- cut(ca$LngtCm, breaks=breaks)
+  hl$lengthgroup <- cut(hl$LngtCm, breaks=breaks)
+  mm <- merge(hl, ca, by=c("haul.id", "lengthgroup"), all.x=T)
+  drop <- sum(is.na(mm$CatCatchWgt) | mm$CatCatchWgt==0)
+  mm <- mm[!is.na(mm$CatCatchWgt) & mm$CatCatchWgt>0,]
+
+  warning(paste(drop, "Registrations dropped because CatCathWgt is missing or zero.", nrow(mm), "registrations left."))
+  nages<-aggregate(list(agesamples=mm$Age), by=list(haul.id=mm$haul.id, lengthgroup=mm$lengthgroup), FUN=function(x){sum(!is.na(x))})
+  if (any(is.na(nages$lengthgroup))){
+    warning("NAs in lengthgroup")
+  }
+  return(nages)
+}
+
 #' Tabulates the number of missing age samples in each length group and roundfish area.
 #' @param hh HH table for the survey
 #' @param ca CA table for the survey
@@ -117,31 +144,25 @@ tabulateMissingAgeSamples <-
   }
 
 #' Plot stations color coded for missing age samples in specific length groups
-#' @param hh HH table for the survey
-#' @param ca CA table for the survey
-#' @param hl HL table for the survey
-#' @param scientific name of species
-#' @param lngtCM the lengthgroup as identified by column lngtCM in CA and HL
+#' @param hh HH table for the surve
+#' @param nages table of age samples as returned by tabulate_ages_pr_length_pr_haul
 #' @param polygons SpatialPolygonsDataFrame object for drawing on the map. Map be NULL.
 #' @param labelcol column i SpatioalPolygon specifying labels for polugons. Not plotted if NULL
 plotStations <-
-  function(hh = HH,
-           ca = CA,
-           hl = HL,
-           lengthGroup,
-           species = "Gadus morhua",
+  function(nages,
+           hh = HH,
            polygons = rfa,
-           labelcol="AreaName") {
-    age <- getStationsWithAge(hh, ca, species, lengthGroup)
-    length <- getStationsWithLength(hh, hl, species, lengthGroup)
-    length <- length[!length$haul.id %in% unique(age$haul.id), ]
+           labelcol="AreaName", main=NULL) {
+
+      age <- hh[hh$haul.id %in% unique(nages[nages$agesamples>0,"haul.id"]),]
+      length <- hh[hh$haul.id %in% unique(nages[nages$agesamples==0,"haul.id"]),]
 
     data(countriesHigh)
     map <- countriesHigh
 
     basemap(
-      xlim = c(min(HH$lon), max(HH$lon)),
-      ylim = c(min(HH$lat), max(HH$lat)),
+      xlim = c(min(hh$lon), max(hh$lon)),
+      ylim = c(min(hh$lat), max(hh$lat)),
       bg = "white"
     )
     plot(map, col = "grey", add = T)
@@ -154,7 +175,12 @@ plotStations <-
     points(age$lon, age$lat, col = "blue", pch = 3)
     points(length$lon, length$lat, col = "red", pch = 3)
 
-    title(paste(species, unique(ca$Year)))
+    if (is.null(main)){
+      title(paste(species, unique(ca$Year)))
+    }
+    else{
+      title(main)
+    }
   }
 
 
@@ -165,17 +191,10 @@ tt[1:6, ]
 quantile(sort(unique(tt$LngtCM)))
 sort(unique(tt$LngtCM))
 
-par.pre <- par(no.readonly = T)
-par(mfrow = c(2, 3))
-plotStations(lengthGroup = 14)
-plotStations(lengthGroup = 16)
-plotStations(lengthGroup = 27)
-plotStations(lengthGroup = 25)
-plotStations(lengthGroup = 50)
-plotStations(lengthGroup = 88)
 par(par.pre)
 #legend("topleft", legend=c("Hauls with missing age ", "Hauls with length and age"),
 #       col=c("red", "blue"), pch= c(3,3), cex=0.8)
+
 
 library(geosphere)
 rfa$areas.sqm<-areaPolygon(rfa)
@@ -184,3 +203,26 @@ print(rfa@data)
 
 unique(CA[CA$Species=="Gadus morhua",]$LngtCm)
 sort(unique(CA[CA$Species=="Gadus morhua" &  CA$Age =="1",]$LngtCm))
+
+# new approach to missing age plotting
+
+#for grouping lengths
+#nages <- tabulate_ages_pr_length_pr_haul(lengthresCM = 5)
+
+nages <- tabulate_ages_pr_length_pr_haul()
+
+plotStations(nages)
+par.pre <- par(no.readonly = T)
+par(mfrow = c(2, 2))
+plotStations(nages[nages$lengthgroup=="(15,16]",])
+plotStations(nages[nages$lengthgroup=="(24,25]",])
+plotStations(nages[nages$lengthgroup=="(26,27]",])
+plotStations(nages[nages$lengthgroup=="(13,14]",])
+par(par.pre)
+
+#get fraction of length registrations with missing age
+sum(nages$agesamples==0)/(nrow(nages))
+
+#get fraction of hauls with some length group that is missing age registrations:
+hauls_missing <- aggregate(list(has_missing=nages$agesamples), by=list(haul.id=nages$haul.id), FUN=function(x){any(x==0)})
+sum(hauls_missing$has_missing)/nrow(hauls_missing)
