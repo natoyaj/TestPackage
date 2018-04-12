@@ -104,7 +104,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @examples
 getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL,
                                bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               procedure = "",weightStatRec = NULL){
+                               procedure = "datras",weightStatRec = NULL){
   #Extract the data of interest-------------
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
@@ -122,13 +122,15 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   }else if(procedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
+<<<<<<< HEAD
   }else if(procedure == ""){
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
+=======
+>>>>>>> 9f4c0a6f64156e3a747fa9d68733e247a98386d3
   }else if(procedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = weightStatRec)
-  }
-  else{
+  }else{
     stop("Unkown procedure.")
   }
   #------------------------------------------
