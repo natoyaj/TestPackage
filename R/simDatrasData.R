@@ -394,6 +394,9 @@ selectHaulIdsHiearchical <-
 
     #recursive case, lower levels exists
     else if (length(levels) > 1) {
+      if (selectionmethod=="R"){
+        stop("selection with replacement is not supported at higher levels. Need to implement renaming of sampling units.")
+      }
       sublevels <- levels[2:length(levels)]
       subselection <- selection[2:length(selection)]
       for (v in levelvalues) {

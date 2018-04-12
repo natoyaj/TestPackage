@@ -122,18 +122,11 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   }else if(procedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
-#<<<<<<< HEAD
-#<<<<<<< HEAD
-  }else if(procedure == ""){
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
-#=======
-#>>>>>>> 9f4c0a6f64156e3a747fa9d68733e247a98386d3
-#=======
-#>>>>>>> 3f95c659fab8ce3d956e862af57ffd6eb5cea8d7
   }else if(procedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = weightStatRec)
-  }else{
+  }
+  else{
     stop("Unkown procedure.")
   }
   #------------------------------------------

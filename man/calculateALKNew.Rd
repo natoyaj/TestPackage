@@ -5,10 +5,14 @@
 \title{calculateALKNew}
 \usage{
 <<<<<<< HEAD
+calculateALKNew(RFA, species, year, quarter, data, data_hl, dfLength = 5)
+=======
+<<<<<<< HEAD
 calculateALKNew(RFA, species, year, quarter, data, data_hl, dfLength = 1)
 =======
 calculateALKNew(RFA, species, year, quarter, data, data_hl, dfLength = 5)
 >>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
+>>>>>>> 8dac1c420ad5a870f0d45d364235b2899834e81e
 }
 \arguments{
 \item{RFA}{Roundfish area number.}

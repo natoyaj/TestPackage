@@ -91,8 +91,13 @@ cpueHaulBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, q
 #Model-based ALK estimator
 #Load data, currently only estimated for cod in year 2015
 modelDir <<- system.file("modelFit", package = "TestPackage")
-load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
-load(paste(modelDir,"/cod2015.rda",sep = ""))
+if(species == "Gadus morhua"){
+  load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
+  load(paste(modelDir,"/cod2015.rda",sep = ""))
+}else if(species == "Pollachius virens"){
+  load(paste(modelDir,"/keyIdMeshHaulSaithe2015.rda",sep = ""))
+  load(paste(modelDir,"/saithe2015.rda",sep = ""))
+}
 bootstrapProcedure = "stratified"
 cpueModelBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                      bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
