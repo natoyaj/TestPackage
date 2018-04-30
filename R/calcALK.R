@@ -208,7 +208,7 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
+calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5){
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
