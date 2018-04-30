@@ -29,7 +29,7 @@ HH <- dat[["HH"]]
 
 #temporary fix for selecting years: we should create an automatic download from DATRAS
 year=2015
-quarter = 1
+quarter = 3
 CA<-CA[CA$Year==year & CA$Quarter ==quarter,]
 HL<-HL[HL$Year==year & HL$Quarter ==quarter,]
 HH<-HH[HH$Year==year & HH$Quarter ==quarter,]
@@ -176,7 +176,7 @@ plotStations <-
     points(length$lon, length$lat, col = "red", pch = 3)
 
     if (is.null(main)){
-      title(paste(species, unique(ca$Year)))
+      title("")
     }
     else{
       title(main)
@@ -208,10 +208,10 @@ sort(unique(CA[CA$Species=="Gadus morhua" &  CA$Age =="1",]$LngtCm))
 
 #for grouping lengths
 #nages <- tabulate_ages_pr_length_pr_haul(lengthresCM = 5)
+#Pollachius virens
+nages <- tabulate_ages_pr_length_pr_haul(species="Pollachius virens", lengthresCM = 5)
 
-nages <- tabulate_ages_pr_length_pr_haul()
-
-plotStations(nages)
+plotStations(nages, main="SAITHE, Q3, 2015")
 par.pre <- par(no.readonly = T)
 par(mfrow = c(2, 2))
 plotStations(nages[nages$lengthgroup=="(15,16]",])
