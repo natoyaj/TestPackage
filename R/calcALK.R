@@ -204,11 +204,11 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
 #' @param quarter The quarter of the year which the ALKs are calculated.
 #' @param data The CA needed for calculating the ALKs.
 #' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
-#' @param dfLength The length of the pooled length class. Default is 5, e.g. 5 length classes in each pooled length class.
+#' @param dfLength The length of the pooled length class. Default is 1, e.g. 1 length classes in each pooled length class.
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5){
+calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -225,6 +225,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
                         !is.na(data_hl$Roundfish) & data_hl$Roundfish == RFA ,]
 
   hlInterest = hlInterest[which(!is.na(hlInterest$LngtCm)),]
+  hlInterest = hlInterest[which(!is.na(hlInterest$Species)),]
   #---------------------------------------------------
 
   #Find distance between trawl locations--------------
@@ -312,6 +313,11 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
   neste = 1
   for(id in haulId){
 
+    #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl), it is time consuming to calculate the ALK for those not observed
+    whichLengtsAreInteresting = unique(hlInterest$LngtCm[hlInterest$haul.id==id & hlInterest$Species==species] )
+    if(species=="Gadus morhua" | species=="Pollachius virens") whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
+
+
     #Construct the parts of the ALK were we have data--------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
     {
@@ -349,6 +355,8 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
     for(i in 1:dim(alkThis)[1])
     {
       if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing[i] = TRUE
+
+      if(!is.element(alkThis$Length[i], whichLengtsAreInteresting)) whichIsMissing[i] = FALSE
     }
     #Routine for filling the not observed length classes
     if(quarter ==1)start = 3
@@ -405,6 +413,9 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 5
     for(i in 1:dim(alkThis)[1])
     {
       if(sum(alkThis[i,-c(1,2)]) == 0)whichIsMissing2[i] = TRUE
+
+      if(!is.element(alkThis$Length[i], whichLengtsAreInteresting)) whichIsMissing2[i] = FALSE
+
     }
 
     #Set those we do not find any age  equal the original ALK from datras, this works only if dfLength = 1
