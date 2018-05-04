@@ -54,8 +54,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     }else if(bootstrapProcedure =="hierarchical"){
       sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFrom, dataToSimulateFrom)
       data <- sim$simHL
-    }
-    else if(bootstrapProcedure =="almost the datras procedure"){
+    }else if(bootstrapProcedure =="almost the datras procedure"){
       data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFrom)
     }else{
       return("Select a valid bootstrap procedure.")

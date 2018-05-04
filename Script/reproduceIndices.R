@@ -28,6 +28,10 @@ ca = ca[,which(!(names(ca) %in% remove))]
 hl = hl[,which(!(names(hl) %in% remove))]
 hh = hh[,which(!(names(hh) %in% remove))]
 
+#There seems to be some missing lengths in the HL-data, removes those
+hl = hl[!is.na(hl$LngtCm),]
+ca = ca[!is.na(ca$Age),]
+
 hh_keys <- c("haul.id")
 hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
 ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
@@ -69,7 +73,7 @@ species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
 
-n=2 #Number of samples in the bootstrap.
+n=1 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
@@ -85,9 +89,9 @@ bootstrapProcedure = "hierarchical"
 cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec = weightStatRec)
 
-bootstrapProcedure = "stratifiedNewALK"
-cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
+#bootstrapProcedure = "stratifiedNewALK"
+#cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+#                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
 
 
 bootstrapProcedure = "stratified"
