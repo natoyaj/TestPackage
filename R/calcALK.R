@@ -40,8 +40,6 @@ calculateALK = function(RFA,species,year,quarter,data)
 
       alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
       alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-
-
     }else if(species == "Pollachius virens"){
       maxAge = 6
       minLength = 7
@@ -55,8 +53,6 @@ calculateALK = function(RFA,species,year,quarter,data)
 
       alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
       alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-
-
     }else{
       #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
     }
