@@ -73,7 +73,7 @@ species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
 
-n=1 #Number of samples in the bootstrap.
+n=3 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
@@ -89,9 +89,9 @@ bootstrapProcedure = "hierarchical"
 cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec = weightStatRec)
 
-#bootstrapProcedure = "stratifiedNewALK"
-#cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-#                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
+bootstrapProcedure = "stratifiedNewALK"
+cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
+                                    bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= weightStatRec)
 
 
 bootstrapProcedure = "stratified"
