@@ -28,8 +28,8 @@ hl = hl[,which(!(names(hl) %in% remove))]
 hh = hh[,which(!(names(hh) %in% remove))]
 
 #There seems to be some missing lengths in the HL-data, removes those
-hl = hl[!is.na(hl$LngtCm),]
-ca = ca[!is.na(ca$Age),]
+#hl = hl[!is.na(hl$LngtCm),] #It seems that these are NA because there was no catch, do not remove these
+#ca = ca[!is.na(ca$Age),]
 
 hh_keys <- c("haul.id")
 hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
@@ -62,13 +62,13 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 #Reproduce CPUEs on age-level-----------------------------------------
 year = 2015
 RFA = 1
-quarter = 3
+quarter = 1
 species = "Gadus morhua"
 species = "Pollachius virens"
 
 ##three ALK estimators and 3 bootstrap procedures: datras, stratified (haul-based, model-based) and hierarchical
 
-n=3 #Number of samples in the bootstrap.
+n=20 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
 bootstrapProcedure = "almost the datras procedure"
@@ -106,15 +106,15 @@ if(species == "Gadus morhua"){
 }
 bootstrapProcedure = "stratified"
 cpueModelBased = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
+                                     bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased", weightStatRec= weightStatRec)
 
 bootstrapProcedure = "hierarchical"
 cpueModelBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
+                                                 bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased", weightStatRec= weightStatRec)
 
 bootstrapProcedure = "stratifiedNewALK"
 cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
-                                                 bootstrapProcedure = bootstrapProcedure, B = n, procedure = "modelBased", weightStatRec= weightStatRec)
+                                                 bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased", weightStatRec= weightStatRec)
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
