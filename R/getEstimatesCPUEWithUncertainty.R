@@ -174,7 +174,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
       simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
       simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
     }else if(bootstrapProcedure =="stratifiedNewALK"){
-      simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = hh,loc = loc)
+      simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = hh,loc = loc) #To use hh here as the HH-data is bad programing
       simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
       simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
 

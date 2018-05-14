@@ -227,7 +227,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   #Find distance between trawl locations--------------
   id1 = as.character(caInterest$haul.id)
   id2 = as.character(hlInterest$haul.id)
-  uniqueId = unique(c(id1,id2)) #Need ALK for every trawl haul. TODO: use hh-data instead.
+  uniqueId = unique(c(id1,id2)) #Need ALK for every trawl haul. TODO: should use hh-data instead.
   loc = data.frame(uniqueId)
   loc$lat = rep(-999,dim(loc)[1])
   loc$lon = rep(-999,dim(loc)[1])
@@ -312,7 +312,12 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
     #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl), it is time consuming to calculate the ALK for those not observed
     whichLengtsAreInteresting = unique(hlInterest$LngtCm[hlInterest$haul.id==id & hlInterest$Species==species] )
     if(species=="Gadus morhua" | species=="Pollachius virens") whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
-
+    if(length(whichLengtsAreInteresting)>0){
+      if(min(whichLengtsAreInteresting)<minLength &
+         !is.element(minLength, whichLengtsAreInteresting)){
+        whichLengtsAreInteresting = c(whichLengtsAreInteresting,minLength)
+      }
+    }
 
     #Construct the parts of the ALK were we have data--------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
