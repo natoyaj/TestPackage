@@ -7,11 +7,7 @@
 getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
   percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
   B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
-<<<<<<< HEAD
-  procedure = "")
-=======
-  procedure = "", weightStatRec = NULL)
->>>>>>> 717c68bd375e468881ef41026fcce19137cd0dad
+  procedure = "datras", weightStatRec = NULL, doBootstrap = TRUE)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -32,9 +28,11 @@ getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
 
 \item{B}{The number of simulations in the selected bootstrap procedure}
 
+\item{procedure}{Logical if we use the new procedure (defaul = false). Call ALK-procedure ?}
+
 \item{weightStatRec}{The weights for the statistical rectangles for Saithe}
 
-\item{newPeocedure}{Logical if we use the new procedure (defaul = false)}
+\item{doBootstrap}{A boolean stating if bootstrap should be done. Default is TRUE.}
 }
 \value{
 Returns the mCPUE per age class in the given RFA with uncertainty
