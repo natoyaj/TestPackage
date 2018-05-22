@@ -77,7 +77,7 @@ species = "Pollachius virens"
 n=3 #Number of samples in the bootstrap.
 
 #DATRAS ALK estimator
-bootstrapProcedure = "almost the datras procedure"
+bootstrapProcedure = "datras"
 cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                                  bootstrapProcedure = bootstrapProcedure, B = n,weightStatRec = weightStatRec)
 bootstrapProcedure = "stratified"
@@ -133,7 +133,7 @@ year = 2015
 quarter = 3
 species = "Gadus morhua"
 n = 5;
-bootstrapProcedure = "almost the datras procedure"
+bootstrapProcedure = "datras"
 mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dataHL = hl_hh, dataCA = ca_hh,
                        bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec= weightStatRec)
 
