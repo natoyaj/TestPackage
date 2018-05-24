@@ -4,7 +4,8 @@
 \alias{simTrawlHaulsBySelection}
 \title{simTrawlHaulsBySelection}
 \usage{
-simTrawlHaulsBySelection(data, idvalues, oldidname = "original.id")
+simTrawlHaulsBySelection(data, idvalues, oldidname = "original.id",
+  removeMissing = F)
 }
 \arguments{
 \item{data}{data frame to resample, e.g. CA or HL table from DATRAS}
@@ -12,6 +13,8 @@ simTrawlHaulsBySelection(data, idvalues, oldidname = "original.id")
 \item{idvalues}{values of the column haul.id that defines the selection}
 
 \item{oldidname}{column name where original haul ids should be stored}
+
+\item{removeMIssing}{indicates whether idvalues with no corresponding entries in data should be rmeoved. If FALSE, this case halts execution}
 }
 \value{
 data frame with the specified selection of samples, with column haul.id populated with unqiue identifiers in stead of the original identifiers, and the original identifiers stored in the column oldidname. idvalues not in data will be represented by NAs
