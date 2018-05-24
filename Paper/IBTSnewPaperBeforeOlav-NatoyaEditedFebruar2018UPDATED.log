@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2017.3.13)  9 APR 2018 10:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2017.3.13)  12 APR 2018 13:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -860,25 +860,21 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [1
 
 {c:/Program Files (x86)/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.m
-ap}] <Allcode40cm2015.png, id=12, 843.15pt x 843.15pt>
+ap}] [2
+
+] <Allcode40cm2015.png, id=18, 843.15pt x 843.15pt>
 File: Allcode40cm2015.png Graphic file (type png)
 
 <use Allcode40cm2015.png>
-Package pdftex.def Info: Allcode40cm2015.png used on input line 121.
+Package pdftex.def Info: Allcode40cm2015.png used on input line 122.
 (pdftex.def)             Requested size: 337.25401pt x 337.25401pt.
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[2
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 127--129
+Underfull \hbox (badness 10000) in paragraph at lines 128--130
 
  []
 
 [3 <./Allcode40cm2015.png (PNG copy)>]
-Overfull \hbox (18.91263pt too wide) in paragraph at lines 136--151
+Overfull \hbox (18.91263pt too wide) in paragraph at lines 137--152
  [][] 
  []
 
@@ -886,67 +882,53 @@ Overfull \hbox (18.91263pt too wide) in paragraph at lines 136--151
 File: icesroundfishmap.jpg Graphic file (type jpg)
 
 <use icesroundfishmap.jpg>
-Package pdftex.def Info: icesroundfishmap.jpg used on input line 161.
+Package pdftex.def Info: icesroundfishmap.jpg used on input line 162.
 (pdftex.def)             Requested size: 312.9803pt x 374.4985pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 168--169
-
- []
-
-[5] [6 <./icesroundfishmap.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 228--229
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 169--170
 
  []
 
-[7] [8]
+[6 <./icesroundfishmap.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
 
-LaTeX Warning: File `trawlHaulsGadusMorhua.png' not found on input line 235.
+ []
 
-
-! Package pdftex.def Error: File `trawlHaulsGadusMorhua.png' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.235 ...ics[scale=0.4]{trawlHaulsGadusMorhua.png}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[9
-
-]
-Overfull \hbox (14.953pt too wide) in paragraph at lines 266--267
+[7]
+Overfull \hbox (14.953pt too wide) in paragraph at lines 352--353
 []\OT1/cmr/m/it/10 we can also in-clude a plot show-ing the rel-a-tive abun-dan
 ce (catches) of age classes (age-at-length distributions)-
  []
 
-[10
-
-] [11]
-Overfull \hbox (10.67142pt too wide) in paragraph at lines 410--411
+[8]
+Overfull \hbox (10.67142pt too wide) in paragraph at lines 495--496
 \OT1/cmr/m/n/10 For known vari-ances of $[][]$, the vari-ance of the mean abun-
 dance at age across supuer-strata, $\OML/cmm/m/it/10 mCPUE[]$\OT1/cmr/m/n/10 ,
  []
 
-[12] [13] [14] [15] [16] [17] [18]
-Overfull \hbox (23.84204pt too wide) in paragraph at lines 538--562
- [][] 
- []
+[9]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 518.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 715.
-
-(c:/Program Files (x86)/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
+ (c:/Program Files (x86)/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 715.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 518.
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+
+[10] [11] [12] [13] [14] [15] [16] [17] [18]
+Overfull \hbox (23.84204pt too wide) in paragraph at lines 690--714
+ [][] 
+ []
 
 [19
 
@@ -955,18 +937,18 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [20]
-Overfull \hbox (26.71715pt too wide) in alignment at lines 793--793
+Overfull \hbox (26.71715pt too wide) in alignment at lines 945--945
 [][][][][][]
  []
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[21] [22] [23] <recWeightings.jpg, id=104, 477.28313pt x 592.46344pt>
+[21] [22] [23] <recWeightings.jpg, id=103, 477.28313pt x 592.46344pt>
 File: recWeightings.jpg Graphic file (type jpg)
 
 <use recWeightings.jpg>
-Package pdftex.def Info: recWeightings.jpg used on input line 820.
+Package pdftex.def Info: recWeightings.jpg used on input line 972.
 (pdftex.def)             Requested size: 441.01772pt x 547.44153pt.
  [24
 
@@ -986,10 +968,10 @@ Missing character: There is no ù in font cmr10!
 ] [26])
 [27] (./IBTSnewPaperBeforeOlav-NatoyaEditedFebruar2018UPDATED.aux) ) 
 Here is how much of TeX's memory you used:
- 16711 strings out of 493013
- 323294 string characters out of 6136993
- 368174 words of memory out of 5000000
- 20037 multiletter control sequences out of 15000+600000
+ 16712 strings out of 493013
+ 323329 string characters out of 6136993
+ 369196 words of memory out of 5000000
+ 20039 multiletter control sequences out of 15000+600000
  19187 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,18n,77p,10437b,700s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1023,13 +1005,12 @@ dist/fonts/type1/public/amsfonts/cm/cmss8.pfb><c:/Program Files (x86)/texlive/2
 Files (x86)/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c
 :/Program Files (x86)/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 ti10.pfb><c:/Program Files (x86)/texlive/2016/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmti9.pfb><c:/Program Files (x86)/texlive/2016/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmtt10.pfb>
+fonts/cm/cmti9.pfb>
 Output written on IBTSnewPaperBeforeOlav-NatoyaEditedFebruar2018UPDATED.pdf (27
- pages, 652792 bytes).
+ pages, 646913 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
+ 199 PDF objects out of 1000 (max. 8388607)
+ 139 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
