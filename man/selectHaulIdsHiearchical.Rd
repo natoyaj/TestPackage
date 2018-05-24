@@ -8,7 +8,7 @@ simTrawlHaulsHiearchical could probably be modified to make parameters quite sim
 selectHaulIdsHiearchical(hh, levels, selection, seed = NULL)
 }
 \arguments{
-\item{hh}{Data set of hauls, formatted as the DATRAS table (could be HH, CA or HL)}
+\item{hh}{Data set of hauls, formatted as the DATRAS table (could be HH, CA or HL), but containing at most one row pr. haul.}
 
 \item{levels}{vector with names of columns in hh that represents levels in the hiearchical sampling. levels[1] identifies the primary sampling unit, levels[2] the secondary, and so on.}
 

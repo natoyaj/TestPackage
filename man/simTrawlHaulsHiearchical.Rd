@@ -4,10 +4,16 @@
 \alias{simTrawlHaulsHiearchical}
 \title{simTrawlHaulsHiearchical}
 \usage{
-simTrawlHaulsHiearchical(hl, ca, hierarchy = c("StatRec", "haul.id"),
-  selection = c("S", "R"))
+simTrawlHaulsHiearchical(RFA, year, quarter, hl, ca, hierarchy = c("StatRec",
+  "haul.id"), selection = c("S", "R"))
 }
 \arguments{
+\item{RFA}{Roundfish area number.}
+
+\item{year}{The year of interest.}
+
+\item{quarter}{The quarter of interest.}
+
 \item{hl}{data formated as DATRAS HL table}
 
 \item{ca}{data formated as DATRAS CA table}

@@ -18,11 +18,6 @@ simALKModel(RFA, species, year, quarter, hh, fitModel, keyIdMeshHaul)
 \item{data}{The CA needed for calculating the ALKs.}
 
 \item{data_hl}{The HL needed for calculating the ALKs (since there can be trawl hauls without age information).}
-<<<<<<< HEAD
-=======
-
-\item{dfLength}{The length of the pooled length class. Default is 5, e.g. 5 length classes in each pooled length class.}
->>>>>>> f3150d2c6b2352ceaae3b42a8c1ad527a367ca09
 }
 \value{
 Returns a list with simulated model based ALK for each trawl haul

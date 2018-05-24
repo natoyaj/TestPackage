@@ -15,7 +15,8 @@ simTrawlHaulsHLStratified(RFA, year, quarter, data, loc = NULL)
 }
 \value{
 Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
-The simulated trawl hauls are simulated stratisfied on the statistical rectangles. TODO: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
+The simulated trawl hauls are simulated stratisfied on the statistical rectangles: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
+The simulated trawl hauls are simulated stratisfied on the statistical rectangles.
 }
 \description{
 Simulates trawl hauls with only length information used in the bootstrap procedure.
