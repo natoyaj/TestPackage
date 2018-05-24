@@ -127,7 +127,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL)
+calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras")
 {
 
   #Extract the data of interest-------------------------
@@ -136,44 +136,85 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatR
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
 
-  #Construct a matrix with mCPUEs for each statistical rectangel---
-  statRects = unique(dataOfInterest$StatRec)
-  numberOfStatRectangles = length(statRects)
-  nAgeClasses = dim(ALK)[2]-1
-  mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
-  #---------------------------------------------------------------
+  if(ALKprocedure=="datras"){
+    #Construct a matrix with mCPUEs for each statistical rectangel---
+    statRects = unique(dataOfInterest$StatRec)
+    numberOfStatRectangles = length(statRects)
+    nAgeClasses = dim(ALK)[2]-1
+    mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
+    #---------------------------------------------------------------
 
-  #Calculate the mCPUEs for each statistical rectangangle---------
-  if(numberOfStatRectangles==0) return("No observations in RFA")
-  for(i in 1:numberOfStatRectangles)
-  {
-    cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
-    mCPUEstatRec[,i] = as.double(cpueStatRec)
-  }
-  #---------------------------------------------------------------
-
-
-  #Average over the statistical recangles and return mCPUE-----
-  weightUsed = rep(0,numberOfStatRectangles)
-  for(i in 1:numberOfStatRectangles){
-    if(species =="Pollachius virensTODO"){
-      weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
-    }else{
-      weightUsed[i] = 1
+    #Calculate the mCPUEs for each statistical rectangangle---------
+    if(numberOfStatRectangles==0) return("No observations in RFA")
+    for(i in 1:numberOfStatRectangles)
+    {
+      cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
+      mCPUEstatRec[,i] = as.double(cpueStatRec)
     }
+    #---------------------------------------------------------------
+
+
+    #Average over the statistical recangles and return mCPUE-----
+    weightUsed = rep(0,numberOfStatRectangles)
+    for(i in 1:numberOfStatRectangles){
+      if(species =="Pollachius virensTODO"){
+        weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+      }else{
+        weightUsed[i] = 1
+      }
+    }
+
+    mCPUE = rep(0,nAgeClasses)
+    for(i in 1:nAgeClasses)
+    {
+      for(j in 1:numberOfStatRectangles){
+        mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+      }
+    }
+    return(mCPUE)
+    #------------------------------------------------------------
+
+  }else if(ALKprocedure=="haulBased" |ALKprocedure== "modelBased"){
+
+    #Construct a matrix with mCPUEs for each statistical rectangel---
+    statRects = unique(dataOfInterest$StatRec)
+    numberOfStatRectangles = length(statRects)
+    nAgeClasses = dim(ALKNew[[1]])[2]-2
+    mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
+    #---------------------------------------------------------------
+
+    #Calculate the mCPUEs for each statistical rectangangle---------
+    if(numberOfStatRectangles==0) return("No observations in RFA")
+    for(i in 1:numberOfStatRectangles)
+    {
+      cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
+
+      mCPUEstatRec[,i] = as.double(cpueStatRec)
+    }
+    #---------------------------------------------------------------
+
+    #Average over the statistical recangles and return mCPUE-----
+    weightUsed = rep(0,numberOfStatRectangles)
+    for(i in 1:numberOfStatRectangles){
+      if(species =="Pollachius virensTODO"){
+        weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+      }else{
+        weightUsed[i] = 1
+      }
+    }
+
+    mCPUE = rep(0,nAgeClasses)
+    for(i in 1:nAgeClasses)
+    {
+      for(j in 1:numberOfStatRectangles){
+        mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+      }
+    }
+    return(mCPUE)
+    #------------------------------------------------------------
   }
 
-  mCPUE = rep(0,nAgeClasses)
-  for(i in 1:nAgeClasses)
-  {
-    for(j in 1:numberOfStatRectangles){
-      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
-    }
-  }
-  return(mCPUE)
-  #------------------------------------------------------------
 }
-
 
 
 
@@ -255,8 +296,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 #' @export
 #' @return
 #' @examples
-#'
-calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL, weightStatRec = NULL)
+calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL)
 {
 
   #Extract the data of interest-------------------------
