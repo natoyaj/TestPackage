@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: IBTSnewPaperBeforeOlav-NatoyaEditedFebruar2018UPDATED.aux
 The style file: apalike.bst
 Database file #1: ibtsBib.bib
-You've used 26 entries,
+You've used 25 entries,
             1935 wiz_defined-function locations,
-            633 strings with 8836 characters,
-and the built_in function-call counts, 10388 in all, are:
-= -- 1031
-> -- 411
-< -- 21
-+ -- 144
-- -- 136
-* -- 915
-:= -- 1810
-add.period$ -- 79
-call.type$ -- 26
-change.case$ -- 194
-chr.to.int$ -- 26
-cite$ -- 26
-duplicate$ -- 369
-empty$ -- 728
-format.name$ -- 184
-if$ -- 2001
+            627 strings with 8620 characters,
+and the built_in function-call counts, 9984 in all, are:
+= -- 989
+> -- 398
+< -- 20
++ -- 140
+- -- 132
+* -- 878
+:= -- 1742
+add.period$ -- 76
+call.type$ -- 25
+change.case$ -- 187
+chr.to.int$ -- 25
+cite$ -- 25
+duplicate$ -- 355
+empty$ -- 698
+format.name$ -- 177
+if$ -- 1922
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 29
-newline$ -- 133
-num.names$ -- 78
-pop$ -- 147
+missing$ -- 28
+newline$ -- 128
+num.names$ -- 75
+pop$ -- 143
 preamble$ -- 1
-purify$ -- 197
+purify$ -- 190
 quote$ -- 0
-skip$ -- 287
+skip$ -- 276
 stack$ -- 0
-substring$ -- 798
-swap$ -- 33
+substring$ -- 761
+swap$ -- 32
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 150
+type$ -- 144
 warning$ -- 0
-while$ -- 91
+while$ -- 87
 width$ -- 0
-write$ -- 339
+write$ -- 326
