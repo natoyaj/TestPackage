@@ -311,12 +311,12 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
 
     #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl), it is time consuming to calculate the ALK for those not observed
     whichLengtsAreInteresting = unique(hlInterest$LngtCm[hlInterest$haul.id==id & hlInterest$Species==species] )
-    if(species=="Gadus morhua" | species=="Pollachius virens") whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
+    if(species=="Gadus morhua" | species=="Pollachius virens"){
+      whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
+    }
     if(length(whichLengtsAreInteresting)>0){
-      if(min(whichLengtsAreInteresting)<minLength &
-         !is.element(minLength, whichLengtsAreInteresting)){
-        whichLengtsAreInteresting = c(whichLengtsAreInteresting,minLength)
-      }
+      if(min(whichLengtsAreInteresting)<minLength & !minLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,minLength)
+      if(max(whichLengtsAreInteresting)>maxLength & !maxLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,maxLength)
     }
 
     #Construct the parts of the ALK were we have data--------------------
