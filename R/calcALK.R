@@ -314,8 +314,10 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
     if(species=="Gadus morhua" | species=="Pollachius virens"){
       whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
     }
-    if(min(whichLengtsAreInteresting)<minLength & !minLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,minLength)
-    if(max(whichLengtsAreInteresting)>maxLength & !maxLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,maxLength)
+    if(length(whichLengtsAreInteresting)>0){
+      if(min(whichLengtsAreInteresting)<minLength & !minLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,minLength)
+      if(max(whichLengtsAreInteresting)>maxLength & !maxLength%in% whichLengtsAreInteresting) whichLengtsAreInteresting = c(whichLengtsAreInteresting,maxLength)
+    }
 
     #Construct the parts of the ALK were we have data--------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
