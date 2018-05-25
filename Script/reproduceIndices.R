@@ -14,18 +14,18 @@ n=3 #Number of bootstrap samples
 #Reproduce CPUEs on length level---------------------------------------
 bootstrapProcedure = "stratified"
 bootstrapProcedure = "simple"
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh,bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec = dat$weightStatRec)
+cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,bootstrapProcedure = bootstrapProcedure, B = n)
 #--------------------------------------------------------------
 
 
 #Reproduce CPUEs on age-level-----------------------------------------
 #DATRAS ALK estimator
 bootstrapProcedure = "datras"
-cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                 bootstrapProcedure = bootstrapProcedure, B = n,weightStatRec = dat$weightStatRec)
+cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                                 bootstrapProcedure = bootstrapProcedure, B = n)
 bootstrapProcedure = "stratified"
-cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                     bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec = dat$weightStatRec)
+cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                                     bootstrapProcedure = bootstrapProcedure, B = n)
 
 #Haul based ALK estimator
 #bootstrapProcedure = "hierarchical"
@@ -33,8 +33,8 @@ cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, 
 #                                                bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec = dat$weightStatRec)
 
 bootstrapProcedure = "stratifiedNewALK"
-cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                    bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec= dat$weightStatRec)
+cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                                    bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased")
 
 
 
@@ -50,8 +50,8 @@ if(species == "Gadus morhua"){
 }
 
 bootstrapProcedure = "stratifiedNewALK"
-cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                                 bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased", weightStatRec= dat$weightStatRec)
+cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                                                 bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased")
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -60,8 +60,8 @@ cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = specie
 species = "Gadus morhua"
 n = 5;
 bootstrapProcedure = "datras"
-mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                       bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec= weightStatRec)
+mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dat = dat,
+                       bootstrapProcedure = bootstrapProcedure, B = n)
 
 
 
