@@ -34,7 +34,11 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
   hh = hh[,which(!(names(hh) %in% remove))]
 
   #There seems to be some missing lengths in the HL-data, removes those
-  hl = hl[!is.na(hl$LngtCm),]
+  hl$SubFactor[is.na(hl$LngtCm)] = rep(0,length(hl$LngtCm[is.na(hl$LngtCm)]))
+  hl$Count[is.na(hl$LngtCm)] = rep(0,length(hl$LngtCm[is.na(hl$LngtCm)]))
+  hl$Species[is.na(hl$LngtCm) ] = as.factor(rep(NA,length(hl$LngtCm[is.na(hl$LngtCm)])))
+  hl$LngtCm[is.na(hl$LngtCm)] = rep(-1,length(hl$LngtCm[is.na(hl$LngtCm)]))
+
   ca = ca[!is.na(ca$Age),]
 
   hh_keys <- c("haul.id")

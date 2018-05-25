@@ -306,6 +306,10 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
     {
       idClosest = loc$shortesDist[which(loc$uniqueId == trawls)]
       toSample = c(toString(idClosest),toString(trawls[1]))
+      if(length(idClosest)==0){
+        toSample = toString(trawls[1])
+        print("There was an haul with zero information in HL-data. This was strange, we should use the HH data when defining all hauls, this is TODO")
+      }
       sampledTreawls = sample(toSample,1)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
       dTmp$StatRec = rec

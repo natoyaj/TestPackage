@@ -28,18 +28,14 @@ cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, 
                                      bootstrapProcedure = bootstrapProcedure, B = n, weightStatRec = dat$weightStatRec)
 
 #Haul based ALK estimator
-bootstrapProcedure = "hierarchical"
-cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                                bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec = dat$weightStatRec)
+#bootstrapProcedure = "hierarchical"
+#cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
+#                                                bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec = dat$weightStatRec)
 
 bootstrapProcedure = "stratifiedNewALK"
 cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
                                     bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec= dat$weightStatRec)
 
-
-bootstrapProcedure = "stratified"
-cpueHaulBasedStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-                                    bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec= dat$weightStatRec)
 
 
 #Model-based ALK estimator
