@@ -35,6 +35,9 @@ cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, ye
 bootstrapProcedure = "stratifiedNewALK"
 cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
                                     bootstrapProcedure = bootstrapProcedure, B = n, procedure = "haulBased", weightStatRec= dat$weightStatRec)
+#=======
+#                                    bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec= weightStatRec)
+#>>>>>>> 9da1460443267c3fdf211cf727c934bc7a255ce7
 
 
 bootstrapProcedure = "stratified"
