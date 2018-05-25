@@ -34,8 +34,8 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
   hh = hh[,which(!(names(hh) %in% remove))]
 
   #There seems to be some missing lengths in the HL-data, removes those
-#  hl = hl[!is.na(hl$LngtCm),]
-#  ca = ca[!is.na(ca$Age),]
+  hl = hl[!is.na(hl$LngtCm),]
+  ca = ca[!is.na(ca$Age),]
 
   hh_keys <- c("haul.id")
   hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
