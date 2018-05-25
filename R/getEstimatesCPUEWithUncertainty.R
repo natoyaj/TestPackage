@@ -96,7 +96,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
-#' @param procedure Logical if we use the new procedure (defaul = false). Call ALK-procedure ?
+#' @param ALKprocedure Either datras, haulbased or modelbased.
 #' @param weightStatRec The weights for the statistical rectangles for Saithe
 #' @param doBootstrap A boolean stating if bootstrap should be done. Default is TRUE.
 #' @export
@@ -104,6 +104,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @examples
 getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL,
                                bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
+                               ALKprocedure = "datras",weightStatRec = NULL){
                                procedure = "datras",weightStatRec = NULL,doBootstrap = TRUE){
   #Extract the data of interest-------------
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
@@ -116,18 +117,18 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
 
   #Estimate CPUEs----------------------------
-  if(procedure == "haulBased"){
+  if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = weightStatRec)
-  }else if(procedure == "modelBased"){
+  }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
-  }else if(procedure == "datras"){
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = weightStatRec)
+  }else if(ALKprocedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = weightStatRec)
   }
   else{
-    stop("Unkown procedure.")
+    stop("Unkown ALKprocedure")
   }
   #------------------------------------------
 
@@ -160,6 +161,38 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     simCPUEs = matrix(NA,length(cpueEst),B)
     for(i in 1:B)
     {
+      simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
+      simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
+    }else if(bootstrapProcedure =="hierarchical"){
+      sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFromHL, dataToSimulateFromCA)
+      simDataCA = sim$simCA
+      simDataHL = sim$simHL
+    }
+    else if(bootstrapProcedure =="stratified"){
+      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
+      simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+    }else if(bootstrapProcedure =="almost the datras procedure"){
+      simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
+      simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
+    }else if(bootstrapProcedure =="stratifiedNewALK"){
+      simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = hh,loc = loc) #To use hh here as the HH-data is bad programing
+      simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
+      simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
+
+      for(j in 1:dim(simHauls)[1]){
+        tmpCA = dataToSimulateFromCA[which(dataToSimulateFromCA$haul.id== simHauls$haul.id[j]),]
+        tmpHL = dataToSimulateFromHL[which(dataToSimulateFromHL$haul.id== simHauls$haul.id[j]),]
+
+        if(dim(tmpCA)[1]>0){
+          tmpCA$StatRec = simHauls$StatRec[j]
+          tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataCA = rbind(simDataCA,tmpCA)
+        }
+        if(dim(tmpHL)[1]>0){
+          tmpHL$StatRec = simHauls$StatRec[j]
+          tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+          simDataHL = rbind(simDataHL,tmpHL)
+        }
       if(bootstrapProcedure =="simple")
       {
         simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
