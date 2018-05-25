@@ -120,7 +120,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = weightStatRec)
   }else if(procedure == "modelBased"){
-    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
+    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = procedure, weightStatRec = weightStatRec)
   }else if(procedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
@@ -176,7 +176,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
         simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
         simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
       }else if(bootstrapProcedure =="stratifiedNewALK"){
-        simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = hh,loc = loc)
+        simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
         simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
         simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
 
@@ -208,7 +208,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
         if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
         sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = procedure, weightStatRec = weightStatRec)
       }else if(procedure == "modelBased"){
-        simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
+        simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=dat$hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
         sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = procedure, weightStatRec = weightStatRec)
       }else{
         simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
@@ -280,7 +280,7 @@ calcMCPUEwholeNorthSea = function(species, year, quarter,dataHL,dataCA, bootstra
   #---------------------------------------------------------------
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
-  for(RFA in 1:9){
+  for(RFA in 1:9){ #TODO, why do we dont have RFA 10 in the data?
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
 
     if(procedure=="datras"){
