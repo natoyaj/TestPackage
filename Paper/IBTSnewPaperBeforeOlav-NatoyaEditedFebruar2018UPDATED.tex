@@ -112,11 +112,10 @@ The North Sea International Bottom Trawl Survey (IBTS) was started by the Intern
 \clearpage
 \section{\large INTRODUCTION}
 Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Survey (IBTS) data, coordinated by the International Council for the Exploration of the Sea (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  As pointed out by  \citet{ludwig1981measurement} estimates of parameters relating to stock size are of little value unless they are accompanied by uncertainty estimates. \\
-\indent Indices of abundance at age from IBTS  are based on data obtained from a stratified {\bf semi-random} sampling approach of trawl stations,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial.  In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
+\indent Indices of abundance at age from IBTS  are based on data from a stratified {\bf semi-random} sampling approach,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial. 
+%In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
 Currently, abundance indices from  IBTS are estimated using an age-length key (ALK) method \citep{fridriksson1934calculation}, which is assumed to be constant  over relatively large areas. In this paper we give a strong case for assuming variation in the ALK within these areas (see Figure \ref{fig:40cmCod2015}, which shows the estimated age probabilities of a 40 cm cod (\emph{Gadhus morhua}) in the first quarter of 2015). Figure \ref{fig:40cmCod2015} shows that the age distribution clearly varies for a 40 cm cod within Central North Sea and Northern North Sea (see second graph in the first panel). We propose two ALK estimators, which consider spatial variation: 1) a nonparametric  ALK estimator, and 2) a spatial model-based ALK estimator, which we describe in Section (\ref{sec:methods}). Section \ref{overview} gives an  overview of the  North Sea International Bottom Trawl Surveys. A brief description of the data is given in Section \ref{sec:data}. The current estimators for ALK and catch per unit effort (CPUE) used by ICES in their database for trawl surveys (DATRAS) and our proposed ALK estimators are given in Section \ref{sec:methods}. The results are given in Section \ref{sec:results} and a discussion is given in Section \ref{sec:discussion}.
 
-%What happens if the complex survey design features are ignored in statistical analysis? If stratiﬁcation or ﬁnite population corrections are ignored, the standard errors will be conservative (too large), the conﬁdence intervals will be too long, and their coverage will exceed the nominal $95%$ level. While the positive bias of the standard errors leads to
-%a loss of power, it can generally be considered acceptable. If clustering is ignored, then the standard errors will be too small and reported results will be claimed signiﬁcant too often. If sampling weights are ignored, then the sampling distributions of unweighted statisticsunderrepresentthevaluesoftherandomvariablesassociatedwithlowselection probabilities and overrepresent the values associated with high selection probabilities. As a result, unweighted statistics are biased for population parameters they estimate. The eﬀects of clustering and unequal weights are detrimental for statistical inference and so analysts and researchers need to account for them \citep{kolenikov2010resampling}. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{Allcode40cm2015.png}
@@ -211,29 +210,6 @@ An analysis of the North Sea cod and saithe catches from the first quarter of IB
 %\midrule
 %Trawl hauls  & Total of 387 trawl hauls (303 with age information of cod)  \\[0.5ex]
 %Age &The age of cod varied between 1 to 8 years. \\[0.5ex]
-%Length & Length information in cm of each cod varied between 8 to 112 cm\\[0.5ex]
-%Date&Date of catch varied between 13.01.2015 to 19.02.2015 \\[0.5ex]
-%Statistical rectangle & The stratum in  which at least two trawl hauls are made \\[0.5ex]
-%Coordinates & Geographic coordinates of each trawl haul in a statistical rectangle \\[0.5ex]
-%Duration of haul & Mean duration is 25.9 minutes, with 15  to 30 minutes as 90\% coverage interval. \\[0.5ex]
-%Total count per age ($\mathrm{Total_{age}}$) & $3017_{1}$, $2629_{2}$, $1773_{3}$, $1051_{4}$, $460_{5}$, $194_{6}$, $58_{7}$ \\[0.5ex]
-%Total count for all ages & 7605 cod in the first quarter of 2015. \\[0.5ex]
-%\bottomrule
-%\end{tabular}
-%\label{tab:data2015}
-%\end{table}
-%\end{small}
-
-%\clearpage
-%\begin{small}
-%\begin{table}[h!]
-%\caption{Summary of North Sea IBTS cod and caithe data for first quarter of 2015.}
-%\begin{tabular}{llllll}
-%\toprule
-%\bf Data&\bf Description \\
-%\midrule
-%Trawl hauls  & Total of 387 trawl hauls (303 with age information of cod)  \\[0.5ex]
-%Age &The age of cod varied between 1 to 8 years. \\[0.5ex]
 %{\bf include Saithe data here} \\[0.5ex]
 %Length & Length information in cm of each cod varied between 8 to 112 cm\\[0.5ex]
 %{\bf include saithe data here} \\[0.5ex]
@@ -241,8 +217,8 @@ An analysis of the North Sea cod and saithe catches from the first quarter of IB
 %Statistical rectangle & The stratum in  which at least two trawl hauls are made \\[0.5ex]
 %Coordinates & Geographic coordinates of each trawl haul in a statistical rectangle \\[0.5ex]
 %Duration of haul & Mean duration is 25.9 minutes, with 15  to 30 minutes as 90\% coverage interval. \\[0.5ex]
-%Total count per age ($\mathrm{Total_{age}}$) & $3017_{1}$, $2629_{2}$, $1773_{3}$, $1051_{4}$, $460_{5}$, $194_{6}$, $58_{7}$ \\[0.5ex]
-%Total count for all ages & 7605 cod in the first quarter of 2015. \\[0.5ex]
+%%Total count per age ($\mathrm{Total_{age}}$) & $3017_{1}$, $2629_{2}$, $1773_{3}$, $1051_{4}$, $460_{5}$, $194_{6}$, $58_{7}$ \\[0.5ex]
+%%Total count for all ages & 7605 cod in the first quarter of 2015. \\[0.5ex]
 %\bottomrule
 %\end{tabular}
 %\label{tab:data2015}
@@ -252,60 +228,28 @@ An analysis of the North Sea cod and saithe catches from the first quarter of IB
 As discussed in Section \ref{overview} otoliths are usually collected from a fraction of the fish sampled (see Table \ref{otolithsTable} in appendix \ref{sec:otolithappendix}), but in some cases only a small number of fish are caught so otoliths are taken from all catches. We examine the probability of all trawl hauls containing missing age-length compositions of the {\bf two species} over an eight year period. Table \ref{probability} gives the probability of age given length of cod or saithe species from 2010-2017. In 2015, $89\%$ of the trawl hauls with at least one length observation of length $l$ of cod, had also an age observation for length $l$, and if we further condition that $l>50$ cm, at least $93\%$ of trawl hauls with at least one length observation of length $l$, had also an age observation for length $l$. {\bf For saithe....}. We also examine the distribution of trawl hauls with length and age information, and with only length information in the 10 round fish areas (Figure....). The  \\
 
 
-%\clearpage
+\clearpage
 
-%\begin{figure}[h!]
-%\centering
-%\includegraphics[scale=0.4]{trawlHaulsGadusMorhua.pdf}
-%\caption{Trawl hauls containing both age and length information (blue) and length information only (red)}\label{trawlHaulsGaduMorhua}
-%\end{figure}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{trawlHaulsGadusMorhua.png}
+\caption{Trawl hauls containing both age and length information (blue) and length information only (red)}\label{trawlHaulsGaduMorhua}
+\end{figure}
 
-
-%
-%
-%\clearpage
-%%\begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{1.5pt} 
-%\captionsetup{font=small, width = 10.5cm}{
-%\caption{Probability of age given length data sampled from 2010-2017.}\label{probability}}
-%\begin{tabular}{cccccccccccccccc}
-%\hline \\
-% {\bf Year} &&& \multicolumn{3}{c}{\bf cod}   \\[1.5ex]
-%&&& $\mathrm{Pr}(a \ | \ l)$ && $\mathrm{Pr}(a \ | \ l > 50 \ \mathrm{cm})$    &&    \\[1.5ex]
-%%\cmidrule(lr{0.5em}){1-1} \cmidrule(lr{0.5em}){2-2}\cmidrule(lr{0.5em}){3-3} \\ [0.1ex]
-%%\hline \\[0.1ex]
-% \cmidrule(lr{0.5em}){4-6} 
-%2010   &&&  86.4 $\%$ && 83.2 $\%$     \\[1.5ex]
-%2011   &&&  90.7 $\%$ && 92.4 $\%$  &&\\[1.5ex]
-%2012   &&&  87.6 $\%$ && 92.0 $\%$  &&   \\[1.5ex]
-%2013   &&&  88.1 $\%$ && 93.0 $\%$  &&     \\[1.5ex]
-%2014   &&&  89.8 $\%$ && 93.7 $\%$  &&    \\[1.5ex]
-%2015   &&&  89.3 $\%$ && 93.8 $\%$  &&    \\[1.5ex]
-%2016   &&&  93.0 $\%$ && 93.7 $\%$  &&   \\[0.5ex]
-%2017   &&&  95.5 $\%$ && 98.8 $\%$  &&  \\[0.5ex]
-%\hline
-%\end{tabular}
-%\end{table}
-%%\end{small}
-
-%Probability of age given length data sampled from 2010-2017.
-
-%\clearpage
+\clearpage
 %\begin{small}
 \begin{table}[h!]
 \centering
 \setlength\tabcolsep{1.5pt} 
-\captionsetup{font=small, width = 11.5cm}{
-\caption{Fraction of trawl hauls with length information for cod and saithe that also had a corresponding age information for the period 2010-2017.}\label{probability}}
+\captionsetup{font=small, width = 10.5cm}{
+\caption{Probability of age given length data sampled from 2010-2017.}\label{probability}}
 \begin{tabular}{cccccccccccccccc}
 \hline \\
  {\bf Year} &&& \multicolumn{3}{c}{\bf cod} && \multicolumn{3}{c}{\bf saithe}  \\[1.5ex]
-  \cmidrule(lr{0.5em}){4-6} \cmidrule(lr{0.5em}){7-10}
-&&&all length groups && length groups $  > 50 \ \mathrm{cm}$    && all length groups && length groups $  > 50 \ \mathrm{cm}$    \\[1.5ex]
+&&& $\mathrm{Pr}(a \ | \ l)$ && $\mathrm{Pr}(a \ | \ l > 50 \ \mathrm{cm})$    && $\mathrm{Pr}(a \ | \ l)$ && $\mathrm{Pr}(a \ | \ l > 50 \ \mathrm{cm})$    \\[1.5ex]
 %\cmidrule(lr{0.5em}){1-1} \cmidrule(lr{0.5em}){2-2}\cmidrule(lr{0.5em}){3-3} \\ [0.1ex]
 %\hline \\[0.1ex]
+ \cmidrule(lr{0.5em}){4-6} \cmidrule(lr{0.5em}){7-10}
 2010   &&&  86.4 $\%$ && 83.2 $\%$  &&  86.4 $\%$ && 83.2 $\%$    \\[1.5ex]
 2011   &&&  90.7 $\%$ && 92.4 $\%$  &&  90.7 $\%$ && 92.4 $\%$ \\[1.5ex]
 2012   &&&  87.6 $\%$ && 92.0 $\%$  &&  87.6 $\%$ && 92.0 $\%$  \\[1.5ex]
@@ -318,36 +262,6 @@ As discussed in Section \ref{overview} otoliths are usually collected from a fra
 \end{tabular}
 \end{table}
 %\end{small}
-
-
-
-%%\clearpage
-%%\begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{1.5pt} 
-%\captionsetup{font=small, width = 9.5cm}{
-%\caption{Fraction of trawl hauls with length information for cod and saithe that also had a corresponding age information for the period 2010-2017.}\label{probability}}
-%\begin{tabular}{cccccccccccccccc}
-%\hline \\
-% {\bf Year} &&& \multicolumn{3}{c}{\bf cod} && \multicolumn{3}{c}{\bf saithe}  \\[1.5ex]
-%&&& $\mathrm{Pr}(a \ | \ l)$ && $\mathrm{Pr}(a \ | \ l > 50 \ \mathrm{cm})$    && $\mathrm{Pr}(a \ | \ l)$ && $\mathrm{Pr}(a \ | \ l > 50 \ \mathrm{cm})$    \\[1.5ex]
-%%\cmidrule(lr{0.5em}){1-1} \cmidrule(lr{0.5em}){2-2}\cmidrule(lr{0.5em}){3-3} \\ [0.1ex]
-%%\hline \\[0.1ex]
-% \cmidrule(lr{0.5em}){4-6} \cmidrule(lr{0.5em}){7-10}
-%2010   &&&  86.4 $\%$ && 83.2 $\%$  &&  86.4 $\%$ && 83.2 $\%$    \\[1.5ex]
-%2011   &&&  90.7 $\%$ && 92.4 $\%$  &&  90.7 $\%$ && 92.4 $\%$ \\[1.5ex]
-%2012   &&&  87.6 $\%$ && 92.0 $\%$  &&  87.6 $\%$ && 92.0 $\%$  \\[1.5ex]
-%2013   &&&  88.1 $\%$ && 93.0 $\%$  &&  88.1 $\%$ && 93.0 $\%$   \\[1.5ex]
-%2014   &&&  89.8 $\%$ && 93.7 $\%$  &&  89.8 $\%$ && 93.7 $\%$   \\[1.5ex]
-%2015   &&&  89.3 $\%$ && 93.8 $\%$  &&  89.3 $\%$ && 93.8 $\%$   \\[1.5ex]
-%2016   &&&  93.0 $\%$ && 93.7 $\%$  &&  93.0 $\%$ && 93.7 $\%$   \\[0.5ex]
-%2017   &&&  95.5 $\%$ && 98.8 $\%$  &&  95.5 $\%$ && 98.8 $\%$   \\[0.5ex]
-%\hline
-%\end{tabular}
-%\end{table}
-%%\end{small}
-
 
 \emph{we can also include a plot showing the relative abundance (catches) of age classes (age-at-length distributions)- overlapping age-length compositions. Fish of a certain age might have a larger mean length in one area than another as a consequence of differential growth rates or size-specific migration (see age-length compositions in Table \ref{agelengthcomposition})} 
 
@@ -378,7 +292,7 @@ As discussed in Section \ref{overview} otoliths are usually collected from a fra
 %\end{table}
 
 
-
+%
 %\clearpage
 %%\begin{small}
 %\begin{table}[h!]
@@ -402,8 +316,8 @@ As discussed in Section \ref{overview} otoliths are usually collected from a fra
 %\hline
 %\end{tabular}
 %\end{table}
-%
-%
+
+
 %
 %%\begin{small}
 %\begin{table}[h!]
@@ -468,25 +382,26 @@ For a given species of interest, define $n_{h,l}$ to be the number of fish with 
 \begin{equation}\label{eq:cpueHaul}
 \mathrm{CPUE}_{h,l} =\frac{n_{h,l}}{d_h},
 \end{equation}
-were $d_h$ is the duration of the trawl in hours. The cpue per age class is further defined as
-\begin{equation}\label{eq:cpueALK}
-\mathrm{CPUE}_{h,a, l} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h,a, l} \times ALK_{a,l,h},
-\end{equation}
-where $ALK_{a,l,h}$ is an age length key which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$, and ${\bf L}$ is the set of all length classes. The mean CPUE in a statistical rectangle is further defined as the average of the CPUE for each trawl haul in the rectangle:
+were $d_h$ is the duration of the trawl in hours. The mean CPUE in a statistical rectangle is further defined as the average of the CPUE for each trawl haul in the rectangle:
 \begin{equation}\label{eq:cpueRec}
-\mathrm{mCPUE}_{s,a,l} =\sum_{h \in H_{s}}\frac{\mathrm{CPUE}_{h,a, l}}{|H_{s}|}.
+\mathrm{mCPUE}_{s,l} =\sum_{h \in H_{s}}\frac{\mathrm{CPUE}_{h,l}}{|H_{s}|}.
 \end{equation}
 Here $H_{s}$ represents the set of trawl hauls taken in statistical rectangle $s$, and $|H_{s}|$ is the number of hauls taken in the rectangle. The mean CPUE in $p$th RFA is further defined as
 \begin{equation}\label{eq:cpueRFA}
-\mathrm{mCPUE}_{p,a,l} = \sum_{s \in S_{p}} \frac{\mathrm{mCPUE}_{s,a,l}}{|S_{p}|} ,
+\mathrm{mCPUE}_{p,l} = \sum_{s \in S_{p}} \frac{\mathrm{mCPUE}_{s,l}}{|S_{p}|} ,
 \end{equation}
-where $S_{p}$ is the set of all statistical rectangles in $p$th RFA and $|S_{p}|$ is the number of statistical rectangles in $p$th RFA. An index of abundance by age per round fish area is computed by taking the sum of the length classes for a given age within the round fish area. This is the mean catch per unit effort for age $a$ in superstratum $p$, which is expressed as
+where $S_{p}$ is the set of all statistical rectangles in $p$th RFA and $|S_{p}|$ is the number of statistical rectangles in $p$th RFA. \\
+\indent The cpue per age class is further defined as
+\begin{equation}\label{eq:cpueALK}
+\mathrm{CPUE}_{h,a} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h,l} \times ALK_{a,l,h},
+\end{equation}
+where $ALK_{a,l,h}$ is an age length key which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$, and ${\bf L}$ is the set of all length classes. The mean CPUE per age in the statistical rectangles and roundfish areas are defined as (\ref{eq:cpueRec}) and (\ref{eq:cpueRFA}) with $\mathrm{CPUE}_{(\cdot),l}$ substituted by $\mathrm{CPUE}_{(\cdot),a, l}$.  An index of abundance by age per round fish area is computed by taking the sum of the length classes for a given age within the round fish area. This is the mean catch per unit effort for age $a$ in superstratum $p$, which is expressed as
 \begin{equation}
 \mathrm{mCPUE}_{p,a} =  \sum\limits_{l \in L} \mathrm{mCPUE}_{p,a,l}.
 \label{ageIndex}
 \end{equation}
 
-Abundance at age in the whole study area, $mCPUE_{N,a} $ is derived by the ratio of the sum of the product of abundance at age in each superstratum ($p$) and the area per superstratum, $A_{p}$ (for $p=1,2,...,P$), divided by the total area ($\sum_{p=1}^{P} A_{p}$) defined by $A_{N}$ of the study area. That is,
+Abundance at age in the whole study area, $mCPUE_{N,a} $ is derived by the ratio of the sum of the product of abundance at age in each superstratum ($p$) and the area per superstratum, $A_{p}$ (for $p=1,2,...,P$), divided by the total area, $\sum_{p=1}^{P} A_{p} (= A_{N})  $, of the study area. That is,
 \begin{equation}
 mCPUE_{N,a} = \frac{\sum_{p=1}^{P} A_{p}  \mathrm{mCPUE}_{p,a}}{A_{N}}
 \label{abundanceestimatornorthsea}
@@ -500,67 +415,6 @@ mCPUE_{N,a} = \frac{\sum_{p=1}^{P} A_{p}  \mathrm{mCPUE}_{p,a}}{A_{N}}
 %of estimated 
 %using combined ratio estimator 
 %\emph{An estimator for catch at age in the North Sea is needed, and variance estimator}
-
-%\indent The cpue per age class is further defined as
-%\begin{equation}\label{eq:cpueALK}
-%\mathrm{CPUE}_{h,a} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h,l} \times ALK_{a,l,h},
-%\end{equation}
-%where $ALK_{a,l,h}$ is an age length key which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$, and ${\bf L}$ is the set of all length classes. The mean CPUE per age in the statistical rectangles and roundfish areas are defined as (\ref{eq:cpueRec}) and (\ref{eq:cpueRFA}) with $\mathrm{CPUE}_{(\cdot),l}$ substituted by $\mathrm{CPUE}_{(\cdot),a, l}$.  \\
-
-
-{\bf Ratio estimator} 
-
-The aim of this method is to obtain increased precision by taking advantage of the correlation between $x$ and $y$, where $x$ is an auxiliary variate correlated with $y$, that is, $x$ is often the value of $y$ at some previous time when a complete census was taken.
-
-\begin{itemize}
-
-
-\item Clustered samples are not as statistically efficient as simple random samples. 
-
-\item Similarities among subjects in clusters can reduce the variability of responses from a cluster compared with those expected from a simple random sample. 
-
-\item If statistics meant for simple random samples are used to design and analyze clustered studies, they will result in overestimation of the effective sample size.
-
-
-\item most statistical methodologies were designed to analyse data that is both selected and analyse on the same level.
-
-\item Clustered designs can be used for many reasons, but they always cause some loss of statistical efficiency as a result of the “relatedness” within the preexisting groups. 
-
-\item Clustered data result when some preexisting group structure is used to select study participants, but the researcher is interested in the individual level data.
-
-\item the design of fisheries research studies creates clusters. For example, the trawl hauls are "randomized (semi-random)" but the data to be analysed is at the fish level
-
-\item fish caught together are often more similar than those in the general population 
-\item Even low levels of intracluster correlation can greatly increase the variance of an estimate compared with that from a simple random sample 
-\item density of marine mammals is usually highly variable over a region, which in the presence of intracluster correlation contributes significantly to the variance of population parameter estimates
-
-\item to take into account the areal stratification of trawl hauls, a combined ratio estimator  would be appropriate or .... this type of estimator is necessary because the proportion of fish in each stratum is unknown
-\end{itemize}
-
-
-{\bf Hierarchical versus stratified }
-
-\begin{itemize}
-
-\item Hierarchical data, such as environmetric data, often include multiple sources of variation that can be described using a hierarchical or multilevel model 
-\item  It may be important when setting up a resampling scheme to take careful account of the multiple sources of variation depending on the nature of the parameter being estimated. 
-
-\item For hierarchical unbalanced data having more than two levels, there are more than two bootstrap resampling strategies
-
-\item  The resampling strategy that works best for three-level (or multilevel) data, such as the structure with regions, families, members [7,9] has not yet been determined
-
-\item  Because nonparametric bootstrapping for hierarchical data is not straightforward: certainly it does not make sense to use simple nonparametric resampling, which treats all observations as independent.
-
-\item {(\bf Olav)} As I guessed, the lower and upper bounds of the prediction intervals for the hierarchical procedure is very much larger. If I am right, this is because we typically sample much fewer trawl hauls with the hierarchical procedure than what is taken in reality.
-
-
-\item {(\bf Olav)} Stratified is as follows: The trawl hauls is sampled stratified with respect to statistical rectangles. The ALK is however not calculated with that sample, but by sample the CA-data stratified with respect to age. I think this procedure for sampling ALK was suggested by DATRAS.
- 
-\item {(\bf Olav)} The StratifiedNewALK procedure was something we tried to implement for better accounting for that there may be spatial variation and haul to haul variations in the ALK. It samples trawl hauls stratified with respect to statistical rectangles, and calculate the ALK based on that sample.
- 
-\item {(\bf Olav)} Note that the calculation takes very much time now when procedure = "haulBased", this is because there are many missing ages. We must look more on how to reduce the time needed for that computation. One possible solution could be to use the DATRAS ALK, but substitute the rows were we have observations in the trawl haul. Or borrow strength from trawl hauls in the same statistical rectangle, and if there are no age observations of that length in the statistical rectangle we use the DATRAS ALK for that row.
-\end{itemize}
-
 \subsection{ALK Estimators}
 
 Three ALK estimators are presented in this section. The first is the DATRAS ALK estimator and two estimators that consider spatial variation in the data, a Haul based ALK estimator and a Model based ALK estimator.
@@ -606,15 +460,9 @@ where $\sigma^2_{\gamma}$ is the marginal variance, $||\cdot||$ is the Euclidean
 \label{sec:uncertaintyestimation}
 
 We use nonparametric bootstrapping to estimate the uncertainty of age of estimated CPUEs. Nonparametric resampling allows us to estimate the sampling distribution of the catch per unit effort empirically without making assumptions concerning the data. The percentile method is used to estimate $95\%$ confidence intervals of the estimated CPUEs,. To obtain sufficiently accurate $95\%$ bootstrap percentile confidence intervals, the number of bootstrap samples should  be on the order of 1000 or more \citep[see][]{carpenter2000bootstrap}. Four bootstrap procedures for simulating the data for uncertainty quantification are investigated: 1) a procedure suggested in DATRAS, which is based on hauls in the whole RFA, 2) a \textit{Stratified procedure}, which is similar to the DATRAS procedure but based on hauls in statistical rectangles, 3)  \textit{Haul-based bootstrap procedure}, which accounts for the sampling variability in age-length compositions between hauls, 4) a \textit{Model-based ALK bootstrap procedure}, which allows a more objective and robust way of estimating ALK and accounts for the uncertainty that arises due to sampling variability. Below we give the general algorithms for the four bootstrap approaches.
+
 \subsubsection{DATRAS bootstrap procedure} 
 \label{datrasboot} 
-To construct the $b$th replicate, take a simple random sample with replacement of $N_{\text{RFA}}^{(i)}$ trawl hauls from the original data in the combined strata in the round fish area RFA and placing it into the relevant statistical rectangle (stratum $s$); repeat independently across strata; estimate the parameter of interest, catch per unit effort for length class $l$ in (\ref{eq:cpueHaul}); assuming $O_i$ is the number of age observations from $i$th length class in the RFA, then sample with replacement $O_i$ of these observations, and if there is only one observed age in that length class, sample either that fish or one which is closest in "length class distance"; estimate the parameters of interest: ALK defined in (\ref{sec:datrasalkestimator}) and catch per unit effort per age class in (\ref{eq:cpueALK}). 
-
-
-
-in the $i$th statistical rectangle
-
-
 The bootstrap procedure outlined in DATRAS (ICES 2006 or 2013) is as follows:
  \begin{enumerate} 
 \item  Assume there is $n_{rec}$ trawl hauls in the $i$th statistical rectangle. Sample with replacement $n_{rec}$ trawl hauls from the whole RFA and put them in the $i$th statistical rectangle. 
