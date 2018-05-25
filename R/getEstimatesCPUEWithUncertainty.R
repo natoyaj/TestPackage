@@ -5,20 +5,19 @@
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param dataHL datras-data with length
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param bootstrapProcedure The bootstrap procedure ("simple", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
 #' @export
 #' @return Returns the estimated mCPUE per length class in the given RFA with uncertainty
 #' @examples
-getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfAreaRepresentative = NULL, bootstrapProcedure="simple", B = 10, weightStatRec = NULL)
+getEstimatesCPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simple", B = 10)
 {
-  dataToSimulateFrom = dataHL[!is.na(dataHL$Year) & dataHL$Year == year&
+  dataToSimulateFrom = dat$hl_hh[!is.na(dataHL$Year) & dataHL$Year == year&
                                 !is.na(dataHL$Quarter) & dataHL$Quarter == quarter&
                                 !is.na(dataHL$Roundfish) & dataHL$Roundfish == RFA ,]
 
   #Estimate CPUEs with uncertainty
-  cpueEst = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = dataToSimulateFrom, weightStatRec = weightStatRec)
+  cpueEst = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = dataToSimulateFrom, weightStatRec = dat$weightStatRec)
 
   if(bootstrapProcedure =="stratified"){
     #Find shortest distance to a neigbour trawl location---
@@ -59,7 +58,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
     }else{
       return("Select a valid bootstrap procedure.")
     }
-    sim = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = data, weightStatRec = weightStatRec)
+    sim = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = data, weightStatRec = dat$weightStatRec)
 
     if(length(sim)!= dim(simCPUEs)[1]) sim = c(sim,rep(0, dim(simCPUEs)[1] - length(sim))) #TODO: define the length classes and include them such that we can remove this line.
 
@@ -93,24 +92,22 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dataHL, percentOfA
 #' @param quarter The quarter of interest.
 #' @param dataHL datras-data with length
 #' @param dataCA datras-data with age
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
 #' @param ALKprocedure Either datras, haulbased or modelbased.
-#' @param weightStatRec The weights for the statistical rectangles for Saithe
 #' @param doBootstrap A boolean stating if bootstrap should be done. Default is TRUE.
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
-getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percentOfAreaRepresentative = NULL,
-                               bootstrapProcedure="simple", B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               ALKprocedure = "datras",weightStatRec = NULL,doBootstrap = TRUE){
+getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
+                               bootstrapProcedure="simple", B = 10,
+                               ALKprocedure = "datras",doBootstrap = TRUE){
   #Extract the data of interest-------------
-  dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
+  dataToSimulateFromCA = dat$ca_hh[!is.na(dataCA$Year) & dataCA$Year == year&
                                  !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
                                  !is.na(dataCA$Roundfish) & dataCA$Roundfish == RFA ,]
 
-  dataToSimulateFromHL = dataHL[!is.na(dataHL$Year) & dataHL$Year == year&
+  dataToSimulateFromHL = dat$hl_hh[!is.na(dataHL$Year) & dataHL$Year == year&
                                   !is.na(dataHL$Quarter) & dataHL$Quarter == quarter&
                                   !is.na(dataHL$Roundfish) & dataHL$Roundfish == RFA ,]
   dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
@@ -118,13 +115,13 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = weightStatRec)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,fitModel = fitModel,keyIdMeshHaul= keyIdMeshHaul)
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = weightStatRec)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
-    cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = weightStatRec)
+    cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }
   else{
     stop("Unkown ALKprocedure")
@@ -206,13 +203,13 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
       if(ALKprocedure == "haulBased"){
         simALK = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
         if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
-        sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = weightStatRec)
+        sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
       }else if(ALKprocedure == "modelBased"){
         simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=dat$hh,fitModel=fitModel,keyIdMeshHaul=keyIdMeshHaul)
-        sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = weightStatRec)
+        sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
       }else{
         simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
-        sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = weightStatRec)
+        sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = dat$weightStatRec)
       }
       simCPUEs[,i] = sim
 
@@ -253,9 +250,9 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dataHL,dataCA, percen
 #' @export
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
-calcMCPUEwholeNorthSea = function(species, year, quarter,dataHL,dataCA, bootstrapProcedure="simple",
+calcMCPUEwholeNorthSea = function(species, year, quarter,dat, bootstrapProcedure="simple",
                                B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               procedure = "datras",weightStatRec = NULL){
+                               procedure = "datras"){
 
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
@@ -284,8 +281,8 @@ calcMCPUEwholeNorthSea = function(species, year, quarter,dataHL,dataCA, bootstra
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
 
     if(procedure=="datras"){
-      cpueThisRFA = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dataHL, dataCA = dataCA,
-                                       bootstrapProcedure = bootstrapProcedure, B = n,weightStatRec = weightStatRec,doBootstrap = FALSE)
+      cpueThisRFA = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat,
+                                       bootstrapProcedure = bootstrapProcedure, B = n,doBootstrap = FALSE)
     }
 
     mCpue[,1] = mCpue[,1] + cpueThisRFA[,1] *areaThisRFA
