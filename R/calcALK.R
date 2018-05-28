@@ -526,12 +526,29 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
 #' @param species The species of interest.
 #' @param year The year which the ALKs are calculated.
 #' @param quarter The quarter of the year which the ALKs are calculated.
-#' @param data The CA needed for calculating the ALKs.
-#' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHaul){
+calculateALKModel = function(RFA, species, year, quarter,hh,simFitModel = NULL, doSimulate = FALSE){
+
+  #Load data, currently only estimated for cod in year 2015
+  if(species == "Gadus morhua"){
+    if(!doSimulate){
+      data("cod2015")
+      fitModel= fitModelCod
+    }else{
+      fitModel = simFitModel
+    }
+    data("keyIdMeshHaulCod2015")
+  }else if(species == "Pollachius virens"){
+    if(!doSimulate){
+      data("saithe2015")
+      fitModel= fitModelSaithe
+    }else{
+      fitModel = simFitModel
+    }
+    data("keyIdMeshHaulSaithe2015")
+  }
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -664,7 +681,18 @@ calculateALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHa
 #' @export
 #' @return Returns a list with simulated model based ALK for each trawl haul
 #' @examples
-simALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHaul){
+simALKModel = function(RFA, species, year, quarter,hh){
+
+  #Load data, currently only estimated for cod in year 2015
+  if(species == "Gadus morhua"){
+    data("cod2015")
+    data("keyIdMeshHaulCod2015")
+    fitModel= fitModelCod
+  }else if(species == "Pollachius virens"){
+    data("saithe2015")
+    data("keyIdMeshHaulSaithe2015")
+    fitModel= fitModelSaithe
+  }
 
   jointPrec = fitModel$jointPrecision
 
@@ -690,8 +718,7 @@ simALKModel = function(RFA, species, year, quarter,hh,fitModel,keyIdMeshHaul){
   simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] + simulateFit[which(namesOrder=="x4")]
   simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] + simulateFit[which(namesOrder=="x5")]
 
-  simALK = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,fitModel = simFitModel,keyIdMeshHaul= keyIdMeshHaul)
-  simALK
+  simALK = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,simFitModel = simFitModel,doSimulate = TRUE)
   #Return the list with ALKs------
   return(simALK)
   #-------------------------------

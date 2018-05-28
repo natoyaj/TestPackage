@@ -118,11 +118,8 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
 #' @param quarter The quarter of interest.
 #' @export
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
-#<<<<<<< HEAD
 #' The simulated trawl hauls are simulated stratisfied on the statistical rectangles: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
-#=======
 #' The simulated trawl hauls are simulated stratisfied on the statistical rectangles.
-#>>>>>>> 9da1460443267c3fdf211cf727c934bc7a255ce7
 #' @examples
 simTrawlHaulsHLStratified = function(RFA,year, quarter,data, loc = NULL)
 {
