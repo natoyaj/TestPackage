@@ -1,4 +1,4 @@
-#' getEstimateCPUElength
+#' CPUElength
 #' @description .
 #' @param RFA The roundfish area of interest.
 #' @param species The species of interest.
@@ -9,7 +9,7 @@
 #' @export
 #' @return Returns the estimated mCPUE per length class in the given RFA with uncertainty
 #' @examples
-getEstimatesCPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simple", B = 10)
+CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simple", B = 10)
 {
   dataToSimulateFrom = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                 !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
@@ -83,7 +83,7 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dat, bootstrapProc
 
 
 
-#' getEstimateCPUEage
+#' CPUEage
 #' @description .
 #' @param RFA The roundfish area of interest.
 #' @param species The species of interest.
@@ -96,8 +96,8 @@ getEstimatesCPUElength = function(RFA, species, year, quarter,dat, bootstrapProc
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
-getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
-                               bootstrapProcedure="simple", B = 10,
+CPUEage = function(RFA, species, year, quarter,dat,
+                               bootstrapProcedure="datras", B = 10,
                                ALKprocedure = "datras",doBootstrap = TRUE){
   #Extract the data of interest-------------
   dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
@@ -134,7 +134,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
   }
   #------------------------------------------
 
-  if(bootstrapProcedure =="stratified"| bootstrapProcedure =="stratifiedNewALK"){
+  if(bootstrapProcedure =="stratifiedHLdatrasCA"| bootstrapProcedure =="stratifiedHLandCA"){
     #Find shortest distance to a neigbour trawl location---
     uniqueId = unique(dataToSimulateFromHL$haul.id)
     loc = data.frame(uniqueId)
@@ -171,13 +171,13 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
         sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFromHL, dataToSimulateFromCA)
         simDataCA = sim$simCA
         simDataHL = sim$simHL
-      }else if(bootstrapProcedure =="stratified"){
-        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
-        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
       }else if(bootstrapProcedure =="datras"){
         simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
         simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
-      }else if(bootstrapProcedure =="stratifiedNewALK"){
+      }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
+        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+      }else if(bootstrapProcedure =="stratifiedHLandCA"){
         simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
         simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
         simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
@@ -255,7 +255,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
 #' @export
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
-calcMCPUEwholeNorthSea = function(species, year, quarter,dat, bootstrapProcedure="simple",
+CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="simple",
                                B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
                                procedure = "datras"){
 
@@ -286,7 +286,7 @@ calcMCPUEwholeNorthSea = function(species, year, quarter,dat, bootstrapProcedure
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
 
     if(procedure=="datras"){
-      cpueThisRFA = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat,
+      cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat,
                                        bootstrapProcedure = bootstrapProcedure, B = n,doBootstrap = FALSE)
     }
 

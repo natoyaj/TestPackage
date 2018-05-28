@@ -15,31 +15,30 @@ n=1 #Number of bootstrap samples
 #Reproduce CPUEs on length level---------------------------------------
 bootstrapProcedure = "stratified"
 bootstrapProcedure = "simple"
-cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,bootstrapProcedure = bootstrapProcedure, B = n)
+cpue = CPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,bootstrapProcedure = bootstrapProcedure, B = n)
 #--------------------------------------------------------------
 
 
 #Calculates CPUEs on age-level in a given RFA-----------------------------------------
 bootstrapProcedure = "datras"
-cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+cpueDatras = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                  bootstrapProcedure = bootstrapProcedure, B = n)
-bootstrapProcedure = "stratified"
-cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+bootstrapProcedure = "stratifiedHLdatrasCA"
+cpueStratifiedHL = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                      bootstrapProcedure = bootstrapProcedure, B = n)
 
-bootstrapProcedure = "stratifiedNewALK"
-cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+bootstrapProcedure = "stratifiedHLandCA"
+cpueHaulBasedStratifiedHLandCA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                     bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased")
 
-#Model-based ALK estimator
-bootstrapProcedure = "stratifiedNewALK"
-cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+bootstrapProcedure = "stratifiedHLandCA"
+cpueHaulBasedStratifiedHLmodelALK= CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                                  bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased")
 #--------------------------------------------------------------
 
 
 #Calculates CPUEs on age-level in the whole North Sea---------
 bootstrapProcedure = "datras"
-mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dat = dat,
+mCPUEdatras = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
                        bootstrapProcedure = bootstrapProcedure, B = n)
 #--------------------------------------------------------------
