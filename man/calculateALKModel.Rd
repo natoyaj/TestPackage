@@ -4,7 +4,8 @@
 \alias{calculateALKModel}
 \title{calculateALKModel}
 \usage{
-calculateALKModel(RFA, species, year, quarter, hh)
+calculateALKModel(RFA, species, year, quarter, hh, simFitModel = NULL,
+  doSimulate = FALSE)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
@@ -14,10 +15,6 @@ calculateALKModel(RFA, species, year, quarter, hh)
 \item{year}{The year which the ALKs are calculated.}
 
 \item{quarter}{The quarter of the year which the ALKs are calculated.}
-
-\item{data}{The CA needed for calculating the ALKs.}
-
-\item{data_hl}{The HL needed for calculating the ALKs (since there can be trawl hauls without age information).}
 }
 \value{
 Returns a list with ALK for each trawl haul
