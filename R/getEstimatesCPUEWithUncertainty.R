@@ -109,6 +109,8 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
                                   !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
   dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
 
+
+
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
@@ -118,11 +120,17 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
-    if(ALK=="No observations in period given") stop(paste("No observation given in RFA ", RFA, ", need to include how this should be included in the code. Perhaps just set cpue  = 0 in this RFA? TODO",sep = ""))
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
-  }
-  else{
+  }else{
     stop("Unkown ALKprocedure")
+  }
+  #------------------------------------------
+
+  #Investigate if it is observed zero data---
+  tmp = dataToSimulateFromCA[!is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA&
+                               !is.na(dat$ca_hh$Species) & dat$ca_hh$Species == species,]
+  if(sum(!is.na(tmp))==0){
+    return(data.frame(cpueEst))
   }
   #------------------------------------------
 

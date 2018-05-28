@@ -11,6 +11,7 @@ species = "Gadus morhua"; #species = "Pollachius virens"
 n=1 #Number of bootstrap samples
 #------------------------------------
 
+
 #Reproduce CPUEs on length level---------------------------------------
 bootstrapProcedure = "stratified"
 bootstrapProcedure = "simple"
@@ -41,8 +42,4 @@ cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = specie
 bootstrapProcedure = "datras"
 mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dat = dat,
                        bootstrapProcedure = bootstrapProcedure, B = n)
-
-
 #--------------------------------------------------------------
-
-
