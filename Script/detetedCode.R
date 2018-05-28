@@ -1,4 +1,62 @@
 
+if(FALSE){ #Olav suggest to remove this part. This part extrapolates ages of no observed similar as the datras procedure, but on haul level.
+  #Set the smallest length groops to age 0 or 1 if there are no observations of them
+  first = which(!whichIsMissing2)[1]
+  if(!is.na(first) &first>1)
+  {
+    if(quarter==1)
+    {
+      alkThis[1:(first-1),4] = 1
+    }else if(quarter>1)
+    {
+      alkThis[1:(first-1),3] = 1
+    }
+    whichIsMissing2[1:first] = FALSE
+  }
+
+
+  distToNext = which(!whichIsMissing2)[1]
+  distToPrevious = 99999999
+  nextValue = NA
+
+  if(quarter ==1)start = 3
+  if(quarter >1)start = 2
+
+  for(j in start:dim(alkThis)[2])
+  {
+    for(i in 1:dim(alkThis)[1])
+    {
+      if(whichIsMissing2[i])
+      {
+        if(distToPrevious<distToNext)
+        {
+          alkThis[i,j]= alkThis[i-1,j]
+        }else if(distToPrevious == distToNext)
+        {
+          alkThis[i,j]= (alkThis[i-1,j] + nextValue)/2
+        }else if(distToPrevious > distToNext)
+        {
+          alkThis[i,j]= nextValue
+        }
+        distToNext  = distToNext -1
+        distToPrevious =distToPrevious +1
+
+      }else{
+        distToPrevious = 1
+        distToNext = which(!whichIsMissing2[i:length(whichIsMissing2)])[2]-2
+        if(is.na(distToNext))
+        {
+          distToNext = 999999999
+          nextValue = -999999999
+        }else{
+          nextValue = alkThis[i + distToNext + 1,j]
+        }
+      }
+    }
+    #------------------------------------------------------
+  }
+}
+#--------------------------------------------------------------------------------------------
 
 
 

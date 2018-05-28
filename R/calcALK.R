@@ -17,7 +17,6 @@ calculateALK = function(RFA,species,year,quarter,data)
     caInterest = caInterest[which(!is.na(caInterest$Age) & !is.na(caInterest$LngtCm)),]
     #---------------------------------------------------
 
-    if(dim(caInterest)[1]==0)return("No observations in period given")
 
     #Define variables used in the construction of the ALK--
     maxAge = NULL
@@ -26,39 +25,29 @@ calculateALK = function(RFA,species,year,quarter,data)
     lengthClassIntervallLengths = NULL
     #----------------------------------------------------
 
-    if(species == "Gadus morhua")
-    {
-      maxAge = 6
-      minLength = 7
-      maxLength = 110
-      lengthClassIntervallLengths = 1
-      if(quarter == 1)
-      {
-        minLength = 15
-        maxLength = 90
-      }
+    #Find the configurations needed for the ALK---------
+    conf = confALK(species = species,quarter = quarter)
+    maxAge = conf$maxAge
+    minLength = conf$minLength
+    maxLength = conf$maxLength
+    lengthClassIntervallLengths = conf$lengthClassIntervallLengths
+    #----------------------------------------------------
 
-      alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
-      alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-    }else if(species == "Pollachius virens"){
-      maxAge = 6
-      minLength = 7
-      maxLength = 110
-      lengthClassIntervallLengths = 1
-      if(quarter == 1)
-      {
-        minLength = 25
-        maxLength = 90
-      }
+    #Create the sceleton of the ALK----------------------
+    alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
+    alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+    #----------------------------------------------------
 
-      alk = matrix(0,(maxLength-minLength + 1)/lengthClassIntervallLengths, maxAge+2)
-      alk[,1] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-    }else{
-      #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
+    #Investigate if zero data, if so return the sceleton-
+    if(dim(caInterest)[1]==0){
+      warning(paste("No observations in period given in RFA: " ,RFA,sep = ""))
+      return(alk)
     }
+    #----------------------------------------------------
 
+    #Truncate all old fish to the pluss group------------
     caInterest$Age[caInterest$Age > maxAge] = maxAge
-
+    #----------------------------------------------------
 
     #Construct the parts of the ALK were we have data-----
     if(species=="Gadus morhua"|species == "Pollachius virens")
@@ -224,6 +213,37 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   hlInterest = hlInterest[which(!is.na(hlInterest$Species)),]
   #---------------------------------------------------
 
+
+  #Find the configurations needed for the ALK---------
+  conf = confALK(species = species,quarter = quarter)
+  maxAge = conf$maxAge
+  minLength = conf$minLength
+  maxLength = conf$maxLength
+  lengthClassIntervallLengths = conf$lengthClassIntervallLengths
+  #----------------------------------------------------
+
+  #Create the sceleton of the ALK----------------------
+  alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
+  alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+  #----------------------------------------------------
+
+  #Investigate if zero data, if so return the sceleton-
+  if(dim(caInterest)[1]==0){
+    idHaul = unique(c(as.character(hlInterest$haul.id),as.character(caInterest$haul.id)))
+    neste=1
+    for(id in haulId){
+      idTmp = as.character(id)
+      alkThis = as.data.frame(alk)
+      names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
+      alkThis$ID[1] = idTmp
+      alkToReturn[[neste]] = alkThis
+      neste = neste+1
+    }
+    warning(paste("No observations in period given in RFA: " ,RFA,sep = ""))
+    return(alkToReturn)
+  }
+  #----------------------------------------------------
+
   #Find distance between trawl locations--------------
   id1 = as.character(caInterest$haul.id)
   id2 = as.character(hlInterest$haul.id)
@@ -251,52 +271,6 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   d = spDists(loc)
   #-----------------------------------------------------
 
-  #Abort the calculations if no age information is given in the RFA----
-  if(dim(caInterest)[1]==0)return("No observations in period given")
-  #-----------------------------------------------------
-
-
-  #Define variables used in the construction of the ALK--
-  maxAge = NULL
-  minLength = NULL
-  maxLength = NULL
-  lengthClassIntervallLengths = NULL
-  #----------------------------------------------------
-
-  #Define the skelleton of the ALK---------------------
-  if(species == "Gadus morhua")
-  {
-    maxAge = 6
-    minLength = 7
-    maxLength = 110
-    lengthClassIntervallLengths = dfLength
-    if(quarter == 1)
-    {
-      minLength = 15
-      maxLength = 90
-    }
-
-    alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
-    alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-  }else if(species == "Pollachius virens"){
-    maxAge = 6
-    minLength = 7
-    maxLength = 110
-    lengthClassIntervallLengths = dfLength
-    if(quarter == 1)
-    {
-      minLength = 25
-      maxLength = 90
-    }
-
-    alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
-    alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
-
-
-  }else{
-    #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
-  }
-  #----------------------------------------------------
 
   #Set old fish to belong to the pluss group-----------
   caInterest$Age[caInterest$Age > maxAge] = maxAge
@@ -422,68 +396,6 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
     #Set those we do not find any age  equal the original ALK from datras, this works only if dfLength = 1
     tmp = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
     alkThis[whichIsMissing2,2:(maxAge+3)] = tmp[whichIsMissing2,]
-
-    if(FALSE){ #Olav suggest to remove this part. This part extrapolates ages of no observed similar as the datras procedure, but on haul level.
-      #Set the smallest length groops to age 0 or 1 if there are no observations of them
-      first = which(!whichIsMissing2)[1]
-      if(!is.na(first) &first>1)
-      {
-        if(quarter==1)
-        {
-          alkThis[1:(first-1),4] = 1
-        }else if(quarter>1)
-        {
-          alkThis[1:(first-1),3] = 1
-        }
-        whichIsMissing2[1:first] = FALSE
-      }
-
-
-      distToNext = which(!whichIsMissing2)[1]
-      distToPrevious = 99999999
-      nextValue = NA
-
-      if(quarter ==1)start = 3
-      if(quarter >1)start = 2
-
-      for(j in start:dim(alkThis)[2])
-      {
-        for(i in 1:dim(alkThis)[1])
-        {
-          if(whichIsMissing2[i])
-          {
-            if(distToPrevious<distToNext)
-            {
-              alkThis[i,j]= alkThis[i-1,j]
-            }else if(distToPrevious == distToNext)
-            {
-              alkThis[i,j]= (alkThis[i-1,j] + nextValue)/2
-            }else if(distToPrevious > distToNext)
-            {
-              alkThis[i,j]= nextValue
-            }
-            distToNext  = distToNext -1
-            distToPrevious =distToPrevious +1
-
-          }else{
-            distToPrevious = 1
-            distToNext = which(!whichIsMissing2[i:length(whichIsMissing2)])[2]-2
-            if(is.na(distToNext))
-            {
-              distToNext = 999999999
-              nextValue = -999999999
-            }else{
-              nextValue = alkThis[i + distToNext + 1,j]
-            }
-          }
-        }
-        #------------------------------------------------------
-      }
-    }
-    #--------------------------------------------------------------------------------------------
-
-
-
 
     #Store the ALK for this trawl haul in the list to be returned
     alkToReturn[[neste]] = alkThis

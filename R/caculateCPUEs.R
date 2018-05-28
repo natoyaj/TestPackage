@@ -136,6 +136,16 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatR
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
 
+  #Investigate if it is observed zero data---
+  tmp = dataOfInterest[!is.na(dataOfInterest$Roundfish) & dataOfInterest$Roundfish == RFA&
+                               !is.na(dataOfInterest$Species) & dataOfInterest$Species == species,]
+  if(sum(!is.na(tmp))==0){
+    nAgeClasses = dim(ALK)[2]-1
+    mCPUE = rep(0,nAgeClasses)
+    return(mCPUE)
+  }
+  #------------------------------------------
+
   if(ALKprocedure=="datras"){
     #Construct a matrix with mCPUEs for each statistical rectangel---
     statRects = unique(dataOfInterest$StatRec)
@@ -304,6 +314,16 @@ calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,proced
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
+
+  #Investigate if it is observed zero data---
+  tmp = dataOfInterest[!is.na(dataOfInterest$Roundfish) & dataOfInterest$Roundfish == RFA&
+                         !is.na(dataOfInterest$Species) & dataOfInterest$Species == species,]
+  if(sum(!is.na(tmp))==0){
+    nAgeClasses = dim(ALKNew[[1]])[2]-2
+    mCPUE = rep(0,nAgeClasses)
+    return(mCPUE)
+  }
+  #------------------------------------------
 
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
