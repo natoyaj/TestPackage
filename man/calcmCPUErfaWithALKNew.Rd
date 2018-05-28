@@ -5,8 +5,7 @@
 \title{calcmCPUErfaWithALKNew}
 \usage{
 calcmCPUErfaWithALKNew(RFA, species, year, quarter, data, ALKNew,
-  procedure = "", percentOfAreaRepresentative = NULL,
-  weightStatRec = NULL)
+  procedure = "", weightStatRec = NULL)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
@@ -23,7 +22,4 @@ calcmCPUErfaWithALKNew(RFA, species, year, quarter, data, ALKNew,
 }
 \description{
 Calculates CPUE per length class in a given roundfish area with  a new procedure TODO:document.
-}
-\examples{
-
 }

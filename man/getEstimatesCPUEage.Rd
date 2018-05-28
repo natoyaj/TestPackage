@@ -4,10 +4,9 @@
 \alias{getEstimatesCPUEage}
 \title{getEstimateCPUEage}
 \usage{
-getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
-  percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
-  B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
-  procedure = "datras", weightStatRec = NULL, doBootstrap = TRUE)
+getEstimatesCPUEage(RFA, species, year, quarter, dat,
+  bootstrapProcedure = "simple", B = 10, ALKprocedure = "datras",
+  doBootstrap = TRUE)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -18,19 +17,11 @@ getEstimatesCPUEage(RFA, species, year, quarter, dataHL, dataCA,
 
 \item{quarter}{The quarter of interest.}
 
-\item{dataHL}{datras-data with length}
-
-\item{dataCA}{datras-data with age}
-
-\item{percentOfAreaRepresentative}{the percentage of the statical recangle within sea depth intervall}
-
 \item{bootstrapProcedure}{The bootstrap procedure ("simple", "stratisfied", ...)}
 
 \item{B}{The number of simulations in the selected bootstrap procedure}
 
-\item{procedure}{Logical if we use the new procedure (defaul = false). Call ALK-procedure ?}
-
-\item{weightStatRec}{The weights for the statistical rectangles for Saithe}
+\item{ALKprocedure}{Either datras, haulbased or modelbased.}
 
 \item{doBootstrap}{A boolean stating if bootstrap should be done. Default is TRUE.}
 }

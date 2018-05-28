@@ -4,9 +4,8 @@
 \alias{getEstimatesCPUElength}
 \title{getEstimateCPUElength}
 \usage{
-getEstimatesCPUElength(RFA, species, year, quarter, dataHL,
-  percentOfAreaRepresentative = NULL, bootstrapProcedure = "simple",
-  B = 10, weightStatRec = NULL)
+getEstimatesCPUElength(RFA, species, year, quarter, dat,
+  bootstrapProcedure = "simple", B = 10)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -16,10 +15,6 @@ getEstimatesCPUElength(RFA, species, year, quarter, dataHL,
 \item{year}{The year of interest.}
 
 \item{quarter}{The quarter of interest.}
-
-\item{dataHL}{datras-data with length}
-
-\item{percentOfAreaRepresentative}{the percentage of the statical recangle within sea depth intervall}
 
 \item{bootstrapProcedure}{The bootstrap procedure ("simple", ...)}
 

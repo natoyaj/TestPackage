@@ -8,7 +8,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=3 #Number of bootstrap samples
+n=200 #Number of bootstrap samples
 #------------------------------------
 
 #Reproduce CPUEs on length level---------------------------------------
@@ -18,8 +18,7 @@ cpue = getEstimatesCPUElength(RFA = RFA, species = species, year = year, quarter
 #--------------------------------------------------------------
 
 
-#Reproduce CPUEs on age-level-----------------------------------------
-#DATRAS ALK estimator
+#Calculates CPUEs on age-level in a given RFA-----------------------------------------
 bootstrapProcedure = "datras"
 cpueDatras = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                  bootstrapProcedure = bootstrapProcedure, B = n)
@@ -27,43 +26,23 @@ bootstrapProcedure = "stratified"
 cpueStratified = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                      bootstrapProcedure = bootstrapProcedure, B = n)
 
-#Haul based ALK estimator
-#bootstrapProcedure = "hierarchical"
-#cpueHaulBasedHierarchical = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dataHL = dat$hl_hh, dataCA = dat$ca_hh,
-#                                                bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased", weightStatRec = dat$weightStatRec)
-
 bootstrapProcedure = "stratifiedNewALK"
 cpueHaulBasedStratifiedNew = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                     bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "haulBased")
 
-
-
 #Model-based ALK estimator
-#Load data, currently only estimated for cod in year 2015
-modelDir <<- system.file("modelFit", package = "TestPackage")
-if(species == "Gadus morhua"){
-  load(paste(modelDir,"/keyIdMeshHaulCod2015.rda",sep = ""))
-  load(paste(modelDir,"/cod2015.rda",sep = ""))
-}else if(species == "Pollachius virens"){
-  load(paste(modelDir,"/keyIdMeshHaulSaithe2015.rda",sep = ""))
-  load(paste(modelDir,"/saithe2015.rda",sep = ""))
-}
-
 bootstrapProcedure = "stratifiedNewALK"
 cpueModelBasedstratifiedNewALK = getEstimatesCPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                                  bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = "modelBased")
+#--------------------------------------------------------------
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-#Calcualtes teh CPUE in the whole North Sea
-species = "Gadus morhua"
-n = 5;
+#Calculates CPUEs on age-level in the whole North Sea---------
 bootstrapProcedure = "datras"
 mCPUEdatras = calcMCPUEwholeNorthSea(species = species, year = year, quarter = quarter,dat = dat,
                        bootstrapProcedure = bootstrapProcedure, B = n)
 
 
-
+#--------------------------------------------------------------
 
 
