@@ -118,6 +118,7 @@ getEstimatesCPUEage = function(RFA, species, year, quarter,dat,
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+    if(ALK=="No observations in period given") stop(paste("No observation given in RFA ", RFA, ", need to include how this should be included in the code. Perhaps just set cpue  = 0 in this RFA? TODO",sep = ""))
     cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }
   else{

@@ -540,6 +540,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,simFitModel = NULL, 
       fitModel = simFitModel
     }
     data("keyIdMeshHaulCod2015")
+    keyIdMeshHaul = keyIdMeshHaulCod
   }else if(species == "Pollachius virens"){
     if(!doSimulate){
       data("saithe2015")
@@ -548,6 +549,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,simFitModel = NULL, 
       fitModel = simFitModel
     }
     data("keyIdMeshHaulSaithe2015")
+    keyIdMeshHaul = keyIdMeshHaulSaithe
   }
 
   #Define the list which shall be filled with the ALKs and returned-----
