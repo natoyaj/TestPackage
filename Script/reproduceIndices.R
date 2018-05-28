@@ -8,7 +8,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=200 #Number of bootstrap samples
+n=1 #Number of bootstrap samples
 #------------------------------------
 
 #Reproduce CPUEs on length level---------------------------------------
