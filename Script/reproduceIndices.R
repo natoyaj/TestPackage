@@ -8,13 +8,12 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=1 #Number of bootstrap samples
+n=10 #Number of bootstrap samples
 #------------------------------------
 
 
 #Reproduce CPUEs on length level---------------------------------------
 bootstrapProcedure = "stratified"
-bootstrapProcedure = "simple"
 cpue = CPUElength(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,bootstrapProcedure = bootstrapProcedure, B = n)
 #--------------------------------------------------------------
 
