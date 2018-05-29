@@ -3,6 +3,7 @@
 export(CPUEage)
 export(CPUElength)
 export(CPUEnorthSea)
+export(calcmCPUEnorthSea)
 export(calcmCPUErfa)
 export(calcmCPUErfaWithALK)
 export(calcmCPUErfaWithALKNew)
