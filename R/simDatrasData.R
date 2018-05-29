@@ -83,7 +83,7 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
   #-----------------------------------------------------
 
   #Simulate trawl hauls---------------------------------
-  haulsID = unique(dataOfInterest$haul.id)
+  haulsID = unique(dataOfInterest$haul.id) #TODO: should use the HH-data
   nSim = length(haulsID)
   simHauls = sample(haulsID,nSim,replace = T)
 
