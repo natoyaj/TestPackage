@@ -1,4 +1,26 @@
 
+if(bootstrapProcedure =="stratifiedHLdatrasCA"| bootstrapProcedure =="stratifiedHLandCA"){
+  #Find shortest distance to a neigbour trawl location---
+  uniqueId = unique(dataToSimulateFromHL$haul.id)
+  loc = data.frame(uniqueId)
+  loc$lat = rep(-999,dim(loc)[1])
+  loc$lon = rep(-999,dim(loc)[1])
+
+  for(i in 1:length(uniqueId))
+  {
+    id = uniqueId[i]
+    indeks = which(dataToSimulateFromHL$haul.id== id)[1]
+    loc$lat[i] = dataToSimulateFromHL$lat[indeks]
+    loc$lon[i] = dataToSimulateFromHL$lon[indeks]
+  }
+
+  coordinates(loc) <- ~lon+lat
+  proj4string(loc) ="+proj=longlat"
+  d = spDists(loc)
+  min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
+  loc$shortesDist = uniqueId[min.d]
+  #-----------------------------------------------------
+}
 if(FALSE){ #Olav suggest to remove this part. This part extrapolates ages of no observed similar as the datras procedure, but on haul level.
   #Set the smallest length groops to age 0 or 1 if there are no observations of them
   first = which(!whichIsMissing2)[1]

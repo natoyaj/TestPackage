@@ -1,5 +1,5 @@
 #' confALK
-#' @description
+#' @description returns Configurations needed for the ALK
 #' @return A dataframe with configurations needed for constructing the ALK, i.e. maximum age, minimum length and maximium length.
 #' @examples
 confALK = function(species,quarter)

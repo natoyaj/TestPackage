@@ -435,3 +435,50 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
   #----------------------------------
 }
 
+
+#' calcmCPUEnorthSea
+#' @description Internal function for calculating mCPUE in whole North sea.
+#' @param rfa information about size of RFA's.
+#' @param species The species of interest.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @param data the datras-data needed.
+#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
+#' @param column column in the mCPUE matrix to calculate mCPUE
+#' @export
+#' @return Returns the mCPUE per length class in the given statistical rectangle
+#' @examples
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,mCPUE,dimCPUE)
+{
+  #Read shape file for roundfish areas and calcualte area---------
+  rfa <-
+    readOGR(file.path(
+      system.file("shapefiles", package = "TestPackage"),
+      "Roundfish_shapefiles"
+    ))
+  rfa$areas.sqm<-areaPolygon(rfa)
+  rfa$areas.sqkm<-rfa$areas.sqm/(1000*1000)
+  #---------------------------------------------------------------
+
+  mCPUEvector = rep(0,dimCPUE[1])
+
+  totalArea = 0
+  for(RFA in 1:9){ #TODO, why do we dont have RFA 10 in the data?
+    areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
+
+
+    cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE)
+
+
+    mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
+
+    totalArea = totalArea + areaThisRFA
+
+    print(paste("Done with rfa number", RFA, ", mean cpue so far is:"))
+    print(mCPUEvector/totalArea )
+  }
+  mCPUEvector = mCPUEvector/totalArea
+
+  return(mCPUEvector)
+}

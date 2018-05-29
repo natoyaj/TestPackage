@@ -1,4 +1,4 @@
-#'
+#' readIBTSData
 #' @description .
 #' @param year year of survey
 #' @param quarter quarter of survey
@@ -55,6 +55,8 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
   weightsDir <<- system.file("weightsSaithe", package = "TestPackage")
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
   #-------------------------------------------------------------------
+  hl_hh$haul.idReal = hl_hh$haul.id
+
 
   toReturn = list()
   toReturn$ca = ca

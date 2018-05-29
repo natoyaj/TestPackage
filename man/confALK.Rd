@@ -9,3 +9,6 @@ confALK(species, quarter)
 \value{
 A dataframe with configurations needed for constructing the ALK, i.e. maximum age, minimum length and maximium length.
 }
+\description{
+returns Configurations needed for the ALK
+}
