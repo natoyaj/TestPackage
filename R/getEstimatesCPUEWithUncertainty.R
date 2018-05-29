@@ -127,8 +127,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
   #------------------------------------------
 
   #Investigate if it is observed zero data---
-  tmp = dataToSimulateFromCA[!is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA&
-                               !is.na(dat$ca_hh$Species) & dat$ca_hh$Species == species,]
+  tmp = dataToSimulateFromCA[!is.na(dataToSimulateFromCA$Roundfish) & dataToSimulateFromCA$Roundfish == RFA&
+                               !is.na(dataToSimulateFromCA$Species) & dataToSimulateFromCA$Species == species,]
   if(sum(!is.na(tmp))==0){
     return(data.frame(cpueEst))
   }
@@ -136,7 +136,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
   if(bootstrapProcedure =="stratifiedHLdatrasCA"| bootstrapProcedure =="stratifiedHLandCA"){
     #Find shortest distance to a neigbour trawl location---
-    uniqueId = unique(dataToSimulateFromHL$haul.id)
+    uniqueId = unique(dataToSimulateFromHL$haul.id) #TODO: should use the HH-data
     loc = data.frame(uniqueId)
     loc$lat = rep(-999,dim(loc)[1])
     loc$lon = rep(-999,dim(loc)[1])
@@ -163,8 +163,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
     simCPUEs = matrix(NA,length(cpueEst),B)
     for(i in 1:B)
     {
-      if(bootstrapProcedure =="simple")
-      {
+      if(bootstrapProcedure =="simple"){
         simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
         simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
       }else if(bootstrapProcedure =="hierarchical"){
@@ -176,7 +175,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
         simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
       }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
         simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
-        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)
+        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)#TODO: should use the HH-data
       }else if(bootstrapProcedure =="stratifiedHLandCA"){
         simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
         simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
