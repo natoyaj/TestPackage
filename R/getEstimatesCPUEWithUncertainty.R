@@ -256,7 +256,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="simple",
                                B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                               procedure = "datras"){
+                              ALKprocedure = "datras"){
 
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
@@ -269,22 +269,16 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="simple",
   #---------------------------------------------------------------
 
   #Defines the matrix with cpue to be returned--------------------
-  if(species=="Gadus morhua"){
-    maxAge = 6
-  }else if(species=="Pollachius virens"){
-    maxAge = 6
-  }else{
-    stop("No valid species selected, only Gadus morhua and Pollachius virens is implemented")
-  }
-  totalArea = 0
+  maxAge = confALK(species = species, quarter = quarter)$maxAge
   mCpue = matrix(0,maxAge+1,B+1)
   #---------------------------------------------------------------
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
+  totalArea = 0
   for(RFA in 1:9){ #TODO, why do we dont have RFA 10 in the data?
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
 
-    if(procedure=="datras"){
+    if(ALKprocedure=="datras"){
       cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat,
                                        bootstrapProcedure = bootstrapProcedure, B = n,doBootstrap = FALSE)
     }
