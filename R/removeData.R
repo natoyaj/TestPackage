@@ -22,13 +22,23 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
     if(whatToInvestigate=="mean"){
       if(typeOfAreaToInvestigate =="RFA"){
         resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
-                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
+                           bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
       }else{
         resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
-                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
+                           bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
       }
 
       tmpResults[,i] = resultSim[,1]
+    }else if (whatToInvestigate=="sd"){
+      if(typeOfAreaToInvestigate =="RFA"){
+        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
+                            bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
+      }else{
+        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
+                                 bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
+      }
+
+      tmpResults[,i] = resultSim$sd
     }
 
     if(i==1)print("Information about progress in outer bootstrap: ")
