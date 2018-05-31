@@ -17,7 +17,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
 
   for(i in 1:outerBootstrapN){
-    datRemoved = removeData(year, quarter,dat,removeProcedure,propRemove,whatToRemove)
+    datRemoved = removeData(year, quarter,species,dat,removeProcedure,propRemove,whatToRemove)
 
     if(whatToInvestigate=="mean"){
       if(typeOfAreaToInvestigate =="RFA"){
@@ -75,14 +75,15 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,dat,removeProcedure=1,propRemove,whatToRemove){
+removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,whatToRemove){
 
   datToReturn = dat
 
   datToReturn$hh = datToReturn$hh[!is.na(datToReturn$hh$Year) &datToReturn$hh$Year ==year &
                                     !is.na(datToReturn$hh$Quarter) & datToReturn$hh$Quarter == quarter,]
   datToReturn$ca_hh = datToReturn$ca_hh[!is.na(datToReturn$ca_hh$Year) &datToReturn$ca_hh$Year ==year &
-                                    !is.na(datToReturn$ca_hh$Quarter) & datToReturn$ca_hh$Quarter == quarter,]
+                                    !is.na(datToReturn$ca_hh$Quarter) & datToReturn$ca_hh$Quarter == quarter&
+                                      !is.na(datToReturn$ca_hh$Species) &datToReturn$ca_hh$Species ==species,]
   datToReturn$hl_hh = datToReturn$hl_hh[!is.na(datToReturn$hl_hh$Year) &datToReturn$hl_hh$Year ==year &
                                     !is.na(datToReturn$hl_hh$Quarter) & datToReturn$hl_hh$Quarter == quarter,]
 
@@ -112,6 +113,8 @@ removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove){
     datDetailed = datDetailed[keep,]
 
     return(datDetailed)
+  }else if(removeProcedure=="stratified"){
+
   }
 }
 
