@@ -1,6 +1,9 @@
 #' confALK
 #' @description returns Configurations needed for the ALK
+#' @param species The species of interest.
+#' @param quarter The quarter of interest.
 #' @return A dataframe with configurations needed for constructing the ALK, i.e. maximum age, minimum length and maximium length.
+#' @export
 #' @examples
 confALK = function(species,quarter)
 {

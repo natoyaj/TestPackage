@@ -6,6 +6,11 @@
 \usage{
 confALK(species, quarter)
 }
+\arguments{
+\item{species}{The species of interest.}
+
+\item{quarter}{The quarter of interest.}
+}
 \value{
 A dataframe with configurations needed for constructing the ALK, i.e. maximum age, minimum length and maximium length.
 }

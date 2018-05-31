@@ -63,3 +63,45 @@ ALKprocedure = "modelBased" #TODO: currently we do not simulate the ALK for each
 mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
 #--------------------------------------------------------------
+
+
+
+
+
+
+#Remove parts of the data and see what happens-----------------
+removeProcedure = "random"
+prop = 0.9 #Proportion to remove
+outerBootstrapN = 10
+whatToInvestigate = "mean"
+whatToRemove = "CA"
+
+bootstrapProcedure = "datras"
+ALKprocedure = "datras"
+removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
+                           removeProcedure = removeProcedure, prop = prop,
+                           outerBootstrapN = outerBootstrapN,
+                           whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove)
+#--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
