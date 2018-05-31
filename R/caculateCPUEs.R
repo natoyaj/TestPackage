@@ -448,7 +448,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,mCPUE,dimCPUE)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
 {
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-

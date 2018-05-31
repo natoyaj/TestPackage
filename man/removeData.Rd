@@ -4,7 +4,8 @@
 \alias{removeData}
 \title{removeData}
 \usage{
-removeData(RFA, year, quarter, dat, removeProcedure = 1, prop = 0.5)
+removeData(RFA, year, quarter, dat, removeProcedure = 1, prop = 0.5,
+  whatToRemove)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}

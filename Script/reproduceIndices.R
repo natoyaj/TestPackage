@@ -71,18 +71,19 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 #Remove parts of the data and see what happens-----------------
 removeProcedure = "random"
-prop = 0.9 #Proportion to remove
-outerBootstrapN = 10
+propRemove = 0.9 #Proportion to remove
+outerBootstrapN = 5
 whatToInvestigate = "mean"
+typeOfAreaToInvestigate = "RFA" #typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
 
-bootstrapProcedure = "datras"
+bootstrapProcedure = "stratifiedHLdatrasCA"
 ALKprocedure = "datras"
 removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
-                           removeProcedure = removeProcedure, prop = prop,
+                           removeProcedure = removeProcedure, propRemove = propRemove,
                            outerBootstrapN = outerBootstrapN,
-                           whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove)
+                           whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate)
 #--------------------------------------------------------------
 
 
