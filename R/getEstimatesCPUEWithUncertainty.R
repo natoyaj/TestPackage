@@ -235,7 +235,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                                B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                              ALKprocedure = ""){
+                              ALKprocedure = "",doBootstrap = TRUE){
 
 
 
@@ -246,60 +246,61 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
   mCPUE[,1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                            dat = dat,ALKprocedure = ALKprocedure,B = B,mCPUE= mCPUE,
+                            dat = dat,ALKprocedure = ALKprocedure,B = B,
                             dimCPUE = dim(mCPUE))
   #-----------------------------------------------------------------------------------------
 
+  if(doBootstrap){
+    #Simulate data for constructin unceratinty intervalls------------
+    for(i in 1:B){
+      CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
+      HL = dat$hl_hh[1,]
+      for(RFA in 1:9){
+        loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
+        if(bootstrapProcedure =="datras"){
+          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+          simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh)
+        }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+          simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dat$hl_hh,loc = loc)#TODO: should use the HH-data
+        }else if(bootstrapProcedure =="stratifiedHLandCA"){
+          simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
+          simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
+          simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
 
-  #Simulate data for constructin unceratinty intervalls------------
-  for(i in 1:B){
-    CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
-    HL = dat$hl_hh[1,]
-    for(RFA in 1:9){
-      loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
-      if(bootstrapProcedure =="datras"){
-        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
-        simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh)
-      }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
-        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
-        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dat$hl_hh,loc = loc)#TODO: should use the HH-data
-      }else if(bootstrapProcedure =="stratifiedHLandCA"){
-        simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
-        simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
-        simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
+          for(j in 1:dim(simHauls)[1]){
+            tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
+            tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
 
-        for(j in 1:dim(simHauls)[1]){
-          tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
-          tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
-
-          if(dim(tmpCA)[1]>0){
-            tmpCA$StatRec = simHauls$StatRec[j]
-            tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-            simDataCA = rbind(simDataCA,tmpCA)
+            if(dim(tmpCA)[1]>0){
+              tmpCA$StatRec = simHauls$StatRec[j]
+              tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+              simDataCA = rbind(simDataCA,tmpCA)
+            }
+            if(dim(tmpHL)[1]>0){
+              tmpHL$StatRec = simHauls$StatRec[j]
+              tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+              simDataHL = rbind(simDataHL,tmpHL)
+            }
           }
-          if(dim(tmpHL)[1]>0){
-            tmpHL$StatRec = simHauls$StatRec[j]
-            tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-            simDataHL = rbind(simDataHL,tmpHL)
-          }
+          simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+          simDataHL = simDataHL[-1,]
+        }else{
+          return("Select a valid bootstrap procedure.")
         }
-        simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
-        simDataHL = simDataHL[-1,]
-      }else{
-        return("Select a valid bootstrap procedure.")
+        CA = rbind(CA,simDataCA)
+        HL = rbind(HL,simDataHL)
       }
-      CA = rbind(CA,simDataCA)
-      HL = rbind(HL,simDataHL)
-    }
-    CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
-    HL = HL[-1,]
+      CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
+      HL = HL[-1,]
 
-    datTmp = dat
-    datTmp$ca_hh = CA
-    datTmp$hl_hh = HL
-    mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                              dat = datTmp,ALKprocedure = ALKprocedure,B = B,mCPUE= mCPUE,
-                              dimCPUE = dim(mCPUE))
+      datTmp = dat
+      datTmp$ca_hh = CA
+      datTmp$hl_hh = HL
+      mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                                      dat = datTmp,ALKprocedure = ALKprocedure,B = B,mCPUE= mCPUE,
+                                      dimCPUE = dim(mCPUE))
+    }
   }
 
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1] )

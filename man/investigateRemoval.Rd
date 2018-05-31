@@ -5,7 +5,8 @@
 \title{removeDataDetailed}
 \usage{
 investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
-  ALKprocedure, removeProcedure, prop, outerBootstrapN, whatToInvestigate)
+  ALKprocedure, removeProcedure, prop, outerBootstrapN, whatToInvestigate,
+  whatToRemove, typeOfAreaToInvestigate)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
