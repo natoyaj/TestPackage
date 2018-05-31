@@ -71,9 +71,9 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 #Remove parts of the data and see what happens-----------------
 removeProcedure = "random"
-propRemove = 0.9 #Proportion to remove
+propRemove = 0.01 #Proportion to remove
 outerBootstrapN = 5
-whatToInvestigate = "mean"
+whatToInvestigate = "mean" #whatToInvestigate = "sd"
 typeOfAreaToInvestigate = "RFA" #typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
 
