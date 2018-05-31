@@ -4,23 +4,22 @@
 \alias{calcmCPUEnorthSea}
 \title{calcmCPUEnorthSea}
 \usage{
-calcmCPUEnorthSea(rfa, species, year, quarter, dat, bootstrapProcedure, B,
-  mCPUE, column)
+calcmCPUEnorthSea(species, year, quarter, dat, ALKprocedure, B, mCPUE, dimCPUE)
 }
 \arguments{
-\item{rfa}{information about size of RFA's.}
-
 \item{species}{The species of interest.}
 
 \item{year}{The year of interest.}
 
 \item{quarter}{The quarter of interest.}
 
-\item{column}{column in the mCPUE matrix to calculate mCPUE}
+\item{rfa}{information about size of RFA's.}
 
 \item{data}{the datras-data needed.}
 
 \item{percentOfAreaRepresentative}{the percentage of the statical recangle within sea depth intervall}
+
+\item{column}{column in the mCPUE matrix to calculate mCPUE}
 }
 \value{
 Returns the mCPUE per length class in the given statistical rectangle

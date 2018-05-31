@@ -9,7 +9,7 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
 {
   #Read IBTS-data-----------------------------------------
   dataDir <<- system.file("Data", package = "TestPackage")
-  dat<- readExchangeDir(dataDir)
+  d<- readExchangeDir(dataDir)
   #-------------------------------------------------------
 
 #  ca = getDATRAS(record = "CA", "NS-IBTS", year, quarter)
@@ -17,9 +17,9 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
 #  hh = getDATRAS(record = "HH", "NS-IBTS", year, quarter)
 
   #Extract the data frames from IBTS-data and merge them---
-  ca <- dat[["CA"]]
-  hl <- dat[["HL"]]
-  hh <- dat[["HH"]]
+  ca <- d[["CA"]]
+  hl <- d[["HL"]]
+  hh <- d[["HH"]]
 
   remove = c("RecordType", "GearExp", "DoorType", "SpecCode","AreaType","Valid_Aphia","Survey",
              "Stratum","HaulVal","HydroStNo","StdSpecRecCode","BycSpecRecCode","Rigging",
@@ -59,8 +59,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
 
 
   toReturn = list()
-  toReturn$ca = ca
-  toReturn$hl = hl
   toReturn$hh = hh
   toReturn$ca_hh = ca_hh
   toReturn$hl_hh = hl_hh

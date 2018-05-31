@@ -4,9 +4,9 @@
 \alias{CPUEnorthSea}
 \title{calcCPUEwholeNorthSea}
 \usage{
-CPUEnorthSea(species, year, quarter, dat, bootstrapProcedure = "simple",
+CPUEnorthSea(species, year, quarter, dat, bootstrapProcedure = "datras",
   B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
-  ALKprocedure = "datras")
+  ALKprocedure = "")
 }
 \value{
 Returns the mCPUE per age class in the whole North Sea
