@@ -298,7 +298,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       datTmp$ca_hh = CA
       datTmp$hl_hh = HL
       mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                      dat = datTmp,ALKprocedure = ALKprocedure,B = B,mCPUE= mCPUE,
+                                      dat = datTmp,ALKprocedure = ALKprocedure,B = B,
                                       dimCPUE = dim(mCPUE))
     }
   }
