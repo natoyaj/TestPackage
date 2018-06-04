@@ -39,6 +39,16 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       }
 
       tmpResults[,i] = resultSim$sd
+    }else if (whatToInvestigate=="bootstrapMean"){
+      if(typeOfAreaToInvestigate =="RFA"){
+        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
+                            bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
+      }else{
+        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
+                                 bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
+      }
+
+      tmpResults[,i] = resultSim$bootstrapMean
     }
 
     if(i==1)print("Information about progress in outer bootstrap: ")
@@ -89,7 +99,7 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
 
 
   if("HH" %in% whatToRemove)datToReturn$hh = removeDataDetailedHH(datToReturn$hh,removeProcedure,propRemove)
-  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datToReturn$ca_hh,removeProcedure,propRemove)
+  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datToReturn$ca_hh,removeProcedure,propRemove,species,quarter)
   if("HL" %in% whatToRemove)datToReturn$hl_hh = removeDataDetailedHL(datToReturn$hl_hh,removeProcedure,propRemove)
 
   return(datToReturn)
@@ -105,7 +115,7 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove){
+removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,quarter){
 
   if(removeProcedure=="random"){
     length = dim(datDetailed)[1]
@@ -114,7 +124,17 @@ removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove){
 
     return(datDetailed)
   }else if(removeProcedure=="stratified"){
-
+    dLength = confALK(species = species,quarter = quarter)$lengthClassIntervallLengths
+#    maxLength = confALK(species = species,quarter = quarter)$maxLength
+    if(dLength==1){
+      lengthArray = sort(unique(floor(datDetailed$LngtCm)))
+      for(length in lengthArray){
+        for(RFA in 1:10){
+          tmp = which(floor(datDetailed$LngtCm)==length & datDetailed$Roundfish==RFA)
+          print(tmp)
+        }
+      }
+    }
   }
 }
 
