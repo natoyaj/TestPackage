@@ -8,7 +8,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=2 #Number of bootstrap samples
+n=30 #Number of bootstrap samples
 #------------------------------------
 
 
@@ -71,9 +71,9 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 #Remove parts of the data and see what happens-----------------
 removeProcedure = "random"
-propRemove = 0.2#Proportion to remove
-outerBootstrapN = 5
-whatToInvestigate = "mean" #whatToInvestigate = "sd"; #whatToInvestigate =bootstrapMean
+propRemove = 0.5#Proportion to remove
+nSim = 30
+whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
 typeOfAreaToInvestigate = "RFA" #typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
 
@@ -82,7 +82,7 @@ ALKprocedure = "datras"
 removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
                            removeProcedure = removeProcedure, propRemove = propRemove,
-                           outerBootstrapN = outerBootstrapN,
+                           nSim = nSim,
                            whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate)
 #--------------------------------------------------------------
 

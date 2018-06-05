@@ -2,25 +2,44 @@
 % Please edit documentation in R/removeData.R
 \name{investigateRemoval}
 \alias{investigateRemoval}
-\title{removeDataDetailed}
+\title{investigateRemoval}
 \usage{
 investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
-  ALKprocedure, removeProcedure, prop, outerBootstrapN, whatToInvestigate,
+  ALKprocedure, removeProcedure, propRemove, nSim, whatToInvestigate,
   whatToRemove, typeOfAreaToInvestigate)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
 
+\item{species}{The species of interest.}
+
+\item{year}{The year species of interest.}
+
+\item{quarter}{The quarter species of interest.}
+
+\item{dat}{Data object}
+
+\item{bootstrapProcedure}{Bootstrap procedure used.}
+
+\item{B}{Samples in the bootstrap}
+
+\item{ALKprocedure}{ALK procedure used for calculating CPUE}
+
 \item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
 
-\item{prop}{proportion of data to remove.}
+\item{propRemove}{proportion of data to remove.}
 
-\item{datDetailed}{The quarter of interest.}
+\item{nSim}{The number of times to simulate removal of data.}
+
+\item{whatToInvestigate}{If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.}
+
+\item{whatToRemove}{What to remove, either CA (otholits) or hauls. (currently not implemented for hauls)}
+
+\item{typeOfAreaToInvestigate}{What area to investigate, either equals "RFA" or "NorthSea".}
 }
 \value{
-Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
-observations in a certain procedure.
+Returns a list with summary about changes in estimates by removal of data.
 }
 \description{
-.
+Remove a proportion of the data in a given way. Return a list regarding changes of summery statistics.
 }

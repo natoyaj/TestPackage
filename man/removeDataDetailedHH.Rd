@@ -4,14 +4,14 @@
 \alias{removeDataDetailedHH}
 \title{removeDataDetailedHH}
 \usage{
-removeDataDetailedHH(datDetailed, removeProcedure, prop, RFA)
+removeDataDetailedHH(datDetailed, removeProcedure, propRemove, RFA)
 }
 \arguments{
 \item{datDetailed}{The quarter of interest.}
 
 \item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
 
-\item{prop}{proportion of data to remove.}
+\item{propRemove}{proportion of data to remove.}
 
 \item{RFA}{The roundfish area of interest.}
 }

@@ -6,7 +6,7 @@
 \usage{
 CPUEnorthSea(species, year, quarter, dat, bootstrapProcedure = "datras",
   B = 10, removeProportionsOfCA = 0, removeProportionsOfHL = 0,
-  ALKprocedure = "")
+  ALKprocedure = "", doBootstrap = TRUE)
 }
 \value{
 Returns the mCPUE per age class in the whole North Sea
