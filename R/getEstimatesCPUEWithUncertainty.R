@@ -209,16 +209,17 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
   #Construct a data.frame with estimates and P.I. of CPUEs per age----
   cpue = data.frame(cpueEst)
+  names(cpue) = "mCPUE"
   cpue$bootstrapMean = rep(0,length(cpueEst))
-  cpue$lQ = rep(0,length(cpueEst))
-  cpue$uQ = rep(0,length(cpueEst))
+  cpue$Q025 = rep(0,length(cpueEst))
+  cpue$Q975 = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
   if(doBootstrap){
     for(i in 1:length(cpueEst))
     {
       quantile = quantile(simCPUEs[i,],c(0.025,0.975))
-      cpue$lQ[i] = quantile[1]
-      cpue$uQ[i] = quantile[2]
+      cpue$Q025[i] = quantile[1]
+      cpue$Q975[i] = quantile[2]
       cpue$sd[i] = sd(simCPUEs[i,])
       cpue$bootstrapMean[i] = mean(simCPUEs[i,])
 
