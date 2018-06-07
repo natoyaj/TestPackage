@@ -1,5 +1,5 @@
 #Read data----------
-year = 2015
+year = 2013
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
@@ -8,7 +8,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=30 #Number of bootstrap samples
+n=3 #Number of bootstrap samples
 #------------------------------------
 
 
@@ -70,11 +70,13 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 
 #Remove parts of the data and see what happens-----------------
-removeProcedure = "random"
-propRemove = 0.5#Proportion to remove
-nSim = 30
+removeProcedure = "random"# removeProcedure =  "stratified"
+doNotRemoveAbove = 20 #Do not remove fish which is meshured longer than this (in cm)
+propRemove = 0.5#Proportion to remove, every sample is removed with this probability
+nSim = 10
 whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
-typeOfAreaToInvestigate = "RFA" #typeOfAreaToInvestigate = "wholeNorthSea"
+#typeOfAreaToInvestigate = "RFA"
+typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
 
 bootstrapProcedure = "stratifiedHLdatrasCA"
@@ -83,16 +85,18 @@ removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, qua
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
                            removeProcedure = removeProcedure, propRemove = propRemove,
                            nSim = nSim,
-                           whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate)
+                           whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate,
+                           doNotRemoveAbove = doNotRemoveAbove)
 #--------------------------------------------------------------
 
 
 
 
-
-
-
-
+k = dat$ca_hh[which(dat$ca_hh$LngtCm<=doNotRemoveAbove &
+                      dat$ca_hh$Species==species &
+                      dat$ca_hh$Quarter==quarter &
+                      dat$ca_hh$Year==year),]
+dim(k)
 
 
 
