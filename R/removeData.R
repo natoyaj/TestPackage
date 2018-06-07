@@ -14,13 +14,15 @@
 #' @param quarter The quarter species of interest.
 #' @param nSim The number of times to simulate removal of data.
 #' @param whatToInvestigate If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.
+#' @param doNotRemoveAbove  Do not remove fish that is larger than this (in cm).
 #' @export
 #' @return Returns a list with summary about changes in estimates by removal of data.
 #' @examples
 investigateRemoval = function(RFA,species, year, quarter,dat ,
                               bootstrapProcedure, B, ALKprocedure,
                               removeProcedure, propRemove,
-                              nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate){
+                              nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
+                              doNotRemoveAbove = 9999){
 
   tmpResults = list()
   tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
@@ -32,7 +34,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
   for(i in 1:nSim){
 
     #Remove data in the given procedure
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,propRemove,whatToRemove)
+    datRemoved = removeData(year, quarter,species,dat,removeProcedure,propRemove,whatToRemove,doNotRemoveAbove)
 
     if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
       if(typeOfAreaToInvestigate =="RFA"){
@@ -143,7 +145,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,whatToRemove){
+removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,whatToRemove,doNotRemoveAbove){
 
   datToReturn = dat
 
@@ -157,7 +159,7 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
 
 
   if("HH" %in% whatToRemove)datToReturn$hh = removeDataDetailedHH(datToReturn$hh,removeProcedure,propRemove)
-  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datToReturn$ca_hh,removeProcedure,propRemove,species,quarter)
+  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,propRemove,species,quarter,doNotRemoveAbove)
   if("HL" %in% whatToRemove)datToReturn$hl_hh = removeDataDetailedHL(datToReturn$hl_hh,removeProcedure,propRemove)
 
   return(datToReturn)
@@ -173,26 +175,34 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,quarter){
+removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,quarter,doNotRemoveAbove){
 
+  toReturn = datDetailed
+  #Removes data in the procedure selected in "removeProcedure".
   if(removeProcedure=="random"){
-    length = dim(datDetailed)[1]
+    length = dim(toReturn)[1]
     keep = sample(1:length,ceiling(length*(1-propRemove)))
-    datDetailed = datDetailed[keep,]
+    keep = unique(c(keep,which(toReturn$LngtCm>doNotRemoveAbove))) #Do not remove the fish larger than a certain level
+    toReturn = toReturn[keep,]
 
-    return(datDetailed)
+    return(toReturn)
   }else if(removeProcedure=="stratified"){
     dLength = confALK(species = species,quarter = quarter)$lengthClassIntervallLengths
-#    maxLength = confALK(species = species,quarter = quarter)$maxLength
     if(dLength==1){
-      lengthArray = sort(unique(floor(datDetailed$LngtCm)))
+      lengthArray = sort(unique(floor(toReturn$LngtCm)))
+      lengthArray = lengthArray[which(lengthArray<=doNotRemoveAbove)]#Do not remove the fish larger than a certain level
       for(length in lengthArray){
-        for(RFA in 1:10){
-          tmp = which(floor(datDetailed$LngtCm)==length & datDetailed$Roundfish==RFA)
-          print(tmp)
+        for(RFA in 1:9){
+          tmp = which(floor(toReturn$LngtCm)==length & toReturn$Roundfish==RFA)
+          u = runif(length(tmp))
+          remove = tmp[which(u<propRemove)]
+          if(length(remove)>0){
+            toReturn = toReturn[-remove,]
+          }
         }
       }
     }
+    return(toReturn)
   }
 }
 
