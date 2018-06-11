@@ -24,12 +24,35 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
                               nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
                               doNotRemoveAbove = 9999){
 
+  toReturn= list()
+
+  if(whatToInvestigate=="mean"){
+    if(typeOfAreaToInvestigate =="RFA"){
+      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                          bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
+    }else{
+      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
+                   bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
+    }
+  }else{
+    if(typeOfAreaToInvestigate =="RFA"){
+      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                                      bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
+    }else{
+      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
+                                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
+    }
+  }
+
+
   tmpResults = list()
   tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+
+
 
   for(i in 1:nSim){
 
@@ -68,7 +91,6 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
   }
 
-  toReturn= list()
   if(whatToInvestigate=="mean"){
     toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
     names(toReturn$mCPUE) = c("mean","Q025","Q975", "sd")
@@ -78,6 +100,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
+
     }
   }else{
     toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
@@ -88,6 +112,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
     }
 
     toReturn$bootstrapMean = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
@@ -98,6 +123,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$bootstrapMean$Q025[i] = quantile[1]
       toReturn$bootstrapMean$Q975[i] = quantile[2]
       toReturn$bootstrapMean$sd[i] = sd(tmpResults$bootstrapMean[i,])
+      toReturn$bootstrapMean$cv[i] = toReturn$bootstrapMean$sd[i]/toReturn$bootstrapMean$mean[i]
     }
     toReturn$sd = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
     names(toReturn$sd) = c("mean","Q025","Q975", "sd")
@@ -107,6 +133,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$sd$Q025[i] = quantile[1]
       toReturn$sd$Q975[i] = quantile[2]
       toReturn$sd$sd[i] = sd(tmpResults$sd[i,])
+      toReturn$sd$cv[i] = toReturn$sd$sd[i]/toReturn$sd$mean[i]
     }
     toReturn$Q025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
     names(toReturn$Q025) = c("mean","Q025","Q975", "sd")
@@ -116,6 +143,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$Q025$Q025[i] = quantile[1]
       toReturn$Q025$Q975[i] = quantile[2]
       toReturn$Q025$sd[i] = sd(tmpResults$Q025[i,])
+      toReturn$Q025$cv[i] = toReturn$Q025$sd[i]/toReturn$Q025$mean[i]
     }
     toReturn$Q975 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
     names(toReturn$Q975) = c("mean","Q025","Q975", "sd")
@@ -125,6 +153,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$Q975$Q025[i] = quantile[1]
       toReturn$Q975$Q975[i] = quantile[2]
       toReturn$Q975$sd[i] = sd(tmpResults$Q975[i,])
+      toReturn$Q975$cv[i] = toReturn$Q975$sd[i]/toReturn$Q975$mean[i]
     }
   }
 
