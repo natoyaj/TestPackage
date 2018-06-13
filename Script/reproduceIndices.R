@@ -1,12 +1,19 @@
 #Read data----------
+<<<<<<< HEAD
 year = 2014
+=======
+year = 2015
+>>>>>>> 29db9d66e5e969e9694b575f8dd8465d7b03cc29
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
 
 
 #Set some additional settings--------
+<<<<<<< HEAD
 RFA = 5
+=======
+>>>>>>> 29db9d66e5e969e9694b575f8dd8465d7b03cc29
 species = "Gadus morhua"; #species = "Pollachius virens"
 n=3 #Number of bootstrap samples
 #------------------------------------
@@ -101,8 +108,6 @@ if(typeOfAreaToInvestigate == "RFA"){
 }
 
 print(paste("we removed on average ",dim(k)[1]*propRemove, " otholits"))
-
-
 
 
 
