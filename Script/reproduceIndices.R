@@ -1,4 +1,5 @@
 #Read data----------
+year = 2011
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
