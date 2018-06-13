@@ -225,6 +225,7 @@ removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,
           tmp = which(floor(toReturn$LngtCm)==length & toReturn$Roundfish==RFA)
           u = runif(length(tmp))
           remove = tmp[which(u<propRemove)]
+          remove = tmp[which(u<propRemove)] #REMOVE EITHER THE ONE ABOWE OR BELOV IN A CERATIN WAY SUCH TAHT ON AVERAGE WE REMOVE THE RIGHT PERCENTAGE.
           if(length(remove)>0){
             toReturn = toReturn[-remove,]
           }
