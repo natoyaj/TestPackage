@@ -1,9 +1,4 @@
 #Read data----------
-<<<<<<< HEAD
-year = 2014
-=======
-year = 2015
->>>>>>> 29db9d66e5e969e9694b575f8dd8465d7b03cc29
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
@@ -11,10 +6,14 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 
 #Set some additional settings--------
 <<<<<<< HEAD
+<<<<<<< HEAD
 RFA = 5
 =======
 RFA = 2
 >>>>>>> 29db9d66e5e969e9694b575f8dd8465d7b03cc29
+=======
+RFA = 3
+>>>>>>> bf7f2363d1f4d369c9edf3be10c183ec19f5f1b8
 species = "Gadus morhua"; #species = "Pollachius virens"
 n=3 #Number of bootstrap samples
 #------------------------------------
