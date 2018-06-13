@@ -112,5 +112,3 @@ print(paste("we removed on average ",dim(k)[1]*propRemove, " otholits"))
 
 
 
-
-
