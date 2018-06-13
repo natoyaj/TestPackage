@@ -70,10 +70,10 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 
 #Remove parts of the data and see what happens-----------------
-removeProcedure = "random"# removeProcedure =  "stratified"
-doNotRemoveAbove = 20 #Do not remove fish which is meshured longer than this (in cm)
+removeProcedure = "random" #removeProcedure =  "stratified"
+doNotRemoveAbove = 999 #Do not remove fish which is meshured longer than this (in cm)
 propRemove = 0.5#Proportion to remove, every sample is removed with this probability
-nSim = 10
+nSim = 30
 whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
 #typeOfAreaToInvestigate = "RFA"
 typeOfAreaToInvestigate = "wholeNorthSea"
@@ -96,7 +96,11 @@ k = dat$ca_hh[which(dat$ca_hh$LngtCm<=doNotRemoveAbove &
                       dat$ca_hh$Species==species &
                       dat$ca_hh$Quarter==quarter &
                       dat$ca_hh$Year==year),]
-dim(k)
+if(typeOfAreaToInvestigate == "RFA"){
+  k = k[k$Roundfish==RFA,]
+}
+
+print(paste("we removed on average ",dim(k)[1]*propRemove, " otholits"))
 
 
 
