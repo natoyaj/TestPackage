@@ -77,6 +77,7 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
     cpue$uQ[i] = quantile[2]
     cpue$sd[i] = sd(simCPUEs[i,])
   }
+
   return(cpue)
 }
 
@@ -213,6 +214,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
   cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$Q025 = rep(0,length(cpueEst))
   cpue$Q975 = rep(0,length(cpueEst))
+  cpue$Q025BiasCorrected = rep(0,length(cpueEst))
+  cpue$Q975BiasCorrected = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
   if(doBootstrap){
     for(i in 1:length(cpueEst))
@@ -225,6 +228,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
     }
   }
+
+  #TODO: calculate the bias corrected
   #-----------------------------------------------------
   return(cpue)
 }
