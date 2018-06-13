@@ -8,7 +8,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #Set some additional settings--------
 RFA = 1
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=2 #Number of bootstrap samples
+n=3 #Number of bootstrap samples
 #------------------------------------
 
 
