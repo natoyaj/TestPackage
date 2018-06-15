@@ -455,7 +455,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
     readOGR(file.path(
       system.file("shapefiles", package = "TestPackage"),
       "Roundfish_shapefiles"
-    ))
+    ),verbose = FALSE)
   rfa$areas.sqm<-areaPolygon(rfa)
   rfa$areas.sqkm<-rfa$areas.sqm/(1000*1000)
   #---------------------------------------------------------------
@@ -475,8 +475,8 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
 
     totalArea = totalArea + areaThisRFA
 
-    print(paste("Done with rfa number", RFA, ", mean cpue so far is:"))
-    print(mCPUEvector/totalArea )
+#    print(paste("Done with rfa number", RFA, ", mean cpue so far is:"))
+#    print(mCPUEvector/totalArea )
   }
   mCPUEvector = mCPUEvector/totalArea
 

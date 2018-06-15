@@ -1,14 +1,12 @@
 #Read data----------
-
-year = 2011
-
+year = 2018
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
 
 
 #Set some additional settings--------
-RFA = 4
+RFA = 1
 
 species = "Gadus morhua"; #species = "Pollachius virens"
 n=3 #Number of bootstrap samples
@@ -73,11 +71,10 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 
 #Remove parts of the data and see what happens-----------------
-removeProcedure = "random" #removeProcedure =  "stratified"
-doNotRemoveAbove = 999 #Do not remove fish which is meshured longer than this (in cm)
-propRemove = 0.5#Proportion to remove, every sample is removed with this probability
-nSim = 30
+nSim = 5
 whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
+removeProcedure = "edvin"
+lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = 5)) #Currently simulate that we select only one otholit in each of these intervals in each trawl.
 #typeOfAreaToInvestigate = "RFA"
 typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
@@ -86,26 +83,12 @@ bootstrapProcedure = "stratifiedHLdatrasCA"
 ALKprocedure = "datras"
 removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
-                           removeProcedure = removeProcedure, propRemove = propRemove,
+                           removeProcedure = removeProcedure, propRemove = 0,
                            nSim = nSim,
                            whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate,
-                           doNotRemoveAbove = doNotRemoveAbove)
+                           doNotRemoveAbove = 999,
+                           lengthDivision = lengthDivision)
 #--------------------------------------------------------------
-
-
-
-
-k = dat$ca_hh[which(dat$ca_hh$LngtCm<=doNotRemoveAbove &
-                      dat$ca_hh$Species==species &
-                      dat$ca_hh$Quarter==quarter &
-                      dat$ca_hh$Year==year),]
-if(typeOfAreaToInvestigate == "RFA"){
-  k = k[k$Roundfish==RFA,]
-}
-
-print(paste("we removed on average ",dim(k)[1]*propRemove, " otholits"))
-
-
 
 
 
