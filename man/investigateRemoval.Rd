@@ -6,7 +6,8 @@
 \usage{
 investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
   ALKprocedure, removeProcedure, propRemove, nSim, whatToInvestigate,
-  whatToRemove, typeOfAreaToInvestigate, doNotRemoveAbove = 9999)
+  whatToRemove, typeOfAreaToInvestigate, doNotRemoveAbove = 9999,
+  lengthDivision = NULL)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
@@ -38,6 +39,8 @@ investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
 \item{typeOfAreaToInvestigate}{What area to investigate, either equals "RFA" or "NorthSea".}
 
 \item{doNotRemoveAbove}{Do not remove fish that is larger than this (in cm).}
+
+\item{lengthDivision}{Take one otholit from each intervall (in cm).}
 }
 \value{
 Returns a list with summary about changes in estimates by removal of data.

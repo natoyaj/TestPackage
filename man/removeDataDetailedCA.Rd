@@ -5,7 +5,7 @@
 \title{removeDataDetailedCA}
 \usage{
 removeDataDetailedCA(datDetailed, removeProcedure, propRemove, species, quarter,
-  doNotRemoveAbove)
+  doNotRemoveAbove, lengthDivision)
 }
 \arguments{
 \item{datDetailed}{The quarter of interest.}

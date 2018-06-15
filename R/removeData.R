@@ -15,6 +15,7 @@
 #' @param nSim The number of times to simulate removal of data.
 #' @param whatToInvestigate If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.
 #' @param doNotRemoveAbove  Do not remove fish that is larger than this (in cm).
+#' @param lengthDivision  Take one otholit from each intervall (in cm).
 #' @export
 #' @return Returns a list with summary about changes in estimates by removal of data.
 #' @examples
@@ -22,7 +23,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
                               bootstrapProcedure, B, ALKprocedure,
                               removeProcedure, propRemove,
                               nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
-                              doNotRemoveAbove = 9999){
+                              doNotRemoveAbove = 9999,
+                              lengthDivision=NULL){
 
   toReturn= list()
 
@@ -55,9 +57,11 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
 
   for(i in 1:nSim){
+    print("Information about progress in otholit removal simulation: ")
+    print(paste("Simulation ",i))
 
     #Remove data in the given procedure
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,propRemove,whatToRemove,doNotRemoveAbove)
+    datRemoved = removeData(year, quarter,species,dat,removeProcedure,propRemove,whatToRemove,doNotRemoveAbove,lengthDivision)
 
     if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
       if(typeOfAreaToInvestigate =="RFA"){
@@ -85,8 +89,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
     }
 
-    if(i==1)print("Information about progress in outer bootstrap: ")
-    print(paste("Bootstrap sample ",i))
+
     print(tmpResults$mCPUE[,i])
 
   }
@@ -174,7 +177,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,whatToRemove,doNotRemoveAbove){
+removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,whatToRemove,doNotRemoveAbove,lengthDivision){
 
   datToReturn = dat
 
@@ -186,10 +189,14 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
   datToReturn$hl_hh = datToReturn$hl_hh[!is.na(datToReturn$hl_hh$Year) &datToReturn$hl_hh$Year ==year &
                                     !is.na(datToReturn$hl_hh$Quarter) & datToReturn$hl_hh$Quarter == quarter,]
 
+  numberOfOtholits = dim(datToReturn$ca_hh)[1]
+  print("Removing otholits...")
 
   if("HH" %in% whatToRemove)datToReturn$hh = removeDataDetailedHH(datToReturn$hh,removeProcedure,propRemove)
-  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,propRemove,species,quarter,doNotRemoveAbove)
+  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,propRemove,species,quarter,doNotRemoveAbove, lengthDivision)
   if("HL" %in% whatToRemove)datToReturn$hl_hh = removeDataDetailedHL(datToReturn$hl_hh,removeProcedure,propRemove)
+
+  print(paste("Removed ",numberOfOtholits- dim(datToReturn$ca_hh)[1], " otholits out of ", numberOfOtholits,".",sep = ""))
 
   return(datToReturn)
 }
@@ -204,7 +211,7 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,propRemove,wh
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,quarter,doNotRemoveAbove){
+removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,quarter,doNotRemoveAbove,lengthDivision){
 
   toReturn = datDetailed
   #Removes data in the procedure selected in "removeProcedure".
@@ -232,8 +239,44 @@ removeDataDetailedCA = function(datDetailed,removeProcedure, propRemove,species,
       }
     }
     return(toReturn)
+  }else if(removeProcedure=="edvin"){
+    toReturn = datDetailed[1,]
+    for(id in unique(datDetailed$haul.id)){
+      obsTmp = datDetailed[which(datDetailed$haul.id==id),]
+      obsReduced = removeObsFromHaul(obsTmp,lengthDivision)
+      toReturn = rbind(toReturn,obsReduced)
+    }
+    toReturn = toReturn[-1,]
+    return(toReturn)
   }
 }
+
+#' removeObsFromHaul
+#' @description .
+#' @param datDetailed The quarter of interest.
+#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
+#' @param RFA The roundfish area of interest.
+#' @param propRemove proportion of data to remove.
+#' @export
+#' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
+#' observations in a certain procedure.
+#' @examples
+removeObsFromHaul = function(obsTmp,lengthDivision){
+  toReturn = obsTmp[1,]
+  for(i in 2:length(lengthDivision)){
+    obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1]  & obsTmp$LngtCm<lengthDivision[i] )
+    if(length(obsInside)>1){
+      obsSelected = sample(obsInside,1)
+    }else{
+      obsSelected = obsInside
+    }
+    toReturn = rbind(toReturn,obsTmp[obsSelected,])
+  }
+  toReturn = toReturn[-1,]
+
+  return(toReturn)
+}
+
 
 
 #' removeDataDetailedHL
