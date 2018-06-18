@@ -532,7 +532,7 @@ where
 \mu_a(l,{\bf s},h) = f_a(l)  + \gamma_a({\bf s}) \big(1+ \nu_a(h)\big).
 \end{align}
 Here $ f_a^l(l)$ is a continuous function of length, $\pmb{\gamma}$ is a mean zero Gaussian spatial random field with Mat\'{e}rn covariance function, and $\pmb{\nu}$ is an independent identically distributed Gaussian random haul effect. The spatial random field is intended to capture any spatial variation in the ALK. The haul random effect is intended to capture any haul variations, for example, a haul may by chance hit a school of fish of a certain age.\\  
-\indent The continous function $f_a^l(l)$ is modelled with uage of P-splines, \citep{wood2017generalized}. This is acheved by including the spline regression coefficients as Gausian random effect with precision matrix which smoothens the spline, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for calculating the precision matrix for the spline regression coefficients.
+\indent The continous function $f_a^l(l)$ is modelled with usage of P-splines, \citep{wood2017generalized}. This is acheved by including the spline regression coefficients as Gausian random effect. The precision matrix for the spline regression coefficients is constructed such that wigglyness in the spline is penalized, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for extracting the precision matrix needed for the spline regression coefficients.
 
 \indent We assume that the spatially Gaussian random field in (\ref{eq:linearPred}), $\pmb{\gamma}$, follows a stationary Mat\'{e}rn covariance structure:
 \begin{align}\label{eq:matern}
