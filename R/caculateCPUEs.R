@@ -475,10 +475,12 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
 
     totalArea = totalArea + areaThisRFA
 
-#    print(paste("Done with rfa number", RFA, ", mean cpue so far is:"))
-#    print(mCPUEvector/totalArea )
+
   }
   mCPUEvector = mCPUEvector/totalArea
+
+  print("Done with one simulation whole North Sea, mCPUE is:")
+  print(mCPUEvector)
 
   return(mCPUEvector)
 }
