@@ -238,11 +238,17 @@ CPUEage = function(RFA, species, year, quarter,dat,
       z=qnorm(c(alphL/2,1-alphL/2)) # Standard. normal. limits
       p=pnorm(z-2*b) # bias-correct & convert to proportions
       qq = quantile(simCPUEs,p=p) # Bias-corrected percentile lims.
+<<<<<<< HEAD
       cpue$Q025BiasC[i] = qq[1]
       cpue$Q975BiasC[i] = qq[2]
 
       #print(simCPUEs)
       #print(b)
+=======
+      cpue$Q025BiasCorrected[i] = qq[1]
+      cpue$Q975BiasCorrected[i] = qq[2]
+      #print( observedCPUE)
+>>>>>>> 335daafd96735d12edae0b760552932f0fd701b8
     }
   }
 

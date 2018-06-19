@@ -1,5 +1,5 @@
 #Read data----------
-year = 2018
+year = 2014
 quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 #-------------------
@@ -9,7 +9,7 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter)
 RFA = 1
 
 species = "Gadus morhua"; #species = "Pollachius virens"
-n=3 #Number of bootstrap samples
+n=20 #Number of bootstrap samples
 #------------------------------------
 
 
@@ -71,7 +71,7 @@ mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, qu
 
 
 #Remove parts of the data and see what happens-----------------
-nSim = 2
+nSim = 3
 whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
 removeProcedure = "edvin"
 lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = 5)) #Currently simulate that we select only one otholit in each of these intervals in each trawl.
