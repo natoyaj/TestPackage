@@ -214,9 +214,10 @@ CPUEage = function(RFA, species, year, quarter,dat,
   cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$Q025 = rep(0,length(cpueEst))
   cpue$Q975 = rep(0,length(cpueEst))
-  cpue$Q025BiasCorrected = rep(0,length(cpueEst))
-  cpue$Q975BiasCorrected = rep(0,length(cpueEst))
+  cpue$Q025BiasC = rep(0,length(cpueEst))
+  cpue$Q975BiasC = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
+  b= rep(0, B)
   if(doBootstrap){
     for(i in 1:length(cpueEst))
     {
@@ -227,17 +228,21 @@ CPUEage = function(RFA, species, year, quarter,dat,
       cpue$bootstrapMean[i] = mean(simCPUEs[i,])
 
       #Estimating bias-corrected confidence intervals
-      observedCPUE = cpueEst[i]
-      #estimate bias in standard norm deviates
-      b=qnorm((sum(simCPUEs[i,] >= observedCPUE)/2)/length(simCPUEs[i,]))
-      alphL=0.05 # 95% limits
-      z_0=qnorm(c(alphL/2,1-alphL/2)) # Standard. normal. limits
-      p=pnorm(z_0-2*b) # bias-correct & convert to proportions
-      qq = quantile(simCPUEs,p=p) # Bias-corrected percentile lims.
-      cpue$Q025BiasCorrected[i] = qq[1]
-      cpue$Q975BiasCorrected[i] = qq[2]
 
-      #print( observedCPUE)
+      #estimate bias in standard norm deviates
+      #for each i, b must be calculated for the number of simulations ran
+
+      b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
+
+      alphL=0.05 # 95% limits
+      z=qnorm(c(alphL/2,1-alphL/2)) # Standard. normal. limits
+      p=pnorm(z-2*b) # bias-correct & convert to proportions
+      qq = quantile(simCPUEs,p=p) # Bias-corrected percentile lims.
+      cpue$Q025BiasC[i] = qq[1]
+      cpue$Q975BiasC[i] = qq[2]
+
+      #print(simCPUEs)
+      #print(b)
     }
   }
 
@@ -333,3 +338,29 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   return(mCPUEsummary)
 }
+
+#
+# # assign vals to variable y
+# y=c(7,7,6,9,8,7,8,7,7,7,6,6,6,8,7,7,7,7,6,7,
+#     8,7,7,6,8,7,8,7,8,7,7,7,5,7,7,7,6,7,8,7,7,
+#     8,6,9,7,14,12,10,13,15)
+#
+# #Bias corrected percentile limits
+# # use a 10% trimmed mean
+# stat=function(y){mean(y,trim=0.1)}
+# (obs=stat(y)) # Observed value of stat.
+#
+# R=5 # use 5 bootstraps
+# boot=r=0 ; while(r < R){r=r+1 # for each of R samples
+# boot[r]=stat(sample(y,replace=TRUE))} # get bootstrap stat.
+#
+#
+# # estimate bias in std. norm deviates
+# b=qnorm((sum(boot > obs)+sum(boot==obs)/2)/r)
+#
+# alpha=0.05 # 95% limits
+# z=qnorm(c(alpha/2,1-alpha/2)) # Std. norm. limits
+# p=pnorm(z-2*b) # bias-correct & convert to proportions
+#
+# quantile(boot,p=p) # Bias-corrected percentile lims.
+#
