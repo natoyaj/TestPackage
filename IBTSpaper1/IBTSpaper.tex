@@ -246,7 +246,7 @@ In \citep{ICES2013} it was suggested a bootstrap procedure for estimating the un
 \subsubsection{DATRAS and stratified bootstrap}
 \indent In this subsection we elaborate the bootstrap procedure for catch at length proposed by \emph{DATRAS} \citep{ICES2013} and the stratified procedure, and elaborate how the ALK is simulated. Assume there are $N_{\text{s}}$ trawl hauls in a statistical rectangle. The DATRAS bootstrap procedure consists of sampling with replacement $N_{\text{s}}$ of all trawl hauls in the corresponding RFA, and place them in the statistical rectangle. This procedure is performed independently across all statistical rectangles. Not that this procedure is based on that the CPUE is homogeneous in the whole RFA. The stratified bootstrap procedure is simply to modify the DATRAS bootstrap to sample the $N_{\text{s}}$ hauls from the hauls within the same statistical rectangle. If there are only one trawl hauls within an statistical rectangle, we sample either that haul or the closest haul in air distance.
 
-We propose two types of non parametric ALKs. For simulating the DATRAS ALK we sample with replacement age observations within each RFA stratified with respect to length. If there is only one observed age from a given length class, we sample either that age or at random one age of the closest length class with observed ages. For the haul based ALK, we use the observed ages in the sampled hauls when simulating the CPUE per length.
+For simulating the DATRAS ALK we sample with replacement age observations within each RFA stratified with respect to length. If there is only one observed age from a given length class, we sample either that age or at random one age of the closest length class with observed ages. For the haul based ALK, we use the observed ages in the sampled hauls when simulating the CPUE per length.
 
 
 \subsection{Reducing sampling effort}
@@ -256,7 +256,7 @@ We propose two types of non parametric ALKs. For simulating the DATRAS ALK we sa
 
 
 
-The current sampling procedure for NS-IBTS sample one otholit from every length observed length group in every trawl. We investigate how the estimated mCPUE change if the sampling procedrue were changed such that fewer otholits were collected. To achieve such a comparison we remove otholits in a stratified procedure, mimicking a sampling procedure with fewer otholits collected. For sampling fewer otholits we define wider length groups and simulate the otholit collection such that only one otholit is collected from every wider length group. Estimated mCPUE's with summary statistics, based on the simulated reduced data sets, are then compared with usage of all data. In principle we are free to define any length class to reduce the number of observed otholits. For simplicity we propose to select two procedures: i) at random sample one otholit from every 2 cm length group, and ii) at random sample one otholit from every 5 cm length group. 
+The current sampling procedure for NS-IBTS sample one otholit from every observed length group in every trawl. We investigate how the estimated mCPUE change if the sampling procedrue were changed such that fewer otholits were collected. To achieve such a comparison we remove otholits in a stratified procedure, mimicking a sampling procedure with fewer otholits collected. For sampling fewer otholits we define wider length groups and simulate the otholit collection such that only one otholit is collected from every wider length group. Estimated mCPUE's with summary statistics, based on the simulated reduced data sets, are then compared with usage of all data. In principle we are free to define any length class to reduce the number of observed otholits. For simplicity we propose to select two procedures: i) at random sample one otholit from every 2 cm length group, and ii) at random sample one otholit from every 5 cm length group. 
 
 \section{Case studies}
 \label{sec:data}
@@ -268,16 +268,15 @@ In this section the method will be applied to data from the International Bottom
 
 \subsection{Summary of cod and saithe data}
 \label{summary}
-\begin{small}
+\begin{footnotesize}
 \begin{table}[h!]
-\caption{Summary of North Sea IBTS cod and saithe data for first and third quarters, respectively of 2015.}
+\caption{Summary of North Sea IBTS cod and saithe (in parentheses) data for first quarter in year 2018.}
 \begin{tabular}{llllll}
 \toprule
 \bf Data&\bf Description \\
 \midrule
-Trawl hauls  & Total of 374 (387) trawl hauls in Q1 of 2015 (303 with length and or age \\ 
-& information of cod) and total of 352 trawl hauls in Q3 of 2015 \\
-&(...with length and or age information of saithe) \\[1.5ex]
+Trawl hauls  & Total of 357 trawl hauls in Q1 of 2018,   \\
+&238 (83)  with length and 231 (82) with age information\\[1.5ex]
 Age &The age of cod varied between 1 to 8 years, while saithe age ranged \\
 & from 1 to .... \\[1.5ex]
 Length & Length information in cm of each cod varied between 8 to 112 cm while saithe \\
@@ -293,7 +292,7 @@ Total count for all ages & 7605 cod in Q1 of 2015 and ....saithe in Q3 of 2015. 
 \end{tabular}
 \label{tab:data2015}
 \end{table}
-\end{small}
+\end{footnotesize}
 
 Otoliths are usually collected from a fraction of the fish sampled (see Table \ref{tab:otolithsTable} in appendix \ref{secAp:otolithappendix}), but in some cases only a small number of fish are caught so otoliths are taken from all catches. ({\bf include legend on plots and number of trawl hauls with length only and age data})
 
