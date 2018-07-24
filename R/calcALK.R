@@ -158,7 +158,7 @@ simulateALK = function(RFA, species , year, quarter, dataCA,bootstrapProcedure =
   dataToSimulateFromCA = dataCA[!is.na(dataCA$Year) & dataCA$Year == year&
                                   !is.na(dataCA$Quarter) & dataCA$Quarter == quarter&
                                   !is.na(dataCA$Roundfish) & dataCA$Roundfish == RFA ,]
-  #Estimate CPUEs with uncertainty
+
   ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
 
   simALK = list()
@@ -231,7 +231,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   if(dim(caInterest)[1]==0){
     idHaul = unique(c(as.character(hlInterest$haul.id),as.character(caInterest$haul.id)))
     neste=1
-    for(id in haulId){
+    for(id in idHaul){
       idTmp = as.character(id)
       alkThis = as.data.frame(alk)
       names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
@@ -424,14 +424,6 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
 
 
 
-
-
-
-
-
-
-
-
 #' calculateALKModel
 #' @description
 #' @param RFA Roundfish area number.
@@ -504,7 +496,6 @@ calculateALKModel = function(RFA, species, year, quarter,hh,simFitModel = NULL, 
 
 
   }else{
-    #TODO: see Annex 1 in datras procedure document for informatiopn regarding ALK for different species amd quarters
   }
   #----------------------------------------------------
 
