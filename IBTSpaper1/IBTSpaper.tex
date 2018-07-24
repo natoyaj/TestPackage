@@ -319,7 +319,9 @@ Total count for all ages & ..... cod in year 2018 Q1 and ....saithe in Q1 of 201
 
 Recall that the main assumption of DATRAS ALK is that the age-length compositions of species across large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a .....cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)).
 
-Table \ref{resultstablecodandsaithe} shows abundance indices of cod and saithe estimated from each of the three ALK methods. 
+Table \ref{resultstablecodandsaithe} shows abundance indices, $\widehat{mCPUE_{N,a}}$, of cod and saithe estimated from each of the three ALK methods. Estimates of the standard error (SE), relative standard error (RSE in parentheses), the lower bound (LB) and upper bound (UB) of approximate $95 \%$ confidence intervals are also given. The estimated indices of abundance are similar for all ALKs, but the the spatial ALKs generally gave higher estimates. Also, the spatial ALKs provide a better fit to the data in terms of precision. Uncertainty estimates (RSE) for older fishes ($\ge 4$) are higher, as expected, for the spatial ALKs as fewer samples are generally collected for these, and given that spatial variation in the data is accounted for, variability would be higher.
+
+ %The ALK methods gave similar trends of estimated abundance indices but the spatial ALK 
 
 \begin{itemize}
 \item \emph{generate plots for year 2018 Q1. Possibly show same age given length group for both species?}
@@ -331,6 +333,7 @@ Table \ref{resultstablecodandsaithe} shows abundance indices of cod and saithe e
 \end{itemize}
 \item \emph{test for significant differences between estimates from ALK methods for age groups?}
 \item \emph{As discussed in Section \ref{sec:datrasalkestimator} and shown in the results in Table \ref{resultstablecodandsaithe} the assumption of no difference in regional compositions of age-length structures is invalid and DATRAS ALK have introduced bias in both direction, and the extent of this  bias in either direction is unknown. Hence, this ALK is not appropriate to perform further analyses. }
+\item \emph{codes do not run for saithe Q1 2018}
 \end{itemize}
 
 \clearpage
@@ -359,32 +362,32 @@ Table \ref{resultstablecodandsaithe} shows abundance indices of cod and saithe e
 \begin{table}[h!]
 \centering
 \scriptsize
-\setlength\tabcolsep{4.3pt} 
+\setlength\tabcolsep{3.0pt} 
 \captionsetup{font=small, width = 16.5cm}{
 \caption{Average estimates of abundance indices for the North Sea cod and saithe species from 200 bootstrap samples and 100 simulation runs, in year 2018 Q1. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
 \begin{tabular}{ccccccccccccccccccccccccccc}
 \hline \\[0.1ex]
-{\bf Species} &{\bf $a$ } & \multicolumn{4}{c}{\bf DATRAS ALK} & \multicolumn{4}{c}{\thead{\bf Haul-based ALK }} & \multicolumn{4}{c}{\thead{\bf  Model-based ALK}} \\[1.5ex]
+{\bf Species} &{\bf $a$ } & \multicolumn{4}{c}{\bf DATRAS ALK} & \multicolumn{4}{c}{\thead{\bf Haul based ALK }} & \multicolumn{4}{c}{\thead{\bf  Model based ALK}} \\[1.5ex]
  % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
 %   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
 & &$\widehat{mCPUE_{N,a}}$ & SE(RSE) & LB & UB &$\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB   & $\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB &   \\[0.5ex]
 \cmidrule(lr{0.5em}){3-6}  \cmidrule(lr{0.5em}){7-10}  \cmidrule(lr{0.1em}){11-14} \\ [0.1ex]
 %\hline\\[1.0ex]
 %\raisebox{1.5ex}{\bf cod} & 0  & 0 & 0 ( $-$) & 0 & 0 &  0   &  0 ($-$) & & & 0 & 0 ($-$)  \\[1ex]
-\raisebox{1.5ex}{\bf cod}& 1  & 0.764  & 0.26 ($34 \%$) & 0.31 & 1.33 & 0.60  & 0.24 ($40 \%$) & & & 0.70 & 0.36 ($51 \%$) \\[1ex]
-& 2  & 21.989 & 6.76 ($31 \%$) & 12.73 & 37.15 & 22.21 & 4.15 ($19 \%$) & & & 22.11& 4.28 ($19 \%$) \\[1ex]
-& 3  & 11.285 & 2.19 ($19 \%$) & 6.31 & 15.02 & 10.58 & 1.20 ($11 \%$) & & & 10.99& 1.77 ($16 \%$) \\[1ex]
-& 4  & 3.265  & 0.71 ($22 \%$) & 1.49 & 4.21 & 3.67  & 1.28 ($35 \%$) & & & 3.50 & 0.87 ($25 \%$) \\[1ex]
-& 5  & 1.147  & 0.34 ($30 \%$) & 0.40 & 1.75 & 1.27  & 0.42 ($33 \%$) & & & 1.20 & 0.48 ($40 \%$) \\[1ex]
-& 6+  & 1.276 & 0.38 ($30 \%$) & 0.44 & 1.82 & 1.40  & 0.70 ($50 \%$) & & & 1.21 & 0.42 ($35 \%$)\\[4.5ex]
+\raisebox{1.5ex}{\bf cod}& 1   & 0.895  & 0.13 ($14.5 \%$) & 0.671 & 1.180 & 0.905  & 0.13 ($14.4 \%$) &0.712 & 1.206 &  &  ($ \%$) \\[1ex]
+& 2  & 6.758 & 0.99 ($14.6 \%$) & 5.399  & 8.722 & 6.811 & 1.07 ($15.7 \%$) &5.283 &9.276 & &  ($ \%$) \\[1ex]
+& 3  & 1.771 & 0.21 ($11.9 \%$) & 1.321  & 2.108 & 1.652 & 0.17 ($10.3 \%$) &1.260 &1.948 & &  ($ \%$) \\[1ex]
+& 4  &1.655  & 0.29 ($17.5 \%$) & 1.009  & 2.126 & 1.667 & 0.32 ($19.2 \%$) &0.917 &2.048 & &  ($ \%$) \\[1ex]
+& 5  & 0.821 & 0.16 ($19.5 \%$) & 0.468  & 1.045 & 0.782 & 0.12 ($15.3 \%$) &0.497 &0.954 & &  ($ \%$) \\[1ex]
+& 6+ & 1.049 & 0.23 ($21.9 \%$) & 0.529  & 1.365 & 1.131 & 0.30 ($26.5 \%$) &0.361 &1.438 & &  ($ \%$)\\[4.5ex]
 
 %\raisebox{1.5ex}{\bf saithe} & 0  & 0      & 0 ( $-$)       & & & 0     &  0 ($-$)       & & & 0    & 0 ($-$)  \\[1ex]
-\raisebox{1.5ex}{\bf saithe} & 1  & 0.764  & 0.26 ($34 \%$) & & & 0.60  & 0.24 ($40 \%$) & & & 0.70 & 0.36 ($51 \%$) \\[1ex]
-& 2  & 21.989 & 6.76 ($31 \%$) & & & 22.21 & 4.15 ($19 \%$) & & & 22.11& 4.28 ($19 \%$) \\[1ex]
-& 3  & 11.285 & 2.19 ($19 \%$) & & & 10.58 & 1.20 ($11 \%$) & & & 10.99& 1.77 ($16 \%$) \\[1ex]
-& 4  & 3.265  & 0.71 ($22 \%$) & & & 3.67  & 1.28 ($35 \%$) & & & 3.50 & 0.87 ($25 \%$) \\[1ex]
-& 5  & 1.147  & 0.34 ($30 \%$) & & & 1.27  & 0.42 ($33 \%$) & & & 1.20 & 0.48 ($40 \%$) \\[1ex]
-& 6+  & 1.276 & 0.38 ($30 \%$) & & & 1.40  & 0.70 ($50 \%$) & & & 1.21 & 0.42 ($35 \%$)\\[0.5ex]
+\raisebox{1.5ex}{\bf saithe} & 1&  & ($ \%$) & & &  & ($ \%$) & & &  &  ($ \%$) \\[1ex]
+& 2  &  &  ($ \%$) & & &  &  ($ \%$) & & & &  ($ \%$) \\[1ex]
+& 3  &  &  ($ \%$) & & &  &  ($ \%$) & & & &  ($ \%$) \\[1ex]
+& 4  &  &  ($ \%$) & & &  &  ($ \%$) & & & &  ($ \%$) \\[1ex]
+& 5  &  &  ($ \%$) & & &  &  ($ \%$) & & & &  ($ \%$) \\[1ex]
+& 6+ &  &  ($ \%$) & & &  &  ($ \%$) & & & &  ($ \%$)\\[0.5ex]
 
 \hline
 \end{tabular}
@@ -457,7 +460,7 @@ Sampling one otolith per 2 cm or 5 cm length group provide .........
 \caption{Estimates of abundance indices and standard error estimates for the North Sea cod and saithe species when all the otolith data is used and when one otolith per 2 cm or 5 cm length group is used. The lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals  are given.}\label{resultsoptimum}}
 \begin{tabular}{ccccccccccccccccccccccccccc}
 \hline \\[0.1ex]
-{\bf Species} &{\bf $a$ } & {\bf No. otoliths} & \multicolumn{2}{c}{\bf Al data }  & \multicolumn{6}{c}{\thead{\bf Reduced data by $2$ cm}} & \multicolumn{6}{c}{\thead{\bf Reduced data by $5$ cm}} \\[1.5ex]
+{\bf Species} &{\bf $a$ } & {\bf No. otoliths} & \multicolumn{2}{c}{\bf All data }  & \multicolumn{6}{c}{\thead{\bf Reduced data by $2$ cm}} & \multicolumn{6}{c}{\thead{\bf Reduced data by $5$ cm}} \\[1.5ex]
    \cmidrule(lr{0.5em}){4-5} \cmidrule(lr{0.5em}){6-11}  \cmidrule(lr{0.1em}){12-17}   \\ [0.1ex]
  &&& \multicolumn{2}{c}{} & \multicolumn{3}{c}{\thead{\bf $\widehat{mCPUE_{N,a}}$  }} & \multicolumn{3}{c}{$\widehat{SE}_{mCPUE_{N,a}}$ } & \multicolumn{3}{c}{\thead{\bf $\widehat{mCPUE_{N,a}}$  }} & \multicolumn{3}{c}{$\widehat{SE}_{mCPUE_{N,a}}$ } \\[1.5ex]
  % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
@@ -562,6 +565,19 @@ Reducing the number of otoliths by ....... percent had {\bf no} significant effe
 \item how does changes in survey design or other factors affect changes in catch rates? If so are these changes  significant? 
 \end{itemize}
 
+
+\section{General comments}
+
+\begin{itemize}
+\item Decide on whether we say, "in this research or paper"
+\item Decide on whether to say, "In this subsection or section"
+\item Decide on year of data for case studies
+\item Decide on writing "haul(model)-based or haul (model) based
+\item Decide on calling the survey "The North Sea IBTS or IBTS"
+\item Decide on writing "Cod or cod, and Saithe or saithe"
+\item Decide on a title for the paper
+
+\end{itemize}
 %
 %\clearpage
 %\begin{itemize}
