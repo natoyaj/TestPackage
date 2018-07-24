@@ -463,9 +463,11 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
   mCPUEvector = rep(0,dimCPUE[1])
 
   totalArea = 0
-  for(RFA in 1:9){ #TODO, why do we dont have RFA 10 in the data?
+  for(RFA in 1:9){
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
 
+    #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
+    if(RFA ==5)areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
 
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                           ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE)

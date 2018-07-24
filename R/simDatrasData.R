@@ -223,6 +223,8 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
                           !is.na(data$Age),]
   #-----------------------------------------------------
 
+  if(dim(dataOfInterest)[1]==0)return(dataOfInterest)
+
   #Simulate trawl hauls---------------------------------
   lengths = unique(sort(floor(dataOfInterest$LngtCm)))
   simData = list(NULL)
@@ -250,7 +252,7 @@ simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus mor
         extra = which(floor(dataOfInterest$LngtCm)==lengths[i+1])
       }
 
-      whichToAdd = sample(length(extra),1)
+      whichToAdd = sample(length(extra),1) #Extract one which is sampled with 0.5 probability
       dTmp = rbind(dataOfInterest[floor(dataOfInterest$LngtCm)==l,],
                    dataOfInterest[extra[whichToAdd],])
       dTmp$LngtCm = l
