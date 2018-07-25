@@ -275,7 +275,7 @@ The current sampling procedure for the North Sea IBTS data is the sampling of on
 
 \section{Case studies}
 \label{sec:data}
-In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for the year 2018, which is obtained from the DATRAS database \citep{datras}. We choose year 2018 because in that year new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, one otolith per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Web appendix \ref{secAp:otolithappendix} for details of the sampling procedures for each target species). In this paper the focal species are cod and saithe and the samples are collected in the first and third quarters. All samples are caught using the standard GOV gear described in Section \ref{overview}. Table \ref{tab:data2018} gives a brief description of the data for year 2018 in the first quarter. The data (Table \ref{tab:data2018}) shows that cod can be as old as 8 years, and saithe as old as ..... years but for simplicity, in our analyses we consider the age groups 1 to 6+ for all ALK methods, where the last group consists of fish of age 6 or older . Note that age 0 for the target species are included in IBTS and are required in the calculation of the ALKs but the results of these estimation are not included in any further analyses.
+In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for the year 2018, which is obtained from the DATRAS database \citep{datras}. We choose year 2018 because in that year new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, one otolith per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Web appendix \ref{secAp:otolithappendix} for details of the sampling procedures for each target species). In this paper the focal species are cod and saithe and the samples are collected in the first and third quarters. All samples are caught using the standard GOV gear described in Section \ref{overview}. Table \ref{tab:data2018} gives a brief description of the data for year 2018 in the first quarter.  The data (Table \ref{tab:data2018}) shows that cod can be as old as 8 years, and saithe as old as ..... years but for simplicity, in our analyses we consider the age groups 1 to 6+ for all ALK methods, where the last group consists of fish of age 6 or older . Note that age 0 for the target species are included in IBTS and are required in the calculation of the ALKs but the results of these estimation are not included in any further analyses.
 
 \begin{itemize}
 \item \emph{logical reasons for using 2018 data but we do not have Q3 data and it was recommended by J Devine etc to use Q3 data for saithe (I am not sure of the reasons, we could clarify this) but Q1 is not recommended for saithe. Should we consider 2017 as most countries were adopting the sampling strategy of one otolith per cm at that time?}
@@ -364,7 +364,7 @@ Abundance indices of saithe ......
 \begin{table}[h!]
 \centering
 \scriptsize
-\setlength\tabcolsep{3.0pt} 
+\setlength\tabcolsep{1.5pt} 
 \captionsetup{font=small, width = 16.5cm}{
 \caption{Average estimates of abundance indices for the North Sea cod and saithe species from 200 bootstrap samples and 100 simulation runs, in year 2018 Q1. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
 \begin{tabular}{ccccccccccccccccccccccccccc}
@@ -375,21 +375,32 @@ Abundance indices of saithe ......
 & &$\widehat{mCPUE_{N,a}}$ & SE(RSE) & LB & UB &$\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB   & $\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB &   \\[0.5ex]
 \cmidrule(lr{0.5em}){3-6}  \cmidrule(lr{0.5em}){7-10}  \cmidrule(lr{0.1em}){11-14} \\ [0.1ex]
 %\hline\\[1.0ex]
-%\raisebox{1.5ex}{\bf cod} & 0  & 0 & 0 ( $-$) & 0 & 0 &  0   &  0 ($-$) & & & 0 & 0 ($-$)  \\[1ex]
-\raisebox{1.5ex}{\bf cod}& 1   & 0.895  & 0.13 ($14.5 \%$) & 0.671 & 1.180 & 0.905  & 0.13 ($14.4 \%$) &0.712 & 1.206 &  &  ($ \%$) \\[1ex]
+
+%\raisebox{1.5ex}{\bf cod 2018 Q1}& 0   & 0  & 0 ($- \%$) & 0 & 0 & 0  & 0 ($- \%$) &0 & 0 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{\bf cod 2018 Q1}& 1   & 0.895  & 0.13 ($14.5 \%$) & 0.671 & 1.180 & 0.905  & 0.13 ($14.4 \%$) &0.712 & 1.206 &  &  ($ \%$) \\[1ex]
 & 2  & 6.758 & 0.99 ($14.6 \%$) & 5.399  & 8.722 & 6.811 & 1.07 ($15.7 \%$) &5.283 &9.276 & &  ($ \%$) \\[1ex]
 & 3  & 1.771 & 0.21 ($11.9 \%$) & 1.321  & 2.108 & 1.652 & 0.17 ($10.3 \%$) &1.260 &1.948 & &  ($ \%$) \\[1ex]
 & 4  &1.655  & 0.29 ($17.5 \%$) & 1.009  & 2.126 & 1.667 & 0.32 ($19.2 \%$) &0.917 &2.048 & &  ($ \%$) \\[1ex]
 & 5  & 0.821 & 0.16 ($19.5 \%$) & 0.468  & 1.045 & 0.782 & 0.12 ($15.3 \%$) &0.497 &0.954 & &  ($ \%$) \\[1ex]
 & 6+ & 1.049 & 0.23 ($21.9 \%$) & 0.529  & 1.365 & 1.131 & 0.30 ($26.5 \%$) &0.361 &1.438 & &  ($ \%$)\\[4.5ex]
 
-%\raisebox{1.5ex}{\bf saithe} & 0  & 0      & 0 ( $-$)       & & & 0     &  0 ($-$)       & & & 0    & 0 ($-$)  \\[1ex]
-\raisebox{1.5ex}{\bf saithe} & 1& 0.059 &0.03 ($50.1 \%$) & 0.030 & 0.079  & 0.059 &0.01 ($16.9 \%$) &0.031 &0.041 &  &  ($ \%$) \\[1ex]
+
+%\raisebox{1.5ex}{\bf saithe 2018 Q1} & 0& 0 &0 ($- \%$) & 0 & 0  & 0 &0 ($- \%$) &0 &0 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{\bf saithe 2018 Q1}  & 1& 0.059 &0.03 ($50.1 \%$) & 0.030 & 0.079  & 0.059 &0.01 ($16.9 \%$) &0.031 &0.041 &  &  ($ \%$) \\[1ex]
 & 2  & 0.06   & 0.02 ($33.3 \%$) &0.058 &0.085  &0.059  &0.01   ($16.9 \%$) &0.057 &0.067 & &  ($ \%$) \\[1ex]
 & 3  & 2.805  & 2.63 ($93.8 \%$) &0.469 & 5.442 &0.372  &0.07   ($18.8 \%$) &0.305 &0.427 & &  ($ \%$) \\[1ex]
 & 4  & 16.752 &14.06 ($83.9 \%$) &2.644 &29.272 &15.017 &11.68  ($69.7 \%$) &3.081 &24.999 & &  ($ \%$) \\[1ex]
 & 5  & 12.117 &10.35 ($85.4 \%$) &3.112 &22.655 &16.119 &12.45 ($77.8 \%$) &3.457 &26.877 & &  ($ \%$) \\[1ex]
-& 6+ & 3.983  &1.74  ($43.7 \%$) &2.126 & 5.408 &4.150  &2.03  ($48.9 \%$)  &1.968 &5.829 & &  ($ \%$)\\[0.5ex]
+& 6+ & 3.983  &1.74  ($43.7 \%$) &2.126 & 5.408 &4.150  &2.03  ($48.9 \%$)  &1.968 &5.829 & &  ($ \%$)\\[4.5ex]
+
+
+%\raisebox{1.5ex}{\bf saithe 2017 Q3} & 0& 0.744 &0.26 ($34.9 \%$) & 0.0326 & 1.154  & 0.744 &0.28 ($37.6 \%$) &0.340 &1.151 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{\bf saithe 2017 Q3} & 1  & 0.130   & 0.05 ($38.4 \%$) &0.046 &0.213  &0.132  &0.05   ($37.9 \%$) &0.053 &0.213 & &  ($ \%$) \\[1ex]
+& 2  & 1.293  & 0.30 ($23.2 \%$) &0.658 & 1.812 &1.190  &0.29   ($24.4 \%$) &0.500 &1.562 & &  ($ \%$) \\[1ex]
+& 3  & 14.812 & 2.31 ($15.6 \%$) &9.282 &18.088 &14.979 &2.16  ($14.4 \%$) &9.554 &17.404 & &  ($ \%$) \\[1ex]
+& 4  & 16.391 &2.39 ($14.6 \%$) &10.705 &20.116 &16.256 &2.31 ($14.2 \%$) &10.841 &19.738 & &  ($ \%$) \\[1ex]
+& 5 & 3.832  &0.59  ($15.4 \%$) &2.782 & 4.979 &3.913  &0.74  ($18.9 \%$)  &2.618 &5.204 & &  ($ \%$)\\[1ex]
+& 6+ & 3.190  &0.54  ($16.9 \%$) &2.104 & 4.149 &3.178  &0.56  ($17.6 \%$)  &2.183 &4.300 & &  ($ \%$)\\[0.5ex]
 
 \hline
 \end{tabular}
