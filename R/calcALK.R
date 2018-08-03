@@ -285,11 +285,10 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   ALKnormal = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
 
   for(id in haulId){
-    #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl), it is time consuming to calculate the ALK for those not observed. Note that we also check CA-data, that is because a few times a fish is meshured by 10.9 in CA and 11 in HL.
+    #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl),
+    #Note that we also check CA-data, that is because a few times a fish is meshured in mm in CA and cm in HL---------------------------
     whichLengtsAreInteresting = unique(c(hlInterest$LngtCm[hlInterest$haul.id==id & hlInterest$Species==species],
                                          caInterest$LngtCm[caInterest$haul.id==id & caInterest$Species==species]))
-
-
 
     if(species=="Gadus morhua" | species=="Pollachius virens"){
       whichLengtsAreInteresting = unique(floor(whichLengtsAreInteresting))
@@ -307,7 +306,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
     }
     whichLengtsAreInteresting = unique(whichLengtsAreInteresting)
     whichIsMissing = rep(TRUE, dim(alk)[1])
-
+    #---------------------------------------------------------------------------------------------------
 
     #Construct the parts of the ALK were we have data--------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
@@ -344,10 +343,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
         }
       }
     }
-    #------------------------------------------------------
 
-
-    #Extrapolate the ALK to length calsses were we do not have data-----------------------------------
     if(length(whichLengtsAreInteresting)==0){
       whichIsMissing = rep(FALSE, dim(alkThis)[1])
     }else{
@@ -355,61 +351,110 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
       tmpIndeks = tmpIndeks[-(whichLengtsAreInteresting-alkThis$Length[1]+1)]
       whichIsMissing[tmpIndeks] = FALSE
     }
-
-    #Routine for filling the not observed length classes
-    if(quarter ==1)start = 3
-    if(quarter >1)start = 2
+    #------------------------------------------------------
 
 
+    if(sum(whichIsMissing)>0){
+      #Extrapolate the ALK to length calsses were we do not have data by looking at similar length in same haul-----------------------------------
+      #Routine for filling the not observed length classes
+      whichIsMissingTmp = whichIsMissing
+      alkThisTMP = alkThis
+      if(quarter ==1)start = 4
+      if(quarter >1)start = 3
 
-    whichIsMissing2 = whichIsMissing
-
-    for(i in 1:dim(alkThis)[1])
-    {
-      if(whichIsMissing[i])
+      for(j in start:dim(alkThis)[2])
       {
-        sortedShortestDist = order(d[,which(loc$uniqueId== id)[1]])[-1]
-
-        closestSorted = haulId[sortedShortestDist]
-        foundAge = FALSE
-        nesteHal = 1
-        closesId = closestSorted[nesteHal]
-        while(!foundAge){
-          closestData = caInterest[caInterest$haul.id == closesId,]
-          if(i==dim(alkThis)[1]){
-            hvilke = which(closestData$LngtCm >= alkThis[i,2])
-          }else if(i==1){
-            hvilke = which(closestData$LngtCm < alkThis[2,2])
-          }else if(i< dim(alkThis)[1]){
-            hvilke = which(closestData$LngtCm >= alkThis[i,2] & closestData$LngtCm < alkThis[i+1,2] )
-          }
-
-          if(length(hvilke)>0)
+        for(i in 1:dim(alkThis)[1])
+        {
+          if(whichIsMissing[i])
           {
-            row = rep(0,maxAge+1)
-            for(l in hvilke)
+            if(i>1){
+              obsInPrevious = (sum(alkThis[i-1,start:dim(alkThis)[2]])>0) #Check if we have an observation in the closest length class
+            }else{
+              obsInPrevious = FALSE
+            }
+            if(i<dim(alkThis)[1]){
+              obsInNext = (sum(alkThis[i+1,start:dim(alkThis)[2]])>0)
+            }else{
+              obsInNext = FALSE
+            }
+            if(obsInPrevious& obsInNext)
             {
-              row[closestData$Age[l]+1] = row[closestData$Age[l]+1] +closestData$NoAtALK[l]
+              alkThisTMP[i,j]= (alkThisTMP[i-1,j] + alkThisTMP[i+1,j])/2
+              whichIsMissingTmp[i] = FALSE
+            }else if(obsInPrevious)
+            {
+              alkThisTMP[i,j]= alkThisTMP[i-1,j]
+              whichIsMissingTmp[i] = FALSE
+            }else if(obsInNext)
+            {
+              alkThisTMP[i,j]= alkThisTMP[i+1,j]
+              whichIsMissingTmp[i] = FALSE
             }
-            alkThis[i,3:dim(alkThis)[2]] = row
-            foundAge = TRUE
-            whichIsMissing2[i] = FALSE
-          }else{
-            nesteHal = nesteHal+1
-            if(nesteHal>length(closestSorted)){#We have now looked in all hauls in the RFA
-              foundAge = TRUE#The age will be filled with datars-procedure
-              nesteHal = 1
-            }
-            closesId = closestSorted[nesteHal]
-            #Did not information in this trawl haul, go to next trawl haul.
           }
         }
       }
+      whichIsMissing = whichIsMissingTmp #Inform which we have filled in
+      alkThis = alkThisTMP
+      #--------------------------------------------------------------------------------------------
     }
-    #------------------------------------------------------
 
+    #Extrapolate the ALK to length calsses were we do not have data by looking at hauls close by-----------------------------------
+    if(sum(whichIsMissing)>0){
+      #Routine for filling the not observed length classes
+      for(i in 1:dim(alkThis)[1])
+      {
+        if(whichIsMissing[i])
+        {
+          sortedShortestDist = order(d[,which(loc$uniqueId== id)[1]])[-1]
+
+          closestSorted = haulId[sortedShortestDist]
+          foundAge = FALSE
+          nesteHal = 1
+          maxDistToBorrowStrength = 60*1.852; #We search this far away from the trawl to look at same length in other hauls
+          closesId = closestSorted[nesteHal]
+          while(!foundAge){
+            distInKm = d[sortedShortestDist[nesteHal],which(loc$uniqueId== id)[1]]
+            if(distInKm<maxDistToBorrowStrength){
+              closestData = caInterest[caInterest$haul.id == closesId,]
+              if(i==dim(alkThis)[1]){
+                hvilke = which(closestData$LngtCm >= alkThis[i,2]) #Extact which fish to extract age from in haul close by
+              }else if(i==1){
+                hvilke = which(closestData$LngtCm < alkThis[2,2])
+              }else if(i< dim(alkThis)[1]){
+                hvilke = which(closestData$LngtCm >= alkThis[i,2] & closestData$LngtCm < alkThis[i+1,2] )
+              }
+
+              if(length(hvilke)>0)
+              {
+                row = rep(0,maxAge+1)
+                for(l in hvilke)
+                {
+                  row[closestData$Age[l]+1] = row[closestData$Age[l]+1] +closestData$NoAtALK[l]
+                }
+                alkThis[i,3:dim(alkThis)[2]] = row
+                foundAge = TRUE
+                whichIsMissing[i] = FALSE
+              }else{
+                nesteHal = nesteHal+1
+                if(nesteHal>length(closestSorted)){#We have now looked in all hauls in the RFA
+                  foundAge = TRUE#The age will be filled with datars-procedure
+                  nesteHal = 1
+                }
+                closesId = closestSorted[nesteHal]
+                #Did not information in this trawl haul, go to next trawl haul.
+              }
+            }else{
+              foundAge = TRUE#The age will be filled with datars-procedure
+              nesteHal = 1
+            }
+          }
+        }
+      }
+    #------------------------------------------------------
+    }
     #Set those we do not find any age  equal the original ALK from datras, this works only if dfLength = 1
-    alkThis[whichIsMissing2,2:(maxAge+3)] = ALKnormal[whichIsMissing2,]
+    alkThis[whichIsMissing,2:(maxAge+3)] = ALKnormal[whichIsMissing,]
 
     #Store the ALK for this trawl haul in the list to be returned
     alkToReturn[[neste]] = alkThis
