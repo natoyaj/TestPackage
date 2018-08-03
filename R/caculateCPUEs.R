@@ -253,7 +253,6 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
                               !is.na(data$StatRec) & data$StatRec == statRec ,]
   #-----------------------------------------------------
 
-
   #Calculates and returns mCPUE-----
   subfactor = dataWithTheSpecies$SubFactor
 
@@ -287,6 +286,8 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
     }
   }
   mCPUE = CPUE/nHauls
+
+
 
   return(mCPUE)
   #----------------------------------

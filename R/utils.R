@@ -11,6 +11,7 @@ findLoc = function(dat, quarter,year,RFA){
 
     #Find shortest distance to a neigbour trawl location---
     uniqueId = unique(dataToSimulateFromHL$haul.id)
+
     loc = data.frame(uniqueId)
     loc$lat = rep(-999,dim(loc)[1])
     loc$lon = rep(-999,dim(loc)[1])
@@ -29,5 +30,6 @@ findLoc = function(dat, quarter,year,RFA){
     min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
     loc$shortesDist = uniqueId[min.d]
     #-----------------------------------------------------
+
     return(loc)
 }

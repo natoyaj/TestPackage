@@ -2,10 +2,11 @@
 #' @description .
 #' @param year year of survey
 #' @param quarter quarter of survey
+#' @param quarter quarter of species of interest
 #' @export
 #' @return
 #' @examples
-readIBTSData = function(survey = "NS-IBTS", year, quarter)
+readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 {
   #Read IBTS-data-----------------------------------------
   dataDir <<- system.file("Data", package = "TestPackage")
@@ -28,10 +29,34 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
              "WindDir","WindSpeed","SwellDir","SwellHeight","SurTemp","BotTemp","SurSal","BotSal",
              "timeOfYear","DateofCalculation","ThermoCline","ThClineDepth","DoorWgt","GroundSpeed","Distance","Netopening","Depth","abstime",
              "SweepLngt","Maturity","Ship","Gear","StNo","HaulNo",
-             "SpecCodeType","PlusGr","CatCatchWgt","Sex","DayNight","HaulLong","TimeShotHour")
+             "SpecCodeType","PlusGr","CatCatchWgt","Sex","DayNight","HaulLong","HaulLat","ShootLong","ShootLat",
+             "TimeShot","TimeShotHour")
   ca = ca[,which(!(names(ca) %in% remove))]
   hl = hl[,which(!(names(hl) %in% remove))]
   hh = hh[,which(!(names(hh) %in% remove))]
+
+  #Remove data without the speceis of interest, not we include one line of teh hl-data if there are zero observation of the speceis in the haul---
+  ca = ca[!is.na(ca$Year) & ca$Year == year&
+            !is.na(ca$Quarter) & ca$Quarter == quarter&
+            !is.na(ca$Species) & ca$Species == species,]
+  hl = hl[!is.na(hl$Year) & hl$Year == year&
+            !is.na(hl$Quarter) & hl$Quarter == quarter,]
+
+
+
+
+  for(id in unique(hl$haul.id)){
+    if(sum(!is.na(hl$Species[hl$haul.id==id])& hl$Species[hl$haul.id==id]==species)==0){
+      hvilke = which(hl$haul.id==id);
+      if(length(hvilke)>1)hl = hl[-hvilke[-1],]
+    }else{
+      hl = hl[-which(!is.na(hl$haul.id)&!is.na(hl$Species)&hl$haul.id==id &hl$Species!=species),]
+    }
+  }
+
+  hh = hh[!is.na(hh$Year) & hh$Year == year&
+            !is.na(hh$Quarter) & hh$Quarter == quarter,]
+  #-------------------------
 
   #There seems to be some missing lengths in the HL-data, removes those
   hl$SubFactor[is.na(hl$LngtCm)] = rep(0,length(hl$LngtCm[is.na(hl$LngtCm)]))
@@ -42,11 +67,20 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
   ca = ca[!is.na(ca$Age),]
 
   hh_keys <- c("haul.id")
-  hl_keys <- c(hh_keys, c("LngtClas", "Species")) #
   ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
-#  ca_hl    <- merge(ca,hl, by=hl_keys, suffixes=c(".CA", ""))
   hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
   #---------------------------------------------------------
+
+  ca_hh$Roundfish = as.integer(ca_hh$Roundfish)
+  ca_hh$StatRec = as.integer(ca_hh$StatRec)
+
+  hl_hh$Roundfish = as.integer(hl_hh$Roundfish)
+  hl_hh$StatRec = as.integer(hl_hh$StatRec)
+
+  hh$haul.id = as.character(hh$haul.id)
+  ca_hh$haul.id = as.character(ca_hh$haul.id)
+  hl_hh$haul.id = as.character(hl_hh$haul.id)
+
 
 #  downloadExchange("NS-IBTS", years = 2015)
 #  ca = getDATRAS(record = "CA", survey = "NS-IBTS", year = 2015, quarter = 1)
@@ -56,6 +90,14 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter)
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
   #-------------------------------------------------------------------
   hl_hh$haul.idReal = hl_hh$haul.id
+
+
+
+  removeHL = c("Quarter.HL","Country.HL","Year.HL")
+  hl_hh = hl_hh[,which(!(names(hl_hh) %in% removeHL))]
+  removeCA = c("Quarter.CA","Country.CA","Year.CA")
+  ca_hh = ca_hh[,which(!(names(ca_hh) %in% removeCA))]
+
 
 
   toReturn = list()
