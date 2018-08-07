@@ -4,7 +4,7 @@
 \alias{calcmCPUEnorthSea}
 \title{calcmCPUEnorthSea}
 \usage{
-calcmCPUEnorthSea(species, year, quarter, dat, ALKprocedure, B, dimCPUE)
+calcmCPUEnorthSea(species, year, quarter, dat, ALKprocedure, B, dimCPUE, rfa)
 }
 \arguments{
 \item{species}{The species of interest.}

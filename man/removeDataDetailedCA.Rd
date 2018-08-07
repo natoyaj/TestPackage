@@ -4,15 +4,13 @@
 \alias{removeDataDetailedCA}
 \title{removeDataDetailedCA}
 \usage{
-removeDataDetailedCA(datDetailed, removeProcedure, propRemove, species, quarter,
+removeDataDetailedCA(datDetailed, removeProcedure, species, quarter,
   doNotRemoveAbove, lengthDivision)
 }
 \arguments{
 \item{datDetailed}{The quarter of interest.}
 
 \item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
-
-\item{propRemove}{proportion of data to remove.}
 }
 \value{
 Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing

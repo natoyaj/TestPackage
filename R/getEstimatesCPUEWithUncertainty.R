@@ -100,7 +100,9 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
 CPUEage = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
                                ALKprocedure = "datras",doBootstrap = TRUE){
-  #Extract the data of interest-------------
+
+
+    #Extract the data of interest-------------
   dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
                                  !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter&
                                  !is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA ,]
@@ -108,9 +110,6 @@ CPUEage = function(RFA, species, year, quarter,dat,
   dataToSimulateFromHL = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                   !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
                                   !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
-#  dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
-
-
 
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
@@ -217,7 +216,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
   cpue$Q025BiasC = rep(0,length(cpueEst))
   cpue$Q975BiasC = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
-  b= rep(0, B)
+
   if(doBootstrap){
     for(i in 1:length(cpueEst))
     {
@@ -254,8 +253,13 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
   #TODO: calculate the bias corrected
   #-----------------------------------------------------
+
   return(cpue)
 }
+
+
+
+
 
 #' calcCPUEwholeNorthSea
 #' @description
@@ -263,8 +267,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
-                               B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                              ALKprocedure = "",doBootstrap = TRUE){
+                        B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
+                        ALKprocedure = "",doBootstrap = TRUE){
 
 
 
@@ -275,12 +279,12 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
   mCPUE[,1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                            dat = dat,ALKprocedure = ALKprocedure,B = B,
-                            dimCPUE = dim(mCPUE))
+                                dat = dat,ALKprocedure = ALKprocedure,B = B,
+                                dimCPUE = dim(mCPUE))
   #-----------------------------------------------------------------------------------------
 
+  #Simulate data and coalculates mCPUE for estimation ofunceratinaty------------------------
   if(doBootstrap){
-    #Simulate data for constructin unceratinty intervalls------------
     for(i in 1:B){
       CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
       HL = dat$hl_hh[1,]
@@ -331,7 +335,9 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                                       dimCPUE = dim(mCPUE))
     }
   }
+  #-----------------------------------------------------------------------------------------
 
+  #Define a summary that we return (mCPUE, quantiles and sd)--------------------------------
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1] )
   names(mCPUEsummary) = c("mCPUE","bootstrapMean","Q025","Q975", "sd")
   for(i in 1:dim(mCPUEsummary)[1]){
@@ -341,9 +347,12 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
     mCPUEsummary$Q975[i] = quantile[2]
     mCPUEsummary$sd[i] = sd(mCPUE[i,2:(B+1)])
   }
+  #-----------------------------------------------------------------------------------------
 
   return(mCPUEsummary)
 }
+
+
 
 #
 # # assign vals to variable y

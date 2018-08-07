@@ -1,3 +1,320 @@
+if(removeProcedure=="random"){
+  length = dim(toReturn)[1]
+  keep = sample(1:length,ceiling(length*(1-propRemove)))
+  keep = unique(c(keep,which(toReturn$LngtCm>doNotRemoveAbove))) #Do not remove the fish larger than a certain level
+  toReturn = toReturn[keep,]
+
+  return(toReturn)
+}else if(removeProcedure=="stratified"){
+  dLength = confALK(species = species,quarter = quarter)$lengthClassIntervallLengths
+  if(dLength==1){
+    lengthArray = sort(unique(floor(toReturn$LngtCm)))
+    lengthArray = lengthArray[which(lengthArray<=doNotRemoveAbove)]#Do not remove the fish larger than a certain level
+    for(length in lengthArray){
+      for(RFA in 1:9){
+        tmp = which(floor(toReturn$LngtCm)==length & toReturn$Roundfish==RFA)
+        u = runif(length(tmp))
+        remove = tmp[which(u<propRemove)] #
+        if(length(remove)>0){
+          toReturn = toReturn[-remove,]
+        }
+      }
+    }
+  }
+  return(toReturn)
+}else
+
+
+#' calcCPUEwholeNorthSea
+#' @description
+#' @export
+#' @return Returns the mCPUE per age class in the whole North Sea
+#' @examples
+CPUEnorthSeaParallel = function(species, year, quarter,dat, bootstrapProcedure="datras",
+                                B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
+                                ALKprocedure = "",doBootstrap = TRUE){
+
+
+
+  #Defines the matrix with cpue to be returned--------------------
+  maxAge = confALK(species = species, quarter = quarter)$maxAge
+  mCPUE = matrix(0,maxAge+1,B+1)
+  #---------------------------------------------------------------
+
+  #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
+  mCPUE[,1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                                dat = dat,ALKprocedure = ALKprocedure,B = B,
+                                dimCPUE = dim(mCPUE))
+  #-----------------------------------------------------------------------------------------
+
+  #Simulate data and coalculates mCPUE for estimation of unceratinaty------------------------
+  if(doBootstrap){
+    simCPUEs <- foreach(i = 1:B, .combine = 'cbind',.packages='TestPackage') %dopar%  {
+      CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
+      HL = dat$hl_hh[1,]
+      for(RFA in 1:9){
+        loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
+        if(bootstrapProcedure =="datras"){
+          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+          simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh)
+        }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+          simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dat$hl_hh,loc = loc)#TODO: should use the HH-data
+        }else if(bootstrapProcedure =="stratifiedHLandCA"){
+          simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
+          simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
+          simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
+
+          for(j in 1:dim(simHauls)[1]){
+            tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
+            tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
+
+            if(dim(tmpCA)[1]>0){
+              tmpCA$StatRec = simHauls$StatRec[j]
+              tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+              simDataCA = rbind(simDataCA,tmpCA)
+            }
+            if(dim(tmpHL)[1]>0){
+              tmpHL$StatRec = simHauls$StatRec[j]
+              tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+              simDataHL = rbind(simDataHL,tmpHL)
+            }
+          }
+          simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+          simDataHL = simDataHL[-1,]
+        }else{
+          return("Select a valid bootstrap procedure.")
+        }
+
+
+        CA = rbind(CA,simDataCA)
+        HL = rbind(HL,simDataHL)
+      }
+      CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
+      HL = HL[-1,]
+
+
+      datTmp = dat
+      datTmp$ca_hh = CA
+      datTmp$hl_hh = HL
+
+      #Estimate mCPUE with the simulated data
+      sim = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                              dat = datTmp,ALKprocedure = ALKprocedure,B = B,
+                              dimCPUE = dim(mCPUE))
+
+      sim
+    }
+  }
+  #-----------------------------------------------------------------------------------------
+
+  #Define a summary that we return (mCPUE, quantiles and sd)--------------------------------
+  mCPUE[,2:(B+1)] = simCPUEs #Results from foreach/()
+
+  mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1] )
+  names(mCPUEsummary) = c("mCPUE","bootstrapMean","Q025","Q975", "sd")
+  for(i in 1:dim(mCPUEsummary)[1]){
+    mCPUEsummary$bootstrapMean[i] = mean(mCPUE[i,2:(B+1)])
+    quantile = quantile(mCPUE[i,2:(B+1)],c(0.025,0.975))
+    mCPUEsummary$Q025[i] = quantile[1]
+    mCPUEsummary$Q975[i] = quantile[2]
+    mCPUEsummary$sd[i] = sd(mCPUE[i,2:(B+1)])
+  }
+  #-----------------------------------------------------------------------------------------
+
+  return(mCPUEsummary)
+}
+
+
+
+#setup parallel backend to use 8 processors
+library(foreach)
+library(doParallel)
+cl<-makeCluster(4)
+registerDoParallel(cl)
+Rprof()
+mCPUEHaulBasedStratifiedHLandCA = CPUEnorthSeaParallel(species = species, year = year, quarter = quarter,dat = dat,
+                                                       bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
+Rprof(NULL)
+summaryRprof()
+stopCluster(cl)
+
+
+
+#' CPUEageParallel
+#' @description .
+#' @param RFA The roundfish area of interest.
+#' @param species The species of interest.
+#' @param year The year of interest.
+#' @param quarter The quarter of interest.
+#' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
+#' @param B The number of simulations in the selected bootstrap procedure
+#' @param ALKprocedure Either datras, haulbased or modelbased.
+#' @param doBootstrap A boolean stating if bootstrap should be done. Default is TRUE.
+#' @export
+#' @return Returns the mCPUE per age class in the given RFA with uncertainty
+#' @examples
+CPUEageParallel = function(RFA, species, year, quarter,dat,
+                           bootstrapProcedure="datras", B = 10,
+                           ALKprocedure = "datras",doBootstrap = TRUE){
+  #Extract the data of interest-------------
+  dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
+                                     !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter&
+                                     !is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA ,]
+
+  dataToSimulateFromHL = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
+                                     !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
+                                     !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
+  #  dataToSimulateFromHL$haul.idReal = dataToSimulateFromHL$haul.id #Need in this in the procedyre for calculating CPUE with model when HL data is simulated
+
+
+
+  #Estimate CPUEs----------------------------
+  if(ALKprocedure == "haulBased"){
+    ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
+  }else if(ALKprocedure == "modelBased"){
+    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh)
+    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+  }else if(ALKprocedure == "datras"){
+    ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+    cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
+  }else{
+    stop("Unkown ALKprocedure")
+  }
+  #------------------------------------------
+
+  #Investigate if it is observed zero data---
+  tmp = dataToSimulateFromCA[!is.na(dataToSimulateFromCA$Roundfish) & dataToSimulateFromCA$Roundfish == RFA&
+                               !is.na(dataToSimulateFromCA$Species) & dataToSimulateFromCA$Species == species,]
+  if(sum(!is.na(tmp))==0){
+    return(data.frame(cpueEst))
+  }
+  #------------------------------------------
+
+  #Find the closest nabour (used in simulation)
+  loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)
+
+  #Simulate CPUES per age B times-------------------------
+  if(doBootstrap){
+    simCPUEs <- foreach(i = 1:B, .combine = 'cbind', .packages='TestPackage') %dopar%  {
+      if(bootstrapProcedure =="simple"){
+        simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
+        simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
+      }else if(bootstrapProcedure =="hierarchical"){
+        sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFromHL, dataToSimulateFromCA)
+        simDataCA = sim$simCA
+        simDataHL = sim$simHL
+      }else if(bootstrapProcedure =="datras"){
+        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
+        simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
+      }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
+        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)#TODO: should use the HH-data
+      }else if(bootstrapProcedure =="stratifiedHLandCA"){
+        simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
+        simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
+        simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
+
+        for(j in 1:dim(simHauls)[1]){
+          tmpCA = dataToSimulateFromCA[which(dataToSimulateFromCA$haul.id== simHauls$haul.id[j]),]
+          tmpHL = dataToSimulateFromHL[which(dataToSimulateFromHL$haul.id== simHauls$haul.id[j]),]
+
+          if(dim(tmpCA)[1]>0){
+            tmpCA$StatRec = simHauls$StatRec[j]
+            tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+            simDataCA = rbind(simDataCA,tmpCA)
+          }
+          if(dim(tmpHL)[1]>0){
+            tmpHL$StatRec = simHauls$StatRec[j]
+            tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+            simDataHL = rbind(simDataHL,tmpHL)
+          }
+        }
+        simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+        simDataHL = simDataHL[-1,]#Removes the first line which was created for defining the structure of the data
+
+      }else{
+        return("Select a valid bootstrap procedure.")
+      }
+
+
+      if(ALKprocedure == "haulBased"){
+        simALK = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
+        if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
+        sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+      }else if(ALKprocedure == "modelBased"){
+        simALK = simALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=dat$hh)
+        sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+      }else{
+        simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
+        sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = dat$weightStatRec)
+      }
+
+      #Print the progress------------------
+      print(i)
+      print(sim)
+      #------------------------------------
+
+      if(is.na(sum(sim)))break
+
+      sim
+
+    }
+
+
+  }
+  #-----------------------------------------------------
+
+  #Construct a data.frame with estimates and P.I. of CPUEs per age----
+  cpue = data.frame(cpueEst)
+  names(cpue) = "mCPUE"
+  cpue$bootstrapMean = rep(0,length(cpueEst))
+  cpue$Q025 = rep(0,length(cpueEst))
+  cpue$Q975 = rep(0,length(cpueEst))
+  cpue$Q025BiasC = rep(0,length(cpueEst))
+  cpue$Q975BiasC = rep(0,length(cpueEst))
+  cpue$sd = rep(0,length(cpueEst))
+  b= rep(0, B)
+  if(doBootstrap){
+    for(i in 1:length(cpueEst))
+    {
+      quantile = quantile(simCPUEs[i,],c(0.025,0.975))
+      cpue$Q025[i] = quantile[1]
+      cpue$Q975[i] = quantile[2]
+      cpue$sd[i] = sd(simCPUEs[i,])
+      cpue$bootstrapMean[i] = mean(simCPUEs[i,])
+
+      #Estimating bias-corrected confidence intervals
+
+      #estimate bias in standard norm deviates
+      #for each i, b must be calculated for the number of simulations ran
+
+      b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
+
+      alphL=0.05 # 95% limits
+      z=qnorm(c(alphL/2,1-alphL/2)) # Standard. normal. limits
+      p=pnorm(z-2*b) # bias-correct & convert to proportions
+      qq = quantile(simCPUEs,p=p) # Bias-corrected percentile lims.
+
+      cpue$Q025BiasC[i] = qq[1]
+      cpue$Q975BiasC[i] = qq[2]
+
+      #print(simCPUEs)
+      #print(b)
+
+      cpue$Q025BiasCorrected[i] = qq[1]
+      cpue$Q975BiasCorrected[i] = qq[2]
+      #print( observedCPUE)
+
+    }
+  }
+
+  #TODO: calculate the bias corrected
+  #-----------------------------------------------------
+  return(cpue)
+}
+
 
 
 

@@ -449,8 +449,10 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,rfa)
 {
+
+
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
     readOGR(file.path(
@@ -470,6 +472,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
     #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
     if(RFA ==5)areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
 
+
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                           ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE)
 
@@ -486,4 +489,5 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
   print(mCPUEvector)
 
   return(mCPUEvector)
+
 }

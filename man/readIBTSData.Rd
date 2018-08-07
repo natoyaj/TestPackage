@@ -4,12 +4,14 @@
 \alias{readIBTSData}
 \title{readIBTSData}
 \usage{
-readIBTSData(survey = "NS-IBTS", year, quarter)
+readIBTSData(survey = "NS-IBTS", year, quarter, species)
 }
 \arguments{
 \item{year}{year of survey}
 
 \item{quarter}{quarter of survey}
+
+\item{quarter}{quarter of species of interest}
 }
 \description{
 .

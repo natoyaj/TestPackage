@@ -4,8 +4,8 @@
 \alias{removeData}
 \title{removeData}
 \usage{
-removeData(year, quarter, species, dat, removeProcedure = 1, propRemove,
-  whatToRemove, doNotRemoveAbove, lengthDivision)
+removeData(year, quarter, species, dat, removeProcedure = 1, whatToRemove,
+  doNotRemoveAbove, lengthDivision)
 }
 \arguments{
 \item{year}{The year of interest.}
@@ -15,8 +15,6 @@ removeData(year, quarter, species, dat, removeProcedure = 1, propRemove,
 \item{species}{The species of interest.}
 
 \item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
-
-\item{propRemove}{proportion of data to remove.}
 }
 \value{
 Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
