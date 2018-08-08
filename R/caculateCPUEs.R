@@ -41,7 +41,7 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatR
   #Average over the statistical recangles and return mCPUE-----
   weightUsed = rep(0,numberOfStatRectangles)
   for(i in 1:numberOfStatRectangles){
-    if(species =="Pollachius virensTODO"){
+    if(species =="Pollachius virens"){
       weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
     }else{
       weightUsed[i] = 1
@@ -167,7 +167,7 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatR
     #Average over the statistical recangles and return mCPUE-----
     weightUsed = rep(0,numberOfStatRectangles)
     for(i in 1:numberOfStatRectangles){
-      if(species =="Pollachius virensTODO"){
+      if(species =="Pollachius virens"){
         weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
       }else{
         weightUsed[i] = 1
@@ -206,7 +206,7 @@ calcmCPUErfaWithALK = function(RFA,species,year, quarter, data, ALK, weightStatR
     #Average over the statistical recangles and return mCPUE-----
     weightUsed = rep(0,numberOfStatRectangles)
     for(i in 1:numberOfStatRectangles){
-      if(species =="Pollachius virensTODO"){
+      if(species =="Pollachius virens"){
         weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
       }else{
         weightUsed[i] = 1
@@ -346,7 +346,7 @@ calcmCPUErfaWithALKNew = function(RFA,species,year, quarter, data, ALKNew,proced
   #Average over the statistical recangles and return mCPUE-----
   weightUsed = rep(0,numberOfStatRectangles)
   for(i in 1:numberOfStatRectangles){
-    if(species =="Pollachius virensTODO"){
+    if(species =="Pollachius virens"){
       weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
     }else{
       weightUsed[i] = 1
@@ -451,8 +451,6 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @examples
 calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,rfa)
 {
-
-
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
     readOGR(file.path(
@@ -463,6 +461,12 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,r
   rfa$areas.sqkm<-rfa$areas.sqm/(1000*1000)
   #---------------------------------------------------------------
 
+  #Read the calcualted area were saithe live in each RFA (between 10 to 200 meters)---
+  data('areaRFA') #Stored in the data frame "areaRFA"
+  #---------------------------------------------------------------
+
+
+
   mCPUEvector = rep(0,dimCPUE[1])
 
   totalArea = 0
@@ -471,6 +475,11 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,r
 
     #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
     if(RFA ==5)areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
+
+
+    if(species== "Pollachius virens"){
+      areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
+    }
 
 
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,

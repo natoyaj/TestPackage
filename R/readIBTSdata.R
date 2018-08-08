@@ -35,6 +35,14 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   hl = hl[,which(!(names(hl) %in% remove))]
   hh = hh[,which(!(names(hh) %in% remove))]
 
+  #Remove test hauls without observations----------------------------------
+  hh = hh[hh$HaulDur>5,] #Is there a way to know it is a test haul?
+  #-------------------------------------------------------------------------
+
+  unique(hh$StatRec[hh$Roundfish==2])
+
+
+
   #Remove data without the speceis of interest, not we include one line of teh hl-data if there are zero observation of the speceis in the haul---
   ca = ca[!is.na(ca$Year) & ca$Year == year&
             !is.na(ca$Quarter) & ca$Quarter == quarter&
@@ -71,11 +79,11 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))
   #---------------------------------------------------------
 
-  ca_hh$Roundfish = as.integer(ca_hh$Roundfish)
-  ca_hh$StatRec = as.integer(ca_hh$StatRec)
+  ca_hh$Roundfish = as.character(ca_hh$Roundfish)
+  ca_hh$StatRec = as.character(ca_hh$StatRec)
 
-  hl_hh$Roundfish = as.integer(hl_hh$Roundfish)
-  hl_hh$StatRec = as.integer(hl_hh$StatRec)
+  hl_hh$Roundfish = as.character(hl_hh$Roundfish)
+  hl_hh$StatRec = as.character(hl_hh$StatRec)
 
   hh$haul.id = as.character(hh$haul.id)
   ca_hh$haul.id = as.character(ca_hh$haul.id)
@@ -88,6 +96,7 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   #Read weights describing the proportion of statrecs of interest-----
   weightsDir <<- system.file("weightsSaithe", package = "TestPackage")
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
+  weightStatRec$StatRec = as.character(weightStatRec$StatRec)
   #-------------------------------------------------------------------
   hl_hh$haul.idReal = hl_hh$haul.id
 
