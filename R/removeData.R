@@ -22,7 +22,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
                               bootstrapProcedure, B, ALKprocedure,
                               removeProcedure,
                               nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
-                              doNotRemoveAbove = 9999,
+                              doNotRemoveAbove = 9999,propRemove = NULL,
                               lengthDivision=NULL){
 
   toReturn= list()
@@ -63,7 +63,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
     print(paste("Simulation ",i))
 
     #Remove data in the given procedure
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision)
+    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = propRemove)
 
     if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
       if(typeOfAreaToInvestigate =="RFA"){
@@ -195,7 +195,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
                               bootstrapProcedure, B, ALKprocedure,
                               removeProcedure,
                               nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
-                              doNotRemoveAbove = 9999,
+                              doNotRemoveAbove = 9999, propRemove = NULL,
                               lengthDivision=NULL){
 
   toReturn= list()
@@ -232,7 +232,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
 
   #Remove data and calulates mCPUE etc. with usage of several cores----------------
   resForEach <- foreach(i = 1:nSim,.packages='TestPackage') %dopar%  {
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision)
+    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = propRemove)
 
     if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
       if(typeOfAreaToInvestigate =="RFA"){
@@ -355,7 +355,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,species, dat,removeProcedure=1,whatToRemove,doNotRemoveAbove,lengthDivision){
+removeData = function(year, quarter,species, dat,removeProcedure=1,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = NULL){
 
   #Extract data which shall be thinned------------------------
   datToReturn = dat
@@ -372,7 +372,7 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,whatToRemove,
 
   #Remove data-----------------------------------------------
 #  if("HH" %in% whatToRemove)datToReturn$hh = removeDataDetailedHH(datToReturn$hh,removeProcedure,propRemove)
-  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,species,quarter,doNotRemoveAbove, lengthDivision)
+  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,species,quarter,doNotRemoveAbove, lengthDivision,propRemove = propRemove)
 #  if("HL" %in% whatToRemove)datToReturn$hl_hh = removeDataDetailedHL(datToReturn$hl_hh,removeProcedure,propRemove)
   #----------------------------------------------------------
 
@@ -392,11 +392,35 @@ removeData = function(year, quarter,species, dat,removeProcedure=1,whatToRemove,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,removeProcedure,species,quarter,doNotRemoveAbove,lengthDivision){
+removeDataDetailedCA = function(datDetailed,removeProcedure,species,quarter,doNotRemoveAbove,lengthDivision,propRemove = NULL){
 
   toReturn = datDetailed
   #Removes data in the procedure selected in "removeProcedure"-----------------------------------
-  if(removeProcedure=="edvin"){#Remove otholits such that only at random only one otholit is read from longer length intervalls
+  if(removeProcedure=="random"){
+    length = dim(toReturn)[1]
+    keep = sample(1:length,ceiling(length*(1-propRemove)))
+    keep = unique(c(keep,which(toReturn$LngtCm>doNotRemoveAbove))) #Do not remove the fish larger than a certain level
+    toReturn = toReturn[keep,]
+
+    return(toReturn)
+  }else if(removeProcedure=="stratified"){
+    dLength = confALK(species = species,quarter = quarter)$lengthClassIntervallLengths
+    if(dLength==1){
+      lengthArray = sort(unique(floor(toReturn$LngtCm)))
+      lengthArray = lengthArray[which(lengthArray<=doNotRemoveAbove)]#Do not remove the fish larger than a certain level
+      for(length in lengthArray){
+        for(RFA in 1:9){
+          tmp = which(floor(toReturn$LngtCm)==length & toReturn$Roundfish==RFA)
+          u = runif(length(tmp))
+          remove = tmp[which(u<propRemove)] #
+          if(length(remove)>0){
+            toReturn = toReturn[-remove,]
+          }
+        }
+      }
+    }
+    return(toReturn)
+  }else if(removeProcedure=="edvin"){#Remove otholits such that only at random only one otholit is read from longer length intervalls
     toReturn = datDetailed[1,]
     for(id in unique(datDetailed$haul.id)){
       obsTmp = datDetailed[which(datDetailed$haul.id==id),]
