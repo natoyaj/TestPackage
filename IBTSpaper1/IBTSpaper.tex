@@ -87,6 +87,10 @@
 \newcommand{\cm}{\textnormal{\sffamily cm}\xspace}
 \newcommand{\g}{\textnormal{\sffamily g}\xspace}
 \newcommand{\kg}{\textnormal{\sffamily kg}\xspace}
+\newcommand{\SE}{\textnormal{\sffamily SE}\xspace}
+\newcommand{\RSE}{\textnormal{\sffamily RSE}\xspace}
+\newcommand{\LB}{\textnormal{\sffamily LB}\xspace}
+\newcommand{\UB}{\textnormal{\sffamily UB}\xspace}
 
 
 \makeatletter
@@ -230,7 +234,7 @@ Here ${\bf P}$ is the set of RFAs, $A_p$ is the area of RFA $p$, and $A_{\text{t
 
  
 
-\subsection{ALK Estimators}
+\subsection{ALK estimators}
 
 The definition of the CPUE of age includes an ALK, see (\ref{eq:cpueALK}), which we described in this section. Three ALK estimators are included in this research, which are named as follows:  \textit{i}) DATRAS ALK, \textit{ii}) haul based ALK and \textit{iii}) model based ALK.
 % In this section we define these three ALK estimators. 
@@ -242,7 +246,7 @@ Let $\text{ALK}^{\text{D}}$ denote the DATRAS ALK. The $\text{ALK}^{\text{D}}$ i
 \label{sec:haulestimator}
 We define a haul dependent ALK  by  $ALK^{H}$. The $ALK^{H}_{a,l,h}$ is defined as the average proportion of observed fish with age $a$ in  length class $l$ in haul $h$. If there are no observed ages of fish in a length class $l$ in the haul, ages from the same length class in the haul close by is used (Web appendix \ref{secAp:oursBorrow} describes the procedure in detail).
 
-\subsubsection{Spatial Model-Based ALK Estimator}
+\subsubsection{Spatial model-based ALK estimator}
 \label{sec:spatialModelALK}
 In this section we introduce a spatial model based ALK. Using such a model enables us to obtain smooth structures in the distribution of age given length. It further enables us to utilize spatial latent effects. Spatial model-based approach of age-lengths are widely used \citep{berg2012spatial, hirst2012bayesian, rindorf2001analyses}, and are used for stock assessment in the North Sea \citep{berg2014evaluation}. \\ % kvist2000using olav: double check this when i have access.
 \indent Let the response variable of the age group of a fish be $a = M,...,A$ where $M$ is the youngest age, and $A$ is the oldest age which is typically defined as a "plus group". Suppose $y(l,{\bf s},h)$ is the age  of a fish with length $l$ caught at location ${\bf s}$. As in \citet{berg2012spatial} we use a continuous ratio model for the spatial age given length model. Define
@@ -264,7 +268,7 @@ The continuous function $f_a(l)$ in (\ref{eq:linearPred}) is modelled with usage
 where $\sigma^2_{\gamma}$ is the marginal variance, $||\cdot||$ is the Euclidean distance measure in kilometres, $\nu$ is a smoothing parameter, $\kappa_{\gamma}$ is a spatial scale parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$. The spatial field is estimated with the stochastic partial differential equation (SPDE) procedure described in \citet{lindgren2011explicit}. The main concept behind the SPDE procedure is that the precision matrix of a spatial field with Mat\'{e}rn  covariance function can be approximated by a sparse matrix on a grid covering the area of interest. Such a grid and sparse precision matrix are constructed with use of the R-INLA package \citep{rue2009approximate}.
 
 The model based ALK estimate is obtained by maximizing the likelihood. We maximize the likelihood with use of an R-Package called Template Model Building {\sffamily TMB} \citep{kristensen2015tmb}, combined with the optimizing function {\sffamily nlminb} in R. In this application {\sffamily TMB} is advantageous as it uses Laplace approximation for the latent fields gaining computational efficiency, it also utilizes sparse structures in the latent fields, and uses automatic derivation. 
-%The time needed for estimating the model varies slighlty between species and year. A laptop with  processor intel(R) Core(TM) i5-6300 CPU @ 2,40 GHz, used e.g. approximately 2 minutes to estimate the parameters for cod in year 2018.
+
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
@@ -286,9 +290,10 @@ The current sampling procedure for the North Sea IBTS data is the sampling of on
 
 \section{Case studies}
 \label{sec:data}
-In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for years 2017-2018, which is obtained from the DATRAS database \citep{datras}. These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, one otolith per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Web appendix \ref{secAp:otolithappendix} for details of the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample optimization procedure described in Section \ref{sec:optimizationsampling}. The second is that IBTS included Age 0 in Q3 surveys, and since data for year 2018 Q3 is not yet available, the data for years 2017 Q3 and 2018 Q1 will be used in our analyses. Also, some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed (see Figure \ref{icesroufismap}). Note that both IBTS Q1 and Q3 surveys do not adequately cover the whole stock distribution of saithe but the data collected is considered generally representative \citep{ICESJune2016}.
+In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for the years 2017-2018, which is obtained from the DATRAS database \citep{datras}. These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, one otolith per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Web appendix \ref{secAp:otolithappendix} for details of the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample optimization procedure described in Section \ref{sec:optimizationsampling}. The second is that IBTS included Age 0 in Q3 surveys, and since data for year 2018 Q3 is not yet available, the data for years 2017 Q3 and 2018 Q1 will be used in our analyses. Also, some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed (see Figure \ref{icesroufismap}). Note that both IBTS Q1 and Q3 surveys do not adequately cover the whole stock distribution of saithe but the data collected is considered generally representative \citep{ICESJune2016}.
 
-In this research, the species of interest are cod and saithe. All samples are caught using the standard GOV gear described in Section \ref{overview}. Table \ref{tab:data2018} gives a brief description of the data for year 2018 in the first quarter and year 2017 in the third quarter.  The data (Table \ref{tab:data2018}) shows that cod can be as old as 12 years in the first quarter and 11 years in the third quarter; and saithe as old as 18 years in the first quarter and 17 years in the third quarter. In our analyses we consider the age groups 1 to 6+ in Q1 and 0 to 6+ in Q3 for all ALK methods, where the last group consists of fish of age 6 or older. Saithe are typically older than cod but smaller in length. Also, catch rates are higher in the third quarter, 48\% for cod and 165\% for saithe, compared with the first quarter. 
+In this research, the species of interest are cod and saithe. All samples are caught using the standard GOV gear described in Section \ref{overview}. Table \ref{tab:data2018} gives a brief description of the data for year 2018 in the first quarter and year 2017 in the third quarter.  Cod can be as old as 12 years in the first quarter and 11 years in the third quarter; and saithe as old as 18 years in the first quarter and 17 years in the third quarter. In our analyses we consider the age groups 1 to 6+ in Q1 and 0 to 6+ in Q3 for all ALK methods, where the last group consists of fish of age 6 or older. Saithe are typically older than cod but smaller in length, particularly in Q1. Catch rates are higher in the third quarter, 48\% for cod and 164\% for saithe, compared with the first quarter, presumably because .....
+%the IBTS Q3 surveys  cover wider areas in the north sea. 
 
 \begin{small}
 \begin{table}[h!]
@@ -297,19 +302,17 @@ In this research, the species of interest are cod and saithe. All samples are ca
 \toprule
 \bf Data&\bf Description \\
 \midrule
-Trawl hauls  & Total of 372 trawl hauls in year 2018 Q1; 238 (83)  with length and 231 (82) \\ & with age information. In 2017 Q3, a total of 349 trawl hauls were taken; \\ & 238 (129) with length and 238 (129) with age information. \\[1.7ex]
+Trawl hauls  & Total of 372 trawl hauls in year 2018 Q1; 238 (83)  with length and 230 (81) \\ & with age information. In 2017 Q3, a total of 349 trawl hauls were taken; \\ & 238 (129) with length and 237 (128) with age information. \\[1.7ex]
 
 Age &The age varied between 1 (1) to 12 (18) years in year 2018 Q1 and \\ & 0 (0) to 11 (17) in year 2017 Q3. \\[1.7ex]
 
 Length & Length information in cm varied between 11 (13) to 114 (106) cm in year 2018 Q1 \\ & and between 6 (10) to 112 (109) cm in year 2017 Q3. \\[1.7ex]
 
-Date&Date of catch in year 2018 Q1 varied between ...... to ....... \\ & and in year 2017 Q3 between ..... to ...... \\[1.7ex]
+Date&Date of catch in year 2018 Q1 varied between 15.01.2018 to 28.02.2018 \\ & and in year 2017 Q3 between 18.07.2017 to 31.08.2018 \\[1.7ex]
 
-Duration of haul & Mean duration is ..... minutes, with 30 minutes as ...\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of ....minutes \\ & with 30 minutes as ..... coverage . \\[1.7ex]
+Duration of haul & Mean duration is 29.37 minutes, with 30 minutes as 83\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of 29.26 minutes \\ & with 30 minutes as 88\% coverage . \\[1.7ex]
 
-%Duration of haul & Mean duration is 25.9 minutes, with 30 minutes as 90\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of ....minutes \\ & with 30 minutes as ..... coverage . \\[1.7ex]
-
-Total count for all ages & 1513 (794) in year 2018 Q1 and 2250 (2107) 2017 Q3. \\[0.5ex]
+Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \\[0.5ex]
 \bottomrule
 \end{tabular}
 \label{tab:data2018}
@@ -323,33 +326,7 @@ Total count for all ages & 1513 (794) in year 2018 Q1 and 2250 (2107) 2017 Q3. \
 \subsection{Cod and Saithe using ALK methods}
 \label{sec:codresults}
 
-Recall that the main assumption of DATRAS ALK is that the age-length compositions of species across large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a .....cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)).
-
-As discussed in Section \ref{sec:datrasstratifiedbootstrap} the naive bootstrap procedure proposed by DATRAS to estimate uncertainty around indices of abundance is not appropriate for IBTS survey. Firstly, the DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty. Secondly, it ignores sampling procedure of age-length data collected at the haul level, leading to an underestimation of the uncertainty. So there are biases in both direction. Table \ref{resultstablecodandsaitheAppendix} in Web appendix....., shows that an overestimation of the uncertainty around indices of abundance is overwhelming suggesting that it is highly relevant to account for the variation in the data over large areas. 
-
-Table \ref{resultstablecodandsaithe} shows abundance indices, defined in (\ref{abundanceestimatornorthsea}), of cod and saithe estimated from each of the three ALK methods. Estimates of the standard error (SE), relative standard error (RSE in parentheses), the lower bound (LB) and upper bound (UB) of approximate $95 \%$ confidence intervals are also given from 200 bootstrap samples. For all ALK methods the stratified bootstrap procedure is employed to estimate the uncertainty around indices of abundance. {\bf The estimated indices of abundance of cod are similar for all ALKs, but the the spatial ALKs generally gave higher estimates. Also, the spatial ALKs provide a better fit to the data in terms of precision. Uncertainty estimates (RSE) for older fishes ($\ge 4$) are higher, as expected, for the spatial ALKs as fewer samples are generally collected for these, and given that spatial variation in the data is accounted for, variability would be higher.}
-
-Abundance indices of saithe ......\\ \\
-
-
-\begin{itemize}
-\item \emph{generate plots for year 2018 Q1 cod and 2017 Q3 saithe. Possibly show same age given length group for both species? change plots to our show information in them- see the structure directly from the raw data that they correspond to the colours in the figure; TMB has problems when few observations are available-issues with the joint covariance matrix }
-\item have different plots...show fish of different ages (contours) corresponds to raw data, include points on the map of the different ages
-\item \emph{discuss differences in estimates from ALK methods (Table \ref{resultstablecodandsaithe} - in terms of relative standard error estimates; overestimation and underestimation from DATRAS (bootstrap) method not knowing the strength in either direction) - Issues:}
-\begin{itemize}
-\item \emph{Ignores fine scale stratification at the first stage, hence overestimation of the uncertainty}
-\item \emph{Ignores age-length data collected at the haul level, hence underestimates the uncertainty}
-\item \emph{Biases in both direction}
-\end{itemize}
-\item \emph{test for significant differences between estimates from ALK methods for age groups?}
-\item \emph{As discussed in Section \ref{sec:datrasalkestimator} and shown in the results in Table \ref{resultstablecodandsaithe} the assumption of no difference in regional compositions of age-length structures is invalid and DATRAS ALK have introduced bias in both direction, and the extent of this  bias in either direction is unknown. Hence, this ALK is not appropriate to perform further analyses. }
-\item \emph{codes do not run for saithe Q1 2018}
-\item \emph{Saithe and haddock tend to have a northerly distribution. The abundance of fish predators is generally lower in the German bight area. Within the northern area, saithe is more abundant in the eastern areas.}
-\item \emph{IBTS Q1 doesn’t cover the distribution of saithe adequately. Saithe are found deeper than the survey extends and any fluctuations in abundance within the survey are not related to stock size, but due to movement up and down the slope at that time. Explanation is in the 2016 benchmark report for saithe, available on the ICES website}
-\item \emph{The saithe assessment went through an ICES benchmark process in 2016 (ICES, 2016b). The scientific survey used in the assessment does not cover the whole stock distribution; however, it is considered generally representative. The number of observations (trawl stations) with saithe is low and the resulting survey index is uncertain. Commercial catch per unit effort information for French, German, and Norwegian trawlers was combined into a single index of biomass of fishable saithe. There are conflicting signals between the survey and fishable biomass index. The fraction of age 3 saithe migrating into the survey area (and the fishery) is low and varying between years with no obvious trend. Observations of saithe at age 3 are not suitable for predicting year-class strength. This means that assumed recruitment values are highly uncertain and a substantial portion $(30 \%)$ of the advised wanted catch in 2017 is based on the recruitment assumptions for 2016 and 2017 \citep{ICESJune2016}} 
- 
-
-\end{itemize}
+Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a .....cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)).
 
 \clearpage
 \begin{figure}[h!]
@@ -370,16 +347,27 @@ Abundance indices of saithe ......\\ \\
   \label{predictedprobabilitiesplot}
 \end{figure}
 
-%\reallywidehat{\mathbb{E}(V)}
+\clearpage
+%The methods of estimating abundance indices (\ref{abundanceestimatornorthsea}) and the uncertainty (\ref{sec:datrasstratifiedbootstrap}) around them are employed on IBTS data. 
+Table \ref{resultstablecodandsaithe} shows indices of abundance of cod and saithe estimated from each of the three ALK methods. From 200 bootstrap samples average parameter estimates of abundance $(\widehat{mCPUE_{N,a}})$, standard error $(\SE)$, relative standard error ($\RSE$), and lower bounds ($\LB$) and upper bounds ($\UB$) of approximate $95\%$ confidence intervals are computed. The resulting indices of abundance (Table \ref{resultstablecodandsaithe}) turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the DATRAS ALK. We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
+
+{\bf Discuss model base ALK results here....problems with variance-covariance structure etc using the required number of linear predictors e.g. A-1 or A-2 or an alternative approach to the fisher information or Hessian matrix, such as bootstrapping, for uncertainty estimation}\\
+
+We also illustrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance. Table \ref{resultstablecodandsaitheAppendix} in Web appendix \ref{secAp:resultsdatrasALK} presents results for year 2017 Q3. As discussed in Section \ref{sec:datrasstratifiedbootstrap} DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, which would lead to an overestimation of the uncertainty; and it ignores the sampling procedure of age-length data collected at the haul level, which would lead to an underestimation of the uncertainty. So there are biases in both directions, which are difficult to quantify. When compared with our stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
+
+
+%As discussed in Section \ref{sec:datrasstratifiedbootstrap} the naive bootstrap procedure proposed by DATRAS to estimate uncertainty around indices of abundance is not appropriate for IBTS survey. Firstly, the DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, which would lead to an overestimation of the uncertainty. Secondly, it ignores the sampling procedure of age-length data collected at the haul level, which would lead to an underestimation of the uncertainty. So there are biases in both directions, which are difficult to quantify. To illustrate the implications of DATRAS bootstrap procedure, we compare estimates from this bootstrap procedure with our stratified bootstrap procedure and the results show that an overestimation of the uncertainty around indices of abundance is overwhelming, suggesting that it is highly relevant to account for the variation in the data over large areas (Table \ref{resultstablecodandsaitheAppendix} in Web appendix \ref{secAp:resultsdatrasALK} presents these results for year 2017 Q3).   
+
+
 \clearpage
 
 \begin{tiny}
 \begin{table}[h!]
 \centering
 \scriptsize
-\setlength\tabcolsep{2.5pt} 
-\captionsetup{font=small, width = 16cm}{
-\caption{Average estimates of abundance indices for the North Sea cod and saithe species from 200 bootstrap samples and 100 simulation runs, in year 2018 Q1. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
+\setlength\tabcolsep{1.0pt} 
+\captionsetup{font=small, width = 15cm}{
+\caption{Average estimates of abundance indices for the North Sea cod and saithe species from 500 bootstrap samples in years 2017-2018. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
 \begin{tabular}{ccccccccccccccccccccccccccc}
 \hline \\[0.1ex]
 {\bf Species} &{\bf $a$ } & \multicolumn{4}{c}{\bf DATRAS ALK} & \multicolumn{4}{c}{\thead{\bf Haul based ALK }} & \multicolumn{4}{c}{\thead{\bf  Model based ALK}} \\[1.5ex]
@@ -402,14 +390,106 @@ Abundance indices of saithe ......\\ \\
 
 
 %\raisebox{1.5ex}{\bf cod 2018 Q1}& 0   & 0  & 0 ($- \%$) & 0 & 0 & 0  & 0 ($- \%$) &0 & 0 &  &  ($ \%$) \\[1ex]
-\raisebox{1.5ex}{2018 Q1} & 1   & 0.895  & 0.13 ($14.5 \%$) & 0.671 & 1.180 & 0.905  & 0.13 ($14.4 \%$) &0.712 & 1.206 &  &  ($ \%$) \\[1ex]
-& 2  & 6.758 & 0.99 ($14.6 \%$) & 5.399  & 8.722 & 6.811 & 1.07 ($15.7 \%$) &5.283 &9.276 & &  ($ \%$) \\[1ex]
-& 3  & 1.771 & 0.21 ($11.9 \%$) & 1.321  & 2.108 & 1.652 & 0.17 ($10.3 \%$) &1.260 &1.948 & &  ($ \%$) \\[1ex]
-& 4  &1.655  & 0.29 ($17.5 \%$) & 1.009  & 2.126 & 1.667 & 0.32 ($19.2 \%$) &0.917 &2.048 & &  ($ \%$) \\[1ex]
-& 5  & 0.821 & 0.16 ($19.5 \%$) & 0.468  & 1.045 & 0.782 & 0.12 ($15.3 \%$) &0.497 &0.954 & &  ($ \%$) \\[1ex]
-& 6+ & 1.049 & 0.23 ($21.9 \%$) & 0.529  & 1.365 & 1.131 & 0.30 ($26.5 \%$) &0.361 &1.438 & &  ($ \%$)\\[4.5ex]
+\raisebox{1.5ex}{2018 Q1} & 1   & 0.853  & 0.12 ($14.1 \%$) & 0.697 & 1.130 & 0.863  & 0.13 ($15.1 \%$) &0.633 & 1.153 &  &  ($ \%$) \\[1ex]
+& 2  & 6.445 & 0.97 ($15.1 \%$) & 4.994  & 8.823 & 6.496 & 0.92 ($14.2 \%$) &5.240 &8.436 & &  ($ \%$) \\[1ex]
+& 3  & 1.685 & 0.22 ($13.1 \%$) & 1.211  & 2.095 & 1.571 & 0.15 ($10.0 \%$) &1.283 &1.866 & &  ($ \%$) \\[1ex]
+& 4  &1.572  & 0.28 ($17.8 \%$) & 0.948  & 1.990 & 1.584 & 0.28 ($17.6 \%$) &0.924 &2.046 & &  ($ \%$) \\[1ex]
+& 5  & 0.780 & 0.16 ($20.5 \%$) & 0.417  & 1.034 & 0.742 & 0.11 ($14.8 \%$) &0.488 &0.891 & &  ($ \%$) \\[1ex]
+& 6+ & 0.996 & 0.21 ($21.1 \%$) & 0.490  & 1.265 & 1.074 & 0.27 ($25.1 \%$) &0.379 &1.371 & &  ($ \%$)\\[4.5ex]
+
+
 
 {\bf saithe} \\[1.0ex]
+\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3} & 0& 0.282 &0.09 ($31.9 \%$) & 0.135 & 0.431  & 0.282 &0.09 ($37.6 \%$) &0.132 &0.431 &  &  ($ \%$) \\[1ex]
+ & 1 & 0.124  & 0.05 ($40.3 \%$) &0.043 &0.217  &0.123  &0.05   ($37.9 \%$) &0.042 &0.213 & &  ($ \%$) \\[1ex]
+& 2  & 1.043  & 0.23 ($22.1 \%$) &0.557 & 1.463 &0.929  &0.26   ($24.4 \%$) &0.341 &1.245 & &  ($ \%$) \\[1ex]
+& 3  & 11.243 & 2.02 ($18.0 \%$) &7.076 &15.03  &11.238 &2.12  ($14.4 \%$)  &6.439 &14.486 & &  ($ \%$) \\[1ex]
+& 4  & 12.703 & 1.82 ($14.3 \%$) &9.022 &16.013 &12.789 &2.14 ($14.2 \%$)   &7.866 &16.121 & &  ($ \%$) \\[1ex]
+& 5  & 2.912  & 0.35 ($12.0 \%$) &2.317 & 3.655 &2.971  &0.33  ($18.9 \%$)  &2.232 &3.516 & &  ($ \%$)\\[1ex]
+& 6+ & 2.845  & 0.52 ($18.3 \%$) &1.795 & 3.884 &2.819  &0.55  ($17.6 \%$)  &1.744 &3.855 & &  ($ \%$)\\[3.5ex]
+
+%\raisebox{1.5ex}{\bf saithe 2018 Q1} & 0& 0 &0 ($- \%$) & 0 & 0  & 0 &0 ($- \%$) &0 &0 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{2018 Q1} & 1& 0.035 &0.01 ($28.6 \%$) & 0.015 & 0.053  & 0.035 &0.01 ($28.6 \%$) &0.017 &0.052 &  &  ($ \%$) \\[1ex]
+& 2  & 0.049   & 0.01 ($20.4 \%$) &0.039 &0.076  &0.051  &0.01   ($19.6 \%$) &0.038 &0.074  & &  ($ \%$) \\[1ex]
+& 3  & 1.679   & 0.91 ($54.2 \%$) &0.264 &3.544  &0.317  &0.07   ($22.1 \%$) &0.166 &0.423  & &  ($ \%$) \\[1ex]
+& 4  & 9.997   &5.26 ($52.6 \%$)  &1.698 &18.458 &8.988  &4.17  ($46.4 \%$)  &1.861 &15.639 & &  ($ \%$) \\[1ex]
+& 5  & 7.476   &3.59 ($48.0 \%$)  &2.123 &13.259 &9.762  &4.54 ($46.5 \%$)   &2.319 &16.734 & &  ($ \%$) \\[1ex]
+& 6+ & 2.561   &0.79 ($30.8 \%$)  &1.305 &3.983  &2.646  &0.76  ($28.7 \%$)  &1.344 &3.871  & &  ($ \%$)\\[0.5ex]
+
+\hline
+\end{tabular}
+\end{table}
+\end{tiny}
+
+
+{\bf Table \ref{resultstablecodandsaithe1} below will not be included in paper. For our purposes to look at estimates of saithe with and without weights and, when the code for weights was "incorrect"}
+
+
+
+
+
+\clearpage
+
+\begin{tiny}
+\begin{table}[h!]
+\centering
+\scriptsize
+\setlength\tabcolsep{1.0pt} 
+\captionsetup{font=small, width = 16cm}{
+\caption{Average estimates of abundance indices for the North Sea cod and saithe species from 200 bootstrap samples in years 2017-2018. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe1}}
+\begin{tabular}{ccccccccccccccccccccccccccc}
+\hline \\[0.1ex]
+{\bf Species} &{\bf $a$ } & \multicolumn{4}{c}{\bf DATRAS ALK} & \multicolumn{4}{c}{\thead{\bf Haul based ALK }} & \multicolumn{4}{c}{\thead{\bf  Model based ALK}} \\[1.5ex]
+ % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
+%   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
+& &$\widehat{mCPUE_{N,a}}$ & SE(RSE) & LB & UB &$\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB   & $\widehat{mCPUE_{N,a}}$ & SE (RSE) & LB & UB &   \\[0.5ex]
+\cmidrule(lr{0.5em}){3-6}  \cmidrule(lr{0.5em}){7-10}  \cmidrule(lr{0.1em}){11-14} \\ [0.1ex]
+%\hline\\[1.0ex]
+
+{\bf saithe-weights} \\[1.0ex]
+\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3} & 0& 0.282 &0.09 ($31.9 \%$) & 0.135 & 0.431  & 0.282 &0.09 ($37.6 \%$) &0.132 &0.431 &  &  ($ \%$) \\[1ex]
+ & 1 & 0.124  & 0.05 ($40.3 \%$) &0.043 &0.217  &0.123  &0.05   ($37.9 \%$) &0.042 &0.213 & &  ($ \%$) \\[1ex]
+& 2  & 1.043  & 0.23 ($22.1 \%$) &0.557 & 1.463 &0.929  &0.26   ($24.4 \%$) &0.341 &1.245 & &  ($ \%$) \\[1ex]
+& 3  & 11.243 & 2.02 ($18.0 \%$) &7.076 &15.03  &11.238 &2.12  ($14.4 \%$)  &6.439 &14.486 & &  ($ \%$) \\[1ex]
+& 4  & 12.703 & 1.82 ($14.3 \%$) &9.022 &16.013 &12.789 &2.14 ($14.2 \%$)   &7.866 &16.121 & &  ($ \%$) \\[1ex]
+& 5  & 2.912  & 0.35 ($12.0 \%$) &2.317 & 3.655 &2.971  &0.33  ($18.9 \%$)  &2.232 &3.516 & &  ($ \%$)\\[1ex]
+& 6+ & 2.845  & 0.52 ($18.3 \%$) &1.795 & 3.884 &2.819  &0.55  ($17.6 \%$)  &1.744 &3.855 & &  ($ \%$)\\[3.5ex]
+
+%\raisebox{1.5ex}{\bf saithe 2018 Q1} & 0& 0 &0 ($- \%$) & 0 & 0  & 0 &0 ($- \%$) &0 &0 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{2018 Q1} & 1& 0.035 &0.01 ($28.6 \%$) & 0.015 & 0.053  & 0.035 &0.01 ($28.6 \%$) &0.017 &0.052 &  &  ($ \%$) \\[1ex]
+& 2  & 0.049   & 0.01 ($20.4 \%$) &0.039 &0.076  &0.051  &0.01   ($19.6 \%$) &0.038 &0.074  & &  ($ \%$) \\[1ex]
+& 3  & 1.679   & 0.91 ($54.2 \%$) &0.264 &3.544  &0.317  &0.07   ($22.1 \%$) &0.166 &0.423  & &  ($ \%$) \\[1ex]
+& 4  & 9.997   &5.26 ($52.6 \%$)  &1.698 &18.458 &8.988  &4.17  ($46.4 \%$)  &1.861 &15.639 & &  ($ \%$) \\[1ex]
+& 5  & 7.476   &3.59 ($48.0 \%$)  &2.123 &13.259 &9.762  &4.54 ($46.5 \%$)   &2.319 &16.734 & &  ($ \%$) \\[1ex]
+& 6+ & 2.561   &0.79 ($30.8 \%$)  &1.305 &3.983  &2.646  &0.76  ($28.7 \%$)  &1.344 &3.871  & &  ($ \%$)\\[0.5ex]
+
+
+{\bf saithe-weights old} \\[1.0ex]
+\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3} & 0& 0.744 &0.26 ($34.9 \%$) & 0.0326 & 1.154  & 0.744 &0.28 ($37.6 \%$) &0.340 &1.151 &  &  ($ \%$) \\[1ex]
+ & 1  & 0.130   & 0.05 ($38.4 \%$) &0.046 &0.213  &0.132  &0.05   ($37.9 \%$) &0.053 &0.213 & &  ($ \%$) \\[1ex]
+& 2  & 1.293  & 0.30 ($23.2 \%$) &0.658 & 1.812 &1.190  &0.29   ($24.4 \%$) &0.500 &1.562 & &  ($ \%$) \\[1ex]
+& 3  & 14.812 & 2.31 ($15.6 \%$) &9.282 &18.088 &14.979 &2.16  ($14.4 \%$) &9.554 &17.404 & &  ($ \%$) \\[1ex]
+& 4  & 16.391 &2.39 ($14.6 \%$) &10.705 &20.116 &16.256 &2.31 ($14.2 \%$) &10.841 &19.738 & &  ($ \%$) \\[1ex]
+& 5 & 3.832  &0.59  ($15.4 \%$) &2.782 & 4.979 &3.913  &0.74  ($18.9 \%$)  &2.618 &5.204 & &  ($ \%$)\\[1ex]
+& 6+ & 3.190  &0.54  ($16.9 \%$) &2.104 & 4.149 &3.178  &0.56  ($17.6 \%$)  &2.183 &4.300 & &  ($ \%$)\\[3.5ex]
+
+%\raisebox{1.5ex}{\bf saithe 2018 Q1} & 0& 0 &0 ($- \%$) & 0 & 0  & 0 &0 ($- \%$) &0 &0 &  &  ($ \%$) \\[1ex]
+\raisebox{1.5ex}{2018 Q1} & 1& 0.059 &0.03 ($50.1 \%$) & 0.030 & 0.079  & 0.059 &0.01 ($16.9 \%$) &0.031 &0.041 &  &  ($ \%$) \\[1ex]
+& 2  & 0.06   & 0.02 ($33.3 \%$) &0.058 &0.085  &0.059  &0.01   ($16.9 \%$) &0.057 &0.067 & &  ($ \%$) \\[1ex]
+& 3  & 2.805  & 2.63 ($93.8 \%$) &0.469 & 5.442 &0.372  &0.07   ($18.8 \%$) &0.305 &0.427 & &  ($ \%$) \\[1ex]
+& 4  & 16.752 &14.06 ($83.9 \%$) &2.644 &29.272 &15.017 &11.68  ($69.7 \%$) &3.081 &24.999 & &  ($ \%$) \\[1ex]
+& 5  & 12.117 &10.35 ($85.4 \%$) &3.112 &22.655 &16.119 &12.45 ($77.8 \%$) &3.457 &26.877 & &  ($ \%$) \\[1ex]
+& 6+ & 3.983  &1.74  ($43.7 \%$) &2.126 & 5.408 &4.150  &2.03  ($48.9 \%$)  &1.968 &5.829 & &  ($ \%$)\\[3.5ex]
+
+
+
+{\bf saithe-no-weights} \\[1.0ex]
 \cmidrule(lr{0.1em}){1-1}\\[1.0ex]
 
 \raisebox{1.5ex}{2017 Q3} & 0& 0.744 &0.26 ($34.9 \%$) & 0.0326 & 1.154  & 0.744 &0.28 ($37.6 \%$) &0.340 &1.151 &  &  ($ \%$) \\[1ex]
@@ -433,53 +513,28 @@ Abundance indices of saithe ......\\ \\
 \end{tiny}
 
 
-
-
 \clearpage
+\begin{itemize}
 
-{\bf this table is to go in the appendix, after filling with correct values for SAITHE. It compares estimates of the DATRAS ALK and bootstrap procedure with estimates form DATRAS ALK method and stratified bootstrap procedure. The idea is to show that it is inappropriate to use DATRAS bootstrap procedure as it does not account for the fine-scale stratification in the survey design.}\\
-\begin{tiny}
-\begin{table}[h!]
-\centering
-\scriptsize
-\setlength\tabcolsep{5.5pt} 
-\captionsetup{font=small, width = 14.5cm}{
-\caption{Comparison of abundance estimates and uncertainty for cod and saithe  from DATRAS bootstrap procedure and stratified procedure using DATRAS ALK, in year 2017 Q3. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaitheAppendix}}
-\begin{tabular}{ccccccccccccccccccccccccccc}
-\hline \\[0.1ex]
-{\bf Species} &{\bf $a$ } & $\widehat{mCPUE_{N,a}}$ & \multicolumn{3}{c}{\bf DATRAS bootstrap procedure} & \multicolumn{3}{c}{\thead{\bf Stratified bootstrap procedure}}  \\[1.5ex]
- % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
-%   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
-& & & SE(RSE) & LB & UB & SE (RSE) & LB & UB     \\[0.5ex]
-\cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}   \\ [0.1ex]
-%\hline\\[1.0ex]
+\item \emph{more data in Q3 particularly for larger older fishes compared with Q1 hence overestimation due to ignoring of fine-scale stratification rather than fewer samples, hence higher variance; 48\% and 164\% increases for cod and saithe, respectively?}
 
-{\bf cod} \\[1.0ex]
-\cmidrule(lr{0.5em}){1-1}\\[1.0ex]
+\item \emph{For all ALK methods the stratified bootstrap procedure is employed to estimate the uncertainty around indices of abundance. {\bf The estimated indices of abundance of cod are similar for all ALKs, but the the spatial ALKs generally gave higher estimates. Also, the spatial ALKs provide a better fit to the data in terms of precision. Uncertainty estimates (RSE) for older fishes ($\ge 4$) are higher, as expected, for the spatial ALKs as fewer samples are generally collected for these, and given that spatial variation in the data is accounted for, variability would be higher.}}
 
-\raisebox{1.5ex}{2017 Q3}& 0   & 1.698  & 0.48 ($28.3 \%$) & 0.683 & 2.383  & 0.35 ($20.6 \%$) &0.826 & 2.122 \\[1ex]
-& 1  & 15.478& 4.66 ($30.1 \%$) & 10.022 & 27.656 & 2.49 ($16.1 \%$) &10.919 & 19.761  \\[1ex]
-& 2  & 1.903 & 0.48 ($25.2 \%$) & 1.246  & 3.067  & 0.31 ($16.3 \%$) &1.277 &2.473  \\[1ex]
-& 3  & 1.310 & 0.22 ($16.8 \%$) & 0.867  & 1.698  & 0.14 ($10.7 \%$)  &1.004 &1.556  \\[1ex]
-& 4  &1.100  & 0.20 ($18.2 \%$) & 0.787  & 1.536  & 0.11 ($10.0 \%$)  &0.893 &1.335  \\[1ex]
-& 5  & 0.653 & 0.17 ($26.0 \%$) & 0.421  & 1.070  & 0.09 ($13.8 \%$) &0.461 &0.827  \\[1ex]
-& 6+ & 0.286 & 0.08 ($28.0 \%$) & 0.183  & 0.463  & 0.05 ($17.5 \%$)  &0.200 &0.391 \\[3.5ex]
-
-
-{\bf saithe} \\[1.0ex]
-\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
-
-\raisebox{1.5ex}{2017 Q3} & 0& 0.744 &0.26 ($34.9 \%$) & 0.0326 & 1.154   &0.28 ($37.6 \%$) &0.340 &1.151 \\[1ex]
-& 1  & 0.130  & 0.05 ($38.4 \%$) &0.046  & 0.213  &0.05  ($37.9 \%$) &0.053  &0.213  \\[1ex]
-& 2  & 1.293  & 0.30 ($23.2 \%$) &0.658  & 1.812  &0.29  ($24.4 \%$) &0.500  &1.562 \\[1ex]
-& 3  & 14.812 & 2.31 ($15.6 \%$) &9.282  & 18.088 &2.16  ($14.4 \%$) &9.554  &17.404  \\[1ex]
-& 4  & 16.391 & 2.39 ($14.6 \%$) &10.705 & 20.116 &2.31  ($14.2 \%$) &10.841 &19.738  \\[1ex]
-& 5  & 3.832  & 0.59 ($15.4 \%$) &2.782  & 4.979  &0.74  ($18.9 \%$) &2.618  &5.204 \\[1ex]
-& 6+ & 3.190  & 0.54 ($16.9 \%$) &2.104  & 4.149  &0.56  ($17.6 \%$) &2.183  &4.300 \\[0.5ex]
-\hline
-\end{tabular}
-\end{table}
-\end{tiny}
+\item \emph{generate plots for year 2018 Q1 cod and 2017 Q3 saithe. Possibly show same age given length group for both species? change plots to our show information in them- see the structure directly from the raw data that they correspond to the colours in the figure; TMB has problems when few observations are available-issues with the joint covariance matrix }
+\item have different plots...show fish of different ages (contours) corresponds to raw data, include points on the map of the different ages
+\item \emph{discuss differences in estimates from ALK methods (Table \ref{resultstablecodandsaithe} - in terms of relative standard error estimates; overestimation and underestimation from DATRAS (bootstrap) method not knowing the strength in either direction) - Issues:}
+\begin{itemize}
+\item \emph{Ignores fine scale stratification at the first stage, hence overestimation of the uncertainty}
+\item \emph{Ignores age-length data collected at the haul level, hence underestimates the uncertainty}
+\item \emph{Biases in both direction}
+\end{itemize}
+\item \emph{test for significant differences between estimates from ALK methods for age groups?}
+\item \emph{As discussed in Section \ref{sec:datrasalkestimator} and shown in the results in Table \ref{resultstablecodandsaithe} the assumption of no difference in regional compositions of age-length structures is invalid and DATRAS ALK have introduced bias in both direction, and the extent of this  bias in either direction is unknown. Hence, this ALK is not appropriate to perform further analyses. }
+\item \emph{codes do not run for saithe Q1 2018}
+\item \emph{Saithe and haddock tend to have a northerly distribution. The abundance of fish predators is generally lower in the German bight area. Within the northern area, saithe is more abundant in the eastern areas.}
+\item \emph{IBTS Q1 doesn’t cover the distribution of saithe adequately. Saithe are found deeper than the survey extends and any fluctuations in abundance within the survey are not related to stock size, but due to movement up and down the slope at that time. Explanation is in the 2016 benchmark report for saithe, available on the ICES website}
+\item \emph{The saithe assessment went through an ICES benchmark process in 2016 (ICES, 2016b). The scientific survey used in the assessment does not cover the whole stock distribution; however, it is considered generally representative. The number of observations (trawl stations) with saithe is low and the resulting survey index is uncertain. Commercial catch per unit effort information for French, German, and Norwegian trawlers was combined into a single index of biomass of fishable saithe. There are conflicting signals between the survey and fishable biomass index. The fraction of age 3 saithe migrating into the survey area (and the fishery) is low and varying between years with no obvious trend. Observations of saithe at age 3 are not suitable for predicting year-class strength. This means that assumed recruitment values are highly uncertain and a substantial portion $(30 \%)$ of the advised wanted catch in 2017 is based on the recruitment assumptions for 2016 and 2017 \citep{ICESJune2016}} 
+\end{itemize}
 
 
 %\clearpage
@@ -546,6 +601,7 @@ In year 2018 Q1, ${\bf x}$ otoliths for cod and ${\bf y}$ otoliths for saithe we
 Sampling one otolith per 2 cm or 5 cm length group provide .........
 
 \begin{itemize}
+\item \emph{The time needed for estimating the model varies slighlty between species and year. A laptop with  processor intel(R) Core(TM) i5-6300 CPU @ 2,40 GHz, used e.g. approximately 2 minutes to estimate the parameters for cod in year 2018.}
 \item \emph{discuss effects of this reduction on estimate and variance}
 \item \emph{extract data for number or percentage of otoliths removed when 2 cm or 5 cm removal procedure is used and fill ${\bf x}$  and ${\bf y}$ in text with values }
 \item include no otoliths for each section ---all data, reduced data by 2 cm etc
@@ -575,34 +631,34 @@ Sampling one otolith per 2 cm or 5 cm length group provide .........
 \cmidrule(lr{0.5em}){1-1} \\
 \raisebox{1.5ex}{2017 Q3} & 0 & 102  & 0 & 0   &  0   &    & & & 0 & 0  \\[1ex]
  & 1 & 1332 & 0.764  & 0.26  & & &  0.60  & 0.24  & & & & &0.70 & 0.36  \\[1ex]
-& 2 & 270 & 21.989 & 6.76  & & & 22.21 & 4.15  & & & &  & 22.11& 4.28  \\[1ex]
-& 3 & 220 & 11.285 & 2.19  & & & 10.58 & 1.20  & & & &  & 10.99& 1.77  \\[1ex]
+& 2 & 269 & 21.989 & 6.76  & & & 22.21 & 4.15  & & & &  & 22.11& 4.28  \\[1ex]
+& 3 & 207 & 11.285 & 2.19  & & & 10.58 & 1.20  & & & &  & 10.99& 1.77  \\[1ex]
 & 4 & 174 & 3.265  & 0.71  & & & 3.67  & 1.28  & & & &  & 3.50 & 0.87 \\[1ex]
 & 5 & 102 & 1.147  & 0.34  & & & 1.27  & 0.42  & & & &  & 1.20 & 0.48  \\[1ex]
 & 6+ & 50  & 1.276 & 0.38  & & & 1.40  & 0.70  & & & & & 1.21 & 0.42 \\[3.5ex]
 
 %\raisebox{1.5ex}{\bf cod} & 0  & 0 & 0   &  0   &  0  & & & 0 & 0  \\[1ex]
 \raisebox{1.5ex}{2018 Q1} & 1 & 144 & 0.764  & 0.26  & & &  0.60  & 0.24  & & & & &0.70 & 0.36  \\[1ex]
-& 2 & 768 & 21.989 & 6.76  & & & 22.21 & 4.15  & & & &  & 22.11& 4.28  \\[1ex]
-& 3 & 215 & 11.285 & 2.19  & & & 10.58 & 1.20  & & & &  & 10.99& 1.77  \\[1ex]
+& 2 & 767 & 21.989 & 6.76  & & & 22.21 & 4.15  & & & &  & 22.11& 4.28  \\[1ex]
+& 3 & 214 & 11.285 & 2.19  & & & 10.58 & 1.20  & & & &  & 10.99& 1.77  \\[1ex]
 & 4 & 168 & 3.265  & 0.71  & & & 3.67  & 1.28  & & & &  & 3.50 & 0.87 \\[1ex]
 & 5 & 100 & 1.147  & 0.34  & & & 1.27  & 0.42  & & & &  & 1.20 & 0.48  \\[1ex]
-& 6+ & 117  & 1.276 & 0.38  & & & 1.40  & 0.70  & & & & & 1.21 & 0.42 \\[3.5ex]
+& 6+ & 118  & 1.276 & 0.38  & & & 1.40  & 0.70  & & & & & 1.21 & 0.42 \\[3.5ex]
 
 {\bf saithe} \\[1.0ex]
 \cmidrule(lr{0.5em}){1-1} \\
 \raisebox{1.5ex}{ 2017 Q3} & 0  & 21 & 0  & 0  &  &  &  0 & 0 &0  & 0 &  & & 0 & 0 &  \\[1ex]
 & 1  & 26 & 0.764  & 0.26 & & & 0.60  & 0.24  & & & & &0.70 & 0.36  \\[1ex]
-& 2  & 66  & 21.989 & 6.76  & & &  22.21 & 4.15 & & & & & 22.11& 4.28  \\[1ex]
-& 3  & 507  & 11.285 & 2.19  & & & 10.58  & 1.20 & & & & & 10.99& 1.77  \\[1ex]
-& 4  & 735 & 3.265  & 0.71  & & & 3.67   & 1.28 & & & & & 3.50 & 0.87  \\[1ex]
+& 2  & 65  & 21.989 & 6.76  & & &  22.21 & 4.15 & & & & & 22.11& 4.28  \\[1ex]
+& 3  & 494  & 11.285 & 2.19  & & & 10.58  & 1.20 & & & & & 10.99& 1.77  \\[1ex]
+& 4  & 734 & 3.265  & 0.71  & & & 3.67   & 1.28 & & & & & 3.50 & 0.87  \\[1ex]
 & 5  & 334 & 1.147  & 0.34  & & & 1.27   & 0.42 & & & & & 1.20 & 0.48  \\[1ex]
 & 6+ & 418 & 1.276  & 0.38  & & & 1.40   & 0.70 & & & & & 1.21 & 0.42 \\[3.5ex]
 
 %\raisebox{1.5ex}{\bf saithe} & 0  & 0 & 0  & 0 &  0 & & & 0 & 0  \\[1ex]
 \raisebox{1.5ex}{2018 Q1} & 1  & 11 & 0.764  & 0.26 & & & 0.60  & 0.24  & & & & &0.70 & 0.36  \\[1ex]
-& 2  & 10  & 21.989 & 6.76  & & &  22.21 & 4.15 & & & & & 22.11& 4.28  \\[1ex]
-& 3  & 37  & 11.285 & 2.19  & & & 10.58  & 1.20 & & & & & 10.99& 1.77  \\[1ex]
+& 2  & 9  & 21.989 & 6.76  & & &  22.21 & 4.15 & & & & & 22.11& 4.28  \\[1ex]
+& 3  & 36  & 11.285 & 2.19  & & & 10.58  & 1.20 & & & & & 10.99& 1.77  \\[1ex]
 & 4  & 210 & 3.265  & 0.71  & & & 3.67   & 1.28 & & & & & 3.50 & 0.87  \\[1ex]
 & 5  & 262 & 1.147  & 0.34  & & & 1.27   & 0.42 & & & & & 1.20 & 0.48  \\[1ex]
 & 6+ & 264 & 1.276  & 0.38  & & & 1.40   & 0.70 & & & & & 1.21 & 0.42 \\[0.5ex]
@@ -752,19 +808,6 @@ Reducing the number of otoliths by ${\bf x}$ percent had {\bf no} significant ef
 %\subsection{Estimates of abundance-at-age and their uncertainty}
 %\label{sec:resultsabundance}
 %%The model-based ALK estimator gives the best overall estimation of uncertainty of estimated CPUE as it accounts for spatial differences in age-length structure. As expected the DATRAS estimator gives smaller estimates of the uncertainty in all ages, except ages 3 and 4. The DATRAS ALK estimator lacks the potential to account for spatial differences in the age-length structure, which may be as a consequence of differential growth rates or size-specific migration. The haul-based ALK estimator gives comparable estimates with the the model-based ALK estimator but uncertainty estimates are generally smaller. For all four bootstrap approaches estimated CPUE for all ages is captured within a $95\%$ confidence interval. Note that the nonparametric bootstrap method is advantageous  because it does not assume any distribution for the data, and it also accounts for some of the variability in the sampling distribution of the CPUE, however, there are some limitations of this method. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations in IBTS is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2017. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Random sampling performed in the bootstrap procedure also adds another level of potential sampling error, which is reflected in variation and biased estimates commonly performed in the bootstrap analysis. Note that the sampling distribution of the bootstrapped statistics is frequently not symmetric and computing point estimates from in this manner may reflect biased estimation from the samples. This can be seen in the estimated bootstrap mean values in Table \ref{resultstable}. The percentile method adopted for computing confidence intervals implicitly assumes the sampling distribution of the bootstrapped statistic is symmetric, and a violation of this assumption would caused the coverage to be substantial %(\emph{possibly include median estimates of CPUE to check for skewness or symmetry, and make reference to it. The percentile method also does partial skewness correction, which adds random variability. Possibly check for significant difference between estimates from different estimators? Approximate confidence intervals - as exact nonparametric confidence intervals do not exist for most parameters \citep{bahadur1956nonexistence}}). 
-%
-
-%
-%\clearpage
-%\begin{itemize}
-%\item discuss ALK estimators, which of the three is the most appropriate at this time, discuss  model-based ALK and compare with \citet{berg2012spatial} as they are similar are both used on IBTS data
-%\item How can estimators be improved, also computational time (1000 bootstrapped samples for each of the four estimators took hours (possibly more than ten, needs verification))
-%
-%\item Discuss next steps for example, removal of otoliths or age information and trawl hauls: the effect may be substantial for larger fish (hence older fish) - as shown in table \ref{agelengthcomposition} fewer older fish are sampled and many younger ones are sampled so the effect would be marginal for younger fish). Draft codes are available for this. \citet{wieland2009estimating} found that considerable catches for cod of older ages were made where the IBTS reported low densities or no cod all (\emph{this is based on data from collaborative fishermen-biologists project on cod in the north-eastern central North Sea}). Also smaller sample sizes would also have an effect on estimated bootstrapped confidence intervals. The smaller the original sample the less likely it is to represent the entire population, thus the more difficult it becomes to compute valid confidence intervals. The bootstrap relies heavily on the tails of the estimated sampling distribution when computing confidence intervals, and using small samples may jeopardize the validity of this computation.  
-%\item a possible full model-based approach for estimating abundance at age with variance simultaneously?
-%\item \emph{Note to us: include ICES references}
-%\end{itemize}
-%
 
 
 \clearpage
@@ -929,29 +972,56 @@ The ALK proposed in DATRAS (ICES 2013), which is an aggregation of individual sa
 The underlying assumption of this ALK approach is that age-length compositions are homogeneous within the superstrata. 
 \subsection{\normalsize Haul-based ALK Borrowing Approach}
 \label{secAp:oursBorrow}
-\indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. \\
+\indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. \emph{Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in air distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1.  }
+
+\section{\large Estimates from DATRAS and stratified bootstrap procedures}
+\label{secAp:resultsdatrasALK}
+The naive bootstrap procedure prosed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestiamtion of the uncertainty. The results (Table \ref{resultstablecodandsaitheAppendix}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
+\begin{tiny}
+\begin{table}[h!]
+\centering
+\scriptsize
+\setlength\tabcolsep{5.5pt} 
+\captionsetup{font=small, width = 14.5cm}{
+\caption{Comparison of abundance estimates and uncertainty for cod and saithe  from DATRAS bootstrap procedure and stratified procedure using DATRAS ALK, in year 2017 Q3. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaitheAppendix}}
+\begin{tabular}{ccccccccccccccccccccccccccc}
+\hline \\[0.1ex]
+{\bf Species} &{\bf $a$ } & $\widehat{mCPUE_{N,a}}$ & \multicolumn{3}{c}{\bf DATRAS bootstrap procedure} & \multicolumn{3}{c}{\thead{\bf Stratified bootstrap procedure}}  \\[1.5ex]
+ % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
+%   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
+& & & SE(RSE) & LB & UB & SE (RSE) & LB & UB     \\[0.5ex]
+\cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}   \\ [0.1ex]
+%\hline\\[1.0ex]
+
+{\bf cod} \\[1.0ex]
+\cmidrule(lr{0.5em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3}& 0   & 1.698  & 0.48 ($28.3 \%$) & 0.683 & 2.383  & 0.35 ($20.6 \%$) &0.826 & 2.122 \\[1ex]
+& 1  & 15.478& 4.66 ($30.1 \%$) & 10.022 & 27.656 & 2.49 ($16.1 \%$) &10.919 & 19.761  \\[1ex]
+& 2  & 1.903 & 0.48 ($25.2 \%$) & 1.246  & 3.067  & 0.31 ($16.3 \%$) &1.277 &2.473  \\[1ex]
+& 3  & 1.310 & 0.22 ($16.8 \%$) & 0.867  & 1.698  & 0.14 ($10.7 \%$)  &1.004 &1.556  \\[1ex]
+& 4  &1.100  & 0.20 ($18.2 \%$) & 0.787  & 1.536  & 0.11 ($10.0 \%$)  &0.893 &1.335  \\[1ex]
+& 5  & 0.653 & 0.17 ($26.0 \%$) & 0.421  & 1.070  & 0.09 ($13.8 \%$) &0.461 &0.827  \\[1ex]
+& 6+ & 0.286 & 0.08 ($28.0 \%$) & 0.183  & 0.463  & 0.05 ($17.5 \%$)  &0.200 &0.391 \\[3.5ex]
+
+
+{\bf saithe} \\[1.0ex]
+\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3} & 0& 0.282 &0.32 ($113.5 \%$) & 0.026 & 1.275   &0.09 ($31.9 \%$) &0.135 &0.431 \\[1ex]
+& 1  & 0.124  & 0.07 ($56.5 \%$) &0.030  & 0.335  &0.05  ($40.3 \%$) &0.043  &0.217  \\[1ex]
+& 2  & 1.043  & 0.39 ($37.4 \%$) &0.638  & 2.098  &0.23  ($22.1 \%$) &0.557  &1.463 \\[1ex]
+& 3  & 11.243 & 2.96 ($26.3 \%$) &7.849  & 19.063 &2.02  ($18.0 \%$) &7.076  &15.030  \\[1ex]
+& 4  & 12.703 & 2.91 ($22.9 \%$) &9.349  & 20.618 &1.82  ($14.3 \%$) &9.022  &16.013  \\[1ex]
+& 5  & 2.912  & 0.60 ($20.6 \%$) &2.138  & 4.391  &0.35  ($12.0 \%$) &2.317  &3.655 \\[1ex]
+& 6+ & 2.845  & 0.80 ($28.1 \%$) &1.660  & 4.794  &0.52  ($18.3 \%$) &1.795  &3.884 \\[0.5ex]
+\hline
+\end{tabular}
+\end{table}
+\end{tiny}
 
 
 
-{\bf Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in air distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1.  }
-%\clearpage
-
-
-
-% \clearpage
-%\section{\large Probability Plot for saithe in the North Sea in Q1 of 2015}
-%\label{secAp:saithe2015Q1Map}
-%
-%\begin{figure}[h!]
-%  \centering
-% {\includegraphics[width=15.5cm]{saithe2015Q1Map.jpeg}}   
-% \captionsetup{font= footnotesize, width=15cm}{
-% \caption{Estimated probability of age of a 50 cm long saithe in the first quarter of year 2015. The probability of age 1 to age 3 is approximately zero. The polygones marked 1 to 10 is the round fish areas (RFAs) where the ALK is assumed constant in the currently used estimators of the official CPUEs. The plots show that the age of saithe is more likely to be 5 given that it is 50 cm, particularly in RFA 1.}\label{saithe2015Q1Map}}
-%\end{figure}
-
-
-
- 
 %\end{appendices}
 
 \end{document}
