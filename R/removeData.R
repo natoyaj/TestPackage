@@ -55,6 +55,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCorQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCorQ975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   #--------------------------------------------------------------------------
 
   #Remove data and calulates mCPUE etc.--------------------------------------
@@ -228,6 +230,9 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCorQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCorQ975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+
   #--------------------------------------------------------------------------
 
   #Remove data and calulates mCPUE etc. with usage of several cores----------------
@@ -258,6 +263,9 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
     k$sd =resultSim$sd
     k$Q025 =resultSim$Q025
     k$Q975 =resultSim$Q975
+    # bias-corrected---------------------
+    k$BiasCorQ025 = resultSim$BiasCorQ025
+    k$BiasCorQ975 = resultSim$BiasCorQ975
     k
   }
   #--------------------------------------------------------------------------
@@ -269,6 +277,9 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
     tmpResults$sd[,i]= resForEach[[i]]$sd
     tmpResults$Q025[,i]= resForEach[[i]]$Q025
     tmpResults$Q975[,i]= resForEach[[i]]$Q975
+  # bias-corrected------------
+    tmpResults$BiasCorQ025[,i]= resForEach[[i]]$BiasCorQ025
+    tmpResults$BiasCorQ975[,i]= resForEach[[i]]$BiasCorQ975
   }
   #--------------------------------------------------------------------------
 
@@ -283,6 +294,16 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
       toReturn$mCPUE$Q975[i] = quantile[2]
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
       toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
+
+    #bias-corrected-------------
+      #b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i])/2)/length(tmpResults$mCPUE[i,]))
+
+      #alph      = 0.05                              # 95% limits
+      #z         = qnorm(c(alph/2,1-alph/2))         # Std. norm. limits
+      #p         = pnorm(z-2*b)                      # bias-correct & convert to proportions
+      #qq        = quantile(mCPUE[i,2:(B+1)],p=p)    # Bias-corrected percentile lims.
+      #mCPUEsummary$BiasCQ025[i] = qq[1]
+     # mCPUEsummary$BiasCQ075[i] = qq[2]
 
     }
   }else{

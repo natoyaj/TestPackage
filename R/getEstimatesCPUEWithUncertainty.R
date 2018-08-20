@@ -69,6 +69,8 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
   cpue = data.frame(cpueEst)
   cpue$lQ = rep(0,length(cpueEst))
   cpue$uQ = rep(0,length(cpueEst))
+  cpue$Q025BiasCorrected = rep(0,length(cpueEst))
+  cpue$Q975BiasCorrected = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
   for(i in 1:length(cpueEst))
   {
@@ -76,6 +78,14 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
     cpue$lQ[i] = quantile[1]
     cpue$uQ[i] = quantile[2]
     cpue$sd[i] = sd(simCPUEs[i,])
+
+    b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
+    alph      = 0.05                           # 95% limits
+    z         = qnorm(c(alph/2,1-alph/2))      # Std. norm. limits
+    p         = pnorm(z-2*b)                   # bias-correct & convert to proportions
+    qq        = quantile(simCPUEs[i,],p=p)    # Bias-corrected percentile lims.
+    cpue$Q025BiasCorrected[i] = qq[1]
+    cpue$Q975BiasCorrected[i] = qq[2]
   }
 
   return(cpue)
@@ -213,8 +223,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
   cpue$bootstrapMean = rep(0,length(cpueEst))
   cpue$Q025 = rep(0,length(cpueEst))
   cpue$Q975 = rep(0,length(cpueEst))
-  cpue$Q025BiasC = rep(0,length(cpueEst))
-  cpue$Q975BiasC = rep(0,length(cpueEst))
+  cpue$Q025BiasCorr = rep(0,length(cpueEst))
+  cpue$Q975BiasCorr = rep(0,length(cpueEst))
   cpue$sd = rep(0,length(cpueEst))
 
   if(doBootstrap){
@@ -227,27 +237,16 @@ CPUEage = function(RFA, species, year, quarter,dat,
       cpue$bootstrapMean[i] = mean(simCPUEs[i,])
 
       #Estimating bias-corrected confidence intervals
-
       #estimate bias in standard norm deviates
       #for each i, b must be calculated for the number of simulations ran
 
       b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
-
-      alphL=0.05 # 95% limits
-      z=qnorm(c(alphL/2,1-alphL/2)) # Standard. normal. limits
-      p=pnorm(z-2*b) # bias-correct & convert to proportions
-      qq = quantile(simCPUEs,p=p) # Bias-corrected percentile lims.
-
-      cpue$Q025BiasC[i] = qq[1]
-      cpue$Q975BiasC[i] = qq[2]
-
-      #print(simCPUEs)
-      #print(b)
-
-      cpue$Q025BiasCorrected[i] = qq[1]
-      cpue$Q975BiasCorrected[i] = qq[2]
-      #print( observedCPUE)
-
+      alph      = 0.05                           # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))      # Std. norm. limits
+      p         = pnorm(z-2*b)                   # bias-correct & convert to proportions
+      qq        = quantile(simCPUEs[i,],p=p)     # Bias-corrected percentile lims.
+      cpue$Q025BiasCorr[i] = qq[1]
+      cpue$Q975BiasCorr[i] = qq[2]
     }
   }
 
@@ -337,15 +336,36 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   }
   #-----------------------------------------------------------------------------------------
 
+
+#  b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
+#  alph      = 0.05                           # 95% limits
+#  z         = qnorm(c(alph/2,1-alph/2))      # Std. norm. limits
+#  p         = pnorm(z-2*b)                   # bias-correct & convert to proportions
+#  qq        = quantile(simCPUEs[i,],p=p)     # Bias-corrected percentile lims.
+#  cpue$Q025BiasCorr[i] = qq[1]
+#  cpue$Q975BiasCorr[i] = qq[2]
+
+
   #Define a summary that we return (mCPUE, quantiles and sd)--------------------------------
-  mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1] )
-  names(mCPUEsummary) = c("mCPUE","bootstrapMean","Q025","Q975", "sd")
+
+  mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1])
+  names(mCPUEsummary) = c("mCPUE","bootstrapMean","Q025","Q975","BiasCQ025","BiasCQ075", "sd")
   for(i in 1:dim(mCPUEsummary)[1]){
     mCPUEsummary$bootstrapMean[i] = mean(mCPUE[i,2:(B+1)])
     quantile = quantile(mCPUE[i,2:(B+1)],c(0.025,0.975))
     mCPUEsummary$Q025[i] = quantile[1]
     mCPUEsummary$Q975[i] = quantile[2]
     mCPUEsummary$sd[i] = sd(mCPUE[i,2:(B+1)])
+
+    # bias corrected confidence intervals (b is not correct)
+    b= qnorm((sum(mCPUE[i,2:(B+1)] > mCPUE[i,1])+ sum(mCPUE[i,2:(B+1)]==mCPUE[i,1])/2)/length(mCPUE[i,2:(B+1)]))
+
+    alph      = 0.05                              # 95% limits
+    z         = qnorm(c(alph/2,1-alph/2))         # Std. norm. limits
+    p         = pnorm(z-2*b)                      # bias-correct & convert to proportions
+    qq        = quantile(mCPUE[i,2:(B+1)],p=p)    # Bias-corrected percentile lims.
+    mCPUEsummary$BiasCQ025[i] = qq[1]
+    mCPUEsummary$BiasCQ075[i] = qq[2]
   }
   #-----------------------------------------------------------------------------------------
 
@@ -353,29 +373,3 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 }
 
 
-
-#
-# # assign vals to variable y
-# y=c(7,7,6,9,8,7,8,7,7,7,6,6,6,8,7,7,7,7,6,7,
-#     8,7,7,6,8,7,8,7,8,7,7,7,5,7,7,7,6,7,8,7,7,
-#     8,6,9,7,14,12,10,13,15)
-#
-# #Bias corrected percentile limits
-# # use a 10% trimmed mean
-# stat=function(y){mean(y,trim=0.1)}
-# (obs=stat(y)) # Observed value of stat.
-#
-# R=5 # use 5 bootstraps
-# boot=r=0 ; while(r < R){r=r+1 # for each of R samples
-# boot[r]=stat(sample(y,replace=TRUE))} # get bootstrap stat.
-#
-#
-# # estimate bias in std. norm deviates
-# b=qnorm((sum(boot > obs)+sum(boot==obs)/2)/r)
-#
-# alpha=0.05 # 95% limits
-# z=qnorm(c(alpha/2,1-alpha/2)) # Std. norm. limits
-# p=pnorm(z-2*b) # bias-correct & convert to proportions
-#
-# quantile(boot,p=p) # Bias-corrected percentile lims.
-#

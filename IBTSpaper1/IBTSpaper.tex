@@ -235,6 +235,7 @@ Here ${\bf P}$ is the set of RFAs, $A_p$ is the area of RFA $p$, and $A_{\text{t
  
 
 \subsection{ALK estimators}
+\label{sec:alkmethods}
 
 The definition of the CPUE of age includes an ALK, see (\ref{eq:cpueALK}), which we described in this section. Three ALK estimators are included in this research, which are named as follows:  \textit{i}) DATRAS ALK, \textit{ii}) haul based ALK and \textit{iii}) model based ALK.
 % In this section we define these three ALK estimators. 
@@ -272,7 +273,11 @@ The model based ALK estimate is obtained by maximizing the likelihood. We maximi
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
-In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The percentile method is used to estimate $95\%$ confidence intervals of the estimated CPUEs \citep{carpenter2000bootstrap}.
+In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using the percentile method  and bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data.
+
+\emph{\large Percentile Method}. The percentile method makes direct use of the empirical sampling distribution, assuming that the statistic from each bootstrap sample is unbiased and symmetric, but not necessarily normal \citep{carpenter2000bootstrap}.  The $100(\alpha /2)$ and $100(1- \alpha /2)$ percentile values of the bootstrap sampling distribution estimate are used as the upper and lower confidence limits for the density $\rho$. The avoidance of the assumption of normality and its simplicity in implementation are the main attractions of this method. However, the coverage error is often substantial if the distribution of the estimated parameter of interest is not nearly symmetric. Also, at least 1000 bootstrap samples are required to obtain sufficiently accurate $95\%$ confidence intervals \citep{briggs1999constructing, carpenter2000bootstrap}.
+
+\emph{\large Biased-corrected}. The Bias-Corrected method is an alternative to the Percentile method, which seeks to adjust for the bias and skew of the sampling distribution. This revised method assumes that there is a montonic increasing function and the estimator $\hat{\rho}$ has a monotonic increasing function $f()$ such that the transformed values $f(\hat{\rho})$ are normally distributed with mean $f(\rho) - z_{0}$ and standard deviation one, where $z_{0}$ are the standard normal limits \citep{puth2015variety}.
 
 A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in  \citet{ICES2013}. In the rest of this paper, we refer to this procedure as DATRAS bootstrap procedure. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE within RFAs. This assumption is likely to be wrong, and will typically cause an overestimation of the uncertainty. Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE within each statistical rectangle. 
 
@@ -325,21 +330,24 @@ Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \
 %\clearpage
 \subsection{Cod and Saithe using ALK methods}
 \label{sec:codresults}
+In this section we applied the percentile bootstrap and bias-corrected bootstrap methods for estimating variability in abundance indices. For both of these methods we applied the stratified procedure described in Section \ref{sec:datrasstratifiedbootstrap}. We also give abundance indices from the three ALK methods described in Section \ref{sec:alkmethods}.
 
+
+%\clearpage
 Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a .....cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)).
 
 \clearpage
 \begin{figure}[h!]
 \centering
-\begin{minipage}[c]{0.70\linewidth}
-\includegraphics[width=103mm,scale=9.5]{Allcode40cm2015.png}
+\begin{minipage}[c]{0.50\linewidth}
+\includegraphics[width=103mm,scale=7.5]{Allcode40cm2015.png}
 \caption*{\bf (a) cod}
 \label{fig1.1}
 \end{minipage}
 
 \quad
-\begin{minipage}[c]{0.70\linewidth}
-\includegraphics[width=103mm,scale=9.5]{saithe2015Q1Map.jpeg}
+\begin{minipage}[c]{0.50\linewidth}
+\includegraphics[width=103mm,scale=7.5]{saithe2015Q1Map.jpeg}
 \caption*{\bf (b) saithe}
 \label{fig5.1}
 \end{minipage}
@@ -348,8 +356,59 @@ Recall that the main assumption of DATRAS ALK is that the age-length composition
 \end{figure}
 
 \clearpage
-%The methods of estimating abundance indices (\ref{abundanceestimatornorthsea}) and the uncertainty (\ref{sec:datrasstratifiedbootstrap}) around them are employed on IBTS data. 
-Table \ref{resultstablecodandsaithe} shows indices of abundance of cod and saithe estimated from each of the three ALK methods. From 200 bootstrap samples average parameter estimates of abundance $(\widehat{mCPUE_{N,a}})$, standard error $(\SE)$, relative standard error ($\RSE$), and lower bounds ($\LB$) and upper bounds ($\UB$) of approximate $95\%$ confidence intervals are computed. The resulting indices of abundance (Table \ref{resultstablecodandsaithe}) turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the DATRAS ALK. We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
+%coverage error sqrt{0.95*0.05/1000} 
+Table \ref{confidencelevels} gives the coverage probability (CP), which is the percentage of time the true value lies within the interval for the bias-corrected and percentile bootstrap methods for 1000 bootstrap replications. The mean width of the confidence intervals is also given. The standard error estimate of the coverage interval is $0.00689$. \\
+
+
+
+%\clearpage
+\begin{tiny}
+\begin{table}[h!]
+\centering
+\scriptsize
+\setlength\tabcolsep{3.5pt} 
+\captionsetup{font=small, width = 16.5cm}{
+\caption{Coverage probability (CP), which is the proportion of time the true value lies within the interval, and the mean width of the confidence intervals from the bias-corrected bootstrap and percentile bootstrap methods are given for each of three ALK methods. The nomial value is $0.95$} \label{confidencelevels}}
+\begin{tabular}{ccccccccccccccccccccccccccc}
+\hline \\[0.1ex]
+{Species}&{ $a$ } & \multicolumn{6}{c}{\bf Bias-corrected}  && \multicolumn{6}{c}{\bf Percentile } \\ [1.1ex]
+ & & \multicolumn{2}{c}{DATRAS } & \multicolumn{2}{c}{\thead{ Haul based }} & \multicolumn{2}{c}{\thead{ Model based}} &&  \multicolumn{2}{c}{DATRAS } & \multicolumn{2}{c}{\thead{ Haul based }} & \multicolumn{2}{c}{\thead{ Model based}} \\[1.5ex]
+ % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
+   \cmidrule(lr{0.5em}){3-8}  \cmidrule(lr{0.1em}){10-15}   \\ [0.1ex]
+& & CP & mean width & CP & mean width   & CP & mean width  && CP &  mean width & CP &  mean width     & CP & mean width \\[0.5ex]
+\cmidrule(lr{0.5em}){3-4}  \cmidrule(lr{0.5em}){5-6}  \cmidrule(lr{0.5em}){7-8} \cmidrule(lr{0.5em}){10-11}  \cmidrule(lr{0.5em}){12-13}  \cmidrule(lr{0.5em}){14-15}\\ [0.1ex]
+%\hline\\[1.0ex]
+
+{\bf cod} \\[1.0ex]
+\cmidrule(lr{0.5em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3}&   &  &  &  &  &   \\[1ex]
+& 1  & &  & & &     \\[1ex]
+& 2  & &  & & &    \\[1ex]
+& 3  & &  & & &  \\[1ex]
+& 4  & &  & & &    \\[1ex]
+& 5  & &  & & &    \\[1ex]
+& 6+ & &  & &  &  \\[3.5ex]
+
+
+{\bf saithe} \\[1.0ex]
+\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+
+\raisebox{1.5ex}{2017 Q3}&   &  &  &  &  &   \\[1ex]
+& 1  & &  & & &     \\[1ex]
+& 2  & &  & & &    \\[1ex]
+& 3  & &  & & &  \\[1ex]
+& 4  & &  & & &    \\[1ex]
+& 5  & &  & & &    \\[1ex]
+& 6+ & &  & &  &  \\[3.5ex]
+
+\hline
+\end{tabular}
+\end{table}
+\end{tiny}
+
+
+{\bf As the coverage probability from the bias-corrected method is closer to the nominal value ($0.95$) compared with the percentile method, this bootstrap method would be used fro analyses in the rest of this research}. Table \ref{resultstablecodandsaithe} gives indices of abundance of cod and saithe estimated from each of the three ALK methods. From 200 bootstrap samples average parameter estimates of abundance $(\widehat{mCPUE_{N,a}})$, standard error $(\SE)$, relative standard error ($\RSE$), and lower bounds ($\LB$) and upper bounds ($\UB$) of approximate $95\%$ confidence intervals. The resulting indices of abundance (Table \ref{resultstablecodandsaithe}) turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the DATRAS ALK. We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
 
 {\bf Discuss model base ALK results here....problems with variance-covariance structure etc using the required number of linear predictors e.g. A-1 or A-2 or an alternative approach to the fisher information or Hessian matrix, such as bootstrapping, for uncertainty estimation}\\
 
@@ -357,7 +416,6 @@ We also illustrate the implications of using DATRAS bootstrap procedure for esti
 
 
 %As discussed in Section \ref{sec:datrasstratifiedbootstrap} the naive bootstrap procedure proposed by DATRAS to estimate uncertainty around indices of abundance is not appropriate for IBTS survey. Firstly, the DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, which would lead to an overestimation of the uncertainty. Secondly, it ignores the sampling procedure of age-length data collected at the haul level, which would lead to an underestimation of the uncertainty. So there are biases in both directions, which are difficult to quantify. To illustrate the implications of DATRAS bootstrap procedure, we compare estimates from this bootstrap procedure with our stratified bootstrap procedure and the results show that an overestimation of the uncertainty around indices of abundance is overwhelming, suggesting that it is highly relevant to account for the variation in the data over large areas (Table \ref{resultstablecodandsaitheAppendix} in Web appendix \ref{secAp:resultsdatrasALK} presents these results for year 2017 Q3).   
-
 
 \clearpage
 
@@ -367,7 +425,7 @@ We also illustrate the implications of using DATRAS bootstrap procedure for esti
 \scriptsize
 \setlength\tabcolsep{1.0pt} 
 \captionsetup{font=small, width = 15cm}{
-\caption{Average estimates of abundance indices for the North Sea cod and saithe species from 500 bootstrap samples in years 2017-2018. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
+\caption{Average estimates of abundance indices for the North Sea cod and saithe species from 200 bootstrap samples in years 2017-2018. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaithe}}
 \begin{tabular}{ccccccccccccccccccccccccccc}
 \hline \\[0.1ex]
 {\bf Species} &{\bf $a$ } & \multicolumn{4}{c}{\bf DATRAS ALK} & \multicolumn{4}{c}{\thead{\bf Haul based ALK }} & \multicolumn{4}{c}{\thead{\bf  Model based ALK}} \\[1.5ex]
