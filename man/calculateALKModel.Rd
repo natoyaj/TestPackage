@@ -4,8 +4,7 @@
 \alias{calculateALKModel}
 \title{calculateALKModel}
 \usage{
-calculateALKModel(RFA, species, year, quarter, hh, simFitModel = NULL,
-  doSimulate = FALSE)
+calculateALKModel(RFA, species, year, quarter, hh, data, fitModel = NULL)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
