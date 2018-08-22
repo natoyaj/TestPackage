@@ -495,9 +495,24 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   alkToReturn = list()
   #----------------------------------------------------
 
+  #Extract the estimated continuous GRF-----------------
+  Apred = fitModel[[7]]
+  field1 = Apred %*%report$x1/exp(report$logTau[1])
+  field2 = Apred %*%report$x2/exp(report$logTau[2])
+  field3 = Apred %*%report$x3/exp(report$logTau[3])
+  field4 = Apred %*%report$x4/exp(report$logTau[4])
+  field5 = Apred %*%report$x5/exp(report$logTau[5])
+  whichHH = which(hh$Roundfish==RFA & hh$Year==year &
+                    hh$Quarter == quarter)
+  field1 = field1[whichHH]
+  field2 = field2[whichHH]
+  field3 = field3[whichHH]
+  field4 = field4[whichHH]
+  field5 = field5[whichHH]
+  #----------------------------------------------------
+
   #Extract the data of interest----------------------
-  hh = hh[which(hh$Roundfish==RFA & hh$Year==year &
-                            hh$Quarter == quarter),]
+  hh = hh[whichHH,]
   #---------------------------------------------------
 
 
@@ -519,15 +534,15 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #----------------------------------------------------
 
   #Extract the spatial latent fields---------------------------
-#  field0 = report$delta0
-  field1 = report$delta1
-  field2 = report$delta2
-  field3 = report$delta3
-  field4 = report$delta4
-  field5 = report$delta5
+#  field1 = report$x1/exp(report$logTau[1])
+#  field2 = report$x2/exp(report$logTau[2])
+#  field3 = report$x3/exp(report$logTau[3])
+#  field4 = report$x4/exp(report$logTau[4])
+#  field5 = report$x5/exp(report$logTau[5])
   beta0 = report$beta0
   repLength = report$repLength
   #----------------------------------------------------
+
 
 
   #Construct each element of the ALK-list----------------------------------------------------------------------
@@ -535,7 +550,8 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   neste = 1
   for(id in haulId){
 
-    omr = keyIdMeshHaul$meshID[which(keyIdMeshHaul$haulID==as.character(id))]
+#    omr = keyIdMeshHaul$meshID[which(keyIdMeshHaul$haulID==as.character(id))]
+    omr = neste #The order of the hh-data matters, this is a bit bad, but dont see how to avoid this easily when connecting eith the estimated model.
     #Construct the parts of the ALK were we have data-------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
     {
@@ -552,6 +568,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
           nu3 = exp(beta0[4]+ repLength[length +maxLength*3] +field3[omr])
           nu4 = exp(beta0[5]+ repLength[length +maxLength*4] +field4[omr])
           nu5 = exp(beta0[6]+ repLength[length +maxLength*5] +field5[omr])
+
 
           sum = nu2 + nu3 + nu4 + nu5
 
@@ -634,20 +651,8 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 #' @export
 #' @return Returns a list with simulated model based ALK for each trawl haul
 #' @examples
-simALKModel = function(RFA, species, year, quarter,hh){
-  if(species == "Gadus morhua"){
-    eval(parse(text =paste( "data('cod",year,"Q",quarter,"')",sep="")))
-    eval(parse(text =paste( "fitModel = fitModelCod",year,"Q",quarter,sep="")))
+simALKModel = function(RFA, species, year, quarter,hh,fitModel){
 
-    eval(parse(text =paste( "data('designMatrixForReportCod",year,"Q",quarter,"')",sep="")))
-    eval(parse(text =paste( "designMatrixForReport = designMatrixForReportCod",year,"Q",quarter,sep="")))
-  }else if(species == "Pollachius virens"){
-    eval(parse(text =paste( "data('saithe",year,"Q",quarter,"')",sep="")))
-    eval(parse(text =paste( "fitModel = fitModelSaithe",year,"Q",quarter,sep="")))
-
-    eval(parse(text =paste( "data('designMatrixForReportSaithe",year,"Q",quarter,"')",sep="")))
-    eval(parse(text =paste( "designMatrixForReport = designMatrixForReportSaithe",year,"Q",quarter,sep="")))
-  }
 
   jointPrec = fitModel$jointPrecision
 
