@@ -480,16 +480,23 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NULL){
+calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NULL,report = NULL){
 
+  useOriginalId = FALSE
   #Fit the model
   if(length(fitModel)==0){
     fitModel =  fitModel(species = species, quarter =quarter, year = year, ca_hh = data,hh = hh)
   }
 
-  report = fitModel[[1]]$report()
+  if(length(report)>0){
+    useOriginalId = TRUE
+  }else{
+    report = fitModel[[1]]$report()
+  }
   boarder = fitModel[[4]]
-  keyIdMeshHaul = fitModel[[5]]
+  listWithOrderedId = fitModel[[5]]
+
+
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -502,16 +509,15 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   field3 = Apred %*%report$x3/exp(report$logTau[3])
   field4 = Apred %*%report$x4/exp(report$logTau[4])
   field5 = Apred %*%report$x5/exp(report$logTau[5])
-  whichHH = which(hh$Roundfish==RFA & hh$Year==year &
-                    hh$Quarter == quarter)
-  field1 = field1[whichHH]
-  field2 = field2[whichHH]
-  field3 = field3[whichHH]
-  field4 = field4[whichHH]
-  field5 = field5[whichHH]
+
+
+  beta0 = report$beta0
+  repLength = report$repLength
   #----------------------------------------------------
 
   #Extract the data of interest----------------------
+  whichHH = which(hh$Roundfish==RFA & hh$Year==year &
+                    hh$Quarter == quarter)
   hh = hh[whichHH,]
   #---------------------------------------------------
 
@@ -533,25 +539,18 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
   #----------------------------------------------------
 
-  #Extract the spatial latent fields---------------------------
-#  field1 = report$x1/exp(report$logTau[1])
-#  field2 = report$x2/exp(report$logTau[2])
-#  field3 = report$x3/exp(report$logTau[3])
-#  field4 = report$x4/exp(report$logTau[4])
-#  field5 = report$x5/exp(report$logTau[5])
-  beta0 = report$beta0
-  repLength = report$repLength
-  #----------------------------------------------------
-
-
 
   #Construct each element of the ALK-list----------------------------------------------------------------------
   haulId = unique(hh$haul.id)
   neste = 1
   for(id in haulId){
+    if(useOriginalId){
+      originalId = hh$originalIdAtThisLocation[which(hh$haul.id==id)]
+      omr = which(listWithOrderedId==originalId) #But the ID is changed for every simulation. This must be looked into when using the Fisher method.
+    }else{
+      omr = which(listWithOrderedId==id) #But the ID is changed for every simulation. This must be looked into when using the Fisher method.
+    }
 
-#    omr = keyIdMeshHaul$meshID[which(keyIdMeshHaul$haulID==as.character(id))]
-    omr = neste #The order of the hh-data matters, this is a bit bad, but dont see how to avoid this easily when connecting eith the estimated model.
     #Construct the parts of the ALK were we have data-------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
     {
@@ -640,7 +639,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 }
 
 
-#' simALKModel
+#' simModelFisher
 #' @description
 #' @param RFA Roundfish area number.
 #' @param species The species of interest.
@@ -651,54 +650,28 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 #' @export
 #' @return Returns a list with simulated model based ALK for each trawl haul
 #' @examples
-simALKModel = function(RFA, species, year, quarter,hh,fitModel){
+simModelFisher = function(species, quarter,rep,fit,sim,i){
+
+  report = fit[[1]]$report()
 
 
-  jointPrec = fitModel$jointPrecision
+  report$repLength[which(report$repLength!=0)] = report$repLength[which(report$repLength!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="repLength")- sum(rep$sd[1:max(which(names(rep$value)=="repLength"))] ==0)]
 
-  mean = rep(0,dim(jointPrec)[1])
-  cholPrec = Cholesky(jointPrec)
+  report$beta0[which(report$beta0!=0)] = report$beta0[which(report$beta0!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="beta0")- sum(rep$sd[1:max(which(names(rep$value)=="beta0"))] ==0)]
 
-  simulateFit = rmvn.sparse(1, mean, CH = cholPrec, prec = TRUE)
+  report$x1[which(report$x1!=0)] = report$x1[which(report$x1!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="x1")-  sum(rep$sd[1:max(which(names(rep$value)=="x1"))] ==0)]
+  report$x2[which(report$x2!=0)] = report$x2[which(report$x2!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="x2")-  sum(rep$sd[1:max(which(names(rep$value)=="x2"))] ==0)]
+  report$x3[which(report$x3!=0)] = report$x3[which(report$x3!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="x3")-  sum(rep$sd[1:max(which(names(rep$value)=="x3"))] ==0)]
+  report$x4[which(report$x4!=0)] = report$x4[which(report$x4!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="x4")-  sum(rep$sd[1:max(which(names(rep$value)=="x4"))] ==0)]
+  report$x5[which(report$x5!=0)] = report$x5[which(report$x5!=0)] +
+    sim[i,which(rep$sd!=0 & names(rep$value)=="x5")-  sum(rep$sd[1:max(which(names(rep$value)=="x5"))] ==0)]
 
-  namesOrder = names(fitModel$jointPrecision[,1])
-  simFitModel = fitModel
-  simFitModel$par.fixed[which(names(simFitModel$par.fixed)=="beta0")] = simFitModel$par.fixed[which(names(simFitModel$par.fixed)=="beta0")] + simulateFit[which(namesOrder=="beta0")]
+  return(report)
 
-  simFitModel$par.fixed[which(names(simFitModel$par.fixed)=="logTau")] = simFitModel$par.fixed[which(names(simFitModel$par.fixed)=="logTau")] + simulateFit[which(namesOrder=="logTau")]
-
-  simFitModel$par.random[which(names(simFitModel$par.random)=="betaLength")] = simFitModel$par.random[which(names(simFitModel$par.random)=="betaLength")] + simulateFit[which(namesOrder=="betaLength")]
-  simFitModel$value[names(simFitModel$value)=="repLength"] = designMatrixForReport%*%simFitModel$par.random[which(names(simFitModel$par.random)=="betaLength")]
-
-  if(species=="Gadus morhua" |species=="Pollachius virens")
-  {
-    if(quarter==1){
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] + simulateFit[which(namesOrder=="x1")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] + simulateFit[which(namesOrder=="x2")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] + simulateFit[which(namesOrder=="x3")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] + simulateFit[which(namesOrder=="x4")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] + simulateFit[which(namesOrder=="x5")]
-
-    }
-    if(quarter==3){
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x0")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x0")] + simulateFit[which(namesOrder=="x0")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] + simulateFit[which(namesOrder=="x1")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] + simulateFit[which(namesOrder=="x2")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] + simulateFit[which(namesOrder=="x3")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] + simulateFit[which(namesOrder=="x4")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] + simulateFit[which(namesOrder=="x5")]
-
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x0")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x0")] + simulateFit[which(namesOrder=="x0")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x1")] + simulateFit[which(namesOrder=="x1")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x2")] + simulateFit[which(namesOrder=="x2")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x3")] + simulateFit[which(namesOrder=="x3")]
-      #      simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x4")] + simulateFit[which(namesOrder=="x4")]
-      simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] = simFitModel$par.random[which(names(simFitModel$par.random)=="x5")] + simulateFit[which(namesOrder=="x5")]
-
-    }
-  }
-  simALK = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = hh,simFitModel = simFitModel,doSimulate = TRUE)
-  #Return the list with ALKs------
-  return(simALK)
-  #-------------------------------
 }

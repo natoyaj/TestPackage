@@ -450,7 +450,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL)
 {
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
@@ -466,9 +466,11 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
   data('areaRFA') #Stored in the data frame "areaRFA"
   #---------------------------------------------------------------
 
-  if(ALKprocedure =="modelBased"){
+  if(ALKprocedure =="modelBased" & length(report)==0){
     fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
   }
+
+
   mCPUEvector = rep(0,dimCPUE[1])
 
   totalArea = 0
@@ -485,7 +487,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
 
 
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit)
+                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report)
 
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
@@ -499,6 +501,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE)
   print("Done with one simulation whole North Sea, mCPUE is:")
   print(mCPUEvector)
 
-  return(mCPUEvector)
+  return(list(mCPUEvector,fit))
 
 }

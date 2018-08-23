@@ -99,7 +99,7 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
 #' @examples
 CPUEage = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
-                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL){
+                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL){
 
 
     #Extract the data of interest-------------
@@ -121,7 +121,11 @@ CPUEage = function(RFA, species, year, quarter,dat,
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
-    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit)
+
+
+    #Bad programing, but here we need to inform that we are using simulated ALK with the fisher method
+    #TODO simulate model parameters which is further given to calculateALKModel( report =...)
+    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
@@ -297,7 +301,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                         B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                        ALKprocedure = "",doBootstrap = TRUE){
+                        ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE){
 
 
 
@@ -307,17 +311,27 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   #---------------------------------------------------------------
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
-  mCPUE[,1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                dat = dat,ALKprocedure = ALKprocedure,B = B,
-                                dimCPUE = dim(mCPUE))
+  tmp = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                          dat = dat,ALKprocedure = ALKprocedure,B = B,
+                          dimCPUE = dim(mCPUE))
+  mCPUE[,1] = tmp[[1]]
   #-----------------------------------------------------------------------------------------
 
   #Simulate data and coalculates mCPUE for estimation ofunceratinaty------------------------
   if(doBootstrap){
+    if(ALKprocedure=="modelBased" &useFisher){
+      fit = tmp[[2]]
+      rep = sdreport(fit[[1]])
+      cov = rep$cov[-which(rep$sd ==0), -which(rep$sd ==0)]
+      mean = rep(0,dim(cov)[1])
+      sim = MASS::mvrnorm(n = B, mean, Sigma = cov)
+    }
+
     for(i in 1:B){
       CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
       HL = dat$hl_hh[1,]
       HH = dat$hh[1,]
+      HH$originalIdAtThisLocation = 0; #Removed later
 
       for(RFA in 1:9){
         loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
@@ -332,7 +346,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
           simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
           simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
           simDataHH = dat$hh[1,]#Define the structure in the data, this line is removed later.
-
+          simDataHH$originalIdAtThisLocation = 0; #Removed later
           for(j in 1:dim(simHauls)[1]){
             tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
             tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
@@ -357,6 +371,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
               tmpHH$lon = simHauls$lon[j]
               tmpHH$lat = simHauls$lat[j]
               tmpHH$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+              tmpHH$originalIdAtThisLocation = simHauls$originalIdAtThisLocation[j]
               simDataHH = rbind(simDataHH,tmpHH)
             }
           }
@@ -378,9 +393,17 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       datTmp$ca_hh = CA
       datTmp$hl_hh = HL
       datTmp$hh = HH
-      mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                      dat = datTmp,ALKprocedure = ALKprocedure,B = B,
-                                      dimCPUE = dim(mCPUE))
+
+      if(ALKprocedure=="modelBased" & useFisher){
+        report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
+        mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                                        dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
+                                        dimCPUE = dim(mCPUE),report)[[1]]
+      }else{
+        mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                                        dat = datTmp,ALKprocedure = ALKprocedure,B = B,
+                                        dimCPUE = dim(mCPUE))[[1]]
+      }
     }
   }
   #-----------------------------------------------------------------------------------------
