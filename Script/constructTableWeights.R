@@ -1,5 +1,7 @@
-n = dim(tab)[1]
+library(xtable)
 
+#Construct table for weights------------------------
+n = dim(tab)[1]
 nn = ceiling(n/5)
 xtable(tab)
 
@@ -15,6 +17,13 @@ tmp$StatRec5 = tab[(4*nn+1):(5*nn),1]
 tmp$Weight5 = tab[(4*nn+1):(5*nn),2]
 
 xtable(tmp,display = rep("s",11))
+#-----------------------------------------------------
 
 
-tmp
+#Construct table for results--------------------------
+tab  = mCPUEHaulBasedStratifiedHLandCA
+xtable(tab,digits = 2)
+#-----------------------------------------------------
+
+
+

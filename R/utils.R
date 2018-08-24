@@ -5,6 +5,7 @@
 #' @examples
 findLoc = function(dat, quarter,year,RFA){
   #Extract the data of interest-------------
+
   dataToSimulateFromHL = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                      !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
                                      !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]

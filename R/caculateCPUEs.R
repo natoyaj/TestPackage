@@ -403,7 +403,8 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
     for(i in 1:dim(dataWithTheSpecies)[1])
     {
       trawlId = dataWithTheSpecies$haul.id[i]
-      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i]
+#      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i]
+      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.id[i]
       whichALK =NA
       for(indeksALK in 1:length(ALKNew))
       {
@@ -449,7 +450,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,rfa)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL)
 {
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
@@ -465,6 +466,9 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,r
   data('areaRFA') #Stored in the data frame "areaRFA"
   #---------------------------------------------------------------
 
+  if(ALKprocedure =="modelBased" & length(report)==0){
+    fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
+  }
 
 
   mCPUEvector = rep(0,dimCPUE[1])
@@ -483,7 +487,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,r
 
 
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE)
+                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report)
 
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
@@ -497,6 +501,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,r
   print("Done with one simulation whole North Sea, mCPUE is:")
   print(mCPUEvector)
 
-  return(mCPUEvector)
+  return(list(mCPUEvector,fit))
 
 }

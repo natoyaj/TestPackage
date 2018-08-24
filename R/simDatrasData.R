@@ -268,6 +268,8 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
   {
     rec = statRec[i]
     trawls = unique(dataOfInterest$haul.id[dataOfInterest$StatRec==rec])
+    lon = dataOfInterest$lon[is.element(dataOfInterest$haul.id,trawls)]
+    lat = dataOfInterest$lat[is.element(dataOfInterest$haul.id,trawls)]
 
     if(length(trawls)==1)
     {
@@ -280,14 +282,26 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
       sampledTreawls = sample(toSample,1)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
       dTmp$StatRec = rec
+      dTmp$lon = lon
+      dTmp$lat = lat
 
+      dTmp$originalIdAtThisLocation = toString(trawls[1])
     }else{
       sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
       dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
 
+
+      dTmp$lon = lon[1]
+      dTmp$lat = lat[1]
+      dTmp$originalIdAtThisLocation = toString(trawls[1])
+
       for(j in 2:length(trawls))
       {
         add = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[j],]
+        add$lon = lon[j]
+        add$lat = lat[j]
+        add$originalIdAtThisLocation = toString(trawls[j])
+
         dTmp = rbind(dTmp,add)
       }
     }
