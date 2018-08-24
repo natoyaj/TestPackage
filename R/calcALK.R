@@ -491,10 +491,11 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   if(length(report)>0){
     useOriginalId = TRUE
   }else{
-    report = fitModel[[1]]$report()
+    report = fitModel$obj$report()
   }
-  boarder = fitModel[[4]]
-  listWithOrderedId = fitModel[[5]]
+  boarder = fitModel$boarder
+  listWithOrderedId = fitModel$haulId
+
 
 
 
@@ -503,7 +504,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #----------------------------------------------------
 
   #Extract the estimated continuous GRF-----------------
-  Apred = fitModel[[7]]
+  Apred = fitModel$Apred
   field1 = Apred %*%report$x1/exp(report$logTau[1])
   field2 = Apred %*%report$x2/exp(report$logTau[2])
   field3 = Apred %*%report$x3/exp(report$logTau[3])
@@ -571,14 +572,14 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 
           sum = nu2 + nu3 + nu4 + nu5
 
-          if(l<boarder){
+          if(length<boarder){
             alkThis$'0'[l] = 0
-            alkThis$'1'[l] = round(1/(sum+1),digits = 2)
+            alkThis$'1'[l] = round(1/(sum+1),digits = 3)
             alkThis$'6'[l] = 0
           }else{
             alkThis$'0'[l] = 0
             alkThis$'1'[l] = 0
-            alkThis$'6'[l] = round(1/(sum+1),digits = 2)
+            alkThis$'6'[l] = round(1/(sum+1),digits = 3)
           }
 
           probField2 = nu2/(sum+1)
@@ -587,10 +588,10 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
           probField5 = nu5/(sum+1)
 
 
-          alkThis$'2'[l] = round(probField2,digits = 2)
-          alkThis$'3'[l] = round(probField3,digits = 2)
-          alkThis$'4'[l] = round(probField4,digits = 2)
-          alkThis$'5'[l] = round(probField5,digits = 2)
+          alkThis$'2'[l] = round(probField2,digits = 3)
+          alkThis$'3'[l] = round(probField3,digits = 3)
+          alkThis$'4'[l] = round(probField4,digits = 3)
+          alkThis$'5'[l] = round(probField5,digits = 3)
         }
       }else if(quarter ==3){
         for(l in 1:length(minLength:maxLength))
@@ -604,12 +605,12 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 
           sum = nu1 + nu2 + nu3 + nu4 + nu5
 
-          if(l<boarder){
-            alkThis$'0'[l] = round(1/(sum+1),digits = 2)
+          if(length<boarder){
+            alkThis$'0'[l] = round(1/(sum+1),digits = 3)
             alkThis$'6'[l] = 0
           }else{
             alkThis$'0'[l] = 0
-            alkThis$'6'[l] = round(1/(sum+1),digits = 2)
+            alkThis$'6'[l] = round(1/(sum+1),digits = 3)
           }
 
           probField1 = nu1/(sum+1)
@@ -619,11 +620,11 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
           probField5 = nu5/(sum+1)
 
 
-          alkThis$'1'[l] = round(probField1,digits = 2)
-          alkThis$'2'[l] = round(probField2,digits = 2)
-          alkThis$'3'[l] = round(probField3,digits = 2)
-          alkThis$'4'[l] = round(probField4,digits = 2)
-          alkThis$'5'[l] = round(probField5,digits = 2)
+          alkThis$'1'[l] = round(probField1,digits = 3)
+          alkThis$'2'[l] = round(probField2,digits = 3)
+          alkThis$'3'[l] = round(probField3,digits = 3)
+          alkThis$'4'[l] = round(probField4,digits = 3)
+          alkThis$'5'[l] = round(probField5,digits = 3)
         }
       }
     }

@@ -322,7 +322,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   if(doBootstrap){
     if(ALKprocedure=="modelBased" &useFisher){
       fit = tmp[[2]]
-      rep = sdreport(fit[[1]])
+      rep = sdreport(fit$obj)
       cov = rep$cov[-which(rep$sd ==0), -which(rep$sd ==0)]
       mean = rep(0,dim(cov)[1])
       sim = MASS::mvrnorm(n = B, mean, Sigma = cov)
@@ -413,7 +413,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   #Define a summary that we return (mCPUE, quantiles and sd)--------------------------------
 
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1], mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1])
-  names(mCPUEsummary) = c("mCPUE","bootstrapMean","median", "Q025","Q975","BiasCQ025","BiasCQ075", "sd")
+  names(mCPUEsummary) = c("mCPUE","bootstrapMean","Median", "Q025","Q975","BiasCQ025","BiasCQ075", "sd")
   for(i in 1:dim(mCPUEsummary)[1]){
     mCPUEsummary$bootstrapMean[i] = mean(mCPUE[i,2:(B+1)])
     mCPUEsummary$Median[i] = median(mCPUE[i,2:(B+1)])
