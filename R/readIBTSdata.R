@@ -39,9 +39,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   hh = hh[hh$HaulDur>5,] #Is there a way to know it is a test haul?
   #-------------------------------------------------------------------------
 
-  unique(hh$StatRec[hh$Roundfish==2])
-
-
 
   #Remove data without the speceis of interest, not we include one line of teh hl-data if there are zero observation of the speceis in the haul---
   ca = ca[!is.na(ca$Year) & ca$Year == year&
@@ -74,6 +71,12 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 
   ca = ca[!is.na(ca$Age),]
 
+  #Duplicate rows with NoAtALK>1 and set NoAtALK = 1--------
+  ca =  ca[rep(row.names(ca), ca$NoAtALK),]
+  ca$NoAtALK = rep(1,dim(ca)[1])
+  #---------------------------------------------------------
+
+  #Merge data-----------------------------------------------
   hh_keys <- c("haul.id")
   ca_hh    <- merge(ca,hh, by=hh_keys, suffixes=c(".CA", ""))
   hl_hh    <- merge(hl,hh, by=hh_keys, suffixes=c(".HL", ""))

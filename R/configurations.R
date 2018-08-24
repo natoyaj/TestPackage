@@ -5,7 +5,7 @@
 #' @return A dataframe with configurations needed for constructing the ALK, i.e. maximum age, minimum length and maximium length.
 #' @export
 #' @examples
-confALK = function(species,quarter)
+confALK = function(species,quarter,ALKprocedure = "")
 {
   if(species == "Gadus morhua")
   {
@@ -30,6 +30,10 @@ confALK = function(species,quarter)
     }
   }else{
     #See Annex 1 in datras procedure document for configurations regarding ALK for different species
+  }
+
+  if(ALKprocedure == "modelBased"){
+#    maxLength = 110
   }
 
   conf = list()

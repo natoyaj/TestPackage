@@ -6,7 +6,8 @@
 \usage{
 investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
   ALKprocedure, removeProcedure, nSim, whatToInvestigate, whatToRemove,
-  typeOfAreaToInvestigate, doNotRemoveAbove = 9999, lengthDivision = NULL)
+  typeOfAreaToInvestigate, doNotRemoveAbove = 9999, propRemove = NULL,
+  lengthDivision = NULL)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
