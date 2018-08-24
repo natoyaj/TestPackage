@@ -24,8 +24,7 @@ ices_rectangles <- readOGR(file.path(system.file("shapefiles", package = "TestPa
 ices_midpoints <- SpatialPoints(as.data.frame(coordinates(ices_rectangles)), proj4string=CRS(proj4string(ices_rectangles)))
 ibts_rectangles <- ices_rectangles[!is.na(unlist(sp::over(ices_midpoints, rfa))),]
 
-ns <- readRDS(file.path(system.file("bathymetry", package = "TestPackage"), "wgs84_raster_north_sea_crop", "ns.rds"))
-
+ns <- readRDS(file.path(system.file("bathymetry", package = "TestPackage"), "wgs84_raster_north_sea_crop", "ns_halfres.rds"))
 data(countriesHigh)
 map <- countriesHigh
 
