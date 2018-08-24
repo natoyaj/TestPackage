@@ -48,7 +48,7 @@ batpal <- rev(brewer.pal(9, "Blues"))
 batpal <- c(rep(batpal[1],4),rep(batpal[2],4), rep(batpal[3],4), batpal[4:length(batpal)])
 
 
-plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labelpos, polygonscol="black", rectangles=ibts_rectangles, rectanglecol="lightgray", landmap=map, landcol="lightgrey", landbordercol="darkgrey", landlabels=map_labels, land_labelpoints=map_labelpoints, land_labelcol="black", seacol="white", bat=ns, batcol=batpal, xlim=c(-8,18), ylim=c(49,62.5), xlab="Longitude", ylab="Latitude"){
+plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labelpos, polygonscol="black", rectangles=ibts_rectangles, rectanglecol="lightgray", landmap=map, landcol="lightgrey", landbordercol="darkgrey", landlabels=map_labels, land_labelpoints=map_labelpoints, land_labelcol="black", cex.landlabels=0.8, seacol="white", bat=ns, batcol=batpal, xlim=c(-8,18), ylim=c(49,62.5), xlab="Longitude", ylab="Latitude"){
 
   if (!is.null(bat)){
     ext <- as(extent(xlim[1], xlim[2], ylim[1], ylim[2]), 'SpatialPolygons')
@@ -75,13 +75,13 @@ plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labe
       text(labelpos, as.character(polygons@data[[labelcol]]), col=polygonscol)
     }
     if (!is.null(land_labelpoints)){
-      text(land_labelpoints, landlabels, cex=0.6, col=land_labelcol)
+      text(land_labelpoints, landlabels, cex=cex.landlabels, col=land_labelcol)
     }
   }
 }
 
 old.par <- par(no.readonly = T)
 par(mfrow=c(1,2), mar=c(5.1, 4.1, 4.1, 4.1))
-plot_ibts_map(rectangles = NULL)
-plot_ibts_map(bat = NULL, ylab="")
+plot_ibts_map(bat = NULL, ylab="", cex.landlabels=0.6)
+plot_ibts_map(rectangles = NULL, cex.landlabels=0.6)
 par(old.par)
