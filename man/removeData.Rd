@@ -5,7 +5,7 @@
 \title{removeData}
 \usage{
 removeData(year, quarter, species, dat, removeProcedure = 1, whatToRemove,
-  doNotRemoveAbove, lengthDivision)
+  doNotRemoveAbove, lengthDivision, propRemove = NULL)
 }
 \arguments{
 \item{year}{The year of interest.}

@@ -14,7 +14,11 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter,species = 
 #Set some additional settings--------
 RFA = 1
 
+
 n=5 #Number of bootstrap samples
+
+n=100 #Number of bootstrap samples
+
 #------------------------------------
 
 
@@ -83,7 +87,7 @@ mCPUEHaulBasedStratifiedHLandCA = CPUEnorthSea(species = species, year = year, q
 
 
 bootstrapProcedure = "stratifiedHLandCA"
-ALKprocedure = "modelBased" #TODO: currently we do not simulate the ALK for each RFA simultaniously, we simulate the seperatly now (29.5.2018)
+ALKprocedure = "modelBased"
 mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
                            bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
 
@@ -169,11 +173,18 @@ plotConfidence(x=tab,
 #--------------------------------------------------------------
 
 #Remove parts of the data and see what happens-----------------
+
 nSim = 4
 whatToInvestigate = "mean" #whatToInvestigate = "mean" #See ?investigateRemoval for details
+
+nSim = 50
+whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
+
 removeProcedure = "edvin"
-lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = 2)) #Currently simulate that we select only one otholit in each of these intervals in each trawl.
+#removeProcedure = "stratified"
+lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = 1)) #Currently simulate that we select only one otholit in each of these intervals in each trawl.
 #typeOfAreaToInvestigate = "RFA"
+propRemove = 0.25
 typeOfAreaToInvestigate = "wholeNorthSea"
 whatToRemove = "CA"
 
@@ -185,7 +196,7 @@ removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, qua
                            removeProcedure = removeProcedure,
                            nSim = nSim,
                            whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate,
-                           doNotRemoveAbove = 999,
+                           doNotRemoveAbove = 999,propRemove = propRemove,
                            lengthDivision = lengthDivision)
 Rprof(NULL)
 summary = summaryRprof()
@@ -195,12 +206,12 @@ nCores = detectCores()
 cl<-makeCluster(nCores)
 registerDoParallel(cl)
 Rprof()
-removeDatrasParallel = investigateRemovalParallel(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+removeDatrasParallel2 = investigateRemovalParallel(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                                   bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,
                                   removeProcedure = removeProcedure,
                                   nSim = nSim,
                                   whatToInvestigate = whatToInvestigate,whatToRemove = whatToRemove,typeOfAreaToInvestigate = typeOfAreaToInvestigate,
-                                  doNotRemoveAbove = 999,
+                                  doNotRemoveAbove = 999,propRemove = propRemove,
                                   lengthDivision = lengthDivision)
 Rprof(NULL)
 summaryWithParallel = summaryRprof()

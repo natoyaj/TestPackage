@@ -4,7 +4,7 @@
 \alias{confALK}
 \title{confALK}
 \usage{
-confALK(species, quarter)
+confALK(species, quarter, ALKprocedure = "")
 }
 \arguments{
 \item{species}{The species of interest.}

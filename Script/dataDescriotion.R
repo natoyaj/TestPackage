@@ -4,6 +4,8 @@ quarter = 1
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter, species = species)
 
 
+
+
 #number of hauls
 hh = dat$hh
 hh = hh[hh$Year==year &hh$Quarter==quarter,]
@@ -61,5 +63,10 @@ maxDay = max(hh$Day[hh$Month==maxMonth])
 
 print(paste("First observation was taken ",minDay, "/", minMonth,"-",year, " (day/month-year) ",sep = ""))
 print(paste("First observation was taken ",maxDay, "/", maxMonth,"-",year, " (day/month-year) ",sep = ""))
+
+
+
+
+
 
 

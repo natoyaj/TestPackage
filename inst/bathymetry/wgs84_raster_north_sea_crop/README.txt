@@ -1,0 +1,1 @@
+ns.rds raster of bathymetry: data downloaded from http://portal.emodnet-bathymetry.eu as ESRI files, merged in R and cropped to relevant area.
