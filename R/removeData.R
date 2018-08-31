@@ -55,8 +55,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCorQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCorQ975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$BiasCQ075 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   #--------------------------------------------------------------------------
 
   #Remove data and calulates mCPUE etc.--------------------------------------
@@ -90,7 +90,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       tmpResults$sd[,i] = resultSim$sd
       tmpResults$Q025[,i] = resultSim$Q025
       tmpResults$Q975[,i] = resultSim$Q975
-
+      tmpResults$BiasCQ025[,i] = resultSim$BiasCQ025
+      tmpResults$BiasCQ075[,i] = resultSim$BiasCQ075
     }
     print(tmpResults$mCPUE[,i])
   }
@@ -98,8 +99,8 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
   #Extract what we are interested in (mCPUE, sd and quantiles)----------------
   if(whatToInvestigate=="mean"){
-    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$mCPUE) = c("mean","Q025","Q975", "sd")
+    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] ,resultSim[,1],resultSim[,1],resultSim[,1])
+    names(toReturn$mCPUE) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$mCPUE)[1]){
       toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
       quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
@@ -108,6 +109,14 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
       toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
 
+       # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$mCPUE$BiasCQ025[i] = qq[1]
+      toReturn$mCPUE$BiasCQ075[i] = qq[2]
     }
   }else{
     toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
@@ -228,7 +237,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
   tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$Median = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$median = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$BiasCQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
@@ -238,6 +247,10 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
 
   #Remove data and calulates mCPUE etc. with usage of several cores----------------
   resForEach <- foreach(i = 1:nSim,.packages='TestPackage') %dopar%  {
+
+    print("Information about progress in otholit removal simulation: ")
+    print(paste("Simulation ",i))
+
     datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = propRemove)
 
     if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
@@ -261,7 +274,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
     k = list() #List to be returned by foreach()
     k$mCPUE = resultSim$mCPUE
     k$bootstrapMean =resultSim$bootstrapMean
-    #k$Median =resultSim$Median
+    k$median =resultSim$median
     k$sd =resultSim$sd
     k$Q025 =resultSim$Q025
     k$Q975 =resultSim$Q975
@@ -276,7 +289,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
   for(i in 1:nSim){
     tmpResults$mCPUE[,i] = resForEach[[i]]$mCPUE
     tmpResults$bootstrapMean[,i]= resForEach[[i]]$bootstrapMean
-    #tmpResults$Median[,i]= resForEach[[i]]$Median
+    tmpResults$median[,i]= resForEach[[i]]$median
     tmpResults$sd[,i]= resForEach[[i]]$sd
     tmpResults$Q025[,i]= resForEach[[i]]$Q025
     tmpResults$Q975[,i]= resForEach[[i]]$Q975
@@ -288,26 +301,26 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
 
   #Extract what we are interested in (mCPUE, sd and quantiles)----------------
   if(whatToInvestigate=="mean"){
-    toReturn$mCPUE = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],
-                      toReturn$WithFullData[,1] ,toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$mCPUE) = c("mean","Q025", "Q975", "BiasCQ025", "BiasCQ075","sd")
+    toReturn$mCPUE = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1] ,toReturn$WithFullData[,1],
+                      toReturn$WithFullData[,1] ,toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1])
+    names(toReturn$mCPUE) = c("mean","median", "Q025", "Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$mCPUE)[1]){
       toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      #toReturn$mCPUE$Median[i] = median(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
       quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
       toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
 
-    #bias-corrected-------------
-      b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$mCPUE$BiasCQ025[i] = qq[1]
-      toReturn$mCPUE$BiasCQ075[i] = qq[2]
+    # #bias-corrected-------------
+        b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
+        alph      = 0.05                                  # 95% limits
+        z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+        p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+        qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
+        toReturn$mCPUE$BiasCQ025[i] = qq[1]
+        toReturn$mCPUE$BiasCQ075[i] = qq[2]
 
     }
   }else{
@@ -315,7 +328,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
     names(toReturn$mCPUE) = c("mean","Q025","Q975", "sd")
     for(i in 1:dim(toReturn$mCPUE)[1]){
       toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      #toReturn$mCPUE$Median[i] = median(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
       quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]

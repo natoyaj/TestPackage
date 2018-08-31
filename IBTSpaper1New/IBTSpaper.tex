@@ -326,7 +326,27 @@ Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \
 
 In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the two bootstrap methods, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. As discussed in Section \ref{sec:datrasstratifiedbootstrap} the Stratified bootstrap procedure is used for analyses in this research.
 
-Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a 40 cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)). 
+Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a 40 cm long cod and a 40 cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. Figure \ref{predictedprobabilitiesplot} (a) for example shows that a 40 cm cod is more likely to be age 3 in eastern North Sea in RFAs 7 and 8 (the regions in yellow). While 40 cm saithe is more likely to be......The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)). 
+
+
+\clearpage
+\begin{figure}[h!]
+\centering
+\begin{minipage}[c]{1.10\linewidth}
+\includegraphics[width=170mm,scale=6.5]{cod2018Q1Map.jpeg}
+\caption*{ (a) Probability plot of 40 cm cod in year 2018 Q1.}
+\label{fig1.1}
+\end{minipage}
+%
+%\quad
+%\begin{minipage}[c]{0.50\linewidth}
+%\includegraphics[width=103mm,scale=7.5]{saithe2015Q1Map.jpeg}
+%\caption*{\bf (b) saithe}
+%\label{fig5.1}
+%\end{minipage}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Predicted probabilities of age given length using model (\ref{eq:linearPred1}) and (\ref{eq:linearPred}) for the year 2018 Q1. Graph (a) gives probabilities of predicted age of a ....cm long cod, and graph (b) gives probabilities of predicted age of a ....cm saithe in RFAs 1 to 10 in the North Sea.}\label{predictedprobabilitiesplot}}
+\end{figure}
 
 
 %\clearpage
@@ -369,10 +389,10 @@ For illustration we show the implications of using DATRAS bootstrap procedure fo
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Cod in years 2017 Q3 and 2018 Q1]{\includegraphics[width=0.95\textwidth]{cod2017Q3BiasCorr.jpeg}} & \\
-\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{cod2017Q3Percentile.jpeg}} &
+\subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{cod2018Q1BiasCorr.jpeg}} & \\
+%\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{cod2017Q3Percentile.jpeg}} &
 \end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$) from bias-corrected  bootstrap method for cod in years 2017 Q3 and 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate), percentage relative standard error (RSE\%), and bootstrap mean (mean)  and median estimates are also given.}
+\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$) from bias-corrected  bootstrap method for cod in years 2017 Q3 and 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), and bootstrap mean (mean)  and median estimates are also given.}
 \label{percentileBiascorrectedCIcod}
 \end{figure*} 
 
@@ -381,37 +401,16 @@ For illustration we show the implications of using DATRAS bootstrap procedure fo
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{saithe2017Q3BiasCorr.jpeg}} & \\
+\subfloat[Saithe in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{saithe2018Q1BiasCorr.jpeg}} & \\
 %\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{saithe2017Q3Percentile.jpeg}} &
 \end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected bootstrap method for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate)), bootstrap mean (mean) and median estimates are also given.}
+\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected bootstrap method for saithe in year 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (mean) and median estimates are also given.}
 \label{percentileBiascorrectedCIsaithe}
 \end{figure*} 
 
 
 \clearpage
 %\subsection{Comparison of ALK methods}
-%
-%
-%\clearpage
-%\begin{figure}[h!]
-%\centering
-%\begin{minipage}[c]{0.50\linewidth}
-%\includegraphics[width=103mm,scale=7.5]{Allcode40cm2015.png}
-%\caption*{\bf (a) cod}
-%\label{fig1.1}
-%\end{minipage}
-%
-%\quad
-%\begin{minipage}[c]{0.50\linewidth}
-%\includegraphics[width=103mm,scale=7.5]{saithe2015Q1Map.jpeg}
-%\caption*{\bf (b) saithe}
-%\label{fig5.1}
-%\end{minipage}
-% \caption{Predicted probabilities of age given length using model (\ref{eq:linearPred1}) and (\ref{eq:linearPred}) for the year 2018 Q1. Graph (a) gives probabilities of predicted age of a ....cm long cod, and graph (b) gives probabilities of predicted age of a ....cm saithe in RFAs 1 to 10 in the North Sea.}
-%  \label{predictedprobabilitiesplot}
-%\end{figure}
-%
 
 
 \clearpage
