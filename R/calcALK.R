@@ -505,11 +505,11 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 
   #Extract the estimated continuous GRF-----------------
   Apred = fitModel$Apred
-  field1 = Apred %*%report$x1/exp(report$logTau[1])
-  field2 = Apred %*%report$x2/exp(report$logTau[2])
-  field3 = Apred %*%report$x3/exp(report$logTau[3])
-  field4 = Apred %*%report$x4/exp(report$logTau[4])
-  field5 = Apred %*%report$x5/exp(report$logTau[5])
+  field1 = Apred %*%report$x1/exp(report$logTau[2])
+  field2 = Apred %*%report$x2/exp(report$logTau[3])
+  field3 = Apred %*%report$x3/exp(report$logTau[4])
+  field4 = Apred %*%report$x4/exp(report$logTau[5])
+  field5 = Apred %*%report$x5/exp(report$logTau[6])
 
 
   beta0 = report$beta0
@@ -547,9 +547,9 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   for(id in haulId){
     if(useOriginalId){
       originalId = hh$originalIdAtThisLocation[which(hh$haul.id==id)]
-      omr = which(listWithOrderedId==originalId) #But the ID is changed for every simulation. This must be looked into when using the Fisher method.
+      omr = which(listWithOrderedId==originalId)
     }else{
-      omr = which(listWithOrderedId==id) #But the ID is changed for every simulation. This must be looked into when using the Fisher method.
+      omr = which(listWithOrderedId==id)
     }
 
     #Construct the parts of the ALK were we have data-------------------
