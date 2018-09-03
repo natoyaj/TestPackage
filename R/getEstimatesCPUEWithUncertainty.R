@@ -384,6 +384,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
         }
         CA = rbind(CA,simDataCA)
         HL = rbind(HL,simDataHL)
+
         if(bootstrapProcedure =="stratifiedHLandCA")HH = rbind(HH,simDataHH)#Quickfix todo
       }
       CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
@@ -393,6 +394,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       datTmp = dat
       datTmp$ca_hh = CA
       datTmp$hl_hh = HL
+
       if(bootstrapProcedure =="stratifiedHLandCA") datTmp$hh = HH#Quickfix todo
 
       if(ALKprocedure=="modelBased" & useFisher){

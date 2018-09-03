@@ -70,3 +70,18 @@ print(paste("First observation was taken ",maxDay, "/", maxMonth,"-",year, " (da
 
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#Date of hauls
+minMonth = min(hh$Month)
+maxMonth = max(hh$Month)
+minDay = min(hh$Day[hh$Month==minMonth])
+maxDay = max(hh$Day[hh$Month==maxMonth])
+
+print(paste("First observation was taken ",minDay, "/", minMonth,"-",year, " (day/month-year) ",sep = ""))
+print(paste("First observation was taken ",maxDay, "/", maxMonth,"-",year, " (day/month-year) ",sep = ""))
+
+
+
+
+
