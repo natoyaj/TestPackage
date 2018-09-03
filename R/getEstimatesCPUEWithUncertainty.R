@@ -254,7 +254,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
   cpue = data.frame(cpueEst)
   names(cpue) = "mCPUE"
   cpue$bootstrapMean = rep(0,length(cpueEst))
-  cpue$Median = rep(0,length(cpueEst))
+  cpue$median = rep(0,length(cpueEst))
   cpue$Q025 = rep(0,length(cpueEst))
   cpue$Q975 = rep(0,length(cpueEst))
   cpue$Q025BiasCorr = rep(0,length(cpueEst))
@@ -269,7 +269,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
       cpue$Q975[i] = quantile[2]
       cpue$sd[i] = sd(simCPUEs[i,])
       cpue$bootstrapMean[i] = mean(simCPUEs[i,])
-      cpue$Median[i] = median(simCPUEs[i,])
+      cpue$median[i] = median(simCPUEs[i,])
 
       #Estimating bias-corrected confidence intervals
       #estimate bias in standard norm deviates
@@ -384,16 +384,18 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
         }
         CA = rbind(CA,simDataCA)
         HL = rbind(HL,simDataHL)
-        HH = rbind(HH,simDataHH)
+
+        if(bootstrapProcedure =="stratifiedHLandCA")HH = rbind(HH,simDataHH)#Quickfix todo
       }
       CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
       HL = HL[-1,]
-      HH = HH[-1,]
+      if(bootstrapProcedure =="stratifiedHLandCA")HH = HH[-1,]
 
       datTmp = dat
       datTmp$ca_hh = CA
       datTmp$hl_hh = HL
-      datTmp$hh = HH
+
+      if(bootstrapProcedure =="stratifiedHLandCA") datTmp$hh = HH#Quickfix todo
 
       if(ALKprocedure=="modelBased" & useFisher){
         report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
@@ -417,7 +419,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   for(i in 1:dim(mCPUEsummary)[1]){
     mCPUEsummary$bootstrapMean[i] = mean(mCPUE[i,2:(B+1)])
-    mCPUEsummary$Median[i] = median(mCPUE[i,2:(B+1)])
+    mCPUEsummary$median[i] = median(mCPUE[i,2:(B+1)])
     quantile = quantile(mCPUE[i,2:(B+1)],c(0.025,0.975))
     mCPUEsummary$Q025[i] = quantile[1]
     mCPUEsummary$Q975[i] = quantile[2]

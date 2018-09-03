@@ -1,7 +1,9 @@
 species  =  "Gadus morhua" # = "Gadus morhua"; #species = "Pollachius virens"
-year = 2017
-quarter = 3
-dat = readIBTSData(survey = "NS-IBTS", year = year,species =species,  quarter = quarter)
+year = 2018
+quarter = 1
+dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter, species = species)
+
+
 
 
 #number of hauls
@@ -49,6 +51,23 @@ AllHaulDuration = sort(hh$HaulDur)
 RemoveCalibrationHaul =  AllHaulDuration[AllHaulDuration>5]       # calibration hauls have durations around 5 minutes or less
 MeanHaulDuration = mean(RemoveCalibrationHaul)
 print(paste("mean haul duration in year ", year,"and quarter ", quarter,":", MeanHaulDuration))
+
+length(RemoveCalibrationHaul[RemoveCalibrationHaul=="30"])/length(RemoveCalibrationHaul)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++
+#Date of hauls
+minMonth = min(hh$Month)
+maxMonth = max(hh$Month)
+minDay = min(hh$Day[hh$Month==minMonth])
+maxDay = max(hh$Day[hh$Month==maxMonth])
+
+print(paste("First observation was taken ",minDay, "/", minMonth,"-",year, " (day/month-year) ",sep = ""))
+print(paste("First observation was taken ",maxDay, "/", maxMonth,"-",year, " (day/month-year) ",sep = ""))
+
+
+
+
+
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
