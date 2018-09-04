@@ -4,7 +4,7 @@
 \alias{simModelFisher}
 \title{simModelFisher}
 \usage{
-simModelFisher(species, quarter, rep, fitModel, sim, i)
+simModelFisher(species, quarter, rep, fit, sim, i)
 }
 \arguments{
 \item{species}{The species of interest.}
@@ -21,4 +21,7 @@ simModelFisher(species, quarter, rep, fitModel, sim, i)
 }
 \value{
 Returns a list with simulated model based ALK for each trawl haul
+}
+\description{
+simModelFisher
 }

@@ -9,3 +9,6 @@ findLoc(dat, quarter, year, RFA)
 \value{
 Returns closest nabour to each trawl station
 }
+\description{
+findLoc
+}

@@ -61,6 +61,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
   #Remove data and calulates mCPUE etc.--------------------------------------
   for(i in 1:nSim){
+
     print("Information about progress in otholit removal simulation: ")
     print(paste("Simulation ",i))
 
@@ -286,6 +287,7 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
   #--------------------------------------------------------------------------
 
   #Combine the results from foreach() in the list rmpResults-----------------
+
   for(i in 1:nSim){
     tmpResults$mCPUE[,i] = resForEach[[i]]$mCPUE
     tmpResults$bootstrapMean[,i]= resForEach[[i]]$bootstrapMean

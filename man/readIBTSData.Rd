@@ -11,8 +11,11 @@ readIBTSData(survey = "NS-IBTS", year, quarter, species)
 
 \item{quarter}{quarter of survey}
 
-\item{quarter}{quarter of species of interest}
+\item{species}{species of interest}
 }
 \description{
-.
+readIBTSData
+}
+\examples{
+
 }

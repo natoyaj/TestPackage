@@ -14,8 +14,13 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter,species = 
 #Set some additional settings--------
 RFA = 1
 
+<<<<<<< HEAD
 n=200 #Number of bootstrap samples
 
+=======
+
+
+>>>>>>> e3f121070e22f966bcd6135ebf566b93f2e9e718
 #------------------------------------
 
 
@@ -189,7 +194,11 @@ plotConfidence(x=tab,
 
 #Remove parts of the data and see what happens-----------------
 
+<<<<<<< HEAD
 nSim = 200
+=======
+
+
 whatToInvestigate = "mean" #whatToInvestigate = "" #See ?investigateRemoval for details
 
 removeProcedure = "edvin"

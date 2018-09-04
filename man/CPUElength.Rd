@@ -4,8 +4,8 @@
 \alias{CPUElength}
 \title{CPUElength}
 \usage{
-CPUElength(RFA, species, year, quarter, dat, bootstrapProcedure = "simple",
-  B = 10)
+CPUElength(RFA, species, year, quarter, dat,
+  bootstrapProcedure = "simple", B = 10)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}
