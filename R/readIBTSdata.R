@@ -10,7 +10,7 @@
 readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 {
   #Read IBTS-data-----------------------------------------
-  dataDir <<- system.file("Data", package = "TestPackage")
+  dataDir <<- system.file("extdata", package = "TestPackage")
   d<- readExchangeDir(dataDir)
   #-------------------------------------------------------
 
