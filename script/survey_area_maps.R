@@ -91,4 +91,4 @@ plot_on_pdf <- function(filename){
   par(old.par)
   dev.off()
 }
-plot_on_pdf("surveyarea.pdf")
+plot_on_pdf("surveyarea.esp")

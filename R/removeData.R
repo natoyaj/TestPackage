@@ -52,6 +52,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
   tmpResults = list()
   tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$median = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
   tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
@@ -88,6 +89,7 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
       tmpResults$mCPUE[,i] = resultSim$mCPUE
       tmpResults$bootstrapMean[,i] = resultSim$bootstrapMean
+      tmpResults$median[,i] = resultSim$median
       tmpResults$sd[,i] = resultSim$sd
       tmpResults$Q025[,i] = resultSim$Q025
       tmpResults$Q975[,i] = resultSim$Q975
@@ -100,10 +102,11 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
 
   #Extract what we are interested in (mCPUE, sd and quantiles)----------------
   if(whatToInvestigate=="mean"){
-    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] ,resultSim[,1],resultSim[,1],resultSim[,1])
+    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
     names(toReturn$mCPUE) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$mCPUE)[1]){
       toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
       quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]
@@ -120,57 +123,155 @@ investigateRemoval = function(RFA,species, year, quarter,dat ,
       toReturn$mCPUE$BiasCQ075[i] = qq[2]
     }
   }else{
-    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$mCPUE) = c("mean","Q025","Q975", "sd")
+    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
+    names(toReturn$mCPUE) = c("mean","median" ,"Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$mCPUE)[1]){
       toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
+      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
       quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
       toReturn$mCPUE$Q025[i] = quantile[1]
       toReturn$mCPUE$Q975[i] = quantile[2]
       toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
       toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
+
+      # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$mCPUE$BiasCQ025[i] = qq[1]
+      toReturn$mCPUE$BiasCQ075[i] = qq[2]
     }
 
-    toReturn$bootstrapMean = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$bootstrapMean) = c("mean","Q025","Q975", "sd")
+    toReturn$bootstrapMean = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
+    names(toReturn$bootstrapMean) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$bootstrapMean)[1]){
       toReturn$bootstrapMean$mean[i] = mean(tmpResults$bootstrapMean[i,])
+      toReturn$bootstrapMean$median[i] = median(tmpResults$bootstrapMean[i,])
       quantile = quantile(tmpResults$bootstrapMean[i,],c(0.025,0.975))
       toReturn$bootstrapMean$Q025[i] = quantile[1]
       toReturn$bootstrapMean$Q975[i] = quantile[2]
       toReturn$bootstrapMean$sd[i] = sd(tmpResults$bootstrapMean[i,])
       toReturn$bootstrapMean$cv[i] = toReturn$bootstrapMean$sd[i]/toReturn$bootstrapMean$mean[i]
+
+      # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$bootstrapMean[i,] > toReturn$WithFullData[i,2])+ sum(tmpResults$bootstrapMean[i,]==toReturn$WithFullData[i,2])/2)/length(tmpResults$bootstrapMean[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$bootstrapMean[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$bootstrapMean$BiasCQ025[i] = qq[1]
+      toReturn$bootstrapMean$BiasCQ075[i] = qq[2]
     }
-    toReturn$sd = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$sd) = c("mean","Q025","Q975", "sd")
+    toReturn$sd = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
+    names(toReturn$sd) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$sd)[1]){
       toReturn$sd$mean[i] = mean(tmpResults$sd[i,])
+      toReturn$sd$median[i] = median(tmpResults$sd[i,])
       quantile = quantile(tmpResults$sd[i,],c(0.025,0.975))
       toReturn$sd$Q025[i] = quantile[1]
       toReturn$sd$Q975[i] = quantile[2]
       toReturn$sd$sd[i] = sd(tmpResults$sd[i,])
       toReturn$sd$cv[i] = toReturn$sd$sd[i]/toReturn$sd$mean[i]
+
+      # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$sd[i,] > toReturn$WithFullData[i,8])+ sum(tmpResults$sd[i,]==toReturn$WithFullData[i,8])/2)/length(tmpResults$sd[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$sd[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$sd$BiasCQ025[i] = qq[1]
+      toReturn$sd$BiasCQ075[i] = qq[2]
+
+
     }
-    toReturn$Q025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$Q025) = c("mean","Q025","Q975", "sd")
+    toReturn$Q025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
+    names(toReturn$Q025) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$Q025)[1]){
       toReturn$Q025$mean[i] = mean(tmpResults$Q025[i,])
+      toReturn$Q025$median[i] = median(tmpResults$Q025[i,])
       quantile = quantile(tmpResults$Q025[i,],c(0.025,0.975))
       toReturn$Q025$Q025[i] = quantile[1]
       toReturn$Q025$Q975[i] = quantile[2]
       toReturn$Q025$sd[i] = sd(tmpResults$Q025[i,])
       toReturn$Q025$cv[i] = toReturn$Q025$sd[i]/toReturn$Q025$mean[i]
+
+      # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$Q025[i,] > toReturn$WithFullData[i,4])+ sum(tmpResults$Q025[i,]==toReturn$WithFullData[i,4])/2)/length(tmpResults$Q025[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$Q025[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$Q025$BiasCQ025[i] = qq[1]
+      toReturn$Q025$BiasCQ075[i] = qq[2]
     }
-    toReturn$Q975 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$Q975) = c("mean","Q025","Q975", "sd")
+    toReturn$Q975 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
+    names(toReturn$Q975) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
     for(i in 1:dim(toReturn$Q975)[1]){
       toReturn$Q975$mean[i] = mean(tmpResults$Q975[i,])
+      toReturn$Q975$median[i] = median(tmpResults$Q975[i,])
       quantile = quantile(tmpResults$Q975[i,],c(0.025,0.975))
       toReturn$Q975$Q025[i] = quantile[1]
       toReturn$Q975$Q975[i] = quantile[2]
       toReturn$Q975$sd[i] = sd(tmpResults$Q975[i,])
       toReturn$Q975$cv[i] = toReturn$Q975$sd[i]/toReturn$Q975$mean[i]
+
+      # #bias-corrected-------------
+      b= qnorm((sum(tmpResults$Q975[i,] > toReturn$WithFullData[i,5])+ sum(tmpResults$Q975[i,]==toReturn$WithFullData[i,5])/2)/length(tmpResults$Q975[i,]))
+      alph      = 0.05                                  # 95% limits
+      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+      qq        = quantile(tmpResults$Q975[i,],p=p)    # Bias-corrected percentile lims.
+      toReturn$Q975$BiasCQ025[i] = qq[1]
+      toReturn$Q975$BiasCQ075[i] = qq[2]
+
     }
+
+#
+#     toReturn$BiasCQ025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
+#     names(toReturn$BiasCQ025) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
+#     for(i in 1:dim(toReturn$BiasCQ025)[1]){
+#       toReturn$BiasCQ025$mean[i] = mean(tmpResults$BiasCQ025[i,])
+#       toReturn$BiasCQ025$median[i] = median(tmpResults$BiasCQ025[i,])
+#       quantile = quantile(tmpResults$BiasCQ025[i,],c(0.025,0.975))
+#       toReturn$BiasCQ025$Q025[i] = quantile[1]
+#       toReturn$BiasCQ025$Q975[i] = quantile[2]
+#       toReturn$BiasCQ025$sd[i] = sd(tmpResults$BiasCQ025[i,])
+#       toReturn$BiasCQ025$cv[i] = toReturn$BiasCQ025$sd[i]/toReturn$BiasCQ025$mean[i]
+#
+#       # #bias-corrected-------------
+#       b= qnorm((sum(tmpResults$BiasCQ025[i,] > toReturn$WithFullData[i,6])+ sum(tmpResults$BiasCQ025[i,]==toReturn$WithFullData[i,6])/2)/length(tmpResults$BiasCQ025[i,]))
+#       alph      = 0.05                                  # 95% limits
+#       z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+#       p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+#       qq        = quantile(tmpResults$BiasCQ025[i,],p=p)    # Bias-corrected percentile lims.
+#       toReturn$BiasCQ025$BiasCQ025[i] = qq[1]
+#       toReturn$BiasCQ025$BiasCQ075[i] = qq[2]
+#
+#     }
+#
+#     toReturn$BiasCQ075 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
+#     names(toReturn$BiasCQ075) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
+#     for(i in 1:dim(toReturn$BiasCQ075)[1]){
+#       toReturn$BiasCQ075$mean[i] = mean(tmpResults$BiasCQ075[i,])
+#       toReturn$BiasCQ075$median[i] = median(tmpResults$BiasCQ075[i,])
+#       quantile = quantile(tmpResults$BiasCQ075[i,],c(0.025,0.975))
+#       toReturn$BiasCQ075$Q025[i] = quantile[1]
+#       toReturn$BiasCQ075$Q975[i] = quantile[2]
+#       toReturn$BiasCQ075$sd[i] = sd(tmpResults$BiasCQ075[i,])
+#       toReturn$BiasCQ075$cv[i] = toReturn$BiasCQ075$sd[i]/toReturn$BiasCQ075$mean[i]
+#
+#       # #bias-corrected-------------
+#       b= qnorm((sum(tmpResults$BiasCQ075[i,] > toReturn$WithFullData[i,7])+ sum(tmpResults$BiasCQ075[i,]==toReturn$WithFullData[i,7])/2)/length(tmpResults$BiasCQ075[i,]))
+#       alph      = 0.05                                  # 95% limits
+#       z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+#       p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+#       qq        = quantile(tmpResults$BiasCQ075[i,],p=p)    # Bias-corrected percentile lims.
+#       toReturn$BiasCQ075$BiasCQ025[i] = qq[1]
+#       toReturn$BiasCQ075$BiasCQ075[i] = qq[2]
+#
+#     }
   }
   #--------------------------------------------------------------------------
 
