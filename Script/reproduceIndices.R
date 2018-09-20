@@ -66,11 +66,10 @@ mCPUEHaulBasedStratifiedHLandCA = CPUEnorthSea(species = species, year = year, q
 
 bootstrapProcedure = "stratifiedHLandCA"
 ALKprocedure = "modelBased"
+useFisher = FALSE
 mCPUEBasedStratifiedHLmodelALK = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
+                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,useFisher = useFisher)
 #--------------------------------------------------------------
-
-
 
 
 
@@ -99,6 +98,7 @@ removeDatras = investigateRemoval(RFA = RFA, species = species, year = year, qua
                            lengthDivision = lengthDivision)
 Rprof(NULL)
 summary = summaryRprof()
+
 
 #Do the same with several cores
 nCores = detectCores()
