@@ -1,11 +1,12 @@
 #' readIBTSData
-#' @description .
+#' @description
 #' @param year year of survey
 #' @param quarter quarter of survey
-#' @param quarter quarter of species of interest
+#' @param species species of interest
 #' @export
 #' @return
 #' @examples
+#'
 readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 {
   #Read IBTS-data-----------------------------------------

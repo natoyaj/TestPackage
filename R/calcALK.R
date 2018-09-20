@@ -512,6 +512,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   field5 = Apred %*%report$x5/exp(report$logTau[6])
 
 
+
   beta0 = report$beta0
   repLength = report$repLength
   #----------------------------------------------------
@@ -550,6 +551,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
       omr = which(listWithOrderedId==originalId)
     }else{
       omr = which(listWithOrderedId==id)
+
     }
 
     #Construct the parts of the ALK were we have data-------------------

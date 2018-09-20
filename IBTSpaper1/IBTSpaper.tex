@@ -130,14 +130,13 @@ In this research we present non-parametric estimation procedures for calculating
 
 
 \section{Introduction}
-Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement, berg2014evaluation}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Survey (IBTS) data, coordinated by the International Council for the Exploration of the Sea (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates.  {\bf As pointed out by  \citet{ludwig1981measurement} estimates of parameters of interest relating to stock size are of little value unless they are accompanied by uncertainty estimates (advice on stock, managers should take into account uncertainty related to stock size)}. The indices of abundance at age from IBTS  are based on data obtained from a stratified semi-random sampling approach of trawl stations,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial.  In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
+Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement, berg2014evaluation}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Survey (IBTS) data, coordinated by the International Council for the Exploration of the Sea (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates. As stated by \citet{ludwig1981measurement} it is relevant for managers to take into the uncertainty related to stock size when making management polices. The indices of abundance at age from IBTS  are based on data obtained from a stratified semi-random sampling approach of trawl stations,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial.  In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
 
 There are two separate stages of the North Sea International Bottom Trawl Survey (IBTS) for generating abundance indices per age.  The first consist of calculating indices per \textit{length} class, which are obtained by trawling in a stratified manner and counting the number of fish caught. Then that knowledge is transformed to indices with respect to age. The latter part is achieved with an age-length key (ALK), which is constructed by sampling otoliths in a stratified procedure from each haul and/or sub-area. To our best knowledge, there has been no research on how much the uncertainty of the abundance indices is related to these two distinct parts. The main contribution of this article is to shed light on how the indices estimates and their associated uncertainty estimates change if less effort was spent on collection of otoliths. We achieve the reduction of otoliths by mimicking a defined sampling procedure with less effort. We also focus on the spatial distribution of the ALK, and such spatial structures in the ALK has also been investigated in \citet{berg2012spatial, hirst2012bayesian}.
 
 Currently, abundance indices from IBTS are reported in DATRAS \citep{datras} using an age-length key (ALK) \citep{fridriksson1934calculation} which is assumed to be constant over relatively large areas. In this research we propose two ALKs which accounts for spatial variation: i) a nonparametric  haul based ALK, and ii) a spatial model-based ALK. These ALKs are described in section \ref{sec:methods}, and the results from the model based ALK gives a strong case for assuming variation in the ALK within RFAs. %In section \ref{sec:modelBasedALK} we introduce a spatial model based ALK, and see figure \ref{fig:40cmCod2015} for an illustration of spatial variation in the ALK. 
-A spatial model based ALK \citep{berg2012spatial, berg2014evaluation} known as the NS-IBTS Delta-GAM index \citep{ICES2016b} is currently being used to calculate standardized age-based survey indices used in assessment for the North Sea stock. \\
-
-{\bf Currently, such variance estimates are \textit{only} utilized for assessment of Herring (\textit{Clupea harengus}) in the North Sea, even thou they may include valuable information from the survey.} \\
+A spatial model based ALK \citep{berg2012spatial, berg2014evaluation} known as the NS-IBTS Delta-GAM index \citep{ICES2016b} is currently being used to calculate standardized age-based survey indices used in assessment for the North Sea stock. And as far as we are aware the variance estimates of parameters estimated from NS-IBTS Delta-GAM index  are \textit{only} utilized for assessment of Herring (\textit{Clupea harengus}) in the North Sea.
+%even thou they may include valuable information from the survey.} \\
 
 The spatial ALK model introduced in \citet{berg2012spatial} is similar to the model used in this paper; the main difference is that we include the spatial structure through a spatial random field \citep{lindgren2011explicit} and not through two dimensional splines \citep{wood2017generalized}.%(see Figure \ref{fig:40cmCod2015}, which shows the estimated age probabilities of a 40 cm cod (\emph{Gadhus morhua}) in the first quarter of 2015). Figure \ref{fig:40cmCod2015} shows that the age distribution clearly varies for a 40 cm cod within Central North Sea and Northern North Sea (see second graph in the first panel). 
  An  overview of the  North Sea International Bottom Trawl Survey is given in Section \ref{overview}. The current estimators for ALK and catch per unit effort (CPUE) used by ICES in their database for trawl surveys (DATRAS) and our proposed ALK estimators are given in Section \ref{sec:methods}. Two case studies, in which the methods described in Section \ref{sec:methods} are applied to, are given in Section \ref{sec:data}, and a discussion is given in Section \ref{sec:discussion}.% The results are given in Section \ref{sec:results} and a discussion is given in Section \ref{sec:discussion}.
@@ -273,18 +272,18 @@ The model based ALK estimate is obtained by maximizing the likelihood. We maximi
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
-In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using the percentile method  and bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data.
+In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using {\bf the percentile method}  and bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-Corrected method adjusts for the bias and skew of the sampling distribution of the data. This method assumes that there is a montonic increasing function and the estimator $\hat{\lambda}_{a}$ has a monotonic increasing function $f()$ such that the transformed values $f(\hat{\lambda}_{a})$ are normally distributed with mean $f(\rho) - z_{0}$ and standard deviation one, where $z_{0}$ are the standard normal limits \citep{puth2015variety}.
 
 %\emph{\large Percentile Method}. The percentile method makes direct use of the empirical sampling distribution, assuming that the statistic from each bootstrap sample is unbiased and symmetric, but not necessarily normal \citep{carpenter2000bootstrap}.  The $100(\alpha /2)$ and $100(1- \alpha /2)$ percentile values of the bootstrap sampling distribution estimate are used as the upper and lower confidence limits for the density $\rho$. The avoidance of the assumption of normality and its simplicity in implementation are the main attractions of this method. However, the coverage error is often substantial if the distribution of the estimated parameter of interest is not nearly symmetric. Also, at least 1000 bootstrap samples are required to obtain sufficiently accurate $95\%$ confidence intervals \citep{briggs1999constructing, carpenter2000bootstrap}.
 
 %\emph{\large Biased-corrected}. The Bias-Corrected method is an alternative to the Percentile method, which seeks to adjust for the bias and skew of the sampling distribution. This revised method assumes that there is a montonic increasing function and the estimator $\hat{\rho}$ has a monotonic increasing function $f()$ such that the transformed values $f(\hat{\rho})$ are normally distributed with mean $f(\rho) - z_{0}$ and standard deviation one, where $z_{0}$ are the standard normal limits \citep{puth2015variety}.
 A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in  \citet{ICES2013}. In the rest of this paper, we refer to this procedure as DATRAS bootstrap procedure. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE within RFAs. This assumption is likely to be wrong, and will typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE within each statistical rectangle. 
 
-\subsubsection{DATRAS and stratified bootstrap procedure}
+\subsubsection{DATRAS and Stratified bootstrap procedure}
 \label{sec:datrasstratifiedbootstrap}
 In this section we describe the bootstrap procedure for catch at length proposed by \emph{DATRAS} \citep{ICES2013} and the stratified procedure, and elaborate how the ALK is simulated. Assume there are $N_{\text{s}}$ trawl hauls in a statistical rectangle. The DATRAS bootstrap procedure consists of sampling with replacement $N_{\text{s}}$ of all trawl hauls in the corresponding RFA, and place them in the statistical rectangle. This procedure is performed independently across all statistical rectangles. It is worth reiterating that this procedure is based on the assumption that ALK is homogeneous in the whole RFA, and the implication of Datras bootstrap procedure on indices of abundance is two-fold. Firstly, Datras bootstrap procedure ignores the fine-scale stratification in the sampling process. This would lead to an overestimation of the uncertainty. Secondly, it ignores the sampling procedure of age-length data collected at the haul level. This would lead  to an underestimation of the uncertainty. So there are biases in both directions, which are difficult to quantify.
 
-The stratified bootstrap procedure is a modification of the DATRAS bootstrap procedure. Rather than sampling hauls from the whole RFA, we  sample the $N_{\text{s}}$ trawl hauls from the list of hauls within the same statistical rectangle. If there is only one trawl haul within a statistical rectangle, we sample either that haul or the closest haul.
+The Stratified bootstrap procedure is a modification of the DATRAS bootstrap procedure. Rather than sampling hauls from the whole RFA, we  sample the $N_{\text{s}}$ trawl hauls from the list of hauls within the same statistical rectangle. If there is only one trawl haul within a statistical rectangle, we sample either that haul or the closest haul.
 
 For simulating the DATRAS ALK we sample with replacement age observations within each RFA stratified with respect to length. If there is only one observed age from a given length class, we sample either that age or, at random, an age of the closest length class with observed ages. For the haul based ALK, we use the observed ages in the sampled hauls when simulating the CPUE per length ({\bf is this from the stratified bootstrap procedure? what about explanations for the model based ALK? We also have codes for stratified procedure where DATRAS ALK is used, should we mention that this is done INSTEAD or AS WELL and include this results below in results section? Jon Helge mentioned that it's not plausible to show results of DATRAS bootstrap as it does not account for the survey design. Better off using our proposed stratified procedure with DATRAS ALK; include resulst for DATRAS using their sugested bootstrap procedure in appendix and reference in paper concerning higher variances}).
 
@@ -329,19 +328,19 @@ Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \
 \subsection{Estimated indices of abundance and variability for cod and saithe}
 \label{sec:codresults}
 
-In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the two bootstrap methods, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. As discussed in Section \ref{sec:datrasstratifiedbootstrap} the stratified bootstrap procedure is used for analyses in this research. Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} give estimates of indices of abundance for cod and saithe in year 2017 Q3, and approximate 95\% confidence intervals from the percentile and bias-corrected bootstrap methods for 200 bootstrap replication estimated from the three ALK methods.
+In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the two bootstrap methods, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. As discussed in Section \ref{sec:datrasstratifiedbootstrap} the Stratified bootstrap procedure is used for analyses in this research. Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} give estimates of indices of abundance for cod in years 2017 Q3 and 2018 Q1, and  saithe in year 2017 Q3. Approximate 95\% confidence intervals from the percentile and bias-corrected bootstrap methods for 200 bootstrap replication estimated from the three ALK methods.
 
 {\bf discuss more about confidence intervals}
 
 Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a .....cm long cod and a .....cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. The plots also suggest that cod is distributed in all areas of the North Sea (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit areas in the northern North Sea, specifically RFA 1 (Figure \ref{predictedprobabilitiesplot} (b)). 
 
-Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} show that the resulting indices of abundance (Table \ref{resultstablecodandsaithe}) turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the DATRAS ALK. We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
+Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} show that the resulting indices of abundance turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the DATRAS ALK. We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
 
 {\bf Discuss model base ALK results here....problems with variance-covariance structure etc using the required number of linear predictors e.g. A-1 or A-2 or an alternative approach to the fisher information or Hessian matrix, such as bootstrapping, for uncertainty estimation}\\
 
 {\bf need to generate this plot for appendix}
 
-For illustration we show the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance  in Table \ref{resultstablecodandsaitheAppendix} in Web appendix \ref{secAp:resultsdatrasALK}. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
+For illustration we show the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance  in Figure \ref{rpercentileBiascorrectedCIProcedures} in Web appendix \ref{secAp:resultsdatrasALK}. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
 
 
 \clearpage
@@ -349,10 +348,10 @@ For illustration we show the implications of using DATRAS bootstrap procedure fo
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Bias-corrected bootstrap method]{\includegraphics[width=0.95\textwidth]{cod2017Q3BiasCorr.jpeg}} & \\
+\subfloat[Cod in years 2017 Q3 and 2018 Q1]{\includegraphics[width=0.95\textwidth]{cod2017Q3BiasCorr.jpeg}} & \\
 \subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{cod2017Q3Percentile.jpeg}} &
 \end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$) from bias-corrected and percentile bootstrap methods for cod in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate), bootstrap mean (mean) and median estimates are also given.}
+\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$) from bias-corrected  bootstrap method for cod in years 2017 Q3 and 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate), percentage relative standard error (RSE\%), and bootstrap mean (mean)  and median estimates are also given.}
 \label{percentileBiascorrectedCIcod}
 \end{figure*} 
 
@@ -361,10 +360,10 @@ For illustration we show the implications of using DATRAS bootstrap procedure fo
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Bias-corrected bootstrap method]{\includegraphics[width=0.95\textwidth]{saithe2017Q3BiasCorr.jpeg}} & \\
-\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{saithe2017Q3Percentile.jpeg}} &
+\subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{saithe2017Q3BiasCorr.jpeg}} & \\
+%\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{saithe2017Q3Percentile.jpeg}} &
 \end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected and percentile bootstrap methods for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate)), bootstrap mean (mean) and median estimates are also given.}
+\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected bootstrap method for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate)), bootstrap mean (mean) and median estimates are also given.}
 \label{percentileBiascorrectedCIsaithe}
 \end{figure*} 
 
@@ -487,6 +486,30 @@ Sampling one otolith per 2 cm or 5 cm length group provide .........
 \item \emph{extract data for number or percentage of otoliths removed when 2 cm or 5 cm removal procedure is used and fill ${\bf x}$  and ${\bf y}$ in text with values }
 \item include no otoliths for each section ---all data, reduced data by 2 cm etc
 \end{itemize}
+
+
+\clearpage
+
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Fri Aug 24 11:42:15 2018
+\begin{table}[ht]
+\centering
+\captionsetup{font=small, width = 16.5cm}{
+\caption{Estimates of abundance indices of cod in year 2017 Q3.}\label{cod}}
+\begin{tabular}{rrrrrrrrr}
+  \hline
+ & All data estimate & Removed data estimate & Lower & Upper  & SE  \\ 
+  \hline
+1 & 1.70 & 1.70      &  1.69 & 1.72 & 0.01 \\ 
+  2 & 15.64 & 15.60  & 15.55 & 15.71 & 0.05 \\ 
+  3 & 1.79 & 1.79    & 1.73 & 1.83 & 0.03  \\ 
+  4 & 1.31 & 1.29    & 1.22 & 1.36 & 0.05  \\ 
+  5 & 1.13 & 1.12    & 1.09 & 1.17 & 0.04  \\ 
+  6 & 0.67 & 0.69    & 0.64 & 0.75 & 0.07  \\ 
+  7 & 0.28 & 0.28    & 0.26 & 0.30 & 0.06  \\ 
+   \hline
+\end{tabular}
+\end{table}
 
 \clearpage
 \begin{tiny}
@@ -905,61 +928,27 @@ The underlying assumption of this ALK approach is that age-length compositions a
 \label{secAp:oursBorrow}
 \indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a superstrata, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. \emph{Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in air distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1.  }
 
-\section{\large Estimates from DATRAS and stratified bootstrap procedures}
+\section{\large Estimates from DATRAS and Stratified bootstrap procedures}
 \label{secAp:resultsdatrasALK}
-The naive bootstrap procedure prosed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestiamtion of the uncertainty. The results (Table \ref{resultstablecodandsaitheAppendix}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
-\begin{tiny}
-\begin{table}[h!]
+The naive bootstrap procedure prosed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestiamtion of the uncertainty. The results (Table \ref{percentileBiascorrectedCIProcedures}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
+
+
+\begin{figure*}[h!]
 \centering
-\scriptsize
-\setlength\tabcolsep{5.5pt} 
-\captionsetup{font=small, width = 14.5cm}{
-\caption{Comparison of abundance estimates and uncertainty for cod and saithe  from DATRAS bootstrap procedure and stratified procedure using DATRAS ALK, in year 2017 Q3. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaitheAppendix}}
-\begin{tabular}{ccccccccccccccccccccccccccc}
-\hline \\[0.1ex]
-{\bf Species} &{\bf $a$ } & $\widehat{mCPUE_{N,a}}$ & \multicolumn{3}{c}{\bf DATRAS bootstrap procedure} & \multicolumn{3}{c}{\thead{\bf Stratified bootstrap procedure}}  \\[1.5ex]
- % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
-%   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
-& & & SE(RSE) & LB & UB & SE (RSE) & LB & UB     \\[0.5ex]
-\cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}   \\ [0.1ex]
-%\hline\\[1.0ex]
-
-{\bf cod} \\[1.0ex]
-\cmidrule(lr{0.5em}){1-1}\\[1.0ex]
-
-\raisebox{1.5ex}{2017 Q3}& 0   & 1.698  & 0.48 ($28.3 \%$) & 0.683 & 2.383  & 0.35 ($20.6 \%$) &0.826 & 2.122 \\[1ex]
-& 1  & 15.478& 4.66 ($30.1 \%$) & 10.022 & 27.656 & 2.49 ($16.1 \%$) &10.919 & 19.761  \\[1ex]
-& 2  & 1.903 & 0.48 ($25.2 \%$) & 1.246  & 3.067  & 0.31 ($16.3 \%$) &1.277 &2.473  \\[1ex]
-& 3  & 1.310 & 0.22 ($16.8 \%$) & 0.867  & 1.698  & 0.14 ($10.7 \%$)  &1.004 &1.556  \\[1ex]
-& 4  &1.100  & 0.20 ($18.2 \%$) & 0.787  & 1.536  & 0.11 ($10.0 \%$)  &0.893 &1.335  \\[1ex]
-& 5  & 0.653 & 0.17 ($26.0 \%$) & 0.421  & 1.070  & 0.09 ($13.8 \%$) &0.461 &0.827  \\[1ex]
-& 6+ & 0.286 & 0.08 ($28.0 \%$) & 0.183  & 0.463  & 0.05 ($17.5 \%$)  &0.200 &0.391 \\[3.5ex]
-
-
-{\bf saithe} \\[1.0ex]
-\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
-
-\raisebox{1.5ex}{2017 Q3} & 0& 0.282 &0.32 ($113.5 \%$) & 0.026 & 1.275   &0.09 ($31.9 \%$) &0.135 &0.431 \\[1ex]
-& 1  & 0.124  & 0.07 ($56.5 \%$) &0.030  & 0.335  &0.05  ($40.3 \%$) &0.043  &0.217  \\[1ex]
-& 2  & 1.043  & 0.39 ($37.4 \%$) &0.638  & 2.098  &0.23  ($22.1 \%$) &0.557  &1.463 \\[1ex]
-& 3  & 11.243 & 2.96 ($26.3 \%$) &7.849  & 19.063 &2.02  ($18.0 \%$) &7.076  &15.030  \\[1ex]
-& 4  & 12.703 & 2.91 ($22.9 \%$) &9.349  & 20.618 &1.82  ($14.3 \%$) &9.022  &16.013  \\[1ex]
-& 5  & 2.912  & 0.60 ($20.6 \%$) &2.138  & 4.391  &0.35  ($12.0 \%$) &2.317  &3.655 \\[1ex]
-& 6+ & 2.845  & 0.80 ($28.1 \%$) &1.660  & 4.794  &0.52  ($18.3 \%$) &1.795  &3.884 \\[0.5ex]
-\hline
+\begin{tabular}{@{}ccc@{}}
+\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{cod2017Q3BootstrapProcedures.jpeg}} & 
 \end{tabular}
-\end{table}
-\end{tiny}
+\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{96}$) from Datras and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for cod in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate), bootstrap mean (mean) and median estimates are also given.}
+\label{percentileBiascorrectedCIProcedures}
+\end{figure*} 
+
 
 
 
 \clearpage
 
 
-
 {\bf Table \ref{resultstablecodandsaithe1} below will not be included in paper. For our purposes to look at estimates of saithe with and without weights and, when the code for weights was "incorrect"}
-
-
 
 
 
@@ -1044,6 +1033,51 @@ The naive bootstrap procedure prosed by DATRAS lacks the potential to account fo
 \end{tabular}
 \end{table}
 \end{tiny}
+
+
+
+%\begin{tiny}
+%\begin{table}[h!]
+%\centering
+%\scriptsize
+%\setlength\tabcolsep{5.5pt} 
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption{Comparison of abundance estimates and uncertainty for cod and saithe  from DATRAS bootstrap procedure and stratified procedure using DATRAS ALK, in year 2017 Q3. Standard error estimates (SE) (relative standard error, RSE in parentheses) and the lower bounds (LB) and upper bounds (UP) of approximate $95\%$ confidence intervals from the three ALK methods are also given.}\label{resultstablecodandsaitheAppendix}}
+%\begin{tabular}{ccccccccccccccccccccccccccc}
+%\hline \\[0.1ex]
+%{\bf Species} &{\bf $a$ } & $\widehat{mCPUE_{N,a}}$ & \multicolumn{3}{c}{\bf DATRAS bootstrap procedure} & \multicolumn{3}{c}{\thead{\bf Stratified bootstrap procedure}}  \\[1.5ex]
+% % & \multicolumn{3}{c}{DATRAS Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap}   & \multicolumn{3}{c}{Stratified Bootstrap} \\[1.5ex]
+%%   \cmidrule(lr{0.5em}){2-5}  \cmidrule(lr{0.1em}){6-9} \cmidrule(lr{0.5em}){10-13}  \\ [0.1ex]
+%& & & SE(RSE) & LB & UB & SE (RSE) & LB & UB     \\[0.5ex]
+%\cmidrule(lr{0.5em}){4-6}  \cmidrule(lr{0.5em}){7-9}   \\ [0.1ex]
+%%\hline\\[1.0ex]
+%
+%{\bf cod} \\[1.0ex]
+%\cmidrule(lr{0.5em}){1-1}\\[1.0ex]
+%
+%\raisebox{1.5ex}{2017 Q3}& 0   & 1.698  & 0.48 ($28.3 \%$) & 0.683 & 2.383  & 0.35 ($20.6 \%$) &0.826 & 2.122 \\[1ex]
+%& 1  & 15.478& 4.66 ($30.1 \%$) & 10.022 & 27.656 & 2.49 ($16.1 \%$) &10.919 & 19.761  \\[1ex]
+%& 2  & 1.903 & 0.48 ($25.2 \%$) & 1.246  & 3.067  & 0.31 ($16.3 \%$) &1.277 &2.473  \\[1ex]
+%& 3  & 1.310 & 0.22 ($16.8 \%$) & 0.867  & 1.698  & 0.14 ($10.7 \%$)  &1.004 &1.556  \\[1ex]
+%& 4  &1.100  & 0.20 ($18.2 \%$) & 0.787  & 1.536  & 0.11 ($10.0 \%$)  &0.893 &1.335  \\[1ex]
+%& 5  & 0.653 & 0.17 ($26.0 \%$) & 0.421  & 1.070  & 0.09 ($13.8 \%$) &0.461 &0.827  \\[1ex]
+%& 6+ & 0.286 & 0.08 ($28.0 \%$) & 0.183  & 0.463  & 0.05 ($17.5 \%$)  &0.200 &0.391 \\[3.5ex]
+%
+%
+%{\bf saithe} \\[1.0ex]
+%\cmidrule(lr{0.1em}){1-1}\\[1.0ex]
+%
+%\raisebox{1.5ex}{2017 Q3} & 0& 0.282 &0.32 ($113.5 \%$) & 0.026 & 1.275   &0.09 ($31.9 \%$) &0.135 &0.431 \\[1ex]
+%& 1  & 0.124  & 0.07 ($56.5 \%$) &0.030  & 0.335  &0.05  ($40.3 \%$) &0.043  &0.217  \\[1ex]
+%& 2  & 1.043  & 0.39 ($37.4 \%$) &0.638  & 2.098  &0.23  ($22.1 \%$) &0.557  &1.463 \\[1ex]
+%& 3  & 11.243 & 2.96 ($26.3 \%$) &7.849  & 19.063 &2.02  ($18.0 \%$) &7.076  &15.030  \\[1ex]
+%& 4  & 12.703 & 2.91 ($22.9 \%$) &9.349  & 20.618 &1.82  ($14.3 \%$) &9.022  &16.013  \\[1ex]
+%& 5  & 2.912  & 0.60 ($20.6 \%$) &2.138  & 4.391  &0.35  ($12.0 \%$) &2.317  &3.655 \\[1ex]
+%& 6+ & 2.845  & 0.80 ($28.1 \%$) &1.660  & 4.794  &0.52  ($18.3 \%$) &1.795  &3.884 \\[0.5ex]
+%\hline
+%\end{tabular}
+%\end{table}
+%\end{tiny}
 
 
 
