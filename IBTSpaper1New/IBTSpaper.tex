@@ -292,6 +292,8 @@ In this section we apply the methods described in Section \ref{sec:methods} to d
 In this research, the species of interest are cod and saithe. All samples are caught using the standard GOV gear described in Section \ref{overview}. Table \ref{tab:data2018} gives a brief description of the data for year 2018 in the first quarter and year 2017 in the third quarter.  Cod can be as old as 12 years in the first quarter and 11 years in the third quarter; and saithe as old as 18 years in the first quarter and 17 years in the third quarter. In our analyses we consider the age groups 1 to 6+ in Q1 and 0 to 6+ in Q3 for all ALK methods, where the last group consists of fish of age 6 or older. Saithe are typically older than cod but smaller in length, particularly in Q1. Catch rates are higher in the third quarter, 48\% for cod and 164\% for saithe, compared with the first quarter.\\
 %the IBTS Q3 surveys  cover wider areas in the north sea. 
 
+{\bf check that number of otoliths are correct, removal simulation suggests 2163 otoliths for saithe and 1600 for cod}
+
 \clearpage
 \begin{small}
 \begin{table}[h!]
@@ -310,7 +312,7 @@ Date&Date of catch in year 2018 Q1 varied between 15.01.2018 to 28.02.2018 \\ & 
 
 Duration of haul & Mean duration is 29.37 minutes, with 30 minutes as 83\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of 29.26 minutes \\ & with 30 minutes as 88\% coverage . \\[1.7ex]
 
-Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \\[0.5ex]
+Total count for all ages & 1511 (793) in year 2018 Q1 and {\bf 2236 (2092) 2017 Q3}. \\[0.5ex]
 \bottomrule
 \end{tabular}
 \label{tab:data2018}
@@ -321,9 +323,7 @@ Total count for all ages & 1511 (793) in year 2018 Q1 and 2236 (2092) 2017 Q3. \
 \subsection{Estimated indices of abundance and variability for cod and saithe}
 \label{sec:codresults}
 
-In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. 
-
-Recall that the main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a 40 cm long cod and a 40 cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. Figure \ref{predictedprobabilitiesplot} (a) shows that the eastern North Sea in RFAs 7 and 8 (the regions in yellow) is one of the areas where a 40 cm cod is more likely to be age 3. A saithe of 40 cm is more likely to be 3 years or older.The plots also show that cod is distributed in all areas of the North Sea, except RFA 10 (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit deeper areas in the northern North Sea, specifically RFA 1, and Skagerrak in  RFA 8 (Figure \ref{predictedprobabilitiesplot} (b) and Figure \ref{icesroufismap}, right panel). 
+In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. The main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. To illustrate that this assumption may not be valid, we used  the spatial ALK model (\ref{eq:linearPred}) to predict probabilities of age given length of a 40 cm long cod and a 40 cm long saithe in the North Sea (Figure \ref{predictedprobabilitiesplot}). These plots provide strong evidence against a null hypothesis of no spatial effect in the ALKs, as the likelihood of age given length changes in some areas. Figure \ref{predictedprobabilitiesplot} (a) shows that the eastern North Sea in RFAs 7 and 8 (the regions in yellow) is one of the areas where a 40 cm cod is more likely to be age 3. A saithe of 40 cm is more likely to be 3 years or older.The plots also show that cod is distributed in all areas of the North Sea, except RFA 10 (Figure \ref{predictedprobabilitiesplot} (a)), whereas saithe is more likely to inhabit deeper areas in the northern North Sea, specifically RFA 1, and Skagerrak in  RFA 8 (Figure \ref{predictedprobabilitiesplot} (b) and Figure \ref{icesroufismap}, right panel). 
 
 %{\bf plot probability graph for saithe}
 
@@ -348,20 +348,42 @@ Recall that the main assumption of DATRAS ALK is that the age-length composition
 
 
 \clearpage
-Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} give estimates of indices of abundance for cod in years 2017 Q3 and 2018 Q1, and  saithe in year 2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 200 bootstrap replication are estimated from the three ALK methods. The stratified procedure described in \ref{sec:datrasstratifiedbootstrap} is used in the sampling process to estimate bootstrap confidence intervals.   
+Figures \ref{percentileBiascorrectedCIcod} gives estimates of indices of abundance for cod in years 2018 Q1 and for saithe in year 2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 200 bootstrap replication are estimated from the three ALK methods. The stratified procedure described in \ref{sec:datrasstratifiedbootstrap} is used in the sampling process to estimate bootstrap confidence intervals.   Figures \ref{percentileBiascorrectedCIcod}  shows that the resulting indices of abundance for cod and saithe turned out to be similar for all ALKs. IBTS is a complex multistage survey design, and since the ALKs are estimated from cluster-correlated data the resulting effective sample for estimating age-composition of fish would be lower than the number of fish measured \citep{ICES2013PICS3}. Hence, the ALKs are subject to large sampling errors. For example, the estimated percentage relative standard errors from the spatial ALKs for the plus group (6+) for cod are $>$ 25\%, suggesting high sampling error in the ALKs. Also, it should be remembered that DATRAS ALK is constant.   \citet{aanes2015efficient} showed that in such cases, and where only the variability of  length compositions are allowed for, the estimated age-distributions may appear to be more precise than they truly are since the ALK itself is subject to sampling errors, see for example the estimated relative standard standard errors for ages 2, and the older fish (4, 5 and 6+) for both species. 
 
-Figures \ref{percentileBiascorrectedCIcod} and  \ref{percentileBiascorrectedCIsaithe} show that the resulting indices of abundance turned out to be similar for all ALKs. However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the the percentage relative standard error (RSE\%) from DATRAS ALK. 
+As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the model base ALK generally gave shorter interval widths for both species. It should be noted that the estimated variance of abundance indices from the spatial model base ALK are computed using bootstrapping. The variance-covariance matrix (fisher information) {(\bf discuss issues with model based ALK and variance estimation)} \\
+
+For these reasons we recommend the haul base ALK method for estimating age-distributions??\\
+
+The implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance are shown for illustration  in Figure \ref{DatrasStratified} in Web appendix \ref{secAp:resultsdatrasALK}. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
 
 
+%and the percentage relative standard (RSE\%) are substantial ($> 100 \%$) suggesting the estimated indices have high sampling errors. It should be remembered that IBTS is a complex multistage survey design, and since the ALKs are estimated from cluster-correlated data the resulting effective sample for estimating age-composition of fish would be lower than the number of fish measured \citep{ICES2013PICS3}. Hence, the ALKs are subject to large sampling errors. It should also be remembered that DATRAS ALK is fixed and only the variability of  length compositions are allowed for. \citet{aanes2015efficient} showed that in such cases the estimate age-distributions may appear to be more precise than they truly are since the ALK itself is subject to sampling errors. It can be seen that the estimated standard error (SE) from DATRAS ALK is smaller (more precise) for 1, 2, 4, and 6+ year-old cod compared with the two spatial ALKs, but the relative standard errors from the spatial ALKs for all age groups, except 1 year-olds, are smaller compared with DATRAS ALK (Figure \ref{percentileBiascorrectedCIcod} (a)). 
+
+%Similarly, the difference between the  estimated indices from the three ALKs  for siathe is minimal but DATRAS  ALK gave large estimated standard errors, except for the older fishes (ages 4, 5 and 6+). This is expected as fewer  older fishes are typically sampled comapred with younger fish and as DATRAS ALK 
+
+%and the standard error estimates (SE) for 1 and 2 year-olds are the same from the ALKs. But, standard error estimates from DATRAS ALK for 4 and 6+ year-old saithe are smaller compared with the spatial ALKs. The percentage relative standard error estimates
+
+%plus group otoliths 418
+
+\clearpage
+%the ALKs are estimated from cluster correlated  
+
+
+ %It should be remembered that DATRAS ALK is fixed and will be subjected to large sampling errors 
+
+% However, the implication of not accounting for variability over wider areas is higher  uncertainty in the estimates, as shown by the the percentage relative standard error (RSE\%) from DATRAS ALK. 
+
+
+%The percentage relative standard are substantial (> 100 \%) suggesting the estimated indices are subject to high sampling error and therefore these must be use with caution
 %We would expect higher uncertainty estimates for older fishes from our ALK methods compared with DATRAS as variability is much higher for this group due to small sample sizes. However, in Q3 for both species estimated uncertainty is from our ALKs is similar or smaller compared with DATRAS ALK for the plus group......\\
 
-{\bf Discuss model base ALK results here....problems with variance-covariance structure etc using the required number of linear predictors e.g. A-1 or A-2 or an alternative approach to the fisher information or Hessian matrix, such as bootstrapping, for uncertainty estimation}\\
+%{\bf Discuss model base ALK results here....problems with variance-covariance structure etc using the required number of linear predictors e.g. A-1 or A-2 or an alternative approach to the fisher information or Hessian matrix, such as bootstrapping, for uncertainty estimation}\\
 
 
 
-For illustration we show the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance  in Figure \ref{percentileBiascorrectedCIProcedures} in Web appendix \ref{secAp:resultsdatrasALK}. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas ({\bf need to generate this plot for appendix}). 
+%For illustration we show the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance  in Figure \ref{percentileBiascorrectedCIProcedures} in Web appendix \ref{secAp:resultsdatrasALK}. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas ({\bf need to generate this plot for appendix}). 
 
-{\bf re-run codes with updated ALK model for cod and saithe in 2017 Q3 plots}
+%{\bf re-run codes with updated ALK model for cod in 2017 Q3 and 2018 Q1 and saithe in 2018 Q1 plots}
 
 
 \clearpage
@@ -370,23 +392,23 @@ For illustration we show the implications of using DATRAS bootstrap procedure fo
 \centering
 \begin{tabular}{@{}ccc@{}}
 \subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{cod2018Q1BiasCorr.jpeg}} & \\
-\subfloat[Cod in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{cod2018Q1BiasCorr.jpeg}} &
+\subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{saithe2017Q3BiasCorr.jpeg}} &
 \end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{95}$) from bias-corrected  bootstrap method for cod in years 2017 Q3 and 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), and bootstrap mean (mean)  and median estimates are also given.}
+\caption[]{Estimated confidence intervals ($\mathrm{CI}_{95}$) from bias-corrected  bootstrap method for cod in year 2018 Q1 and saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (Mean)  and Median estimates and the width of the confidence interval (Width CI-95) are also given.}
 \label{percentileBiascorrectedCIcod}
 \end{figure*} 
 
-\clearpage
-
-\begin{figure*}[h!]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[Saithe in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{saithe2018Q1BiasCorr.jpeg}} & \\
-%\subfloat[Percentile bootstrap method]{\includegraphics[width=0.95\textwidth]{saithe2017Q3Percentile.jpeg}} &
-\end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected bootstrap method for saithe in year 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (mean) and median estimates are also given.}
-\label{percentileBiascorrectedCIsaithe}
-\end{figure*} 
+%\clearpage
+%
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[Cod in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{cod2017Q3BiasCorr.jpeg}} & \\
+%\subfloat[Saithe in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{saithe2018Q1BiasCorr.jpeg}} &
+%\end{tabular}
+%\caption[]{Estimated confidence intervals ($\mathrm{CI}_{96}$)  from bias-corrected bootstrap method for saithe in year 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (mean) and median estimates are also given.}
+%\label{percentileBiascorrectedCIsaithe}
+%\end{figure*} 
 
 %
 %\clearpage
@@ -437,7 +459,7 @@ In order to determine optimum sampling levels of otoliths for saithe and cod in 
 %For each sampling procedure, the number of otoliths removed for cod is 
 
 
-In year 2018 Q1, the number of otoliths sampled for cod was 1511, of which .........were removed in the experiments 1 cm, 2 cm, 3 cm, 4 cm, 5 cm or 7 cm length group, respectively. In year 2017 Q3, 2092 otoliths were sampled for saithe and ........were removed in the experiments 1 cm, 2 cm, 3 cm, 4 cm, 5 cm or 7 cm length group, respectively. Figure\ref{reduceresults} gives estimates of abundance for the original data, estimated indices for the reduced data, and their standard errors, and approximate 95\% confidence intervals for  $200$ simulations and $200$ bootstrap replication. 
+In year 2018 Q1, the number of otoliths sampled for cod was {\bf 1600}, of which 231, 457, 615, 712, 788, 841, and 889 are removed in the experiments 1 cm, 2 cm, 3 cm, 4 cm, 5 cm, 6 cm or 7 cm length group, respectively. In year 2017 Q3, 2092 otoliths were sampled for saithe and ........were removed in the experiments 1 cm, 2 cm, 3 cm, 4 cm, 5 cm or 7 cm length group, respectively. Figure\ref{reduceresults} gives estimates of abundance for the original data, estimated indices for the reduced data, and their standard errors, and approximate 95\% confidence intervals for  $200$ simulations and $200$ bootstrap replication. 
 
 The effect on abundance indices for 3 cm length or less is minimal for all age groups ............. 
 
@@ -692,16 +714,16 @@ The underlying assumption of this ALK approach is that age-length compositions a
 
 \section{\large Estimates from DATRAS and Stratified bootstrap procedures}
 \label{secAp:resultsdatrasALK}
-The naive bootstrap procedure prosed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestiamtion of the uncertainty. The results (Table \ref{percentileBiascorrectedCIProcedures}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
+The bootstrap procedure proposed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. The results (Figure\ref{DatrasStratified}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
 
 
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{cod2017Q3BootstrapProcedures.jpeg}} & 
+\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{saithe2017Q3DATRASStratifedBiasCorr.jpeg}} & 
 \end{tabular}
-\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{96}$) from Datras and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for cod in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE(Estimate), bootstrap mean (mean) and median estimates are also given.}
-\label{percentileBiascorrectedCIProcedures}
+\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{95}$) from DATRAS and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), bootstrap mean (Mean), Median estimates, percentage relative standard error (RSE \%) and width of confidence intervals  are also given.}
+\label{DatrasStratified}
 \end{figure*} 
 
 
