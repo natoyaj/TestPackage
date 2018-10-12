@@ -531,7 +531,7 @@ calculateALKModelOlav = function(RFA, species, year, quarter,hh,data, fitModel =
   #-----------------------------------------------------
 
   #Define variables used in the construction of the ALK--
-  conf = confALK(species = species,quarter = quarter,ALKprocedure = "modelBased")
+  conf = confALK(species = species,quarter = quarter)
   maxAge = conf$maxAge
   minLength = conf$minLength
   maxLength = conf$maxLength
@@ -699,7 +699,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #-----------------------------------------------------
 
   #Define variables used in the construction of the ALK--
-  conf = confALK(species = species,quarter = quarter,ALKprocedure = "modelBased")
+  conf = confALK(species = species,quarter = quarter)
   maxAge = conf$maxAge
   minLength = conf$minLength
   maxLength = conf$maxLength
