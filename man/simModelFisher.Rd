@@ -22,6 +22,3 @@ simModelFisher(species, quarter, rep, fit, sim, i)
 \value{
 Returns a list with simulated model based ALK for each trawl haul
 }
-\description{
-simModelFisher
-}

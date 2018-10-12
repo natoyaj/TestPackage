@@ -11,6 +11,3 @@ CPUEnorthSea(species, year, quarter, dat, bootstrapProcedure = "datras",
 \value{
 Returns the mCPUE per age class in the whole North Sea
 }
-\description{
-calcCPUEwholeNorthSea
-}

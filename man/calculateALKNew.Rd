@@ -24,6 +24,3 @@ calculateALKNew(RFA, species, year, quarter, data, data_hl, dfLength = 1)
 \value{
 Returns a list with ALK for each trawl haul
 }
-\description{
-calculateALKNew
-}

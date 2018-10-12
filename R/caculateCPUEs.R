@@ -403,8 +403,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
     for(i in 1:dim(dataWithTheSpecies)[1])
     {
       trawlId = dataWithTheSpecies$haul.id[i]
-#      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i]
-      if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.id[i]
+ #    if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i] #Need to look more into this if uses fisher
       whichALK =NA
       for(indeksALK in 1:length(ALKNew))
       {
@@ -469,7 +468,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   if(ALKprocedure =="modelBased" & length(report)==0){
     fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
   }
-
 
   mCPUEvector = rep(0,dimCPUE[1])
 

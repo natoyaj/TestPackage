@@ -4,8 +4,8 @@
 \alias{simTrawlHaulsHiearchical}
 \title{simTrawlHaulsHiearchical}
 \usage{
-simTrawlHaulsHiearchical(RFA, year, quarter, hl, ca,
-  hierarchy = c("StatRec", "haul.id"), selection = c("S", "R"))
+simTrawlHaulsHiearchical(RFA, year, quarter, hl, ca, hierarchy = c("StatRec",
+  "haul.id"), selection = c("S", "R"))
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
