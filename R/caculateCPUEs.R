@@ -454,7 +454,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
     readOGR(file.path(
-      system.file("shapefiles", package = "TestPackage"),
+      system.file("shapefiles", package = "IBTSindices"),
       "Roundfish_shapefiles"
     ),verbose = FALSE)
   rfa$areas.sqm<-areaPolygon(rfa)
