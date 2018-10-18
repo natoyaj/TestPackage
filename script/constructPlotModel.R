@@ -1,15 +1,258 @@
 #Read data----------
-year = 2018
-quarter = 1
-#quarter = 3
-#species = "Pollachius virens"
-species = "Gadus morhua";
+year = 2018; quarter = 1; species = "Gadus morhua";
+#year = 2017; quarter = 3; species = "Pollachius virens";
+#year = 2017; quarter = 3; species = "Gadus morhua";
 
 dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter,species = species)
-dat$hh$originalIdAtThisLocation = dat$hh$haul.id
 #-------------------
 
 fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
+
+
+#Plot cod 2018 Q1 ALK with model and with Datras for a haul in RFA 1 with the most observations of ages of cod
+id = "2018:1:SCO:SCO3:GOV:42:42"
+for(RFA in 1:9){
+  alk = calculateALKModel(RFA = RFA, species= species, year = year, quarter = quarter,hh = dat$hh,data = dat$ca_hh, fitModel = fit,report = NULL)
+  alkD = calculateALK(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh)
+  for(i in 1:length(alk)){
+    if(alk[[i]][1,1]==id){
+      counter = i
+      break
+    }
+  }
+  if(counter >0)break;
+}
+
+alk = alk[[counter]]
+
+png("ALKmodelQ1year2018RFA1HaulWithMostObservations.png")
+plot(alk$Length,alk$`0` ,
+     ylim = c(0,1),
+     xlab = "Length", ylab = "Proportion", main = "Model based ALK",
+     lwd=3, col="red",type = 'l',
+     cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2)
+lines(alk$Length,alk$`1` ,
+      ylim = c(0,1),
+      lwd=3, col="grey",type = 'l')
+lines(alk$Length,alk$`2` ,
+      ylim = c(0,1),
+      lwd=3, col="blue",type = 'l')
+lines(alk$Length,alk$`3` ,
+      ylim = c(0,1),
+      lwd=3, col="black",type = 'l')
+lines(alk$Length,alk$`4` ,
+      ylim = c(0,1),
+      lwd=3, col="darkgreen",type = 'l')
+lines(alk$Length,alk$`5` ,
+      ylim = c(0,1),
+      lwd=3, col="purple",type = 'l')
+lines(alk$Length,alk$`6` ,
+      ylim = c(0,1),
+      lwd=3, col="brown",type = 'l')
+abline(h=0)
+legend(x=61,y=1.02,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
+       ,col=c("grey","blue","black","darkgreen","purple","brown"),lty = 1,lwd = 3,cex = 0.9)
+dev.off()
+
+
+for(i in 1:dim(alkD)[1]){
+  alkD[i,3:8] = alkD[i,3:8]/sum(alkD[i,3:8])
+}
+png("ALKdatrasQ1year2018RFA1.png")
+plot(alkD$length,alkD$`0` ,
+     ylim = c(0,1),
+     xlab = "Length", ylab = "Proportion", main = "DATRAS ALK",
+     lwd=3, col="red",type = 'l',
+     cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2)
+lines(alkD$length,alkD$`1` ,
+      ylim = c(0,1),
+      lwd=3, col="grey",type = 'l')
+lines(alkD$length,alkD$`2` ,
+      ylim = c(0,1),
+      lwd=3, col="blue",type = 'l')
+lines(alkD$length,alkD$`3` ,
+      ylim = c(0,1),
+      lwd=3, col="black",type = 'l')
+lines(alkD$length,alkD$`4` ,
+      ylim = c(0,1),
+      lwd=3, col="darkgreen",type = 'l')
+lines(alkD$length,alkD$`5` ,
+      ylim = c(0,1),
+      lwd=3, col="purple",type = 'l')
+lines(alkD$length,alkD$`6` ,
+      ylim = c(0,1),
+      lwd=3, col="brown",type = 'l')
+abline(h=0)
+dev.off()
+
+
+caInt = dat$ca_hh[dat$ca_hh$Roundfish==1,]
+points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+#---------------------------------------------------------
+
+
+
+
+
+
+#Plot cod 2018 Q1 ALK spatial effect----------------------------------------
+#polygons <- readOGR("C:/Users/a5415/Documents/IBTSgithub/inst/shapefiles/Roundfish_shapefiles")
+#rfa <- readOGR("Roundfish_shapefiles")
+polygons <- readOGR("Roundfish_shapefiles")
+
+data(countriesHigh)
+map <- countriesHigh
+
+
+report = fit$obj$report()
+tau = exp(report$logTau)
+d1 = report$x[,2]/tau[2]
+d2 = report$x[,3]/tau[3]
+d3 = report$x[,4]/tau[4]
+d4 = report$x[,5]/tau[5]
+d5 = report$x[,6]/tau[6]
+projXY = fit$projXY
+repLength = report$repLength
+
+length = 20
+maxLength = confALK(species = species,quarter = quarter)$maxLength
+nu1 = exp(repLength[length +maxLength*1] + d1)
+nu2 = exp(repLength[length +maxLength*2] + d2)
+nu3 = exp(repLength[length +maxLength*3] + d3)
+nu4 = exp(repLength[length +maxLength*4] + d4)
+nu5 = exp(repLength[length +maxLength*5] + d5)
+
+truncationL = setBoundrySpline(species = species, quarter = quarter, ca_hh = dat$ca_hh)$l
+truncationU = setBoundrySpline(species = species, quarter = quarter, ca_hh = dat$ca_hh)$u
+boarder = fit$boarder
+
+if(quarter ==1){
+
+  if(truncationL[1]>length | truncationU[1]<length)nu2 = 0
+  if(truncationL[2]>length | truncationU[2]<length)nu3 = 0
+  if(truncationL[3]>length | truncationU[3]<length)nu4 = 0
+  if(truncationL[4]>length | truncationU[4]<length)nu5 = 0
+
+  prob2 = nu2/(1+nu2)
+  prob3 = nu3/(1+nu3)*(1-prob2)
+  prob4 = nu4/(1+nu4)*(1-prob2-prob3)
+  prob5 = nu5/(1+nu5)*(1-prob2-prob3-prob4)
+
+  if(length<=boarder){
+    prob0 =prob2*0
+    prob1= round(1-prob2-prob3-prob4 -prob5, digits = 3)
+    prob6 = prob2*0
+  }else{
+    prob0 = prob2*0
+    prob1 = prob2*0
+    prob6 = round(1-prob2-prob3-prob4 -prob5, digits = 3)
+  }
+}
+
+
+xlim = c(8,14)
+ylim = c(55,59)
+xVidde = 5.5;yVidde = 4.5;mainVidde = 3.5
+par(mfrow = c(1,2),mar=c(xVidde,yVidde,mainVidde,3.2))
+
+low = length-1
+upp = length+1
+hvilke2 = which(dat$ca_hh$Age ==2 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+hvilke1 = which(dat$ca_hh$Age ==1 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+noize1 = runif(length(hvilke1))*0.05
+noize12 = runif(length(hvilke1))*0.05
+noize2 = runif(length(hvilke2))*0.05
+noize22 = runif(length(hvilke2))*0.05
+
+png("spatialALKQ1year2018RFA9Age1.png")
+breaks   = c(0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
+image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob1),col =  colorRampPalette(c("white","yellow", "red"))(10),
+           main = paste("Proportion with age 1 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
+           cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
+           xlim = xlim,
+           ylim = ylim,
+           breaks   =breaks)
+
+contour(projXY$x, projXY$y,inla.mesh.project(projXY, prob1) ,add = T,labcex  = 1,cex = 1,
+        breaks   = breaks,
+        zlim = c(0.005,0.9))
+plot(map, col="grey", add=T)
+if (!is.null(polygons)){
+  plot(polygons, add=T,lwd = 3)
+}
+points(dat$ca_hh$lon[hvilke2] +noize2,dat$ca_hh$lat[hvilke2] +noize22,col = 'blue' ,lwd = 5)
+points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'green',lwd = 5,pch = 2 )
+pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
+dev.off()
+
+png("spatialALKQ1year2018RFA9Age2.png")
+image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob2),col =  colorRampPalette(c("white","yellow", "red"))(10),
+           main = paste("Proportion with age 2 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
+           cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
+           xlim = xlim,
+           ylim = ylim,
+           breaks   =breaks)
+
+contour(projXY$x, projXY$y,inla.mesh.project(projXY, prob2) ,add = T,labcex  = 1,cex = 1,
+        breaks   = breaks,
+        zlim = c(0.005,0.9))
+plot(map, col="grey", add=T)
+if (!is.null(polygons)){
+  plot(polygons, add=T,lwd = 3)
+}
+points(dat$ca_hh$lon[hvilke2] +noize2,dat$ca_hh$lat[hvilke2] +noize22,col = 'blue' ,lwd = 5)
+points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'green',lwd = 5,pch = 2 )
+pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
+dev.off()
+#-----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 lonLat = c(-1.5,59.27)
 lonLat = c(4.9,58.03)
 #lonLat = c(4.5,58.2)
@@ -101,6 +344,155 @@ points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,co
 points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
 points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
 points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+
+
+
+haul1 = "2017:3:ENG:END:GOV:59:113" ; haul2 = "2017:3:SCO:SCO3:GOV:194:194"
+
+ant = 2
+avoid = rep("",ant)
+for(i in 1:ant){
+  largestId = ""
+  nObs = 0
+  for(id in unique(dat$hh$haul.id)){
+    if(sum(dat$ca_hh$haul.id==id)>nObs & !(id %in% avoid)){
+      nObs = sum(dat$ca_hh$haul.id==id)
+      largestId = id
+    }
+  }
+  avoid[i] = largestId
+}
+closest = 0
+for(hvilke in 1:ant){
+  #hvilke = 1
+  for(RFA in 1:9){
+    alk = calculateALKModel(RFA = RFA, species= species, year = year, quarter = quarter,hh = dat$hh,data = dat$ca_hh, fitModel = fit,report = NULL)
+    alkD = calculateALK(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh)
+    for(i in 1:length(alk)){
+      if(alk[[i]][1,1]==avoid[hvilke]){
+        closest = i
+        break
+      }
+    }
+    if(closest >0)break;
+  }
+
+  alk = alk[[closest]]
+
+  x11()
+  plot(alk$Length,alk$`0` ,
+       ylim = c(0,1),
+       xlab = "Length", ylab = "Prob", main = paste( hvilke, " ", dat$hh$Roundfish[dat$hh$haul.id==avoid[hvilke]]),
+       lwd=3, col="red",type = 'l',
+       cex.lab=1.5, cex.main = 1.8,cex.axis = 1.2)
+  lines(alk$Length,alk$`1` ,
+        ylim = c(0,1),
+        lwd=3, col="grey",type = 'l')
+  lines(alk$Length,alk$`2` ,
+        ylim = c(0,1),
+        lwd=3, col="blue",type = 'l')
+  lines(alk$Length,alk$`3` ,
+        ylim = c(0,1),
+        lwd=3, col="black",type = 'l')
+  lines(alk$Length,alk$`4` ,
+        ylim = c(0,1),
+        lwd=3, col="darkgreen",type = 'l')
+  lines(alk$Length,alk$`5` ,
+        ylim = c(0,1),
+        lwd=3, col="purple",type = 'l')
+  lines(alk$Length,alk$`6` ,
+        ylim = c(0,1),
+        lwd=3, col="brown",type = 'l')
+  abline(h=0)
+  legend(x=75,y=0.99,legend = c("0 year","1 year", "2 year","3 year","4 year","5 year",">5 year")
+         ,col=c("red","grey","blue","black","darkgreen","purple","brown"),lty = 1,lwd = 3)
+
+
+  caInt = dat$ca_hh[dat$ca_hh$haul.id==avoid[hvilke],]
+  points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+  points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+  points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+  points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+  points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+  points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+}
+
+
+caInt = dat$ca_hh
+points(caInt$LngtCm[caInt$Age==0],1/20 + runif(sum(caInt$Age==0))*0.01,pch = 16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+
+
+
+
+
+
+
+
+
+haul = "2017:3:ENG:END:GOV:59:113" ;
+haul2 = "2017:3:SCO:SCO3:GOV:194:194"
+for(RFA in 1:9){
+  alk = calculateALKModel(RFA = RFA, species= species, year = year, quarter = quarter,hh = dat$hh,data = dat$ca_hh, fitModel = fit,report = NULL)
+  for(i in 1:length(alk)){
+    if(alk[[i]][1,1]==haul){
+      closest = i
+      break
+    }
+  }
+  if(closest >0)break;
+}
+
+alk = alk[[closest]]
+
+x11()
+plot(alk$Length,alk$`0` ,
+     ylim = c(0,1),
+     xlab = "Length", ylab = "Prob", main = "P(age| length,haul)",
+     lwd=3, col="red",type = 'l',
+     cex.lab=1.5, cex.main = 1.8,cex.axis = 1.2)
+lines(alk$Length,alk$`1` ,
+      ylim = c(0,1),
+      lwd=3, col="grey",type = 'l')
+lines(alk$Length,alk$`2` ,
+      ylim = c(0,1),
+      lwd=3, col="blue",type = 'l')
+lines(alk$Length,alk$`3` ,
+      ylim = c(0,1),
+      lwd=3, col="black",type = 'l')
+lines(alk$Length,alk$`4` ,
+      ylim = c(0,1),
+      lwd=3, col="darkgreen",type = 'l')
+lines(alk$Length,alk$`5` ,
+      ylim = c(0,1),
+      lwd=3, col="purple",type = 'l')
+lines(alk$Length,alk$`6` ,
+      ylim = c(0,1),
+      lwd=3, col="brown",type = 'l')
+abline(h=0)
+legend(x=75,y=0.99,legend = c("0 year","1 year", "2 year","3 year","4 year","5 year",">5 year")
+       ,col=c("red","grey","blue","black","darkgreen","purple","brown"),lty = 1,lwd = 3)
+
+
+caInt = dat$ca_hh[dat$ca_hh$haul.id==avoid[hvilke],]
+points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+
+
+
+
+
+
+
 
 
 
