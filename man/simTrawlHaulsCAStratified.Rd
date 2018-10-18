@@ -4,7 +4,8 @@
 \alias{simTrawlHaulsCAStratified}
 \title{simTrawlHaulsCAStratified}
 \usage{
-simTrawlHaulsCAStratified(RFA, year, quarter, data, species = "Gadus morhua")
+simTrawlHaulsCAStratified(RFA, year, quarter, data,
+  species = "Gadus morhua")
 }
 \arguments{
 \item{RFA}{Roundfish area number.}

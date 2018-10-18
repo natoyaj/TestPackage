@@ -19,3 +19,6 @@ calculateALKModel(RFA, species, year, quarter, hh, data, fitModel = NULL,
 \value{
 Returns a list with ALK for each trawl haul
 }
+\description{
+calculateALKModel
+}

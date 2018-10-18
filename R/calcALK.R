@@ -515,6 +515,7 @@ calculateALKModelOlav = function(RFA, species, year, quarter,hh,data, fitModel =
 
 
 
+
   beta0 = report$beta0
   repLength = report$repLength
   #----------------------------------------------------
