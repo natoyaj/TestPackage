@@ -480,13 +480,18 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NULL,report = NULL){
+calculateALKModelOlav = function(RFA, species, year, quarter,hh,data, fitModel = NULL,report = NULL){
 
   useOriginalId = FALSE
   #Fit the model
   if(length(fitModel)==0){
     fitModel =  fitModel(species = species, quarter =quarter, year = year, ca_hh = data,hh = hh)
   }
+
+  if(fitModel$opt$message!="relative convergence (4)"){
+    warning("Convergence problemst, FIX TODO, samplingh should be performed again.")
+  }
+
 
   if(length(report)>0){
     useOriginalId = TRUE
@@ -496,20 +501,18 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   boarder = fitModel$boarder
   listWithOrderedId = fitModel$haulId
 
-
-
-
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
   #----------------------------------------------------
 
   #Extract the estimated continuous GRF-----------------
   Apred = fitModel$Apred
-  field1 = Apred %*%report$x1/exp(report$logTau[2])
-  field2 = Apred %*%report$x2/exp(report$logTau[3])
-  field3 = Apred %*%report$x3/exp(report$logTau[4])
-  field4 = Apred %*%report$x4/exp(report$logTau[5])
-  field5 = Apred %*%report$x5/exp(report$logTau[6])
+  field1 = Apred %*%report$x[,2]/exp(report$logTau[2])
+  field2 = Apred %*%report$x[,3]/exp(report$logTau[3])
+  field3 = Apred %*%report$x[,4]/exp(report$logTau[4])
+  field4 = Apred %*%report$x[,5]/exp(report$logTau[5])
+  field5 = Apred %*%report$x[,6]/exp(report$logTau[6])
+
 
 
 
@@ -529,7 +532,7 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #-----------------------------------------------------
 
   #Define variables used in the construction of the ALK--
-  conf = confALK(species = species,quarter = quarter,ALKprocedure = "modelBased")
+  conf = confALK(species = species,quarter = quarter)
   maxAge = conf$maxAge
   minLength = conf$minLength
   maxLength = conf$maxLength
@@ -642,6 +645,182 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
 }
 
 
+#' calculateALKModel
+#' @description
+#' @param RFA Roundfish area number.
+#' @param species The species of interest.
+#' @param year The year which the ALKs are calculated.
+#' @param quarter The quarter of the year which the ALKs are calculated.
+#' @export
+#' @return Returns a list with ALK for each trawl haul
+#' @examples
+calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NULL,report = NULL){
+
+  useOriginalId = FALSE
+  #Fit the model
+  if(length(fitModel)==0){
+    fitModel =  fitModel(species = species, quarter =quarter, year = year, ca_hh = data,hh = hh)
+  }
+
+  if(length(report)>0){
+    useOriginalId = TRUE
+  }else{
+    report = fitModel$obj$report()
+  }
+  boarder = fitModel$boarder
+  listWithOrderedId = fitModel$haulId
+
+  #Define the list which shall be filled with the ALKs and returned-----
+  alkToReturn = list()
+  #----------------------------------------------------
+
+  #Extract the estimated continuous GRF-----------------
+  Apred = fitModel$Apred
+  field1 = Apred %*%report$x[,2]/exp(report$logTau[2])
+  field2 = Apred %*%report$x[,3]/exp(report$logTau[3])
+  field3 = Apred %*%report$x[,4]/exp(report$logTau[4])
+  field4 = Apred %*%report$x[,5]/exp(report$logTau[5])
+  field5 = Apred %*%report$x[,6]/exp(report$logTau[6])
+
+
+
+  #beta0 = report$beta0
+  repLength = report$repLength
+  #----------------------------------------------------
+
+  #Extract the data of interest----------------------
+  whichHH = which(hh$Roundfish==RFA & hh$Year==year &
+                    hh$Quarter == quarter)
+  hh = hh[whichHH,]
+  #---------------------------------------------------
+
+
+  #Abort the calculations if no age information is given in the RFA----
+  if(dim(hh)[1]==0)return("No observations in period given")
+  #-----------------------------------------------------
+
+  #Define variables used in the construction of the ALK--
+  conf = confALK(species = species,quarter = quarter)
+  maxAge = conf$maxAge
+  minLength = conf$minLength
+  maxLength = conf$maxLength
+  lengthClassIntervallLengths = conf$lengthClassIntervallLengths
+  #----------------------------------------------------
+
+  #Define the skelleton of the ALK---------------------
+  alk = matrix(0,(maxLength-minLength)/lengthClassIntervallLengths +1, maxAge+3)
+  alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
+  #----------------------------------------------------
+
+  truncationL = setBoundrySpline(species = species, quarter = quarter, ca_hh = data)$l
+  truncationU = setBoundrySpline(species = species, quarter = quarter, ca_hh = data)$u
+
+
+  #Construct each element of the ALK-list----------------------------------------------------------------------
+  haulId = unique(hh$haul.id)
+  neste = 1
+  for(id in haulId){
+    if(useOriginalId){
+      originalId = hh$originalIdAtThisLocation[which(hh$haul.id==id)]
+      omr = which(listWithOrderedId==originalId)
+    }else{
+      omr = which(listWithOrderedId==id)
+
+    }
+
+    #Construct the parts of the ALK were we have data-------------------
+    if(species=="Gadus morhua" | species=="Pollachius virens")
+    {
+      idTmp = as.character(id)
+      alkThis = as.data.frame(alk)
+      names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
+      alkThis$ID[1] = idTmp
+
+      if(quarter ==1){
+        for(l in 1:length(minLength:maxLength))
+        {
+          length = (minLength:maxLength)[l]
+          nu2 = exp(repLength[length +maxLength*2] +field2[omr])
+          nu3 = exp(repLength[length +maxLength*3] +field3[omr])
+          nu4 = exp(repLength[length +maxLength*4] +field4[omr])
+          nu5 = exp(repLength[length +maxLength*5] +field5[omr])
+
+
+          if(truncationL[1]>length | truncationU[1]<length)nu2 = 0
+          if(truncationL[2]>length | truncationU[2]<length)nu3 = 0
+          if(truncationL[3]>length | truncationU[3]<length)nu4 = 0
+          if(truncationL[4]>length | truncationU[4]<length)nu5 = 0
+
+          prob2 = nu2/(1+nu2)
+          prob3 = nu3/(1+nu3)*(1-prob2)
+          prob4 = nu4/(1+nu4)*(1-prob2-prob3)
+          prob5 = nu5/(1+nu5)*(1-prob2-prob3-prob4)
+
+          if(length<=boarder){
+            alkThis$'0'[l] = 0
+            alkThis$'1'[l] = round(1-prob2-prob3-prob4 -prob5, digits = 3)
+            alkThis$'6'[l] = 0
+          }else{
+            alkThis$'0'[l] = 0
+            alkThis$'1'[l] = 0
+            alkThis$'6'[l] = round(1-prob2-prob3-prob4 -prob5, digits = 3)
+          }
+
+          alkThis$'2'[l] = round(prob2,digits = 3)
+          alkThis$'3'[l] = round(prob3,digits = 3)
+          alkThis$'4'[l] = round(prob4,digits = 3)
+          alkThis$'5'[l] = round(prob5,digits = 3)
+        }
+      }else if(quarter ==3){
+        for(l in 1:length(minLength:maxLength))
+        {
+          length = (minLength:maxLength)[l]
+          nu1 = exp(repLength[length +maxLength]   +field1[omr])
+          nu2 = exp(repLength[length +maxLength*2] +field2[omr])
+          nu3 = exp(repLength[length +maxLength*3] +field3[omr])
+          nu4 = exp(repLength[length +maxLength*4] +field4[omr])
+          nu5 = exp(repLength[length +maxLength*5] +field5[omr])
+
+          if(truncationL[1]>l | truncationU[1]<l)nu1 = 0
+          if(truncationL[2]>l | truncationU[2]<l)nu2 = 0
+          if(truncationL[3]>l | truncationU[3]<l)nu3 = 0
+          if(truncationL[4]>l | truncationU[4]<l)nu4 = 0
+          if(truncationL[5]>l | truncationU[5]<l)nu5 = 0
+
+          prob1 = nu1/(1+nu1)
+          prob2 = nu2/(1+nu2)*(1-prob1)
+          prob3 = nu3/(1+nu3)*(1-prob1-prob2)
+          prob4 = nu4/(1+nu4)*(1-prob1-prob2-prob3)
+          prob5 = nu5/(1+nu5)*(1-prob1-prob2-prob3-prob4)
+
+          if(length<=boarder){
+            alkThis$'0'[l] =round(1-prob1 -prob2-prob3-prob4 -prob5, digits = 3)
+            alkThis$'6'[l] = 0
+          }else{
+            alkThis$'0'[l] = 0
+            alkThis$'6'[l] = round(1-prob1 -prob2-prob3-prob4 -prob5, digits = 3)
+          }
+
+          alkThis$'1'[l] = round(prob1,digits = 3)
+          alkThis$'2'[l] = round(prob2,digits = 3)
+          alkThis$'3'[l] = round(prob3,digits = 3)
+          alkThis$'4'[l] = round(prob4,digits = 3)
+          alkThis$'5'[l] = round(prob5,digits = 3)
+        }
+      }
+    }
+    #Store the ALK for this trawl haul in the list to be returned
+    alkToReturn[[neste]] = alkThis
+    neste = neste+1
+  }
+  #--------------------------------------------------------------------
+
+  #Return the list with ALKs------
+  return(alkToReturn)
+  #-------------------------------
+}
+
+
 #' simModelFisher
 #' @description
 #' @param RFA Roundfish area number.
@@ -661,8 +840,8 @@ simModelFisher = function(species, quarter,rep,fit,sim,i){
   report$repLength[which(report$repLength!=0)] = report$repLength[which(report$repLength!=0)] +
     sim[i,which(rep$sd!=0 & names(rep$value)=="repLength")- sum(rep$sd[1:max(which(names(rep$value)=="repLength"))] ==0)]
 
-  report$beta0[which(report$beta0!=0)] = report$beta0[which(report$beta0!=0)] +
-    sim[i,which(rep$sd!=0 & names(rep$value)=="beta0")- sum(rep$sd[1:max(which(names(rep$value)=="beta0"))] ==0)]
+#  report$beta0[which(report$beta0!=0)] = report$beta0[which(report$beta0!=0)] +
+#    sim[i,which(rep$sd!=0 & names(rep$value)=="beta0")- sum(rep$sd[1:max(which(names(rep$value)=="beta0"))] ==0)]
 
   report$x1[which(report$x1!=0)] = report$x1[which(report$x1!=0)] +
     sim[i,which(rep$sd!=0 & names(rep$value)=="x1")-  sum(rep$sd[1:max(which(names(rep$value)=="x1"))] ==0)]

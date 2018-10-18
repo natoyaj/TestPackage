@@ -111,6 +111,9 @@ CPUEage = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
                                ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL){
 
+  if(ALKprocedure=="modelBased" & doBootstrap){
+    stop("Uncertainty within only one RFA with model based ALK is not implemented.")
+  }
 
     #Extract the data of interest-------------
   dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
@@ -124,15 +127,13 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
   dataCAforModel = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
                                !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter,]
-  dataHLforModel = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Yearyear == year&
+  dataHLforModel = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                      !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter,]
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
     cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
-
-
     #Bad programing, but here we need to inform that we are using simulated ALK with the fisher method
     #TODO simulate model parameters which is further given to calculateALKModel( report =...)
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
@@ -301,10 +302,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
-                        B = 10, removeProportionsOfCA =0,removeProportionsOfHL =0,
-                        ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE){
-
-
+                        B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -329,7 +327,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
     }
 
     for(i in 1:B){
-      CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convinience here
+      CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convenience here
       HL = dat$hl_hh[1,]
       HH = dat$hh[1,]
       HH$originalIdAtThisLocation = 0; #Removed later

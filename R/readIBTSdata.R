@@ -10,7 +10,7 @@
 readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 {
   #Read IBTS-data-----------------------------------------
-  dataDir <<- system.file("extdata", package = "TestPackage")
+  dataDir <<- system.file("extdata", package = "IBTSindices")
   d<- readExchangeDir(dataDir)
   #-------------------------------------------------------
 
@@ -98,7 +98,7 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 #  ca = getDATRAS(record = "CA", survey = "NS-IBTS", year = 2015, quarter = 1)
 
   #Read weights describing the proportion of statrecs of interest-----
-  weightsDir <<- system.file("weightsSaithe", package = "TestPackage")
+  weightsDir <<- system.file("weightsSaithe", package = "IBTSindices")
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
   weightStatRec$StatRec = as.character(weightStatRec$StatRec)
   #-------------------------------------------------------------------
