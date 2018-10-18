@@ -1,3 +1,5 @@
+
+pathFigures = "Papers/ourPaper/figures/"
 #Read data----------
 year = 2018; quarter = 1; species = "Gadus morhua";
 #year = 2017; quarter = 3; species = "Pollachius virens";
@@ -25,7 +27,8 @@ for(RFA in 1:9){
 
 alk = alk[[counter]]
 
-png("ALKmodelQ1year2018RFA1HaulWithMostObservations.png")
+setEPS()
+postscript(paste(pathFigures,"ALKmodelQ1year2018RFA1HaulWithMostObservations.eps",sep = ""))
 plot(alk$Length,alk$`0` ,
      ylim = c(0,1),
      xlab = "Length", ylab = "Proportion", main = "Model based ALK",
@@ -58,7 +61,8 @@ dev.off()
 for(i in 1:dim(alkD)[1]){
   alkD[i,3:8] = alkD[i,3:8]/sum(alkD[i,3:8])
 }
-png("ALKdatrasQ1year2018RFA1.png")
+setEPS()
+postscript(paste(pathFigures,"ALKdatrasQ1year2018RFA1.eps",sep = ""))
 plot(alkD$length,alkD$`0` ,
      ylim = c(0,1),
      xlab = "Length", ylab = "Proportion", main = "DATRAS ALK",
@@ -101,9 +105,7 @@ points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col 
 
 
 #Plot cod 2018 Q1 ALK spatial effect----------------------------------------
-#polygons <- readOGR("C:/Users/a5415/Documents/IBTSgithub/inst/shapefiles/Roundfish_shapefiles")
-#rfa <- readOGR("Roundfish_shapefiles")
-polygons <- readOGR("Roundfish_shapefiles")
+polygons <- readOGR("inst/shapefiles/Roundfish_shapefiles")
 
 data(countriesHigh)
 map <- countriesHigh
@@ -169,7 +171,8 @@ noize12 = runif(length(hvilke1))*0.05
 noize2 = runif(length(hvilke2))*0.05
 noize22 = runif(length(hvilke2))*0.05
 
-png("spatialALKQ1year2018RFA9Age1.png")
+setEPS()
+postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.eps",sep = ""))
 breaks   = c(0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob1),col =  colorRampPalette(c("white","yellow", "red"))(10),
            main = paste("Proportion with age 1 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
@@ -190,7 +193,8 @@ points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'g
 pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
 dev.off()
 
-png("spatialALKQ1year2018RFA9Age2.png")
+setEPS()
+postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age2.eps",sep = ""))
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob2),col =  colorRampPalette(c("white","yellow", "red"))(10),
            main = paste("Proportion with age 2 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
            cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
