@@ -10,15 +10,23 @@ dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter,species = 
 
 fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
 
+source("script/fullHaulBasedALK.R") #Script for defining function which can return the full haul based ALK
 
 #Plot cod 2018 Q1 ALK with model and with Datras for a haul in RFA 1 with the most observations of ages of cod
 id = "2018:1:SCO:SCO3:GOV:42:42"
 for(RFA in 1:9){
   alk = calculateALKModel(RFA = RFA, species= species, year = year, quarter = quarter,hh = dat$hh,data = dat$ca_hh, fitModel = fit,report = NULL)
   alkD = calculateALK(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh)
+  alkH = calculateALKNewFull(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh,data_hl = dat$hl_hh)
   for(i in 1:length(alk)){
     if(alk[[i]][1,1]==id){
       counter = i
+      break
+    }
+  }
+  for(i in 1:length(alkH)){
+    if(alkH[[i]][1,1]==id){
+      counter2 = i
       break
     }
   }
@@ -26,9 +34,11 @@ for(RFA in 1:9){
 }
 
 alk = alk[[counter]]
+alkH = alkH[[counter2]]
 
-setEPS()
-postscript(paste(pathFigures,"ALKmodelQ1year2018RFA1HaulWithMostObservations.eps",sep = ""))
+jpeg(paste(pathFigures,"ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg",sep = ""))
+#setEPS()
+#postscript(paste(pathFigures,"ALKmodelQ1year2018RFA1HaulWithMostObservations.eps",sep = ""))
 plot(alk$Length,alk$`0` ,
      ylim = c(0,1),
      xlab = "Length", ylab = "Proportion", main = "Model based ALK",
@@ -55,14 +65,24 @@ lines(alk$Length,alk$`6` ,
 abline(h=0)
 legend(x=61,y=1.02,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
        ,col=c("grey","blue","black","darkgreen","purple","brown"),lty = 1,lwd = 3,cex = 0.9)
+caInt = dat$ca_hh[dat$ca_hh$haul.id==id,]
+points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
 dev.off()
 
 
 for(i in 1:dim(alkD)[1]){
   alkD[i,3:8] = alkD[i,3:8]/sum(alkD[i,3:8])
 }
-setEPS()
-postscript(paste(pathFigures,"ALKdatrasQ1year2018RFA1.eps",sep = ""))
+
+
+jpeg(paste(pathFigures,"ALKdatrasQ1year2018RFA1.jpeg",sep = ""))
+#setEPS()
+#postscript(paste(pathFigures,"ALKdatrasQ1year2018RFA1.eps",sep = ""))
 plot(alkD$length,alkD$`0` ,
      ylim = c(0,1),
      xlab = "Length", ylab = "Proportion", main = "DATRAS ALK",
@@ -90,6 +110,47 @@ abline(h=0)
 dev.off()
 
 
+for(i in 1:dim(alkH)[1]){
+  alkH[i,4:9] = alkH[i,4:9]/sum(alkH[i,4:9])
+}
+jpeg(paste(pathFigures,"ALKhaulQ1year2018RFA1.jpeg",sep = ""))
+#setEPS()
+#postscript(paste(pathFigures,"ALKdatrasQ1year2018RFA1.eps",sep = ""))
+plot(alkH$Length,alkH$`0` ,
+     ylim = c(0,1),
+     xlab = "Length", ylab = "Proportion", main = "Haul based ALK",
+     lwd=3, col="red",type = 'l',
+     cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2)
+lines(alkH$Length,alkH$`1` ,
+      ylim = c(0,1),
+      lwd=3, col="grey",type = 'l')
+lines(alkH$Length,alkH$`2` ,
+      ylim = c(0,1),
+      lwd=3, col="blue",type = 'l')
+lines(alkH$Length,alkH$`3` ,
+      ylim = c(0,1),
+      lwd=3, col="black",type = 'l')
+lines(alkH$Length,alkH$`4` ,
+      ylim = c(0,1),
+      lwd=3, col="darkgreen",type = 'l')
+lines(alkH$Length,alkH$`5` ,
+      ylim = c(0,1),
+      lwd=3, col="purple",type = 'l')
+lines(alkH$Length,alkH$`6` ,
+      ylim = c(0,1),
+      lwd=3, col="brown",type = 'l')
+abline(h=0)
+dev.off()
+
+caInt = dat$ca_hh[dat$ca_hh$haul.id==id,]
+points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
+points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
+points(caInt$LngtCm[caInt$Age==3],3/10 + runif(sum(caInt$Age==3))*0.01,pch=16,col = 'black')
+points(caInt$LngtCm[caInt$Age==4],4/10 + runif(sum(caInt$Age==4))*0.01,pch=16,col = 'darkgreen')
+points(caInt$LngtCm[caInt$Age==5],5/10 + runif(sum(caInt$Age==5))*0.01,pch=16,col = 'purple')
+points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col = 'brown')
+
+
 caInt = dat$ca_hh[dat$ca_hh$Roundfish==1,]
 points(caInt$LngtCm[caInt$Age==1],1/10 + runif(sum(caInt$Age==1))*0.01,pch = 16, col = 'grey')
 points(caInt$LngtCm[caInt$Age==2],2/10 + runif(sum(caInt$Age==2))*0.01,pch =16, col = 'blue')
@@ -106,6 +167,10 @@ points(caInt$LngtCm[caInt$Age>5],6/10 + runif(sum(caInt$Age>5))*0.01,pch=16,col 
 
 #Plot cod 2018 Q1 ALK spatial effect----------------------------------------
 polygons <- readOGR("inst/shapefiles/Roundfish_shapefiles")
+
+
+
+
 
 data(countriesHigh)
 map <- countriesHigh
@@ -171,8 +236,9 @@ noize12 = runif(length(hvilke1))*0.05
 noize2 = runif(length(hvilke2))*0.05
 noize22 = runif(length(hvilke2))*0.05
 
-setEPS()
-postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.eps",sep = ""))
+jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.jpeg",sep = ""))
+#setEPS()
+#postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.eps",sep = ""))
 breaks   = c(0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob1),col =  colorRampPalette(c("white","yellow", "red"))(10),
            main = paste("Proportion with age 1 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
@@ -193,8 +259,9 @@ points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'g
 pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
 dev.off()
 
-setEPS()
-postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age2.eps",sep = ""))
+jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age2.jpeg",sep = ""))
+#setEPS()
+#postscript(paste(pathFigures,"spatialALKQ1year2018RFA9Age2.eps",sep = ""))
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob2),col =  colorRampPalette(c("white","yellow", "red"))(10),
            main = paste("Proportion with age 2 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
            cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
