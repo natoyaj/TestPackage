@@ -111,7 +111,10 @@
 
  
 \begin{document}
-\title{Optimising sampling effort of the North Sea International Bottom Trawl Survey Data}
+%\title{Optimising sampling effort of the North Sea International Bottom Trawl Survey Data}
+
+
+\title{An analysis of the North Sea International Bottom Trawl Survey Data}
 
 \maketitle
 
@@ -233,7 +236,11 @@ To estimate DATRAS ALK we sample with replacement age observations within each R
 
 \subsection{Reducing sampling effort}
 \label{sec:optimizationsampling}
-The current sampling procedure for the North Sea IBTS data is the sampling of one otolith from every observed length group in every trawl (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}). We investigate the effect on the estimated mCPUE and its variance if the sampling procedure of otoliths changes such that fewer otoliths were collected. To determine this effect we remove otholits in a stratified manner, mimicking a sampling procedure where fewer otoliths are collected. For sampling fewer otoliths, we define wider length groups, for example $2$ cm, or $3$ cm, or $5$ cm and so on,  and simulate the otolith  collection such that only one otolith is sampled from every wider length group. Estimated mCPUE's with summary statistics, based on the simulated reduced data sets are then compared with the parameters estimated from using all of data. In principle, we are free to define any length class to reduce the number of observed otoliths. For simplicity we propose two procedures: i) sample at random  one otolith from every 2 cm length group, and ii) sample at random one otolith from every 5 cm length group. 
+The current sampling procedure for the North Sea IBTS data is the sampling of one otolith from every observed length group in every trawl (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}). We investigate the effect on the estimated index of abundance $\hat{\lambda}_{a}$ and its variance if the sampling procedure of otoliths changes such that fewer otoliths were collected. To determine this effect we remove otholits in a stratified manner, mimicking a sampling procedure where fewer otoliths are collected. For sampling fewer otoliths, we define wider length groups, for example $1$ cm, $2$ cm, $3$ cm and so on,  and simulate the otolith  collection such that only one pair of otolith is sampled from every wider length group. Estimated indices of abundance with summary statistics, based on the simulated reduced data sets are then compared with the parameters estimated from using all of data. In principle, we are free to define any length class to reduce the number of observed otoliths. To determine whether there is obvious change in estimated indices of abundance and its uncertainty we propose seven procedures. We sample at random one pair of otoliths from the following length groups: 1 cm, 2 cm,  3 cm, 4 cm , 6 cm or  7 cm. 
+
+%For clear visual change 
+
+%simplicity we propose two procedures: i) sample at random  one otolith from every 2 cm length group, and ii) sample at random one otolith from every 5 cm length group. 
 
 \section{Case studies}
 \label{sec:data}
@@ -243,7 +250,7 @@ In this research, the species of interest are cod and saithe. All samples are ca
 
 \subsection{Estimated indices of abundance and variability for cod and saithe}
 \label{sec:codresults}
-In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. The main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. In this section we apply the three ALK methods, given in section \ref{sec:alkmethods}, for estimating abundance and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap}, for estimating variability of estimated indices of abundance.  The main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. Figure \ref{fig:proportionSkagerak} illustrates the predicted probability of age of cod given length using the spatial model based ALK  (\ref{eq:linearPred}).  Figure \ref{fig:proportionSkagerak} illustrates that the main assumption of DATRAS ALK of constant age-length compositions over large areas is not valid as a 20 cm long cod is more likely to be two years old in the south and east of Skagerak.
+In this section we apply the three ALK methods given in section \ref{sec:alkmethods} for abundance estimation, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. The main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. In this section we apply the three ALK methods, given in section \ref{sec:alkmethods}, for estimating abundance at age and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap}, for estimating variability of estimated indices of abundance.  The main assumption of DATRAS ALK is that the age-length compositions of species over large areas are the same. Figure \ref{fig:proportionSkagerak} illustrates the predicted probability of age of cod given length using the spatial model based ALK  (\ref{eq:linearPred}).  Figure \ref{fig:proportionSkagerak} illustrates that the main assumption of DATRAS ALK of constant age-length compositions over large areas is not valid as a 20 cm long cod is more likely to be two years old in the south and east of Skagerak.
 %the spatial model based ALK (\ref{eq:linearPred}) for a 20 cm long cod,
 %and gives a strong case on that the main assumption of DATRAS ALK is violated. From figure \ref{fig:proportionSkagerak} shows that the proportion of two years old cod among 20 cm long cod is higher south and east in Skagerak.
 \clearpage
@@ -258,10 +265,6 @@ In this section we apply the three ALK methods given in section \ref{sec:alkmeth
 
 Figures \ref{percentileBiascorrectedCIcod} gives estimates of indices of abundance for cod in years 2018 Q1 and for saithe in year 2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 200 bootstrap replication are estimated from the three ALK methods. The stratified procedure described in \ref{sec:datrasstratifiedbootstrap} is used in the sampling process to estimate bootstrap confidence intervals.   Figures \ref{percentileBiascorrectedCIcod}  shows that the resulting indices of abundance for cod and saithe turned out to be similar for all ALKs. IBTS is a complex multistage survey design, and since the ALKs are estimated from cluster-correlated data the resulting effective sample for estimating age-composition of fish would be lower than the number of fish measured \citep{ICES2013PICS3}. Hence, the ALKs are subject to large sampling errors. For example, the estimated percentage relative standard errors from the spatial ALKs for the plus group (6+) for cod are $>$ 25\%, suggesting high sampling error in the ALKs. Also, it should be remembered that DATRAS ALK is constant.   \citet{aanes2015efficient} showed that in such cases, and where only the variability of  length compositions are allowed for, the estimated age-distributions may appear to be more precise than they truly are since the ALK itself is subject to sampling errors, see for example the estimated relative standard standard errors for ages 2, and the older fish (4, 5 and 6+) for both species. 
 
-As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the model based ALK generally gave shorter interval widths for both species. Uncertainty of relative abundance from the spatial ALK model is calculated using bootstrapping, as approximation of the joint distribution of the regression coefficient and spatial effect, in some cases, fails to account for the  negative correlations between ages. Also, estimating relative abundance at age and its precision from the spatial ALK model is computationally intensive. For these reasons we recommend the haul based ALK method for estimating age-distributions.
-
-We also demonstrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance (see Figure \ref{DatrasStratified} in Supplementary Materials \ref{secAp:resultsdatrasALK}). Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
-
 \clearpage
 
 \begin{figure*}[h!]
@@ -274,26 +277,78 @@ We also demonstrate the implications of using DATRAS bootstrap procedure for est
 \label{percentileBiascorrectedCIcod}
 \end{figure*} 
 
-\clearpage
-\subsection{Optimum sampling effort for North Sea Cod and Saithe}
+
+As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the spatial model based ALK generally gave shorter interval widths for both species (Figure \ref{percentileBiascorrectedCIcod}). Furthermore, compared with DATRAS ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. Figure \ref{fig:proportionRFA1CodQ1} illustrates the estimated age compositions as a function of length for a given haul in RFA 1. The haul selected is the haul with the most number of observed ages of cod in 2018 Q1. Notice that the the model based ALK is smooth, while the DATRAS ALK and the haul based ALK are not. This is an important advantage of the model based ALK, and it is surprising that it did not result in a larger difference in the estimated index of abundance as shown Figure \ref{percentileBiascorrectedCIcod}. An intuitive reason for this is presumably because there are enough observed ages per length group for the haul based ALK to be representative. But, there are some limitations of the spatial model based ALK. For instance, the uncertainty of relative abundance from the spatial model based ALK is calculated using bootstrapping, as approximation of the joint distribution of the regression coefficient and spatial effect, in some cases, fails to account for the  negative correlations between ages. Also, estimating relative abundance at age and its precision from the spatial ALK model can be computationally intensive. 
+%For these reasons we recommend the haul based ALK method for estimating age-distributions.
+
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKdatrasQ1year2018RFA1.jpeg}}
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKhaulQ1year2018RFA1.jpeg}}
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated age compositions of cod as a function of length in a given haul in RFA 1 using a) DATRAS ALK, b) haul based ALK and c) model based ALK. Note that explanation of the colours are only given in c). Each coloured point in c) defines an observed cod with the corresponding length and age in the haul. The haul selected is the haul with most observed ages of cod in 2018 Q1. }\label{fig:proportionRFA1CodQ1}}
+\end{figure}
+
+We also demonstrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance (see Figure \ref{DatrasStratified} in Supplementary Materials \ref{secAp:resultsdatrasALK}). Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
+
+
+%\clearpage
+\subsection{Alternative sampling procedure for North Sea Cod and Saithe}
 \label{sec:optimumeffortresults}
+%\begin{itemize}
+%\item {\bf We discuss and include these in explanations below}
+%\item Accuracy of estimates of reduced data compared with estimates from full data
+%\item Precision in estimates is measured by standard error (SE) and relative standard error (RSE)
+%\item accuracy is measured by root mean square error (RMSE) $= \sqrt{\mathrm{SE}^2 + (\mathrm{bias})^2}$. Measures how close, on average, a fitted line is to the data points (measure of goodness of fit). One can compare the RMSE to observed variation in measurements of a typical point {(\bf the two should be similar for a reasonable fit)}. Can we use this even though we do not have a "true value", which we would never know from large survey data and since we did not simulate synthetic data? Can we consider $\hat{\lambda}_{a}$ as a "true value"?
+%\end{itemize}
+
+ %{\bf Figure \ref{percentileBiascorrectedCIcod}  shows that the spatial model based ALK...... Also, the assumption of no difference in regional compositions of age-length structures is invalid (see Figure \ref{fig:proportionSkagerak}),  so DATRAS ALK is not use for further analyses}
+In this section we investigate the effect of sampling fewer otoliths on the estimated indices of abundance for the North Sea IBTS saithe and cod. {\bf We use the spatial ALK model based approach, although the haul based could also be used (see Supplementary Materials.....)}. The removal procedure for otolith sampling described in Section \ref{sec:optimizationsampling} is applied to data in year 2018 Q1 for cod and year 2017 Q3 for saithe. We sample one pair of otoliths per length group described in Section \ref{sec:optimizationsampling}: 1 cm, 2 cm, 3 cm, 4 cm, 5 cm, 6 cm or 7 cm. Recall that prior to 2018 the standardized IBTS sampling procedure was 8 pairs of otoliths per length group but some nations such as Norway and Netherlands sampled one pair of otoliths per length group from every haul. Although the revised standardized IBTS sampling procedure is one pair of otolith per 1 cm length group for standard round fish as of year 2018 Q1, except for haddock and Norway Pout where 2 otoliths per cm is to be sampled, some nations (Sctoland and Sweden) continue to sample more than one pair of otoliths, particularly for older age groups (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}).
+
+Figure \ref{fig:RSEandMSECodQ1} gives the percentage relative standard error of estimated indices of abundance and mean square error for cod and saithe from the seven different sampling procedures described above. Estimates are computed from $1000$ simulations and $1000$ bootstrap replication A total of 1600 pairs of otoliths were sampled for cod in year 2018 Q1, while 2163 pairs of otoliths were sampled for saithe in year 2017 Q3 (see Table \ref{tab:data2018} in Supplementary Materials \ref{secAp:data}). The proportion of otoliths removed for cod from each of the sampling  procedures stated above is: 14.4\%, 28.6\%, 38.4\%, 44.5\%, 49.3\%, 52.6\% or 55.6\%, respectively, while for saithe the following proportions of otoliths are removed: 27.1\%, 48.9\%, 59.5\%, 65.6\%, 69.8\%, 73.1\% or 75.2\%, respectively. Notice that 14\% of the cod data in year 2018 Q1 is removed for the sampling procedure of a pair of otoliths per 1 cm length group. This should be 0\% if all nations followed the revised standardized IBTS sampling procedure of year 2018 Q1. \\
+
+{\bf Tables \ref{codresults2018} and \ref{saitheresults2017} in Supplementary Materials \ref{secAP:resultssamplingprocedure}  give results of the estimated indices of abundance and approximate 95\% bias-corrected boostrap confidence intervals }
+%The percentage relative standard error, but for all ages RSE\%$< 25\%$, suggesting that the variability in the estimates is low
+
+{\bf discuss graph}\\
+
 \begin{itemize}
-\item {\bf to discuss and include these in explanations below}
+\item {\bf We discuss and include these in explanations below}
 \item Accuracy of estimates of reduced data compared with estimates from full data
 \item Precision in estimates is measured by standard error (SE) and relative standard error (RSE)
 \item accuracy is measured by root mean square error (RMSE) $= \sqrt{\mathrm{SE}^2 + (\mathrm{bias})^2}$. Measures how close, on average, a fitted line is to the data points (measure of goodness of fit). One can compare the RMSE to observed variation in measurements of a typical point {(\bf the two should be similar for a reasonable fit)}. Can we use this even though we do not have a "true value", which we would never know from large survey data and since we did not simulate synthetic data? Can we consider $\hat{\lambda}_{a}$ as a "true value"?
 \end{itemize}
 
-To determine optimum sampling levels of otoliths for saithe and cod in the North Sea, ALKs are estimated using the haul based  method. As shown in Figure \ref{percentileBiascorrectedCIcod}  the haul based ALK and the model based ALK gave similar estimates of abundance indices and precision as both approaches are attempting to capture spatial variation in the data. But, the spatial model based ALK  is  quite complex, and model fitting would be computer-intensive since the model must be fitted for each bootstrap run and each simulated sampling procedure that mimics the real data collection procedure. For this reason, the model based ALK approach will not be used in this analysis. Also, the assumption of no difference in regional compositions of age-length structures is invalid,  as shown in Figure \ref{fig:proportionSkagerak},  so DATRAS ALK is not use for further analyses. The removal procedure for otolith sampling described in Section \ref{sec:optimizationsampling} is applied to data in year 2018 Q1 for cod and year 2017 Q3 for saithe. We sample one otolith per length group: 1 cm, 2 cm, 3 cm, 4 cm, 5 cm, 6 cm or 7 cm. Recall that the standardized IBTS sampling procedure is one otolith per length group for standard round fish as of year 2018 Q1, except for haddock and Norway Pout where 2 otoliths per cm is to be sampled (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}). 
+The nonparametric bias-corrected bootstrap method is adopted for estimating confidence intervals of indices of abundance, and although this method has the advantage of correcting for the bias and skew of the sampling distribution of the data; accounting for some of the variability in the sampling distribution of the CPUE;  and does not assume any distribution for the data, there are some limitations of the bootstrap approach. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations for IBTS surveys is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently, selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2018. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Additionally, prior to 2013, all nations were sampling 8 pairs of otoliths per 1 cm length group for our focal species (Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}), and these samples could be acquired from, for example the first haul (or first few trawl hauls), resulting in an unrepresentative sample of the population. From 2013, some nations adopted the current sampling procedure outlined by ICES for IBTS 2018 surveys of 1 pair of otolith per 1 cm length group from each haul, while other nations continued with sampling 8 pairs of otoliths per 1 cm length group. So, bias was still introduced via the sampling  procedure. Another limitation of the bootstrap is the smaller the original sample the less likely it is to represent the entire population, thus the more difficult it becomes to compute valid confidence intervals. Note that the bootstrap relies heavily on the tails of the estimated sampling distribution when computing \\
 
- Table \ref{codresults2018} compares estimates of relative  abundance ($\hat{\lambda}_{a}$) for the original sample of otolith data  with  bootstrap estimates of abundance indices  for the reduced sample of otolith data  ($\hat{\lambda}_{a}^{*}$) where a pair of otoliths are sampled from the following sampling procedures: 1 cm, 2 cm, 3 cm, 4 cm, 5 cm, 6 cm or 7 cm length group. The median estimated indices, estimated standard errors of the estimated indices of abundance from the reduced data, with  approximate bias-corrected bootstrap 95\% confidence intervals and percentage relative standard error are given for  $200$ simulations and $200$ bootstrap replication. Similar estimates are given for saithe in Table \ref{saitheresults2017}. A total of 1600 pairs of otoliths were sampled for cod in year 2018 Q1, while 2163 pairs of otoliths were sampled for saithe in year 2017 Q3 (see Table \ref{tab:data2018} in Supplementary Materials \ref{secAp:data}). The proportion of otoliths removed for cod from each of the sampling  procedures stated above is: 14.4\%, 28.6\%, 38.4\%, 44.5\%, 49.3\%, 52.6\% or 55.6\%, respectively, while for saithe the following proportions of otoliths are removed: 27.1\%, 48.9\%, 59.5\%, 65.6\%, 69.8\%, 73.1\% or 75.2\%, respectively.
+{\bf these results in the graph are from the haul based ALK procedure. The model based ALK procedure gave an error, when it's working those will be here and haul based will go in supplementary materials} 
+
+
+%\clearpage
+
+\begin{figure}[h!]
+\centering
+\subfloat[Percentage relative standard error (RSE\%) for cod]{\includegraphics[scale=0.12]{figures/RSEcod2018.jpeg}}
+\subfloat[Mean square error (MSE) for cod ]{\includegraphics[scale=0.12]{figures/MSEcod2018.jpeg}}
+\quad
+\subfloat[Percentage relative standard error (RSE\%) for saithe]{\includegraphics[scale=0.12]{figures/RSEsaithe2018.jpeg}}
+\subfloat[Mean square error (MSE) for saithe]{\includegraphics[scale=0.12]{figures/MSEsaithe2018.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Percentage relative standard error (RSE\%) and mean square errror (MSE) for age given specific length group sampling of otolith for cod in year 2018 Q1 and saithe in year 2017 Q3. }\label{fig:RSEandMSECodQ1}}
+\end{figure}
+
+%\clearpage
+
+
+%Table \ref{codresults2018} compares estimates of relative  abundance ($\hat{\lambda}_{a}$) from the original data  with  bootstrap estimates of abundance indices  ($\hat{\lambda}_{a}^{*}$) from the reduced data. The median estimated indices, estimated standard errors of the estimated indices of abundance from the reduced data, with  approximate bias-corrected bootstrap 95\% confidence intervals and percentage relative standard error are given for  $1000$ simulations and $1000$ bootstrap replication. Similar estimates are given for saithe in Table \ref{saitheresults2017}. A total of 1600 pairs of otoliths were sampled for cod in year 2018 Q1, while 2163 pairs of otoliths were sampled for saithe in year 2017 Q3 (see Table \ref{tab:data2018} in Supplementary Materials \ref{secAp:data}). The proportion of otoliths removed for cod from each of the sampling  procedures stated above is: 14.4\%, 28.6\%, 38.4\%, 44.5\%, 49.3\%, 52.6\% or 55.6\%, respectively, while for saithe the following proportions of otoliths are removed: 27.1\%, 48.9\%, 59.5\%, 65.6\%, 69.8\%, 73.1\% or 75.2\%, respectively. Notice that 14\% of the cod data in year 2018 Q1 is removed for the sampling procedure of one pair of otoliths per 1 cm length group. This should be 0\% if all nations followed the revised standardized IBTS sampling procedure of year 2018 Q1. 
   
- The results (Table \ref{codresults2018}) show that the difference between  ($\hat{\lambda}_{a}$) and ($\hat{\lambda}_{a}^{*}$) is marginal for all sampling procedures for ages 1-4. For the older fishes (ages 5 and 6+) this difference is clear, particularly for sampling procedures $\ge \ 5 \ \mathrm{cm}$. This is supported by the percentage relative standard error, but for all ages RSE\%$< 25\%$, suggesting that the variability in the estimates is low. A similar pattern emerges for satihe (Table \ref{saitheresults2017}), except for estimated relative abundance of age 2 saithe. It can be seen that the RSE\% is substantially larger than those of the neighbouring age groups, for example 1 or 3 year-olds. Almost all the RSE\% $>30\%$ for two-year olds, suggesting high variability in the parameter estimates (see $\hat{\lambda}_{a}$ and $\hat{\lambda}_{a}^{*}$ for age 2 saithe).  As shown in Figure \ref{fig:proportionSkagerak} the predicted probabilities of age-given-length of 2-year old saithe can overlap with younger fishes or older fishes, for example 3 or 4-year olds, and the proportion of otoliths of 2-year olds sampled during IBTS 2017 Q3 survey is a mere 3\% compared with 25\% and 35\% of 3-year and 4-year olds (see Table \ref{realdatacodandsaithe} in Supplementary Materials \ref{secAp:data}). And, given that a pair of otoliths (irrespective of age) is randomly selected from each of the following sampling procedures: 1 cm, 2 cm,...,7 cm, the older fishes (3 or 4-year olds) are more likely to be sampled, resulting in fewer samples utilised in the optimization procedure, and hence, higher variability in the estimates. Furthermore, the sampling variability in lengths of 2-year olds are high compared with 1-year olds and are comparable with 3-year and 4-year olds, so the standard error estimates of the estimated abundance indices may be dominated by this uncertainty. 
+% The results (Table \ref{codresults2018}) show that the difference between  ($\hat{\lambda}_{a}$) and ($\hat{\lambda}_{a}^{*}$) is marginal for all sampling procedures for ages 1-4. For the older fishes (ages 5 and 6+) this difference is clear, particularly for sampling procedures $\ge \ 5 \ \mathrm{cm}$. This is supported by the percentage relative standard error, but for all ages RSE\%$< 25\%$, suggesting that the variability in the estimates is low. A similar pattern emerges for satihe (Table \ref{saitheresults2017}), except for estimated relative abundance of age 2 saithe. It can be seen that the RSE\% is substantially larger than those of the neighbouring age groups, for example 1 or 3 year-olds. Almost all the RSE\% $>30\%$ for two-year olds, suggesting high variability in the parameter estimates (see $\hat{\lambda}_{a}$ and $\hat{\lambda}_{a}^{*}$ for age 2 saithe).  As shown in Figure \ref{fig:proportionSkagerak} the predicted probabilities of age-given-length of 2-year old saithe can overlap with younger fishes or older fishes, for example 3 or 4-year olds, and the proportion of otoliths of 2-year olds sampled during IBTS 2017 Q3 survey is a mere 3\% compared with 25\% and 35\% of 3-year and 4-year olds (see Table \ref{realdatacodandsaithe} in Supplementary Materials \ref{secAp:data}). And, given that a pair of otoliths (irrespective of age) is randomly selected from each of the following sampling procedures: 1 cm, 2 cm,...,7 cm, the older fishes (3 or 4-year olds) are more likely to be sampled, resulting in fewer samples utilised in the optimization procedure, and hence, higher variability in the estimates. Furthermore, the sampling variability in lengths of 2-year olds are high compared with 1-year olds and are comparable with 3-year and 4-year olds, so the standard error estimates of the estimated abundance indices may be dominated by this uncertainty. 
+%
+%It can be seen also (Tables \ref{codresults2018} and \ref{saitheresults2017}) for the older fishes ($\geq 3-\mathrm{year \ olds}$) the confidence intervals are wider compared with the younger fishes. This could be for several reasons. The nonparametric bias-corrected bootstrap method is adopted for estimating confidence intervals of indices of abundance, and although this method has the advantage of correcting for the bias and skew of the sampling distribution of the data; accounting for some of the variability in the sampling distribution of the CPUE;  and does not assume any distribution for the data, there are some limitations of the bootstrap approach. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations for IBTS surveys is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently, selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2018. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Additionally, prior to 2013, all nations were sampling 8 pairs of otoliths per 1 cm length group for our focal species (Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}), and these samples could be acquired from, for example the first haul (or first few trawl hauls), resulting in an unrepresentative sample of the population. From 2013, some nations adopted the current sampling procedure outlined by ICES for IBTS 2018 surveys of 1 pair of otolith per 1 cm length group from each haul, while other nations continued with sampling 8 pairs of otoliths per 1 cm length group. So, bias was still introduced via the sampling  procedure. Another limitation of the bootstrap is the smaller the original sample the less likely it is to represent the entire population, thus the more difficult it becomes to compute valid confidence intervals. Note that the bootstrap relies heavily on the tails of the estimated sampling distribution when computing
+%confidence intervals, and using small samples may jeopardize the validity of this computation. As explained above, in 2017 Q3 data for 2-year old saithe, for example, 65 pairs of otoliths out of 2163 were sampled (a mere 3\%) and because of overlapping-age-length keys among neighbouring age groups, the probability of selecting 2-year olds is smaller, resulting in larger estimates of the variance, and hence wider confidence intervals. 
 
-It can be seen also (Tables \ref{codresults2018} and \ref{saitheresults2017}) for the older fishes ($\geq 3-\mathrm{year \ olds}$) the confidence intervals are wider compared with the younger fishes. This could be for several reasons. The nonparametric bias-corrected bootstrap method is adopted for estimating confidence intervals of indices of abundance, and although this method has the advantage of correcting for the bias and skew of the sampling distribution of the data; accounting for some of the variability in the sampling distribution of the CPUE;  and does not assume any distribution for the data, there are some limitations of the bootstrap approach. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations for IBTS surveys is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently, selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2018. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Additionally, prior to 2013, all nations were sampling 8 pairs of otoliths per 1 cm length group for our focal species (Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}), and these samples could be acquired from, for example the first haul (or first few trawl hauls), resulting in an unrepresentative sample of the population. From 2013, some nations adopted the current sampling procedure outlined by ICES for IBTS 2018 surveys of 1 pair of otolith per 1 cm length group from each haul, while other nations continued with sampling 8 pairs of otoliths per 1 cm length group. So, bias was still introduced via the sampling  procedure. Another limitation of the bootstrap is the smaller the original sample the less likely it is to represent the entire population, thus the more difficult it becomes to compute valid confidence intervals. Note that the bootstrap relies heavily on the tails of the estimated sampling distribution when computing
-confidence intervals, and using small samples may jeopardize the validity of this computation. As explained above, in 2017 Q3 data for 2-year old saithe, for example, 65 pairs of otoliths out of 2163 were sampled (a mere 3\%) and because of overlapping-age-length keys among neighbouring age groups, the probability of selecting 2-year olds is smaller, resulting in larger estimates of the variance, and hence wider confidence intervals. 
-
-{\bf need to conclude on which sampling procedure is best based on estimated uncertainty (RSE\%), for example 5cm?}
+%{\bf need to conclude on which sampling procedure is best based on estimated uncertainty (RSE\%), for example 5cm?}
  
 %Furthermore, estimates of age 0 saithe lie on the boundary and estimated standard is 0. The sample size of 
 
@@ -305,467 +360,8 @@ confidence intervals, and using small samples may jeopardize the validity of thi
 %Note that the nonparametric bootstrap method is advantageous  because it does not assume any distribution for the data, and it also accounts for some of the variability in the sampling distribution of the CPUE, however, there are some limitations of this method. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations in IBTS is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2017. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Random sampling performed in the bootstrap procedure also adds another level of potential sampling error, which is reflected in variation and biased estimates commonly performed in the bootstrap analysis. Note that the sampling distribution of the bootstrapped statistics is frequently not symmetric and computing point estimates from in this manner may reflect biased estimation from the samples. This can be seen in the estimated bootstrap mean values in Figure \ref{reduceresults}\\
 
 
-\clearpage
- \begin{small}
-\begin{table}[h!]
-\centering
-\setlength\tabcolsep{11.5pt} 
-\captionsetup{font=small, width = 16.0cm}{
-\caption{Estimated abundance ($\hat{\lambda}_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The median estimated indices, estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)), the percentage relative standard error (RSE\%) and root mean square error (RMSE) are also given.}\label{codresults2018}}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclcl}
-  \hline \\ [0.3ex]
-&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\%  & RMSE  &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-\hline \\
- \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
-&   1 cm & 0.863 &    0.866  & 0.867 &         0.00910& 1.051 & 0.00946 & (0.84, 0.88)\\
-&   2 cm & 0.863 &    0.866  & 0.866 &         0.00969& 1.119 & 0.01012 & (0.84, 0.88)\\
-&   3 cm & 0.863 &    0.858  & 0.862 &         0.02476& 2.886 & 0.02525 & (0.81, 0.90) \\
-&   4 cm & 0.863 &    0.854  & 0.855 &         0.02993& 3.507 & 0.03139 & (0.81, 0.90) \\
-&   5 cm & 0.863 &    0.848  & 0.850 &         0.03712& 4.379 & 0.04019 & (0.81, 0.92)\\
-&   6 cm & 0.863 &    0.858  & 0.858 &         0.03646& 4.249 & 0.03680 & (0.80, 0.93)\\
-&   7 cm & 0.863 &    0.856  & 0.857 &         0.03920& 4.582 & 0.03990 & (0.80, 0.93)\\[1.5ex]
 
- \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
-&    1 cm & 6.496 &    6.485 & 6.483 &          0.02055& 0.317 & 0.02351 & (6.47, 6.53)\\
-&    2 cm & 6.496 &    6.485 & 6.486 &          0.01968& 0.303 & 0.02257 & (6.46, 6.52)\\
-&    3 cm & 6.496 &    6.503 & 6.506 &          0.05023& 0.772 & 0.05074 & (6.38, 6.60)\\
-&    4 cm & 6.496 &    6.498 & 6.498 &          0.05852& 0.901 & 0.05854 & (6.39, 6.62)\\
-&    5 cm & 6.496 &    6.507 & 6.505 &          0.07121& 1.094 & 0.07201 & (6.36, 6.64)\\
-&    6 cm & 6.496 &    6.510 & 6.512 &          0.07415& 1.139 & 0.07540 & (6.34, 6.64)\\
-&    7 cm & 6.496 &    6.491 & 6.496 &          0.08395& 1.293 & 0.08408 & (6.33, 6.64)\\[1.5ex]
-
- \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
-&   1 cm & 1.571 &    1.574  & 1.567 &         0.06955& 4.418  & 0.06962 & (1.46, 1.73)\\
-&   2 cm & 1.571 &    1.579  & 1.575 &         0.06785& 4.429  & 0.06828 & (1.45, 1.71)\\
-&   3 cm & 1.571 &    1.559  & 1.556 &         0.09708& 6.228  & 0.09791 & (1.41, 1.75)\\
-&   4 cm & 1.571 &    1.641  & 1.640 &         0.10051& 6.124  & 0.12246 & (1.41, 1.84)\\
-&   5 cm & 1.571 &    1.627  & 1.622 &         0.12505& 7.686  & 0.13691 & (1.31, 1.88)\\
-&   6 cm & 1.571 &    1.643  & 1.640 &         0.12598& 7.670  & 0.14470 & (1.31, 1.91)\\
-&   7 cm & 1.571 &    1.753  & 1.763 &         0.13991& 7.979  & 0.22963 & (1.44, 2.02) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
-&   1 cm & 1.584 &    1.603  & 1.597 &         0.12104& 7.550  & 0.12259 & (1.37, 1.85)\\
-&   2 cm & 1.584 &    1.592  & 1.593 &         0.11493& 7.218  & 0.11524 & (1.37, 1.82)\\
-&   3 cm & 1.584 &    1.610  & 1.603 &         0.14425& 8.960  & 0.14662 & (1.31, 1.91)\\
-&   4 cm & 1.584 &    1.571  & 1.570 &         0.15284& 9.729  & 0.15336 & (1.31, 1.88)\\
-&   5 cm & 1.584 &    1.585  & 1.583 &         0.15010& 9.468  & 0.15011 & (1.32, 1.89)\\
-&   6 cm & 1.584 &    1.588  & 1.600 &         0.15178& 9.560  & 0.15183 & (1.26, 1.88)\\
-&   7 cm & 1.584 &    1.503  & 1.518 &         0.16675& 11.094 & 0.18520 & (1.38, 1.82) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
-&   1 cm & 0.742 &    0.740 & 0.738 &          0.10729& 14.504 & 0.10732 & (0.56, 095)\\
-&   2 cm & 0.742 &    0.744 & 0.724 &          0.11047& 14.848 & 0.11048 & (0.57, 0.98)\\
-&   3 cm & 0.742 &    0.764 & 0.760 &          0.11675& 15.287 & 0.11868 & (0.55, 1.02)\\
-&   4 cm & 0.742 &    0.752 & 0.735 &          0.11398& 15.158 & 0.11437 & (0.58, 0.99)\\
-&   5 cm & 0.742 &    0.814 & 0.805 &          0.12034& 14.789 & 0.13991 & (0.53, 1.08)\\
-&   6 cm & 0.742 &    0.782 & 0.766 &          0.10975& 14.043 & 0.11653 & (0.57, 1.02)\\
-&   7 cm & 0.742 &    0.813 & 0.790 &          0.12545& 15.425 & 0.14410 & (0.59, 1.09) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
-&   1 cm & 1.074 &    1.063 & 1.058 &          0.10489& 9.865  & 0.10548 & (0.90, 1.28)\\
-&   2 cm & 1.074 &    1.065 & 1.056 &          0.10657& 10.009 & 0.10700 & (0.90, 1.29)\\
-&   3 cm & 1.074 &    1.037 & 1.022 &          0.12215& 11.775 & 0.12763 & (0.88, 1.25)\\
-&   4 cm & 1.074 &    1.015 & 1.004 &          0.11855& 11.679 & 0.13251 & (0.89, 1.24)\\
-&   5 cm & 1.074 &    0.950 & 0.935 &          0.12210& 12.849 & 0.17409 & (0.93, 1.21)\\
-&   6 cm & 1.074 &    0.951 & 0.937 &          0.11562& 12.154 & 0.16883 & (0.92, 1.19)\\
-&   7 cm & 1.074 &    0.914 & 0.893 &          0.12577& 13.760 & 0.20373 & (0.96, 1.18) \\[1.5ex]
-  \hline \\
-\end{tabular}
-\end{footnotesize}
-\end{table}
- \end{small}
-
-
-\clearpage
- \begin{small}
-\begin{table}[h!]
-\centering
-\setlength\tabcolsep{10.5pt} 
-\captionsetup{font=small, width = 16cm}{
-\caption{Estimated abundance ($\hat{\lambda}_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclclcl}
-  \hline \\ [0.3ex]
-&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$  & SE($\hat{\lambda}_{a}^{*}$) & RSE\%& RMSE &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-\hline \\
- \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
-&   1 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   2 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   3 cm & 0.282  &    0.288 &  0.295 &  0.00628 & 2.18 & 0.00891 & (0.28, 0.29)\\
-&   4 cm & 0.282  &    0.291 &  0.295 &  0.00578 & 1.99 & 0.01044 & (0.28, 0.29)\\
-&   5 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   6 cm & 0.282  &    0.297 &  0.295 &  0.00949 & 3.19 & 0.01801 & (0.28, 0.31)\\
-&   7 cm & 0.282  &    0.290 &  0.295 &  0.00595 & 2.05 & 0.01018 & (0.28, 0.29)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
-&   1 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
-&   2 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
-&   3 cm & 0.123 &      0.117  & 0.111 & 0.00628  & 5.36 & 0.00891 & (0.11, 0.12)\\
-&   4 cm & 0.123 &      0.117  & 0.115 & 0.00641  & 5.47 & 0.00891 & (0.11, 0.13) \\
-&   5 cm & 0.123 &      0.125  & 0.126 & 0.00139  & 1.11 & 0.00207 & (0.12, 0.13) \\
-&   6 cm & 0.123 &      0.112  & 0.114 & 0.00942  & 8.43 & 0.01492 & (0.11, 0.13)\\
-&   7 cm & 0.123 &      0.115  & 0.114 & 0.00630  & 5.46 & 0.01023 & (0.11, 0.13)\\[1.2ex]
-
-\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
-&   1 cm & 0.929 &    0.917  & 0.913 &   0.17774& 19.39 & 0.17818 & (0.58, 1.25)\\
-&   2 cm & 0.929 &    0.892  & 0.856 &   0.28437& 31.89 & 0.28681 & (0.47, 1.50) \\
-&   3 cm & 0.929 &    0.985  & 0.918 &   0.33392& 33.90 & 0.33854 & (0.51, 1.65)\\
-&   4 cm & 0.929 &    0.982  & 0.922 &   0.33738& 34.36 & 0.34147 & (0.48, 1.55)\\
-&   5 cm & 0.929 &    1.003  & 0.948 &   0.34661& 34.56 & 0.35437 & (0.50, 1.61)\\
-&   6 cm & 0.929 &    0.945  & 0.892 &   0.33643& 35.60 & 0.33680 & (0.49, 1.77)\\
-&   7 cm & 0.929 &    0.982  & 0.929 &   0.33668& 34.28 & 0.34083 & (0.42, 1.62)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 3} \\ [1.0ex]
-&   1 cm & 11.238  &  11.272 & 11.300 &  0.53160& 4.72  & 0.53269 & (10.30, 12.15)\\
-&   2 cm & 11.238  &  11.161 & 11.163 &  0.93489& 8.38  & 0.93809 & (9.56, 13.11)\\
-&   3 cm & 11.238  &  11.091 & 11.173 &  1.17954& 10.64 & 1.18867 & (9.15, 13.39)\\
-&   4 cm & 11.238  &  10.903 & 11.022 &  1.05854& 9.71  & 1.11031 & (9.45, 13.27)\\
-&   5 cm & 11.238  &  10.857 & 10.718 &  1.12152& 10.33 & 1.18439 & (9.16, 12.95)\\
-&   6 cm & 11.238  &  10.937 & 10.914 &  1.10301& 10.09 & 1.14341 & (9.77, 12.88)\\
-&   7 cm & 11.238  &  10.724 & 10.658 &  1.04157& 9.71  & 1.16145 & (8.80, 13.07)\\[1.5ex]
-
- \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
- &  1 cm & 12.789 &   12.773 & 12.793 &  0.52290& 4.09 & 0.52314 & (11.89, 13.74) \\
- &  2 cm & 12.789 &   12.874 & 12.903 &  0.91838& 7.13 & 0.92233 & (10.80, 14.54) \\
- &  3 cm & 12.789 &   12.877 & 12.771 &  1.14444& 8.89 & 1.14780 & (10.76, 14.84) \\
- &  4 cm & 12.789 &   13.019 & 13.033 &  1.09987& 8.45 & 1.12363 & (10.69, 15.09) \\
- &  5 cm & 12.789 &   13.033 & 13.114 &  1.15195& 8.84 & 1.17747 & (10.51, 15.25) \\
- &  6 cm & 12.789 &   13.111 & 13.056 &  1.09241& 8.33 & 1.13885 & (10.57, 15.13) \\
- &  7 cm & 12.789 &   13.278 & 13.267 &  1.07854& 8.12 & 1.18419 & (10.23, 15.64) \\[1.2ex]
-
- \raisebox{1ex}{age 5}  \\ [1.0ex]
-&  1 cm  & 2.971 &     2.967   & 2.962 & 0.12220& 4.12  & 0.12226 & (2.76, 3.24) \\
-&   2 cm & 2.971 &     3.036   & 3.006 & 0.29591& 9.75  & 0.30294 & (2.48, 3.58) \\
-&   3 cm & 2.971 &     2.970   & 2.945 & 0.29382& 9.89  & 0.29382 & (2.47, 3.61) \\
-&   4 cm & 2.971 &     3.045   & 3.040 & 0.38412& 12.61 & 0.39122 & (2.31, 3.99) \\
-&   5 cm & 2.971 &     3.077   & 2.996 & 0.43326& 14.08 & 0.44597 & (2.31, 3.87)\\
-&   6 cm & 2.971 &     2.936   & 2.898 & 0.38625& 13.16 & 0.38781 & (2.23, 3.77)\\
-&   7 cm & 2.971 &     2.971   & 2.938 & 0.42992& 14.14 & 0.42992 & (2.12, 3.81)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
-&   1 cm & 2.819  &   2.817 & 2.820 & 0.05126& 1.82 & 0.05129 & (2.73, 2.90) \\
-&   2 cm & 2.819  &   2.783 & 2.782 & 0.08525& 3.06 & 0.09231 & (2.70, 2.94) \\
-&   3 cm & 2.819  &   2.823 & 2.821 & 0.11729& 4.15 & 0.11738 & (2.64, 3.04) \\
-&   4 cm & 2.819  &   2.794 & 2.796 & 0.12590& 4.15 & 0.12820 & (2.61, 3.05) \\
-&   5 cm & 2.819  &   2.775 & 2.782 & 0.13938& 5.02 & 0.14618 & (2.54, 3.02) \\
-&   6 cm & 2.819  &   2.813 & 2.803 & 0.14435& 5.13 & 0.14446 & (2.53, 3.12)  \\
-&   7 cm & 2.819  &   2.790 & 2.794 & 0.15922& 5.71 & 0.16182 & (2.54, 3.06)  \\[0.1ex]
-   \hline \\
-\end{tabular}
-\end{footnotesize}
-\end{table}
- \end{small}
- 
-%
 %\clearpage
-% \begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{18.5pt} 
-%\captionsetup{font=small, width = 15.5cm}{
-%\caption{Estimated abundance ($\hat{\lambda}_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)) and the percentage relative standard error (RSE\%) are also given.}\label{codresults2018}}
-%\begin{footnotesize}
-%\begin{tabular}{clclclclcl}
-%  \hline \\ [0.3ex]
-%&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\% &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-%\hline \\
-% \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
-%&   1 cm & 0.863 &    0.866  &          0.00910& 1.051 & (0.84, 0.88)\\
-%&   2 cm & 0.863 &    0.866  &          0.00969& 1.119 & (0.84, 0.88)\\
-%&   3 cm & 0.863 &    0.858  &          0.02476& 2.886 & (0.81, 0.90) \\
-%&   4 cm & 0.863 &    0.854  &          0.02993& 3.507 & (0.81, 0.90) \\
-%&   5 cm & 0.863 &    0.848  &          0.03712& 4.379 & (0.81, 0.92)\\
-%&   6 cm & 0.863 &    0.858  &          0.03646& 4.249 & (0.80, 0.93)\\
-%&   7 cm & 0.863 &    0.856  &          0.03920& 4.582 & (0.80, 0.93)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
-%&    1 cm & 6.496 &    6.485 &           0.02055& 0.317 & (6.47, 6.53)\\
-%&    2 cm & 6.496 &    6.485 &           0.01968& 0.303 & (6.46, 6.52)\\
-%&    3 cm & 6.496 &    6.503 &           0.05023& 0.772 & (6.38, 6.60)\\
-%&    4 cm & 6.496 &    6.498 &           0.05852& 0.901 & (6.39, 6.62)\\
-%&    5 cm & 6.496 &    6.507 &           0.07121& 1.094 & (6.36, 6.64)\\
-%&    6 cm & 6.496 &    6.510 &           0.07415& 1.139 & (6.34, 6.64)\\
-%&    7 cm & 6.496 &    6.491 &           0.08395& 1.293 & (6.33, 6.64)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
-%&   1 cm & 1.571 &    1.574  &          0.06955& 4.418  & (1.46, 1.73)\\
-%&   2 cm & 1.571 &    1.579  &          0.06785& 4.429  & (1.45, 1.71)\\
-%&   3 cm & 1.571 &    1.559  &          0.09708& 6.228  & (1.41, 1.75)\\
-%&   4 cm & 1.571 &    1.641  &          0.10051& 6.124  & (1.41, 1.84)\\
-%&   5 cm & 1.571 &    1.627  &          0.12505& 7.686  & (1.31, 1.88)\\
-%&   6 cm & 1.571 &    1.643  &          0.12598& 7.670  & (1.31, 1.91)\\
-%&   7 cm & 1.571 &    1.753  &          0.13991& 7.979  & (1.44, 2.02) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
-%&   1 cm & 1.584 &    1.603  &          0.12104& 7.550  & (1.37, 1.85)\\
-%&   2 cm & 1.584 &    1.592  &          0.11493& 7.218  & (1.37, 1.82)\\
-%&   3 cm & 1.584 &    1.610  &          0.14425& 8.960  & (1.31, 1.91)\\
-%&   4 cm & 1.584 &    1.571  &          0.15284& 9.729  & (1.31, 1.88)\\
-%&   5 cm & 1.584 &    1.585  &          0.15010& 9.468  & (1.32, 1.89)\\
-%&   6 cm & 1.584 &    1.588  &          0.15178& 9.560  & (1.26, 1.88)\\
-%&   7 cm & 1.584 &    1.503  &          0.16675& 11.094 & (1.38, 1.82) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
-%&   1 cm & 0.742 &    0.740 &           0.10729& 14.504 & (0.56, 095)\\
-%&   2 cm & 0.742 &    0.744 &           0.11047& 14.848 & (0.57, 0.98)\\
-%&   3 cm & 0.742 &    0.764 &           0.11675& 15.287 & (0.55, 1.02)\\
-%&   4 cm & 0.742 &    0.752 &           0.11398& 15.158 & (0.58, 0.99)\\
-%&   5 cm & 0.742 &    0.814 &           0.12034& 14.789 & (0.53, 1.08)\\
-%&   6 cm & 0.742 &    0.782 &           0.10975& 14.043 & (0.57, 1.02)\\
-%&   7 cm & 0.742 &    0.813 &           0.12545& 15.425 & (0.59, 1.09) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
-%&   1 cm & 1.074 &    1.063 &           0.10489& 9.865  & (0.90, 1.28)\\
-%&   2 cm & 1.074 &    1.065 &           0.10657& 10.009 & (0.90, 1.29)\\
-%&   3 cm & 1.074 &    1.037 &           0.12215& 11.775 & (0.88, 1.25)\\
-%&   4 cm & 1.074 &    1.015 &           0.11855& 11.679 & (0.89, 1.24)\\
-%&   5 cm & 1.074 &    0.950 &           0.12210& 12.849 & (0.93, 1.21)\\
-%&   6 cm & 1.074 &    0.951 &           0.11562& 12.154 & (0.92, 1.19)\\
-%&   7 cm & 1.074 &    0.914 &           0.12577& 13.760 & (0.96, 1.18) \\[1.5ex]
-%  \hline \\
-%\end{tabular}
-%\end{footnotesize}
-%\end{table}
-% \end{small}
-%
-
-% \begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{15.5pt} 
-%\captionsetup{font=small, width = 15cm}{
-%\caption{Estimated abundance ($\hat{\lambda}_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
-%\begin{footnotesize}
-%\begin{tabular}{clclclclclclcl}
-%  \hline \\ [0.3ex]
-%&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$  & SE($\hat{\lambda}_{a}^{*}$) & RSE\%&  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-%\hline \\
-% \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
-%&   1 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   2 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   3 cm & 0.282  &    0.288 &           0.00628& 2.18 & (0.28, 0.29)\\
-%&   4 cm & 0.282  &    0.291 &           0.00578& 1.99 & (0.28, 0.29)\\
-%&   5 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   6 cm & 0.282  &    0.297 &           0.00949& 3.19 & (0.28, 0.31)\\
-%&   7 cm & 0.282  &    0.290 &           0.00595& 2.05 & (0.28, 0.29)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
-%&   1 cm & 0.123 &      0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
-%&   2 cm & 0.123 &      0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
-%&   3 cm & 0.123 &      0.117  &          0.00628& 5.36 & (0.11, 0.12)\\
-%&   4 cm & 0.123 &      0.117  &          0.00641& 5.47 & (0.11, 0.13) \\
-%&   5 cm & 0.123 &      0.125  &          0.00139& 1.11 & (0.12, 0.13) \\
-%&   6 cm & 0.123 &      0.112  &          0.00942& 8.43 & (0.11, 0.13)\\
-%&   7 cm & 0.123 &      0.115  &          0.00630& 5.46 & (0.11, 0.13)\\[1.2ex]
-%
-%\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
-%&   1 cm & 0.929 &    0.917  &          0.17774& 19.39 & (0.58, 1.25)\\
-%&   2 cm & 0.929 &    0.892  &          0.28437& 31.89 & (0.47, 1.50) \\
-%&   3 cm & 0.929 &    0.985  &          0.33392& 33.90 & (0.51, 1.65)\\
-%&   4 cm & 0.929 &    0.982  &          0.33738& 34.36 & (0.48, 1.55)\\
-%&   5 cm & 0.929 &    1.003  &          0.34661& 34.56 & (0.50, 1.61)\\
-%&   6 cm & 0.929 &    0.945  &          0.33643& 35.60 & (0.49, 1.77)\\
-%&   7 cm & 0.929 &    0.982  &          0.33668& 34.28 & (0.42, 1.62)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 3} \\ [1.0ex]
-%&   1 cm & 11.238  &  11.272 &           0.53160& 4.72  & (10.30, 12.15)\\
-%&   2 cm & 11.238  &  11.161 &           0.93489& 8.38  & (9.56, 13.11)\\
-%&   3 cm & 11.238  &  11.091 &           1.17954& 10.64 & (9.15, 13.39)\\
-%&   4 cm & 11.238  &  10.903 &           1.05854& 9.71  & (9.45, 13.27)\\
-%&   5 cm & 11.238  &  10.857 &           1.12152& 10.33 & (9.16, 12.95)\\
-%&   6 cm & 11.238  &  10.937 &           1.10301& 10.09 & (9.77, 12.88)\\
-%&   7 cm & 11.238  &  10.724 &           1.04157& 9.71  & (8.80, 13.07)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
-% &  1 cm & 12.789 &   12.773 &           0.52290& 4.09 & (11.89, 13.74) \\
-% &  2 cm & 12.789 &   12.874 &           0.91838& 7.13 & (10.80, 14.54) \\
-% &  3 cm & 12.789 &   12.877 &           1.14444& 8.89 & (10.76, 14.84) \\
-% &  4 cm & 12.789 &   13.019 &           1.09987& 8.45 & (10.69, 15.09) \\
-% &  5 cm & 12.789 &   13.033 &           1.15195& 8.84 & (10.51, 15.25) \\
-% &  6 cm & 12.789 &   13.111 &           1.09241& 8.33 & (10.57, 15.13) \\
-% &  7 cm & 12.789 &   13.278 &           1.07854& 8.12 & (10.23, 15.64) \\[1.2ex]
-%
-% \raisebox{1ex}{age 5}  \\ [1.0ex]
-%&  1 cm  & 2.971 &     2.967   &         0.12220& 4.12  & (2.76, 3.24) \\
-%&   2 cm & 2.971 &     3.036   &         0.29591& 9.75  & (2.48, 3.58) \\
-%&   3 cm & 2.971 &     2.970   &         0.29382& 9.89  & (2.47, 3.61) \\
-%&   4 cm & 2.971 &     3.045   &         0.38412& 12.61 & (2.31, 3.99) \\
-%&   5 cm & 2.971 &     3.077   &         0.43326& 14.08 & (2.31, 3.87)\\
-%&   6 cm & 2.971 &     2.936   &         0.38625& 13.16 & (2.23, 3.77)\\
-%&   7 cm & 2.971 &     2.971   &         0.42992& 14.14 & (2.12, 3.81)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
-%&   1 cm & 2.819  &   2.817 &           0.05126& 1.82 & (2.73, 2.90) \\
-%&   2 cm & 2.819  &   2.783 &           0.08525& 3.06 & (2.70, 2.94) \\
-%&   3 cm & 2.819  &   2.823 &           0.11729& 4.15 & (2.64, 3.04) \\
-%&   4 cm & 2.819  &   2.794 &           0.12590& 4.15 & (2.61, 3.05) \\
-%&   5 cm & 2.819  &   2.775 &           0.13938& 5.02 & (2.54, 3.02) \\
-%&   6 cm & 2.819  &   2.813 &           0.14435& 5.13 & (2.53, 3.12)  \\
-%&   7 cm & 2.819  &   2.790 &           0.15922& 5.71 & (2.54, 3.06)  \\[0.1ex]
-%   \hline \\
-%\end{tabular}
-%\end{footnotesize}
-%\end{table}
-% \end{small}
-% 
-
-
-%
-%
-%\clearpage
-% \begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{15.5pt} 
-%\captionsetup{font=small, width = 16cm}{
-%\caption{Estimated abundance ($\lambda_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\lambda_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)) and the percentage relative standard error (RSE\%) are also given.}\label{codresults2018}}
-%\begin{footnotesize}
-%\begin{tabular}{clclclclcl}
-%  \hline \\ [0.3ex]
-%&  $l$ & $\hat{\lambda}_{a}$ & \thead{Otoliths\\ removed} & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\% &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-%\hline \\
-% \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
-%&   1 cm & 0.863 &   231 & 0.866  &          0.00910& 1.051 & (0.84, 0.88)\\
-%&   2 cm & 0.863 &   457 & 0.866  &          0.00969& 1.119 & (0.84, 0.88)\\
-%&   3 cm & 0.863 &   615 & 0.858  &          0.02476& 2.886 & (0.81, 0.90) \\
-%&   4 cm & 0.863 &   712 & 0.854  &          0.02993& 3.507 & (0.81, 0.90) \\
-%&   5 cm & 0.863 &   788 & 0.848  &          0.03712& 4.379 & (0.81, 0.92)\\
-%&   6 cm & 0.863 &   841 & 0.858  &          0.03646& 4.249 & (0.80, 0.93)\\
-%&   7 cm & 0.863 &   889 & 0.856  &          0.03920& 4.582 & (0.80, 0.93)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
-%&    1 cm & 6.496 &  231 &  6.485 &           0.02055& 0.317 & (6.47, 6.53)\\
-%&    2 cm & 6.496 &  457 &  6.485 &           0.01968& 0.303 & (6.46, 6.52)\\
-%&    3 cm & 6.496 &  615 &  6.503 &           0.05023& 0.772 & (6.38, 6.60)\\
-%&    4 cm & 6.496 &  712 &  6.498 &           0.05852& 0.901 & (6.39, 6.62)\\
-%&    5 cm & 6.496 &  788 &  6.507 &           0.07121& 1.094 & (6.36, 6.64)\\
-%&    6 cm & 6.496 &  841 &  6.510 &           0.07415& 1.139 & (6.34, 6.64)\\
-%&    7 cm & 6.496 &  889 &  6.491 &           0.08395& 1.293 & (6.33, 6.64)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
-%&   1 cm & 1.571 &  213 &  1.574  &          0.06955& 4.418  & (1.46, 1.73)\\
-%&   2 cm & 1.571 &  457 &  1.579  &          0.06785& 4.429  & (1.45, 1.71)\\
-%&   3 cm & 1.571 &  615 &  1.559  &          0.09708& 6.228  & (1.41, 1.75)\\
-%&   4 cm & 1.571 &  712 &  1.641  &          0.10051& 6.124  & (1.41, 1.84)\\
-%&   5 cm & 1.571 &  788 &  1.627  &          0.12505& 7.686  & (1.31, 1.88)\\
-%&   6 cm & 1.571 &  841 &  1.643  &          0.12598& 7.670  & (1.31, 1.91)\\
-%&   7 cm & 1.571 &  889 &  1.753  &          0.13991& 7.979  & (1.44, 2.02) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
-%&   1 cm & 1.584 &  213 &  1.603  &          0.12104& 7.550  & (1.37, 1.85)\\
-%&   2 cm & 1.584 &  457 &  1.592  &          0.11493& 7.218  & (1.37, 1.82)\\
-%&   3 cm & 1.584 &  615 &  1.610  &          0.14425& 8.960  & (1.31, 1.91)\\
-%&   4 cm & 1.584 &  712 &  1.571  &          0.15284& 9.729  & (1.31, 1.88)\\
-%&   5 cm & 1.584 &  788 &  1.585  &          0.15010& 9.468  & (1.32, 1.89)\\
-%&   6 cm & 1.584 &  841 &  1.588  &          0.15178& 9.560  & (1.26, 1.88)\\
-%&   7 cm & 1.584 &  889 &  1.503  &          0.16675& 11.094 & (1.38, 1.82) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
-%&   1 cm & 0.742 &  213 &  0.740 &           0.10729& 14.504 & (0.56, 095)\\
-%&   2 cm & 0.742 &  457 &  0.744 &           0.11047& 14.848 & (0.57, 0.98)\\
-%&   3 cm & 0.742 &  615 &  0.764 &           0.11675& 15.287 & (0.55, 1.02)\\
-%&   4 cm & 0.742 &  712 &  0.752 &           0.11398& 15.158 & (0.58, 0.99)\\
-%&   5 cm & 0.742 &  788 &  0.814 &           0.12034& 14.789 & (0.53, 1.08)\\
-%&   6 cm & 0.742 &  841 &  0.782 &           0.10975& 14.043 & (0.57, 1.02)\\
-%&   7 cm & 0.742 &  889 &  0.813 &           0.12545& 15.425 & (0.59, 1.09) \\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
-%&   1 cm & 1.074 &  231 &  1.063 &           0.10489& 9.865  & (0.90, 1.28)\\
-%&   2 cm & 1.074 &  457 &  1.065 &           0.10657& 10.009 & (0.90, 1.29)\\
-%&   3 cm & 1.074 &  615 &  1.037 &           0.12215& 11.775 & (0.88, 1.25)\\
-%&   4 cm & 1.074 &  712 &  1.015 &           0.11855& 11.679 & (0.89, 1.24)\\
-%&   5 cm & 1.074 &  788 &  0.950 &           0.12210& 12.849 & (0.93, 1.21)\\
-%&   6 cm & 1.074 &  841 &  0.951 &           0.11562& 12.154 & (0.92, 1.19)\\
-%&   7 cm & 1.074 &  889 &  0.914 &           0.12577& 13.760 & (0.96, 1.18) \\[1.5ex]
-%  \hline \\
-%\end{tabular}
-%\end{footnotesize}
-%\end{table}
-% \end{small}
-%
-%
-%\clearpage
-% \begin{small}
-%\begin{table}[h!]
-%\centering
-%\setlength\tabcolsep{13.5pt} 
-%\captionsetup{font=small, width = 16.5cm}{
-%\caption{Estimated abundance ($\lambda_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\lambda_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
-%\begin{footnotesize}
-%\begin{tabular}{clclclclcl}
-%  \hline \\ [0.3ex]
-%&  $l$ & $\hat{\lambda}_{a}$ & \thead{Otoliths  removed} & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\%&  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-%\hline \\
-% \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
-%&   1 cm & 0.282  &  586  &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   2 cm & 0.282  &  1057 &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   3 cm & 0.282  &  1287 &  0.288 &           0.00628& 2.18 & (0.28, 0.29)\\
-%&   4 cm & 0.282  &  1420 &  0.291 &           0.00578& 1.99 & (0.28, 0.29)\\
-%&   5 cm & 0.282  &  1509 &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
-%&   6 cm & 0.282  &  1581 &  0.297 &           0.00949& 3.19 & (0.28, 0.31)\\
-%&   7 cm & 0.282  &  1626 &  0.290 &           0.00595& 2.05 & (0.28, 0.29)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
-%&   1 cm & 0.123 &   586 &   0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
-%&   2 cm & 0.123 &   1057&   0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
-%&   3 cm & 0.123 &   1287&   0.117  &          0.00628& 5.36 & (0.11, 0.12)\\
-%&   4 cm & 0.123 &   1420&   0.117  &          0.00641& 5.47 & (0.11, 0.13) \\
-%&   5 cm & 0.123 &   1509&   0.125  &          0.00139& 1.11 & (0.12, 0.13) \\
-%&   6 cm & 0.123 &   1581&   0.112  &          0.00942& 8.43 & (0.11, 0.13)\\
-%&   7 cm & 0.123 &   1626&   0.115  &          0.00630& 5.46 & (0.11, 0.13)\\[1.2ex]
-%
-%\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
-%&   1 cm & 0.929 &  586 &  0.917  &          0.17774& 19.39 & (0.58, 1.25)\\
-%&   2 cm & 0.929 &  1057&  0.892  &          0.28437& 31.89 & (0.47, 1.50) \\
-%&   3 cm & 0.929 &  1287&  0.985  &          0.33392& 33.90 & (0.51, 1.65)\\
-%&   4 cm & 0.929 &  1420&  0.982  &          0.33738& 34.36 & (0.48, 1.55)\\
-%&   5 cm & 0.929 &  1509&  1.003  &          0.34661& 34.56 & (0.50, 1.61)\\
-%&   6 cm & 0.929 &  1581&  0.945  &          0.33643& 35.60 & (0.49, 1.77)\\
-%&   7 cm & 0.929 &  1626&  0.982  &          0.33668& 34.28 & (0.42, 1.62)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 3} \\ [1.0ex]
-%&   1 cm & 11.238  & 586 & 11.272 &           0.53160& 4.72  & (10.30, 12.15)\\
-%&   2 cm & 11.238  & 1057& 11.161 &           0.93489& 8.38  & (9.56, 13.11)\\
-%&   3 cm & 11.238  & 1287& 11.091 &           1.17954& 10.64 & (9.15, 13.39)\\
-%&   4 cm & 11.238  & 1420& 10.903 &           1.05854& 9.71  & (9.45, 13.27)\\
-%&   5 cm & 11.238  & 1509& 10.857 &           1.12152& 10.33 & (9.16, 12.95)\\
-%&   6 cm & 11.238  & 1581& 10.937 &           1.10301& 10.09 & (9.77, 12.88)\\
-%&   7 cm & 11.238  & 1626& 10.724 &           1.04157& 9.71  & (8.80, 13.07)\\[1.5ex]
-%
-% \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
-% &  1 cm & 12.789 &  586 & 12.773 &           0.52290& 4.09 & (11.89, 13.74) \\
-% &  2 cm & 12.789 &  1057& 12.874 &           0.91838& 7.13 & (10.80, 14.54) \\
-% &  3 cm & 12.789 &  1287& 12.877 &           1.14444& 8.89 & (10.76, 14.84) \\
-% &  4 cm & 12.789 &  1420& 13.019 &           1.09987& 8.45 & (10.69, 15.09) \\
-% &  5 cm & 12.789 &  1509& 13.033 &           1.15195& 8.84 & (10.51, 15.25) \\
-% &  6 cm & 12.789 &  1581& 13.111 &           1.09241& 8.33 & (10.57, 15.13) \\
-% &  7 cm & 12.789 &  1626& 13.278 &           1.07854& 8.12 & (10.23, 15.64) \\[1.2ex]
-%
-% \raisebox{1ex}{age 5}  \\ [1.0ex]
-%&  1 cm  & 2.971 &  586&   2.967   &         0.12220& 4.12  & (2.76, 3.24) \\
-%&   2 cm & 2.971 &  1057&  3.036   &         0.29591& 9.75  & (2.48, 3.58) \\
-%&   3 cm & 2.971 &  1287&  2.970   &         0.29382& 9.89  & (2.47, 3.61) \\
-%&   4 cm & 2.971 &  1420&  3.045   &         0.38412& 12.61 & (2.31, 3.99) \\
-%&   5 cm & 2.971 &  1509&  3.077   &         0.43326& 14.08 & (2.31, 3.87)\\
-%&   6 cm & 2.971 &  1581&  2.936   &         0.38625& 13.16 & (2.23, 3.77)\\
-%&   7 cm & 2.971 &  1626&  2.971   &         0.42992& 14.14 & (2.12, 3.81)\\[1.2ex]
-%
-% \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
-%&   1 cm & 2.819  & 586 &  2.817 &           0.05126& 1.82 & (2.73, 2.90) \\
-%&   2 cm & 2.819  & 1057&  2.783 &           0.08525& 3.06 & (2.70, 2.94) \\
-%&   3 cm & 2.819  & 1287&  2.823 &           0.11729& 4.15 & (2.64, 3.04) \\
-%&   4 cm & 2.819  & 1420&  2.794 &           0.12590& 4.15 & (2.61, 3.05) \\
-%&   5 cm & 2.819  & 1509&  2.775 &           0.13938& 5.02 & (2.54, 3.02) \\
-%&   6 cm & 2.819  & 1581&  2.813 &           0.14435& 5.13 & (2.53, 3.12)  \\
-%&   7 cm & 2.819  & 1626&  2.790 &           0.15922& 5.71 & (2.54, 3.06)  \\[0.1ex]
-%   \hline \\
-%\end{tabular}
-%\end{footnotesize}
-%\end{table}
-% \end{small}
- 
-\clearpage
 
 \section{DISCUSSION}
 \label{sec:discussion}
@@ -775,16 +371,18 @@ In this research we have determined optimal sampling efforts of otoliths for tar
 
 %The spatial ALK model based estimator appears to be a useful tool to detect significant differences between ALKs over large areas, although estimation of the uncertainty in the ALK from the joint precision matrix is problematic. Including the uncertainty of the ALK in the model requires an approximation of the joint distribution of the regression coefficient and the spatial effect, but this approximation is only as good as the quality of the data in a given year and quarter, for example Figure ({\bf insert probability plot}) shows that the approximation of the ALK for a cod of length 90 cm is likely to be 2 years old in year 2018 Q1. This occurs presumably because the approximation fails to account for the negative correlation structures between ages. So the uncertainty in the relative abundance was, therefore, calculated using bootstrapping as done by \citet{berg2012spatial,berg2014evaluation}. In future, the model might be expanded to include the probability of recording inaccurate age-at-length data, so that uncertainty in the ALK could be estimated using the joint precision matrix. The model might also be expanded to include covariates such as trawl hauls to capture any haul variation, for example a trawl haul may "hit" a school of fish  of a certain age. 
 
-The spatial ALK model based estimator appears to be a useful tool to detect significant differences between ALKs over large areas, although estimation of the uncertainty in the ALK from the joint precision matrix is problematic. Including the uncertainty of the ALK in the model requires an approximation of the joint distribution of the regression coefficient and the spatial effect, but this approximation is only as good as the quality of the data in a given year and quarter. For instance, the approximation of the ALK can predict juvenile ages given longer lengths, which goes against the natural biology. This occurs presumably because the approximation fails to account for the negative correlation structures between ages. So the uncertainty in the relative abundance was, therefore, calculated using bootstrapping as done by \citet{berg2012spatial,berg2014evaluation}. In future, the model might be expanded to include the probability of recording inaccurate age-at-length data, so that uncertainty in the ALK could be estimated using the joint precision matrix. The model might also be expanded to include covariates such as trawl hauls to capture any haul variation, for example a trawl haul may "hit" a school of fish  of a certain age. Furthermore, compared with DATRAS ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. Figure \ref{fig:proportionRFA1CodQ1} illustrates the estimated age compositions as a function of length for a given haul in RFA 1. The haul selected is the haul with the most number of observed ages of cod in 2018 Q1. Notice that the the model based ALK is smooth, while the DATRAS ALK and the haul based ALK are not. This is an important advantage of the model based ALK, and it is surprising that it did not result in a larger difference in the estimated index of abundance as shown Figure \ref{percentileBiascorrectedCIcod}. An intuitive reason for this is presumably because there are enough observed ages per length group for the haul based ALK to be representative.
+The spatial ALK model based estimator appears to be a useful tool to detect significant differences between ALKs over large areas, although estimation of the uncertainty in the ALK from the joint precision matrix is problematic. Including the uncertainty of the ALK in the model requires an approximation of the joint distribution of the regression coefficient and the spatial effect, but this approximation is only as good as the quality of the data in a given year and quarter. For instance, the approximation of the ALK can predict juvenile ages given longer lengths, which goes against the natural biology. This occurs presumably because the approximation fails to account for the negative correlation structures between ages. So the uncertainty in the relative abundance was, therefore, calculated using bootstrapping as done by \citet{berg2012spatial,berg2014evaluation}. In future, the model might be expanded to include the probability of recording inaccurate age-at-length data, so that uncertainty in the ALK could be estimated using the joint precision matrix. The model might also be expanded to include covariates such as trawl hauls to capture any haul variation, for example a trawl haul may "hit" a school of fish  of a certain age.
 
-\begin{figure}[h!]
-\centering
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKdatrasQ1year2018RFA1.jpeg}}
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKhaulQ1year2018RFA1.jpeg}}
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg}}
-\captionsetup{font=small, width = 14.5cm}{
- \caption{Estimated age compositions of cod as a function of length in a given haul in RFA 1 using a) DATRAS ALK, b) haul based ALK and c) model based ALK. Note that explanation of the colours are only given in c). Each coloured point in c) defines an observed cod with the corresponding length and age in the haul. The haul selected is the haul with most observed ages of cod in 2018 Q1. }\label{fig:proportionRFA1CodQ1}}
-\end{figure}
+% Furthermore, compared with DATRAS ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. Figure \ref{fig:proportionRFA1CodQ1} illustrates the estimated age compositions as a function of length for a given haul in RFA 1. The haul selected is the haul with the most number of observed ages of cod in 2018 Q1. Notice that the the model based ALK is smooth, while the DATRAS ALK and the haul based ALK are not. This is an important advantage of the model based ALK, and it is surprising that it did not result in a larger difference in the estimated index of abundance as shown Figure \ref{percentileBiascorrectedCIcod}. An intuitive reason for this is presumably because there are enough observed ages per length group for the haul based ALK to be representative.
+
+%\begin{figure}[h!]
+%\centering
+%\subfloat[]{\includegraphics[scale=0.33]{figures/ALKdatrasQ1year2018RFA1.jpeg}}
+%\subfloat[]{\includegraphics[scale=0.33]{figures/ALKhaulQ1year2018RFA1.jpeg}}
+%\subfloat[]{\includegraphics[scale=0.33]{figures/ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg}}
+%\captionsetup{font=small, width = 14.5cm}{
+% \caption{Estimated age compositions of cod as a function of length in a given haul in RFA 1 using a) DATRAS ALK, b) haul based ALK and c) model based ALK. Note that explanation of the colours are only given in c). Each coloured point in c) defines an observed cod with the corresponding length and age in the haul. The haul selected is the haul with most observed ages of cod in 2018 Q1. }\label{fig:proportionRFA1CodQ1}}
+%\end{figure}
 
 With regards to how many otoliths to sample per length group, the evidence is clear that .....\\
 
@@ -1134,8 +732,10 @@ Total count for all ages & 1600 (822) in year 2018 Q1 and 2330 (2163) 2017 Q3. \
 \end{table}
  \end{small}
  
+\section{Analysis of real data}
+\label{secAp:analysisofdata}
 
-\section{\large Estimates from DATRAS and Stratified bootstrap procedures}
+\subsection{\large Estimates from DATRAS and Stratified bootstrap procedures}
 \label{secAp:resultsdatrasALK}
 The bootstrap procedure proposed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. The results (Figure\ref{DatrasStratified}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
 
@@ -1150,4 +750,467 @@ The bootstrap procedure proposed by DATRAS lacks the potential to account for th
 \end{figure*} 
 
 
+\subsection{Estimates from different sampling procedures}
+\label{secAP:resultssamplingprocedure}
+\clearpage
+ \begin{small}
+\begin{table}[h!]
+\centering
+\setlength\tabcolsep{11.5pt} 
+\captionsetup{font=small, width = 16.0cm}{
+\caption{Estimated abundance ($\hat{\lambda}_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The median estimated indices, estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)), the percentage relative standard error (RSE\%) and  mean square error (MSE) are also given.}\label{codresults2018}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclcl}
+  \hline \\ [0.3ex]
+&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\%  & MSE  &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+\hline \\
+ \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
+&   1 cm & 0.863 &    0.863  & 0.863 &         0.00910& 0.000 & 0.0000  & (0.86, 0.86)\\
+&   2 cm & 0.863 &    0.865  & 0.867 &         0.00939& 1.085 & 0.00009 & (0.84, 0.88)\\
+&   3 cm & 0.863 &    0.856  & 0.861 &         0.02803& 3.274 & 0.00083 & (0.80, 0.90) \\
+&   4 cm & 0.863 &    0.857  & 0.859 &         0.02791& 3.257 & 0.00082 & (0.81, 0.91) \\
+&   5 cm & 0.863 &    0.845  & 0.847 &         0.03694& 4.370 & 0.00044 & (0.81, 0.92)\\
+&   6 cm & 0.863 &    0.860  & 0.861 &         0.03514& 4.088 & 0.00125 & (0.79, 0.93)\\
+&   7 cm & 0.863 &    0.854  & 0.853 &         0.03803& 4.454 & 0.00153 & (0.80, 0.93)\\[1.5ex]
+
+ \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
+&    1 cm & 6.496 &    6.496 & 6.491 &          0.00552& 0.085 & 0.00003 & (6.49, 6.50)\\
+&    2 cm & 6.496 &    6.486 & 6.486 &          0.02073& 0.320 & 0.00053 & (6.46, 6.53)\\
+&    3 cm & 6.496 &    6.504 & 6.506 &          0.05414& 0.832 & 0.00299 & (6.38, 6.60)\\
+&    4 cm & 6.496 &    6.498 & 6.500 &          0.05351& 0.823 & 0.00287 & (6.38, 6.60)\\
+&    5 cm & 6.496 &    6.514 & 6.517 &          0.07322& 1.124 & 0.00567 & (6.32, 6.65)\\
+&    6 cm & 6.496 &    6.503 & 6.507 &          0.07862& 1.209 & 0.00623 & (6.30, 6.65)\\
+&    7 cm & 6.496 &    6.486 & 6.491 &          0.09414& 1.452 & 0.00897 & (6.31, 6.64)\\[1.5ex]
+
+ \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
+&   1 cm & 1.571 &    1.572  & 1.571 &         0.04499& 2.861  & 0.00203 & (1.49, 1.66)\\
+&   2 cm & 1.571 &    1.578  & 1.572 &         0.07268& 4.605  & 0.00533 & (1.45, 1.74)\\
+&   3 cm & 1.571 &    1.557  & 1.554 &         0.09893& 6.353  & 0.00999 & (1.41, 1.77)\\
+&   4 cm & 1.571 &    1.640  & 1.632 &         0.10687& 6.517  & 0.00161 & (1.38, 1.86)\\
+&   5 cm & 1.571 &    1.634  & 1.632 &         0.12411& 7.593  & 0.01940 & (1.31, 1.87)\\
+&   6 cm & 1.571 &    1.649  & 1.643 &         0.13337& 8.086  & 0.02390 & (1.31, 1.93)\\
+&   7 cm & 1.571 &    1.748  & 1.740 &         0.14741& 8.432  & 0.05300 & (1.28, 2.06) \\[1.5ex]
+
+ \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
+&   1 cm & 1.584 &    1.581  & 1.581 &         0.06670& 4.219   & 0.00446 & (1.45, 1.71)\\
+&   2 cm & 1.584 &    1.597  & 1.596 &         0.11810& 7.397   & 0.01410 & (1.35, 1.83)\\
+&   3 cm & 1.584 &    1.613  & 1.619 &         0.14715& 9.123   & 0.02250 & (1.25, 1.89)\\
+&   4 cm & 1.584 &    1.563  & 1.568 &         0.14581& 9.326   & 0.02170 & (1.30, 1.84)\\
+&   5 cm & 1.584 &    1.586  & 1.581 &         0.15534& 9.794   & 0.02410 & (1.30, 1.90)\\
+&   6 cm & 1.584 &    1.596  & 1.595 &         0.16125& 10.104  & 0.02620 & (1.26, 1.93)\\
+&   7 cm & 1.584 &    1.502  & 1.500 &         0.16988& 11.311  & 0.03550 & (1.33, 1.83) \\[1.5ex]
+
+ \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
+&   1 cm & 0.742 &    0.746 & 0.751 &          0.06817& 9.1440 & 0.00466 & (0.61, 0.87)\\
+&   2 cm & 0.742 &    0.738 & 0.729 &          0.10457& 14.170 & 0.01100 & (0.58, 0.96)\\
+&   3 cm & 0.742 &    0.765 & 0.756 &          0.11506& 15.040 & 0.01380 & (0.53, 1.00)\\
+&   4 cm & 0.742 &    0.764 & 0.757 &          0.11686& 15.299 & 0.01410 & (0.54, 1.00)\\
+&   5 cm & 0.742 &    0.801 & 0.787 &          0.12230& 15.270 & 0.01840 & (0.55, 1.07)\\
+&   6 cm & 0.742 &    0.779 & 0.765 &          0.11546& 14.817 & 0.01470 & (0.58, 1.02)\\
+&   7 cm & 0.742 &    0.828 & 0.814 &          0.12779& 15.435 & 0.02360 & (0.54, 1.11) \\[1.5ex]
+
+ \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
+&   1 cm & 1.074 &    1.073 & 1.065 &          0.06707& 6.251  & 0.00450 & (0.95, 1.20)\\
+&   2 cm & 1.074 &    1.067 & 1.060 &          0.10236& 9.595  & 0.01050 & (0.90, 1.28)\\
+&   3 cm & 1.074 &    1.036 & 1.028 &          0.11648& 11.247 & 0.01510 & (0.90, 1.26)\\
+&   4 cm & 1.074 &    1.009 & 1.003 &          0.11837& 11.735 & 0.01830 & (0.90, 1.25)\\
+&   5 cm & 1.074 &    0.950 & 0.944 &          0.11578& 12.184 & 0.02880 & (0.96, 1.19)\\
+&   6 cm & 1.074 &    0.944 & 0.930 &          0.11745& 12.446 & 0.03090 & (0.95, 1.20)\\
+&   7 cm & 1.074 &    0.913 & 0.905 &          0.11462& 12.553 & 0.03910 & (1.00, 1.14) \\[1.5ex]
+  \hline \\
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+
+
+
+\clearpage
+ \begin{small}
+\begin{table}[h!]
+\centering
+\setlength\tabcolsep{10.5pt} 
+\captionsetup{font=small, width = 16cm}{
+\caption{Estimated abundance ($\hat{\lambda}_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclclcl}
+  \hline \\ [0.3ex]
+&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$  & SE($\hat{\lambda}_{a}^{*}$) & RSE\%& RMSE &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+\hline \\
+ \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
+&   1 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
+&   2 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
+&   3 cm & 0.282  &    0.289 &  0.295 &  0.00626 & 2.17 & 0.00008 & (0.28, 0.29)\\
+&   4 cm & 0.282  &    0.290 &  0.295 &  0.00592 & 2.04 & 0.00010 & (0.28, 0.29)\\
+&   5 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
+&   6 cm & 0.282  &    0.297 &  0.295 &  0.01022 & 3.44 & 0.00030 & (0.28, 0.31)\\
+&   7 cm & 0.282  &    0.290 &  0.295 &  0.00594 & 2.05 & 0.00010 & (0.28, 0.29)\\[1.2ex]
+
+ \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
+&   1 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
+&   2 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
+&   3 cm & 0.123 &      0.117  & 0.111 & 0.00626  & 5.36 & 0.00008 & (0.11, 0.12)\\
+&   4 cm & 0.123 &      0.118  & 0.115 & 0.00673  & 5.71 & 0.00008 & (0.11, 0.13) \\
+&   5 cm & 0.123 &      0.125  & 0.123 & 0.00139  & 1.12 & 0.000003 & (0.12, 0.13) \\
+&   6 cm & 0.123 &      0.112  & 0.114 & 0.01059  & 9.46 & 0.00024 & (0.11, 0.13)\\
+&   7 cm & 0.123 &      0.116  & 0.114 & 0.00628  & 5.43 & 0.00009 & (0.11, 0.13)\\[1.2ex]
+
+\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
+&   1 cm & 0.929 &    0.930  & 0.923 &   0.16851& 18.13 & 0.02840 & (0.64, 1.28)\\
+&   2 cm & 0.929 &    0.916  & 0.861 &   0.28468& 31.06 & 0.08120 & (0.55, 1.53) \\
+&   3 cm & 0.929 &    0.966  & 0.902 &   0.33158& 34.32 & 0.11000 & (0.53, 1.71)\\
+&   4 cm & 0.929 &    0.955  & 0.900 &   0.31885& 33.38 & 0.10200 & (0.49, 1.66)\\
+&   5 cm & 0.929 &    0.992  & 0.942 &   0.31609& 31.85 & 0.10400 & (0.48, 1.75)\\
+&   6 cm & 0.929 &    0.966  & 0.893 &   0.36374& 37.66 & 0.13400 & (0.47, 1.83)\\
+&   7 cm & 0.929 &    0.989  & 0.933 &   0.34996& 35.40 & 0.12600 & (0.45, 1.80)\\[1.2ex]
+
+ \raisebox{1ex}{\bf age 3} \\ [1.0ex]
+&   1 cm & 11.238  &  11.270 & 11.249 &  0.53506& 4.75  & 0.28700 & (10.19, 12.30)\\
+&   2 cm & 11.238  &  11.179 & 11.187 &  0.92312& 8.26  & 0.85600 & (9.57, 13.11)\\
+&   3 cm & 11.238  &  11.109 & 11.082 &  1.07691& 9.69  & 1.18000 & (9.30, 13.27)\\
+&   4 cm & 11.238  &  11.000 & 11.009 &  1.08989& 9.91  & 1.24000 & (9.21, 13.15)\\
+&   5 cm & 11.238  &  10.891 & 10.871 &  1.11346& 10.22 & 1.36000 & (9.41, 13.03)\\
+&   6 cm & 11.238  &  10.920 & 10.905 &  1.06856& 9.79  & 1.24000 & (9.46, 13.04)\\
+&   7 cm & 11.238  &  10.840 & 10.839 &  1.08304& 9.99  & 1.33000 & (9.53, 13.05)\\[1.5ex]
+
+ \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
+ &  1 cm & 12.789 &   12.757 & 12.754 &  0.52780& 4.14 & 0.28000 & (11.79, 13.73) \\
+ &  2 cm & 12.789 &   12.816 & 12.827 &  0.93741& 7.31 & 0.87900 & (10.76, 14.60) \\
+ &  3 cm & 12.789 &   12.863 & 12.856 &  1.06438& 8.27 & 1.14000 & (10.68, 14.93) \\
+ &  4 cm & 12.789 &   12.950 & 12.954 &  1.09842& 8.48 & 1.23000 & (10.56, 15.14) \\
+ &  5 cm & 12.789 &   13.096 & 13.087 &  1.12912& 8.62 & 1.37000 & (10.51, 15.31) \\
+ &  6 cm & 12.789 &   13.061 & 13.051 &  1.08819& 8.33 & 1.26000 & (10.42, 15.11) \\
+ &  7 cm & 12.789 &   13.176 & 13.187 &  1.09385& 8.30 & 1.35000 & (10.33, 15.18) \\[1.2ex]
+
+ \raisebox{1ex}{age 5}  \\ [1.0ex]
+&  1 cm  & 2.971 &     2.971   & 2.966 & 0.13399& 4.51  & 0.01800 & (2.72, 3.24) \\
+&   2 cm & 2.971 &     3.048   & 3.037 & 0.27486& 9.02  & 0.08150 & (2.52, 3.62) \\
+&   3 cm & 2.971 &     3.000   & 2.974 & 0.31856& 10.62 & 0.10200 & (2.42, 3.65) \\
+&   4 cm & 2.971 &     3.038   & 3.005 & 0.34723& 11.43 & 0.12500 & (2.40, 3.77) \\
+&   5 cm & 2.971 &     2.971   & 2.968 & 0.33433& 11.25 & 0.11200 & (2.35, 3.64)\\
+&   6 cm & 2.971 &     2.980   & 2.964 & 0.38418& 12.89 & 0.14800 & (2.28, 3.77)\\
+&   7 cm & 2.971 &     2.940   & 2.922 & 0.39677& 13.49 & 0.15800 & (2.32, 3.76)\\[1.2ex]
+
+ \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
+&   1 cm & 2.819  &   2.818 & 2.820 & 0.05409& 1.92 & 0.00293 & (2.71, 2.92) \\
+&   2 cm & 2.819  &   2.787 & 2.784 & 0.08700& 3.12 & 0.00860 & (2.68, 2.96) \\
+&   3 cm & 2.819  &   2.808 & 2.808 & 0.11451& 4.08 & 0.01320 & (2.60, 3.04) \\
+&   4 cm & 2.819  &   2.800 & 2.795 & 0.12424& 4.44 & 0.01580 & (2.61, 3.06) \\
+&   5 cm & 2.819  &   2.793 & 2.791 & 0.13520& 4.84 & 0.01890 & (2.58, 3.07) \\
+&   6 cm & 2.819  &   2.814 & 2.823 & 0.14353& 5.10 & 0.02060 & (2.54, 3.10)  \\
+&   7 cm & 2.819  &   2.800 & 2.794 & 0.16239& 5.80 & 0.02670 & (2.55, 3.14)  \\[0.1ex]
+   \hline \\
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+ 
+%
+%\clearpage
+% \begin{small}
+%\begin{table}[h!]
+%\centering
+%\setlength\tabcolsep{18.5pt} 
+%\captionsetup{font=small, width = 15.5cm}{
+%\caption{Estimated abundance ($\hat{\lambda}_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)) and the percentage relative standard error (RSE\%) are also given.}\label{codresults2018}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclcl}
+%  \hline \\ [0.3ex]
+%&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\% &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+%\hline \\
+% \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
+%&   1 cm & 0.863 &    0.866  &          0.00910& 1.051 & (0.84, 0.88)\\
+%&   2 cm & 0.863 &    0.866  &          0.00969& 1.119 & (0.84, 0.88)\\
+%&   3 cm & 0.863 &    0.858  &          0.02476& 2.886 & (0.81, 0.90) \\
+%&   4 cm & 0.863 &    0.854  &          0.02993& 3.507 & (0.81, 0.90) \\
+%&   5 cm & 0.863 &    0.848  &          0.03712& 4.379 & (0.81, 0.92)\\
+%&   6 cm & 0.863 &    0.858  &          0.03646& 4.249 & (0.80, 0.93)\\
+%&   7 cm & 0.863 &    0.856  &          0.03920& 4.582 & (0.80, 0.93)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
+%&    1 cm & 6.496 &    6.485 &           0.02055& 0.317 & (6.47, 6.53)\\
+%&    2 cm & 6.496 &    6.485 &           0.01968& 0.303 & (6.46, 6.52)\\
+%&    3 cm & 6.496 &    6.503 &           0.05023& 0.772 & (6.38, 6.60)\\
+%&    4 cm & 6.496 &    6.498 &           0.05852& 0.901 & (6.39, 6.62)\\
+%&    5 cm & 6.496 &    6.507 &           0.07121& 1.094 & (6.36, 6.64)\\
+%&    6 cm & 6.496 &    6.510 &           0.07415& 1.139 & (6.34, 6.64)\\
+%&    7 cm & 6.496 &    6.491 &           0.08395& 1.293 & (6.33, 6.64)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
+%&   1 cm & 1.571 &    1.574  &          0.06955& 4.418  & (1.46, 1.73)\\
+%&   2 cm & 1.571 &    1.579  &          0.06785& 4.429  & (1.45, 1.71)\\
+%&   3 cm & 1.571 &    1.559  &          0.09708& 6.228  & (1.41, 1.75)\\
+%&   4 cm & 1.571 &    1.641  &          0.10051& 6.124  & (1.41, 1.84)\\
+%&   5 cm & 1.571 &    1.627  &          0.12505& 7.686  & (1.31, 1.88)\\
+%&   6 cm & 1.571 &    1.643  &          0.12598& 7.670  & (1.31, 1.91)\\
+%&   7 cm & 1.571 &    1.753  &          0.13991& 7.979  & (1.44, 2.02) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
+%&   1 cm & 1.584 &    1.603  &          0.12104& 7.550  & (1.37, 1.85)\\
+%&   2 cm & 1.584 &    1.592  &          0.11493& 7.218  & (1.37, 1.82)\\
+%&   3 cm & 1.584 &    1.610  &          0.14425& 8.960  & (1.31, 1.91)\\
+%&   4 cm & 1.584 &    1.571  &          0.15284& 9.729  & (1.31, 1.88)\\
+%&   5 cm & 1.584 &    1.585  &          0.15010& 9.468  & (1.32, 1.89)\\
+%&   6 cm & 1.584 &    1.588  &          0.15178& 9.560  & (1.26, 1.88)\\
+%&   7 cm & 1.584 &    1.503  &          0.16675& 11.094 & (1.38, 1.82) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
+%&   1 cm & 0.742 &    0.740 &           0.10729& 14.504 & (0.56, 095)\\
+%&   2 cm & 0.742 &    0.744 &           0.11047& 14.848 & (0.57, 0.98)\\
+%&   3 cm & 0.742 &    0.764 &           0.11675& 15.287 & (0.55, 1.02)\\
+%&   4 cm & 0.742 &    0.752 &           0.11398& 15.158 & (0.58, 0.99)\\
+%&   5 cm & 0.742 &    0.814 &           0.12034& 14.789 & (0.53, 1.08)\\
+%&   6 cm & 0.742 &    0.782 &           0.10975& 14.043 & (0.57, 1.02)\\
+%&   7 cm & 0.742 &    0.813 &           0.12545& 15.425 & (0.59, 1.09) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
+%&   1 cm & 1.074 &    1.063 &           0.10489& 9.865  & (0.90, 1.28)\\
+%&   2 cm & 1.074 &    1.065 &           0.10657& 10.009 & (0.90, 1.29)\\
+%&   3 cm & 1.074 &    1.037 &           0.12215& 11.775 & (0.88, 1.25)\\
+%&   4 cm & 1.074 &    1.015 &           0.11855& 11.679 & (0.89, 1.24)\\
+%&   5 cm & 1.074 &    0.950 &           0.12210& 12.849 & (0.93, 1.21)\\
+%&   6 cm & 1.074 &    0.951 &           0.11562& 12.154 & (0.92, 1.19)\\
+%&   7 cm & 1.074 &    0.914 &           0.12577& 13.760 & (0.96, 1.18) \\[1.5ex]
+%  \hline \\
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small}
+%
+
+% \begin{small}
+%\begin{table}[h!]
+%\centering
+%\setlength\tabcolsep{15.5pt} 
+%\captionsetup{font=small, width = 15cm}{
+%\caption{Estimated abundance ($\hat{\lambda}_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclclclcl}
+%  \hline \\ [0.3ex]
+%&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$  & SE($\hat{\lambda}_{a}^{*}$) & RSE\%&  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+%\hline \\
+% \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
+%&   1 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   2 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   3 cm & 0.282  &    0.288 &           0.00628& 2.18 & (0.28, 0.29)\\
+%&   4 cm & 0.282  &    0.291 &           0.00578& 1.99 & (0.28, 0.29)\\
+%&   5 cm & 0.282  &    0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   6 cm & 0.282  &    0.297 &           0.00949& 3.19 & (0.28, 0.31)\\
+%&   7 cm & 0.282  &    0.290 &           0.00595& 2.05 & (0.28, 0.29)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
+%&   1 cm & 0.123 &      0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
+%&   2 cm & 0.123 &      0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
+%&   3 cm & 0.123 &      0.117  &          0.00628& 5.36 & (0.11, 0.12)\\
+%&   4 cm & 0.123 &      0.117  &          0.00641& 5.47 & (0.11, 0.13) \\
+%&   5 cm & 0.123 &      0.125  &          0.00139& 1.11 & (0.12, 0.13) \\
+%&   6 cm & 0.123 &      0.112  &          0.00942& 8.43 & (0.11, 0.13)\\
+%&   7 cm & 0.123 &      0.115  &          0.00630& 5.46 & (0.11, 0.13)\\[1.2ex]
+%
+%\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
+%&   1 cm & 0.929 &    0.917  &          0.17774& 19.39 & (0.58, 1.25)\\
+%&   2 cm & 0.929 &    0.892  &          0.28437& 31.89 & (0.47, 1.50) \\
+%&   3 cm & 0.929 &    0.985  &          0.33392& 33.90 & (0.51, 1.65)\\
+%&   4 cm & 0.929 &    0.982  &          0.33738& 34.36 & (0.48, 1.55)\\
+%&   5 cm & 0.929 &    1.003  &          0.34661& 34.56 & (0.50, 1.61)\\
+%&   6 cm & 0.929 &    0.945  &          0.33643& 35.60 & (0.49, 1.77)\\
+%&   7 cm & 0.929 &    0.982  &          0.33668& 34.28 & (0.42, 1.62)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 3} \\ [1.0ex]
+%&   1 cm & 11.238  &  11.272 &           0.53160& 4.72  & (10.30, 12.15)\\
+%&   2 cm & 11.238  &  11.161 &           0.93489& 8.38  & (9.56, 13.11)\\
+%&   3 cm & 11.238  &  11.091 &           1.17954& 10.64 & (9.15, 13.39)\\
+%&   4 cm & 11.238  &  10.903 &           1.05854& 9.71  & (9.45, 13.27)\\
+%&   5 cm & 11.238  &  10.857 &           1.12152& 10.33 & (9.16, 12.95)\\
+%&   6 cm & 11.238  &  10.937 &           1.10301& 10.09 & (9.77, 12.88)\\
+%&   7 cm & 11.238  &  10.724 &           1.04157& 9.71  & (8.80, 13.07)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
+% &  1 cm & 12.789 &   12.773 &           0.52290& 4.09 & (11.89, 13.74) \\
+% &  2 cm & 12.789 &   12.874 &           0.91838& 7.13 & (10.80, 14.54) \\
+% &  3 cm & 12.789 &   12.877 &           1.14444& 8.89 & (10.76, 14.84) \\
+% &  4 cm & 12.789 &   13.019 &           1.09987& 8.45 & (10.69, 15.09) \\
+% &  5 cm & 12.789 &   13.033 &           1.15195& 8.84 & (10.51, 15.25) \\
+% &  6 cm & 12.789 &   13.111 &           1.09241& 8.33 & (10.57, 15.13) \\
+% &  7 cm & 12.789 &   13.278 &           1.07854& 8.12 & (10.23, 15.64) \\[1.2ex]
+%
+% \raisebox{1ex}{age 5}  \\ [1.0ex]
+%&  1 cm  & 2.971 &     2.967   &         0.12220& 4.12  & (2.76, 3.24) \\
+%&   2 cm & 2.971 &     3.036   &         0.29591& 9.75  & (2.48, 3.58) \\
+%&   3 cm & 2.971 &     2.970   &         0.29382& 9.89  & (2.47, 3.61) \\
+%&   4 cm & 2.971 &     3.045   &         0.38412& 12.61 & (2.31, 3.99) \\
+%&   5 cm & 2.971 &     3.077   &         0.43326& 14.08 & (2.31, 3.87)\\
+%&   6 cm & 2.971 &     2.936   &         0.38625& 13.16 & (2.23, 3.77)\\
+%&   7 cm & 2.971 &     2.971   &         0.42992& 14.14 & (2.12, 3.81)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
+%&   1 cm & 2.819  &   2.817 &           0.05126& 1.82 & (2.73, 2.90) \\
+%&   2 cm & 2.819  &   2.783 &           0.08525& 3.06 & (2.70, 2.94) \\
+%&   3 cm & 2.819  &   2.823 &           0.11729& 4.15 & (2.64, 3.04) \\
+%&   4 cm & 2.819  &   2.794 &           0.12590& 4.15 & (2.61, 3.05) \\
+%&   5 cm & 2.819  &   2.775 &           0.13938& 5.02 & (2.54, 3.02) \\
+%&   6 cm & 2.819  &   2.813 &           0.14435& 5.13 & (2.53, 3.12)  \\
+%&   7 cm & 2.819  &   2.790 &           0.15922& 5.71 & (2.54, 3.06)  \\[0.1ex]
+%   \hline \\
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small}
+% 
+
+
+%
+%
+%\clearpage
+% \begin{small}
+%\begin{table}[h!]
+%\centering
+%\setlength\tabcolsep{15.5pt} 
+%\captionsetup{font=small, width = 16cm}{
+%\caption{Estimated abundance ($\lambda_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\lambda_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)) and the percentage relative standard error (RSE\%) are also given.}\label{codresults2018}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclcl}
+%  \hline \\ [0.3ex]
+%&  $l$ & $\hat{\lambda}_{a}$ & \thead{Otoliths\\ removed} & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\% &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+%\hline \\
+% \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
+%&   1 cm & 0.863 &   231 & 0.866  &          0.00910& 1.051 & (0.84, 0.88)\\
+%&   2 cm & 0.863 &   457 & 0.866  &          0.00969& 1.119 & (0.84, 0.88)\\
+%&   3 cm & 0.863 &   615 & 0.858  &          0.02476& 2.886 & (0.81, 0.90) \\
+%&   4 cm & 0.863 &   712 & 0.854  &          0.02993& 3.507 & (0.81, 0.90) \\
+%&   5 cm & 0.863 &   788 & 0.848  &          0.03712& 4.379 & (0.81, 0.92)\\
+%&   6 cm & 0.863 &   841 & 0.858  &          0.03646& 4.249 & (0.80, 0.93)\\
+%&   7 cm & 0.863 &   889 & 0.856  &          0.03920& 4.582 & (0.80, 0.93)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
+%&    1 cm & 6.496 &  231 &  6.485 &           0.02055& 0.317 & (6.47, 6.53)\\
+%&    2 cm & 6.496 &  457 &  6.485 &           0.01968& 0.303 & (6.46, 6.52)\\
+%&    3 cm & 6.496 &  615 &  6.503 &           0.05023& 0.772 & (6.38, 6.60)\\
+%&    4 cm & 6.496 &  712 &  6.498 &           0.05852& 0.901 & (6.39, 6.62)\\
+%&    5 cm & 6.496 &  788 &  6.507 &           0.07121& 1.094 & (6.36, 6.64)\\
+%&    6 cm & 6.496 &  841 &  6.510 &           0.07415& 1.139 & (6.34, 6.64)\\
+%&    7 cm & 6.496 &  889 &  6.491 &           0.08395& 1.293 & (6.33, 6.64)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
+%&   1 cm & 1.571 &  213 &  1.574  &          0.06955& 4.418  & (1.46, 1.73)\\
+%&   2 cm & 1.571 &  457 &  1.579  &          0.06785& 4.429  & (1.45, 1.71)\\
+%&   3 cm & 1.571 &  615 &  1.559  &          0.09708& 6.228  & (1.41, 1.75)\\
+%&   4 cm & 1.571 &  712 &  1.641  &          0.10051& 6.124  & (1.41, 1.84)\\
+%&   5 cm & 1.571 &  788 &  1.627  &          0.12505& 7.686  & (1.31, 1.88)\\
+%&   6 cm & 1.571 &  841 &  1.643  &          0.12598& 7.670  & (1.31, 1.91)\\
+%&   7 cm & 1.571 &  889 &  1.753  &          0.13991& 7.979  & (1.44, 2.02) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
+%&   1 cm & 1.584 &  213 &  1.603  &          0.12104& 7.550  & (1.37, 1.85)\\
+%&   2 cm & 1.584 &  457 &  1.592  &          0.11493& 7.218  & (1.37, 1.82)\\
+%&   3 cm & 1.584 &  615 &  1.610  &          0.14425& 8.960  & (1.31, 1.91)\\
+%&   4 cm & 1.584 &  712 &  1.571  &          0.15284& 9.729  & (1.31, 1.88)\\
+%&   5 cm & 1.584 &  788 &  1.585  &          0.15010& 9.468  & (1.32, 1.89)\\
+%&   6 cm & 1.584 &  841 &  1.588  &          0.15178& 9.560  & (1.26, 1.88)\\
+%&   7 cm & 1.584 &  889 &  1.503  &          0.16675& 11.094 & (1.38, 1.82) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
+%&   1 cm & 0.742 &  213 &  0.740 &           0.10729& 14.504 & (0.56, 095)\\
+%&   2 cm & 0.742 &  457 &  0.744 &           0.11047& 14.848 & (0.57, 0.98)\\
+%&   3 cm & 0.742 &  615 &  0.764 &           0.11675& 15.287 & (0.55, 1.02)\\
+%&   4 cm & 0.742 &  712 &  0.752 &           0.11398& 15.158 & (0.58, 0.99)\\
+%&   5 cm & 0.742 &  788 &  0.814 &           0.12034& 14.789 & (0.53, 1.08)\\
+%&   6 cm & 0.742 &  841 &  0.782 &           0.10975& 14.043 & (0.57, 1.02)\\
+%&   7 cm & 0.742 &  889 &  0.813 &           0.12545& 15.425 & (0.59, 1.09) \\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
+%&   1 cm & 1.074 &  231 &  1.063 &           0.10489& 9.865  & (0.90, 1.28)\\
+%&   2 cm & 1.074 &  457 &  1.065 &           0.10657& 10.009 & (0.90, 1.29)\\
+%&   3 cm & 1.074 &  615 &  1.037 &           0.12215& 11.775 & (0.88, 1.25)\\
+%&   4 cm & 1.074 &  712 &  1.015 &           0.11855& 11.679 & (0.89, 1.24)\\
+%&   5 cm & 1.074 &  788 &  0.950 &           0.12210& 12.849 & (0.93, 1.21)\\
+%&   6 cm & 1.074 &  841 &  0.951 &           0.11562& 12.154 & (0.92, 1.19)\\
+%&   7 cm & 1.074 &  889 &  0.914 &           0.12577& 13.760 & (0.96, 1.18) \\[1.5ex]
+%  \hline \\
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small}
+%
+%
+%\clearpage
+% \begin{small}
+%\begin{table}[h!]
+%\centering
+%\setlength\tabcolsep{13.5pt} 
+%\captionsetup{font=small, width = 16.5cm}{
+%\caption{Estimated abundance ($\lambda_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\lambda_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclcl}
+%  \hline \\ [0.3ex]
+%&  $l$ & $\hat{\lambda}_{a}$ & \thead{Otoliths  removed} & $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\%&  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
+%\hline \\
+% \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
+%&   1 cm & 0.282  &  586  &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   2 cm & 0.282  &  1057 &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   3 cm & 0.282  &  1287 &  0.288 &           0.00628& 2.18 & (0.28, 0.29)\\
+%&   4 cm & 0.282  &  1420 &  0.291 &           0.00578& 1.99 & (0.28, 0.29)\\
+%&   5 cm & 0.282  &  1509 &  0.282 &           0.00000& 0.00 & (0.28, 0.28)\\
+%&   6 cm & 0.282  &  1581 &  0.297 &           0.00949& 3.19 & (0.28, 0.31)\\
+%&   7 cm & 0.282  &  1626 &  0.290 &           0.00595& 2.05 & (0.28, 0.29)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
+%&   1 cm & 0.123 &   586 &   0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
+%&   2 cm & 0.123 &   1057&   0.123  &          0.00000& 0.00 & (0.12, 0.12)\\
+%&   3 cm & 0.123 &   1287&   0.117  &          0.00628& 5.36 & (0.11, 0.12)\\
+%&   4 cm & 0.123 &   1420&   0.117  &          0.00641& 5.47 & (0.11, 0.13) \\
+%&   5 cm & 0.123 &   1509&   0.125  &          0.00139& 1.11 & (0.12, 0.13) \\
+%&   6 cm & 0.123 &   1581&   0.112  &          0.00942& 8.43 & (0.11, 0.13)\\
+%&   7 cm & 0.123 &   1626&   0.115  &          0.00630& 5.46 & (0.11, 0.13)\\[1.2ex]
+%
+%\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
+%&   1 cm & 0.929 &  586 &  0.917  &          0.17774& 19.39 & (0.58, 1.25)\\
+%&   2 cm & 0.929 &  1057&  0.892  &          0.28437& 31.89 & (0.47, 1.50) \\
+%&   3 cm & 0.929 &  1287&  0.985  &          0.33392& 33.90 & (0.51, 1.65)\\
+%&   4 cm & 0.929 &  1420&  0.982  &          0.33738& 34.36 & (0.48, 1.55)\\
+%&   5 cm & 0.929 &  1509&  1.003  &          0.34661& 34.56 & (0.50, 1.61)\\
+%&   6 cm & 0.929 &  1581&  0.945  &          0.33643& 35.60 & (0.49, 1.77)\\
+%&   7 cm & 0.929 &  1626&  0.982  &          0.33668& 34.28 & (0.42, 1.62)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 3} \\ [1.0ex]
+%&   1 cm & 11.238  & 586 & 11.272 &           0.53160& 4.72  & (10.30, 12.15)\\
+%&   2 cm & 11.238  & 1057& 11.161 &           0.93489& 8.38  & (9.56, 13.11)\\
+%&   3 cm & 11.238  & 1287& 11.091 &           1.17954& 10.64 & (9.15, 13.39)\\
+%&   4 cm & 11.238  & 1420& 10.903 &           1.05854& 9.71  & (9.45, 13.27)\\
+%&   5 cm & 11.238  & 1509& 10.857 &           1.12152& 10.33 & (9.16, 12.95)\\
+%&   6 cm & 11.238  & 1581& 10.937 &           1.10301& 10.09 & (9.77, 12.88)\\
+%&   7 cm & 11.238  & 1626& 10.724 &           1.04157& 9.71  & (8.80, 13.07)\\[1.5ex]
+%
+% \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
+% &  1 cm & 12.789 &  586 & 12.773 &           0.52290& 4.09 & (11.89, 13.74) \\
+% &  2 cm & 12.789 &  1057& 12.874 &           0.91838& 7.13 & (10.80, 14.54) \\
+% &  3 cm & 12.789 &  1287& 12.877 &           1.14444& 8.89 & (10.76, 14.84) \\
+% &  4 cm & 12.789 &  1420& 13.019 &           1.09987& 8.45 & (10.69, 15.09) \\
+% &  5 cm & 12.789 &  1509& 13.033 &           1.15195& 8.84 & (10.51, 15.25) \\
+% &  6 cm & 12.789 &  1581& 13.111 &           1.09241& 8.33 & (10.57, 15.13) \\
+% &  7 cm & 12.789 &  1626& 13.278 &           1.07854& 8.12 & (10.23, 15.64) \\[1.2ex]
+%
+% \raisebox{1ex}{age 5}  \\ [1.0ex]
+%&  1 cm  & 2.971 &  586&   2.967   &         0.12220& 4.12  & (2.76, 3.24) \\
+%&   2 cm & 2.971 &  1057&  3.036   &         0.29591& 9.75  & (2.48, 3.58) \\
+%&   3 cm & 2.971 &  1287&  2.970   &         0.29382& 9.89  & (2.47, 3.61) \\
+%&   4 cm & 2.971 &  1420&  3.045   &         0.38412& 12.61 & (2.31, 3.99) \\
+%&   5 cm & 2.971 &  1509&  3.077   &         0.43326& 14.08 & (2.31, 3.87)\\
+%&   6 cm & 2.971 &  1581&  2.936   &         0.38625& 13.16 & (2.23, 3.77)\\
+%&   7 cm & 2.971 &  1626&  2.971   &         0.42992& 14.14 & (2.12, 3.81)\\[1.2ex]
+%
+% \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
+%&   1 cm & 2.819  & 586 &  2.817 &           0.05126& 1.82 & (2.73, 2.90) \\
+%&   2 cm & 2.819  & 1057&  2.783 &           0.08525& 3.06 & (2.70, 2.94) \\
+%&   3 cm & 2.819  & 1287&  2.823 &           0.11729& 4.15 & (2.64, 3.04) \\
+%&   4 cm & 2.819  & 1420&  2.794 &           0.12590& 4.15 & (2.61, 3.05) \\
+%&   5 cm & 2.819  & 1509&  2.775 &           0.13938& 5.02 & (2.54, 3.02) \\
+%&   6 cm & 2.819  & 1581&  2.813 &           0.14435& 5.13 & (2.53, 3.12)  \\
+%&   7 cm & 2.819  & 1626&  2.790 &           0.15922& 5.71 & (2.54, 3.06)  \\[0.1ex]
+%   \hline \\
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small}
+ 
 \end{document}
