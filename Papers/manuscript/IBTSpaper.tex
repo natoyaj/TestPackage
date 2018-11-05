@@ -307,6 +307,24 @@ We also demonstrate the implications of using DATRAS bootstrap procedure for est
 %\clearpage
 \subsection{Alternative sampling procedure for North Sea Cod and Saithe}
 \label{sec:optimumeffortresults}
+
+\ed{In this section we investigate how the mCPUE estimates are affected by reducing the number of otoliths collected. The collection of otoliths is cost full and time consuming, and we therefore want to share light on the impact of reducing the effort spent on age determination. The current sampling procedure for cod and saithe is to collect \textit{one} otolith from every observed cm group in every haul. In this research we remove otoliths such that the reduced data set is a random realisation with a sampling procedure were \textit{one} otolith is collected from every 1,2,...,5 cm group as explained in section \ref{sec:optimizationsampling}. }
+
+\ed{We want to highlight that in some hauls there were collected more than one otholit from some cm groups. In e.g. year 2018 in Q1, a total of 231 otoliths were removed by sampling \textit{one} otolith per cm group for cod. We have noticed that it is mainly surveys conducted by Scotland were those otoliths were collected, and mainly from the larger cod. Intuitively it is reasonable that relatively more effort should be spent on the larger fish since the uncertainty of the age is typically high for the larger fish. One interesting part about the availability of those, in some sense extra, samples is that we are able to give an indication about how the mCPUE is affected by collecting more than one otolith per cm group.}
+
+\ed{We shall now elaborate the additional uncertainty introduced with reducing the number of otoliths collected with the mCPUE uncertainty given in table \ref{percentileBiascorrectedCIcod}. Define $\lambda_{a,l}$ to be the random point estimate of the $\text{mCPUE}_a$ of interest if the proposed sampling procedure in section \ref{sec:optimizationsampling} was performed. Here $l$ refers to the width of the length intervals explained in section \ref{sec:optimizationsampling}.  Figure \ref{fig:removalPlot} shows the stand deviation of $\lambda_{a,l}$ as a function of $l$, and as a proportion of the uncertainty of $\text{mCPUE}_a$. We see that the uncertainty increases relatively rapidly for age 2 and older. This indicates that the mCPUE would typically be estimated quite different for several of the ages if the sampling procedure were adjusted as suggested in section \ref{sec:optimizationsampling}.}
+
+\ed{From figure \ref{fig:removalPlot} we see that the uncertainty of $\lambda_{a,l}$ is quite large compared with the uncertainty of the corresponding $\text{mCPUE}_a$ for $l = 1$cm. This indicates that we would gain relatively much information by collecting more than one otolith per cm group.}
+
+
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.7]{figures/removalCod.jpeg}}
+\subfloat[]{\includegraphics[scale=0.7]{figures/removalSaithe.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated standard deviation of $\lambda_{a,l}$ as a function of the grouped length width intervalls, a) for cod in year 2018 in Q1 and b) for saithe in year 2017 in Q3. }\label{fig:removalPlot}}
+\end{figure}
+
 %\begin{itemize}
 %\item {\bf We discuss and include these in explanations below}
 %\item Accuracy of estimates of reduced data compared with estimates from full data
