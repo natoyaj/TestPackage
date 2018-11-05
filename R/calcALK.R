@@ -674,6 +674,11 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   alkToReturn = list()
   #----------------------------------------------------
 
+  if(fitModel$opt$message !="relative convergence (4)"){
+    print("-------------------Convergence NOT OK--------------------------------------------")
+    print(opt$message)
+    stop("Abort because of convergence issues")
+  }
   #Extract the estimated continuous GRF-----------------
   Apred = fitModel$Apred
   field1 = Apred %*%report$x[,2]/exp(report$logTau[2])
