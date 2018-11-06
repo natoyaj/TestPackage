@@ -488,7 +488,7 @@ calculateALKModelOlav = function(RFA, species, year, quarter,hh,data, fitModel =
     fitModel =  fitModel(species = species, quarter =quarter, year = year, ca_hh = data,hh = hh)
   }
 
-  if(fitModel$opt$message!="relative convergence (4)"){
+  if(fitModel$opt$message!="relative convergence (4)" & fitModel$opt$message!="both X-convergence and relative convergence (5)"){
     warning("Convergence problemst, FIX TODO, samplingh should be performed again.")
   }
 
@@ -674,9 +674,9 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   alkToReturn = list()
   #----------------------------------------------------
 
-  if(fitModel$opt$message !="relative convergence (4)"){
+  if(!fitModel$convergence){
     print("-------------------Convergence NOT OK--------------------------------------------")
-    print(opt$message)
+    print(fitModel$opt$message)
     stop("Abort because of convergence issues")
   }
   #Extract the estimated continuous GRF-----------------
