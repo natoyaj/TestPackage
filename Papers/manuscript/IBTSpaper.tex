@@ -97,6 +97,8 @@
 \usepackage{ulem}
 \newcommand{\ed}[1]{\textcolor{red}{#1}}
 \newcommand{\nat}[1]{\textcolor{blue}{#1}}
+\definecolor{darkgreen}{rgb}{0.09, 0.45, 0.27}
+\newcommand{\olav}[1]{\textcolor{darkgreen}{#1}}
 
 \makeatletter
 \let\latex@xfloat=\@xfloat
@@ -211,23 +213,49 @@ Let the response variable of the age group of a fish be $a = M,...,A$ where $M$ 
 \begin{equation}\label{eq:linearPred1}
 \pi_a[y(l,{\bf s})] = \frac{p_a(l,{\bf s})}{p_a(l,{\bf s}) + \cdots + p_{A}(l,{\bf s}) +p_{M}(l,{\bf s}) } \vspace{ 4mm} \ \ \ \text{for } a =M+1,...,A-1 ,
 \end{equation}
-where \vspace{-5mm} $p_a(l,s)$ is the probability of a fish with length $l$ at location ${\bf s}$ \ed{(I assume from the use of Eucledian distance later that $\mathbf{s}$ is in planar coordinates. It would be nice to state that clearly here, and state somewhere the projection used for the IBTS data.)} to be of age $a$. Note that either $p_{A}(l,{\bf s})$ or $p_{M}(l,{\bf s})$ is known to be equal to zero, and the other is selected such that $\sum_a p_a = 1$. We further assume the logit link
+where \vspace{-5mm} $p_a(l,s)$ is the probability of a fish with length $l$ at location ${\bf s}$ \ed{(I assume from the use of Eucledian distance later that $\mathbf{s}$ is in planar coordinates. It would be nice to state that clearly here, and state somewhere the projection used for the IBTS data.)} \olav{(I changed the the text under related to $||\cdot||$ and I don't think we need to include the coordinate system here. Perhaps we should include how the distances are calculated, note that these distances are also calculated in the haul based ALK when filling the missing values.}  to be of age $a$.  Note  that either $p_{A}(l,{\bf s})$ or $p_{M}(l,{\bf s})$ is known to be equal to zero, and the other is selected such that $\sum_a p_a = 1$. 
+
+We further assume the logit link
 \begin{equation}\label{eq:linearPred}
 \log \left[ \frac{\pi_a[y(l,{\bf s})]}{1-\pi_a[y(l,{\bf s})]}\right] = f_a(l) + \gamma_a({\bf s}).
 \end{equation}
-Here $ f_a(l)$ is a continuous function of length and $\pmb{\gamma}$ is a mean zero Gaussian spatial random field with Mat\'{e}rn covariance function \ed{(I think $\gamma$ needs to be specified, but it could probably be done by reference)}. The spatial random field is intended to capture any spatial variation in the ALK.
+Here $ f_a(l)$ is a continuous function of length and $\pmb{\gamma}$ is a mean zero Gaussian spatial random field with Mat\'{e}rn covariance function \olav{\citep{stein2012interpolation}}. \ed{(I think $\gamma$ needs to be specified, but it could probably be done by reference)}. The spline $f_a$ is intended to account for that longer fish are typically older, and the spatial random field, $\pmb{\gamma}$, is intended to account for spatial variation in the ALK. \olav{See table \ref{tab:parameters} for a description of the parameters used in (\ref{eq:linearPred}). }
 
-The continuous function $f_a(l)$ in (\ref{eq:linearPred}) is modelled with usage of P-splines \citep{wood2017generalized}, and these spline regression coefficients are included as a Gaussian random effect. The precision matrix for the spline regression coefficients is constructed such that the variability (or wryggliness) in the spline is penalized, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for extracting the precision matrix needed for the spline regression coefficients. We assume that the spatially Gaussian random field in (\ref{eq:linearPred}), $\pmb{\gamma}$, follows a stationary Mat\'{e}rn covariance structure:
+The continuous function $f_a(l)$ in (\ref{eq:linearPred}) is modelled with usage of P-splines \citep{wood2017generalized}, and these spline regression coefficients are included as a Gaussian random effect. The precision matrix for the spline regression coefficients is constructed such that the variability (or wryggliness) in the spline is penalized, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for extracting the precision matrix needed for the spline regression coefficients. The marginal variance of the P-splines regression coefficients, $\sigma_f^2$, is estimated in our inference procedure. 
+
+We assume that the spatially Gaussian random field in (\ref{eq:linearPred}), $\pmb{\gamma}$, follows a stationary Mat\'{e}rn covariance structure:
 \begin{equation}\label{eq:matern}
- \text{Cov}(\gamma(\mathbf{s}_1),\gamma(\mathbf{s}_2)) = \frac{\sigma^2_{\gamma}}{2^{\nu-1}\Gamma(\nu)}(\kappa_{\gamma}||\mathbf{s}_1 -\mathbf{s}_2||)^{\nu}K_{\nu}(\kappa_{\gamma}||\mathbf{s}_1-\mathbf{s}_2||),
+ \text{Cov}(\gamma(\mathbf{s}_1),\gamma(\mathbf{s}_2)) = \frac{\sigma^2_{\gamma}}{2^{\nu-1}\Gamma(\nu)}(\kappa||\mathbf{s}_1 -\mathbf{s}_2||)^{\nu}K_{\nu}(\kappa||\mathbf{s}_1-\mathbf{s}_2||),
 \end{equation}
-where $\sigma^2_{\gamma}$ is the marginal variance, $||\cdot||$ is the Euclidean distance measure {\ed{\sout{in kilometres} (I think the unit should be specified for $\mathbf{s}$ if they need to be specified. For this particular expression, I suppose the spatial scale parameter takes care of adjusting for distance units.)}), $\nu$ is a smoothing parameter, $\kappa_{\gamma}$ is a spatial scale parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$. The spatial field is estimated with the stochastic partial differential equation (SPDE) procedure described in \citet{lindgren2011explicit}. The main concept behind the SPDE procedure is that the precision matrix of a spatial field with Mat\'{e}rn  covariance function can be approximated by a sparse matrix on a grid covering the area of interest. Such a grid and sparse precision matrix are constructed with use of the R-INLA package \citep{rue2009approximate}. \ed{(we should spesify somehwere the grid parameters we have used)}
+where $\sigma^2_{\gamma}$ is the marginal variance, \olav{$||\mathbf{s}_1-\mathbf{s}_2||$ is the distance between $\mathbf{s}_1$ and $\mathbf{s}_2$ in kilometres} \olav{\sout{$||\cdot||$ is the Euclidean distance measure}} {\ed{\sout{in kilometres} (I think the unit should be specified for $\mathbf{s}$ if they need to be specified. For this particular expression, I suppose the spatial scale parameter takes care of adjusting for distance units.)}) \olav{(Yes $\kappa$ does, but it is important to know that the distance is given in kilometres for interpretation of $\kappa$. I don't think we need to define the units of ${\bf s}$, it is only $||\mathbf{s}_1-\mathbf{s}_2||$ which is of interest.)}, $\kappa$ is a spatial scale parameter, $\nu$ is a smoothing parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$.  The spatial field is estimated with the stochastic partial differential equation (SPDE) procedure described in \citet{lindgren2011explicit}. The main concept behind the SPDE procedure is that the precision matrix of a spatial field with Mat\'{e}rn  covariance function can be approximated by a sparse matrix on a grid covering the area of interest. Such a grid and sparse precision matrix are constructed with use of the R-INLA package \citep{rue2009approximate}. \olav{See figure \ref{fig:mesh} for an illustration of the mesh used in the case study for cod in section \ref{sec:data}.} \ed{(we should spesify somehwere the grid parameters we have used)} \olav{(The code should be publicly available when publishing the paper, and the results should relatively easily be redone by anyone. Perhaps we can reefer the interested reader to the code for the specifications used in the INLA and mgcv package.)}
+
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{figures/mesh.jpeg}
+ \caption{Mesh used in the case study for cod in section \ref{sec:data} for approximating (\ref{eq:matern}) with the SPDE-procedure.}\label{fig:mesh}
+\end{center}
+\end{figure}
+
 
 The species specific constant $l^*$ is selected as the mid point between the shortest fish of age A and the longest fish of age M in the corresponding year and quarter. A sensitivity analysis of this constant were performed by adjusting it up and down 5 cm for cod in year 2018 in Q1. The point estimate of the mCPUEs then changed in the forth decimal, which \ed{we will consider\sout{is}} negligible.
 
 The model based ALK estimate is obtained by maximizing the likelihood. We maximize the likelihood with use of an R-Package called Template Model Building {\sffamily TMB} \citep{kristensen2015tmb}, combined with the optimizing function {\sffamily nlminb} in R. In this application {\sffamily TMB} is advantageous as it uses Laplace approximation for the latent fields gaining computational efficiency, it also utilizes sparse structures in the latent fields, and uses automatic derivation. 
 
-\ed{(I think the above gives a good declaration of the model, but I wasnt quite able to always keep track of the parameters that need to be decided in the max-likelihood procedure. It would be nice with a short summary of what our free parameters are, including any dimensionality so that the reader can compare with the data volume.)}
+\begin{table}[hh!]
+\begin{tabular}{lllllr}
+Parameter &\bf{Explenation}  \\
+\midrule
+$\sigma_f^2$	& Marginal variance of the spline regression coefficients \\
+$\sigma_{\gamma}^2$ &Marginal variance of the spatial field in (\ref{eq:matern})			\\
+$\kappa$	&  Spatial scale parameter of the spatial field	in (\ref{eq:matern})\\
+\bottomrule
+\end{tabular}
+\caption{\textit{The three parameters used in the ALK model.}}
+\label{tab:parameters}
+\end{table}
+
+\ed{(I think the above gives a good declaration of the model, but I wasnt quite able to always keep track of the parameters that need to be decided in the max-likelihood procedure. It would be nice with a short summary of what our free parameters are, including any dimensionality so that the reader can compare with the data volume.)} \olav{(I agree, I suggest to include a table with MLE of the parameters in the section we elaborate results for the case studies)}
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
@@ -308,13 +336,13 @@ We also demonstrate the implications of using DATRAS bootstrap procedure for est
 \subsection{Alternative sampling procedure for North Sea Cod and Saithe}
 \label{sec:optimumeffortresults}
 
-\ed{In this section we investigate how the mCPUE estimates are affected by reducing the number of otoliths collected. The collection of otoliths is cost full and time consuming, and we therefore want to share light on the impact of reducing the effort spent on age determination. The current sampling procedure for cod and saithe is to collect \textit{one} otolith from every observed cm group in every haul. In this research we remove otoliths such that the reduced data set is a random realisation with a sampling procedure were \textit{one} otolith is collected from every 1,2,...,5 cm group as explained in section \ref{sec:optimizationsampling}. }
+\olav{In this section we investigate how the mCPUE estimates are affected by reducing the number of otoliths collected. The collection of otoliths is cost full and time consuming, and we therefore want to share light on the impact of reducing the effort spent on age determination. The current sampling procedure for cod and saithe is to collect \textit{one} otolith from every observed cm group in every haul. In this research we remove otoliths such that the reduced data set is a random realisation with a sampling procedure were \textit{one} otolith is collected from every 1,2,...,5 cm group as explained in section \ref{sec:optimizationsampling}. }
 
-\ed{We want to highlight that in some hauls there were collected more than one otholit from some cm groups. In e.g. year 2018 in Q1, a total of 231 otoliths were removed by sampling \textit{one} otolith per cm group for cod. We have noticed that it is mainly surveys conducted by Scotland were those otoliths were collected, and mainly from the larger cod. Intuitively it is reasonable that relatively more effort should be spent on the larger fish since the uncertainty of the age is typically high for the larger fish. One interesting part about the availability of those, in some sense extra, samples is that we are able to give an indication about how the mCPUE is affected by collecting more than one otolith per cm group.}
+\olav{We want to highlight that in some hauls there were collected more than one otholit from some cm groups. In e.g. year 2018 in Q1, a total of 231 otoliths were removed by sampling \textit{one} otolith per cm group for cod. We have noticed that it is mainly surveys conducted by Scotland were those otoliths were collected, and mainly from the larger cod. Intuitively it is reasonable that relatively more effort should be spent on the larger fish since the uncertainty of the age is typically high for the larger fish. One interesting part about the availability of those, in some sense extra, samples is that we are able to give an indication about how the mCPUE is affected by collecting more than one otolith per cm group.}
 
-\ed{We shall now elaborate the additional uncertainty introduced with reducing the number of otoliths collected with the mCPUE uncertainty given in table \ref{percentileBiascorrectedCIcod}. Define $\lambda_{a,l}$ to be the random point estimate of the $\text{mCPUE}_a$ of interest if the proposed sampling procedure in section \ref{sec:optimizationsampling} was performed. Here $l$ refers to the width of the length intervals explained in section \ref{sec:optimizationsampling}.  Figure \ref{fig:removalPlot} shows the stand deviation of $\lambda_{a,l}$ as a function of $l$, and as a proportion of the uncertainty of $\text{mCPUE}_a$. We see that the uncertainty increases relatively rapidly for age 2 and older. This indicates that the mCPUE would typically be estimated quite different for several of the ages if the sampling procedure were adjusted as suggested in section \ref{sec:optimizationsampling}.}
+\olav{We shall now elaborate the additional uncertainty introduced with reducing the number of otoliths collected with the mCPUE uncertainty given in table \ref{percentileBiascorrectedCIcod}. Define $\lambda_{a,l}$ to be the random point estimate of the $\text{mCPUE}_a$ of interest if the proposed sampling procedure in section \ref{sec:optimizationsampling} was performed. Here $l$ refers to the width of the length intervals explained in section \ref{sec:optimizationsampling}.  Figure \ref{fig:removalPlot} shows the stand deviation of $\lambda_{a,l}$ as a function of $l$, and as a proportion of the uncertainty of $\text{mCPUE}_a$. We see that the uncertainty increases relatively rapidly for age 2 and older. This indicates that the mCPUE would typically be estimated quite different for several of the ages if the sampling procedure were adjusted as suggested in section \ref{sec:optimizationsampling}.}
 
-\ed{From figure \ref{fig:removalPlot} we see that the uncertainty of $\lambda_{a,l}$ is quite large compared with the uncertainty of the corresponding $\text{mCPUE}_a$ for $l = 1$cm. This indicates that we would gain relatively much information by collecting more than one otolith per cm group.}
+\olav{From figure \ref{fig:removalPlot} we see that the uncertainty of $\lambda_{a,l}$ is quite large compared with the uncertainty of the corresponding $\text{mCPUE}_a$ for $l = 1$cm. This indicates that we would gain relatively much information by collecting more than one otolith per cm group.}
 
 
 \begin{figure}[h!]
