@@ -302,21 +302,25 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
-                        B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE){
+                        B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
+                        removeFirst = FALSE,lengthDivision =NULL,samplesWithinEachIntervall = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
   mCPUE = matrix(0,maxAge+1,B+1)
+  nOtolithsTotal = dim(dat$ca_hh)[1]
+  nOtolithsRemoved = 0
   #---------------------------------------------------------------
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
+  if(!removeFirst){
   tmp = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                           dat = dat,ALKprocedure = ALKprocedure,B = B,
                           dimCPUE = dim(mCPUE))
   mCPUE[,1] = tmp[[1]]
   #-----------------------------------------------------------------------------------------
-
-  #Simulate data and coalculates mCPUE for estimation ofunceratinaty------------------------
+  }
+  #Simulate data and calculates mCPUE for estimation of unceratinaty------------------------
   if(doBootstrap){
     if(ALKprocedure=="modelBased" &useFisher){
       fit = tmp[[2]]
@@ -395,6 +399,23 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
       if(bootstrapProcedure =="stratifiedHLandCA") datTmp$hh = HH#Quickfix todo
 
+
+      if(removeFirst){
+        #simulate otolits
+        tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
+        nOtolithsRemoved = tmp$nOtolithsRemoved
+        datTmp = tmp$reducedData
+        nOtolithsTotal = dim(CA)[1]
+      }else{
+
+        lengthDivision = c(seq(0,max(round(datTmp$ca_hh$LngtCm)) + 1,by = 1))
+        tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
+                         samplesWithinEachIntervall =999999)
+        nOtolithsRemoved = tmp$nOtolithsRemoved
+        datTmp = tmp$reducedData
+        nOtolithsTotal = dim(CA)[1]
+      }
+
       if(ALKprocedure=="modelBased" & useFisher){
         report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
         mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
@@ -414,6 +435,10 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1], mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1])
   names(mCPUEsummary) = c("mCPUE","bootstrapMean","median", "Q025","Q975","BiasCQ025","BiasCQ075", "sd")
+
+  if(removeFirst){#Bad code.  Shall use the first (and only ssimulation) if we remove otolits before removing hauls
+    mCPUEsummary$mCPUE = mCPUE[,2] #Clean this up TODO
+  }
 
   for(i in 1:dim(mCPUEsummary)[1]){
     mCPUEsummary$bootstrapMean[i] = mean(mCPUE[i,2:(B+1)])
@@ -436,6 +461,8 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   }
   #-----------------------------------------------------------------------------------------
 
+  attributes(mCPUEsummary)$nOtolithsRemoved = nOtolithsRemoved
+  attributes(mCPUEsummary)$nOtolithsTotal = nOtolithsTotal
   return(mCPUEsummary)
 }
 

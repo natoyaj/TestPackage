@@ -13,12 +13,9 @@ readIBTSData(survey = "NS-IBTS", year, quarter, species)
 
 \item{species}{species of interest}
 }
-<<<<<<< HEAD
-=======
 \description{
 readIBTSData
 }
->>>>>>> master
 \examples{
 
 }

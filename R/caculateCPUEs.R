@@ -424,9 +424,11 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
       if(dataWithTheSpecies$DataType[i]=="R")
       {
         CPUE =  CPUE + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
+        if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
         CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
+        if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }
     }
   }

@@ -2,16 +2,15 @@
 % Please edit documentation in R/removeData.R
 \name{investigateRemoval}
 \alias{investigateRemoval}
-\title{investigateRemoval}
+\title{investigateRemovalAfterMeeting}
 \usage{
-investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
-  ALKprocedure, removeProcedure, nSim, whatToInvestigate, whatToRemove,
-  typeOfAreaToInvestigate, doNotRemoveAbove = 9999, propRemove = NULL,
-  lengthDivision = NULL)
+investigateRemoval(species, year, quarter, dat,
+  bootstrapProcedure = "stratifiedHLandCA", B,
+  ALKprocedure = "haulBased", removeProcedure = "reduceEffort",
+  doNotRemoveAbove = 9999, lengthDivision = NULL,
+  samplesWithinEachIntervall = 1)
 }
 \arguments{
-\item{RFA}{The roundfish area of interest.}
-
 \item{species}{The species of interest.}
 
 \item{year}{The year species of interest.}
@@ -28,17 +27,11 @@ investigateRemoval(RFA, species, year, quarter, dat, bootstrapProcedure, B,
 
 \item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
 
-\item{nSim}{The number of times to simulate removal of data.}
-
-\item{whatToInvestigate}{If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.}
-
-\item{whatToRemove}{What to remove, either CA (otholits) or hauls. (currently not implemented for hauls)}
-
-\item{typeOfAreaToInvestigate}{What area to investigate, either equals "RFA" or "NorthSea".}
-
 \item{doNotRemoveAbove}{Do not remove fish that is larger than this (in cm).}
 
 \item{lengthDivision}{Take one otholit from each intervall (in cm).}
+
+\item{samplesWithinEachIntervall}{Number of samples taken within each length intervall.}
 }
 \value{
 Returns a list with summary about changes in estimates by removal of data.

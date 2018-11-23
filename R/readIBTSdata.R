@@ -10,7 +10,7 @@
 readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 {
   #Read IBTS-data-----------------------------------------
-  dataDir <<- system.file("extdata", package = "IBTSindices")
+  dataDir <- system.file("extdata", package = "IBTSindices")
   d<- readExchangeDir(dataDir)
   #-------------------------------------------------------
 
@@ -47,9 +47,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
             !is.na(ca$Species) & ca$Species == species,]
   hl = hl[!is.na(hl$Year) & hl$Year == year&
             !is.na(hl$Quarter) & hl$Quarter == quarter,]
-
-
-
 
   for(id in unique(hl$haul.id)){
     if(sum(!is.na(hl$Species[hl$haul.id==id])& hl$Species[hl$haul.id==id]==species)==0){

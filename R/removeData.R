@@ -1,488 +1,86 @@
-#' investigateRemoval
+#' investigateRemovalAfterMeeting
 #' @description Remove a proportion of the data in a given way. Return a list regarding changes of summery statistics.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
-#' @param RFA The roundfish area of interest.
 #' @param dat Data object
 #' @param bootstrapProcedure Bootstrap procedure used.
 #' @param B Samples in the bootstrap
 #' @param ALKprocedure ALK procedure used for calculating CPUE
-#' @param whatToRemove What to remove, either CA (otholits) or hauls. (currently not implemented for hauls)
-#' @param typeOfAreaToInvestigate What area to investigate, either equals "RFA" or "NorthSea".
 #' @param species The species of interest.
 #' @param year The year species of interest.
 #' @param quarter The quarter species of interest.
-#' @param nSim The number of times to simulate removal of data.
-#' @param whatToInvestigate If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.
 #' @param doNotRemoveAbove  Do not remove fish that is larger than this (in cm).
 #' @param lengthDivision  Take one otholit from each intervall (in cm).
+#' @param samplesWithinEachIntervall  Number of samples taken within each length intervall.
 #' @export
 #' @return Returns a list with summary about changes in estimates by removal of data.
 #' @examples
-investigateRemoval = function(RFA,species, year, quarter,dat ,
-                              bootstrapProcedure, B, ALKprocedure,
-                              removeProcedure,
-                              nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
-                              doNotRemoveAbove = 9999,propRemove = NULL,
-                              lengthDivision=NULL){
+investigateRemoval = function(species, year, quarter,dat ,
+                              bootstrapProcedure= "stratifiedHLandCA", B, ALKprocedure = "haulBased",
+                              doNotRemoveAbove = 9999,
+                              lengthDivision=NULL, samplesWithinEachIntervall = 1){
 
   toReturn= list()
 
   #Calculate the mCPUE and possibly more with all data---------------------
-  if(whatToInvestigate=="mean"){
-    if(typeOfAreaToInvestigate =="RFA"){
-      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                          bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-    }else{
-      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                   bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-    }
-  }else{
-    if(typeOfAreaToInvestigate =="RFA"){
-      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                                      bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
-    }else{
-      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
-    }
-  }
+   toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
+                                         bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
   #--------------------------------------------------------------------------
-
 
   #Define a data frame were results shall be stored -----------------------
   tmpResults = list()
-  tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$median = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCQ075 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
+  tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$median = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$BiasCQ025 = matrix(0,confALK(species,quarter)$maxAge+1, B)
+  tmpResults$BiasCQ075 = matrix(0,confALK(species,quarter)$maxAge+1, B)
   #--------------------------------------------------------------------------
 
-  #Remove data and calulates mCPUE etc.--------------------------------------
-  for(i in 1:nSim){
-
+  nOtolithsRemoved = rep(0,B)
+  nOtolithsTotal = rep(0,B)
+  #Sample hauls, remove data, and calulates mCPUE --------------------------------------
+  for(i in 1:B){
     print("Information about progress in otholit removal simulation: ")
     print(paste("Simulation ",i))
-
-    #Remove data in the given procedure
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = propRemove)
-
-    if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
-      if(typeOfAreaToInvestigate =="RFA"){
-        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
-                           bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-      }else{
-        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
-                           bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-      }
-      tmpResults$mCPUE[,i] = resultSim$mCPUE
-    }else{ #Do bootstrap with the reduced data set.
-      if(typeOfAreaToInvestigate =="RFA"){
-        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
-                            bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
-      }else{
-        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
-                                 bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
-      }
-
-      tmpResults$mCPUE[,i] = resultSim$mCPUE
-      tmpResults$bootstrapMean[,i] = resultSim$bootstrapMean
-      tmpResults$median[,i] = resultSim$median
-      tmpResults$sd[,i] = resultSim$sd
-      tmpResults$Q025[,i] = resultSim$Q025
-      tmpResults$Q975[,i] = resultSim$Q975
-      tmpResults$BiasCQ025[,i] = resultSim$BiasCQ025
-      tmpResults$BiasCQ075[,i] = resultSim$BiasCQ075
-    }
-    print(tmpResults$mCPUE[,i])
+    resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
+                             bootstrapProcedure = bootstrapProcedure, B=1, ALKprocedure = ALKprocedure,removeFirst = TRUE, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
+    tmpResults$mCPUE[,i] = resultSim$mCPUE
+    nOtolithsRemoved[i] = attributes(resultSim)$nOtolithsRemoved
+    nOtolithsTotal[i]= attributes(resultSim)$nOtolithsTotal
   }
   #--------------------------------------------------------------------------
 
   #Extract what we are interested in (mCPUE, sd and quantiles)----------------
-  if(whatToInvestigate=="mean"){
-    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
-    names(toReturn$mCPUE) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$mCPUE)[1]){
-      toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
-      quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
-      toReturn$mCPUE$Q025[i] = quantile[1]
-      toReturn$mCPUE$Q975[i] = quantile[2]
-      toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
-
-       # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$mCPUE$BiasCQ025[i] = qq[1]
-      toReturn$mCPUE$BiasCQ075[i] = qq[2]
-    }
-  }else{
-    toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
-    names(toReturn$mCPUE) = c("mean","median" ,"Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$mCPUE)[1]){
-      toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
-      quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
-      toReturn$mCPUE$Q025[i] = quantile[1]
-      toReturn$mCPUE$Q975[i] = quantile[2]
-      toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
-
-      # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$mCPUE$BiasCQ025[i] = qq[1]
-      toReturn$mCPUE$BiasCQ075[i] = qq[2]
-    }
-
-    toReturn$bootstrapMean = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
-    names(toReturn$bootstrapMean) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$bootstrapMean)[1]){
-      toReturn$bootstrapMean$mean[i] = mean(tmpResults$bootstrapMean[i,])
-      toReturn$bootstrapMean$median[i] = median(tmpResults$bootstrapMean[i,])
-      quantile = quantile(tmpResults$bootstrapMean[i,],c(0.025,0.975))
-      toReturn$bootstrapMean$Q025[i] = quantile[1]
-      toReturn$bootstrapMean$Q975[i] = quantile[2]
-      toReturn$bootstrapMean$sd[i] = sd(tmpResults$bootstrapMean[i,])
-      toReturn$bootstrapMean$cv[i] = toReturn$bootstrapMean$sd[i]/toReturn$bootstrapMean$mean[i]
-
-      # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$bootstrapMean[i,] > toReturn$WithFullData[i,2])+ sum(tmpResults$bootstrapMean[i,]==toReturn$WithFullData[i,2])/2)/length(tmpResults$bootstrapMean[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$bootstrapMean[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$bootstrapMean$BiasCQ025[i] = qq[1]
-      toReturn$bootstrapMean$BiasCQ075[i] = qq[2]
-    }
-    toReturn$sd = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
-    names(toReturn$sd) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$sd)[1]){
-      toReturn$sd$mean[i] = mean(tmpResults$sd[i,])
-      toReturn$sd$median[i] = median(tmpResults$sd[i,])
-      quantile = quantile(tmpResults$sd[i,],c(0.025,0.975))
-      toReturn$sd$Q025[i] = quantile[1]
-      toReturn$sd$Q975[i] = quantile[2]
-      toReturn$sd$sd[i] = sd(tmpResults$sd[i,])
-      toReturn$sd$cv[i] = toReturn$sd$sd[i]/toReturn$sd$mean[i]
-
-      # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$sd[i,] > toReturn$WithFullData[i,8])+ sum(tmpResults$sd[i,]==toReturn$WithFullData[i,8])/2)/length(tmpResults$sd[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$sd[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$sd$BiasCQ025[i] = qq[1]
-      toReturn$sd$BiasCQ075[i] = qq[2]
-
-
-    }
-    toReturn$Q025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$Q025) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$Q025)[1]){
-      toReturn$Q025$mean[i] = mean(tmpResults$Q025[i,])
-      toReturn$Q025$median[i] = median(tmpResults$Q025[i,])
-      quantile = quantile(tmpResults$Q025[i,],c(0.025,0.975))
-      toReturn$Q025$Q025[i] = quantile[1]
-      toReturn$Q025$Q975[i] = quantile[2]
-      toReturn$Q025$sd[i] = sd(tmpResults$Q025[i,])
-      toReturn$Q025$cv[i] = toReturn$Q025$sd[i]/toReturn$Q025$mean[i]
-
-      # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$Q025[i,] > toReturn$WithFullData[i,4])+ sum(tmpResults$Q025[i,]==toReturn$WithFullData[i,4])/2)/length(tmpResults$Q025[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$Q025[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$Q025$BiasCQ025[i] = qq[1]
-      toReturn$Q025$BiasCQ075[i] = qq[2]
-    }
-    toReturn$Q975 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-    names(toReturn$Q975) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$Q975)[1]){
-      toReturn$Q975$mean[i] = mean(tmpResults$Q975[i,])
-      toReturn$Q975$median[i] = median(tmpResults$Q975[i,])
-      quantile = quantile(tmpResults$Q975[i,],c(0.025,0.975))
-      toReturn$Q975$Q025[i] = quantile[1]
-      toReturn$Q975$Q975[i] = quantile[2]
-      toReturn$Q975$sd[i] = sd(tmpResults$Q975[i,])
-      toReturn$Q975$cv[i] = toReturn$Q975$sd[i]/toReturn$Q975$mean[i]
-
-      # #bias-corrected-------------
-      b= qnorm((sum(tmpResults$Q975[i,] > toReturn$WithFullData[i,5])+ sum(tmpResults$Q975[i,]==toReturn$WithFullData[i,5])/2)/length(tmpResults$Q975[i,]))
-      alph      = 0.05                                  # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-      p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-      qq        = quantile(tmpResults$Q975[i,],p=p)    # Bias-corrected percentile lims.
-      toReturn$Q975$BiasCQ025[i] = qq[1]
-      toReturn$Q975$BiasCQ075[i] = qq[2]
-
-    }
-
-#
-#     toReturn$BiasCQ025 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-#     names(toReturn$BiasCQ025) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-#     for(i in 1:dim(toReturn$BiasCQ025)[1]){
-#       toReturn$BiasCQ025$mean[i] = mean(tmpResults$BiasCQ025[i,])
-#       toReturn$BiasCQ025$median[i] = median(tmpResults$BiasCQ025[i,])
-#       quantile = quantile(tmpResults$BiasCQ025[i,],c(0.025,0.975))
-#       toReturn$BiasCQ025$Q025[i] = quantile[1]
-#       toReturn$BiasCQ025$Q975[i] = quantile[2]
-#       toReturn$BiasCQ025$sd[i] = sd(tmpResults$BiasCQ025[i,])
-#       toReturn$BiasCQ025$cv[i] = toReturn$BiasCQ025$sd[i]/toReturn$BiasCQ025$mean[i]
-#
-#       # #bias-corrected-------------
-#       b= qnorm((sum(tmpResults$BiasCQ025[i,] > toReturn$WithFullData[i,6])+ sum(tmpResults$BiasCQ025[i,]==toReturn$WithFullData[i,6])/2)/length(tmpResults$BiasCQ025[i,]))
-#       alph      = 0.05                                  # 95% limits
-#       z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-#       p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-#       qq        = quantile(tmpResults$BiasCQ025[i,],p=p)    # Bias-corrected percentile lims.
-#       toReturn$BiasCQ025$BiasCQ025[i] = qq[1]
-#       toReturn$BiasCQ025$BiasCQ075[i] = qq[2]
-#
-#     }
-#
-#     toReturn$BiasCQ075 = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1] )
-#     names(toReturn$BiasCQ075) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
-#     for(i in 1:dim(toReturn$BiasCQ075)[1]){
-#       toReturn$BiasCQ075$mean[i] = mean(tmpResults$BiasCQ075[i,])
-#       toReturn$BiasCQ075$median[i] = median(tmpResults$BiasCQ075[i,])
-#       quantile = quantile(tmpResults$BiasCQ075[i,],c(0.025,0.975))
-#       toReturn$BiasCQ075$Q025[i] = quantile[1]
-#       toReturn$BiasCQ075$Q975[i] = quantile[2]
-#       toReturn$BiasCQ075$sd[i] = sd(tmpResults$BiasCQ075[i,])
-#       toReturn$BiasCQ075$cv[i] = toReturn$BiasCQ075$sd[i]/toReturn$BiasCQ075$mean[i]
-#
-#       # #bias-corrected-------------
-#       b= qnorm((sum(tmpResults$BiasCQ075[i,] > toReturn$WithFullData[i,7])+ sum(tmpResults$BiasCQ075[i,]==toReturn$WithFullData[i,7])/2)/length(tmpResults$BiasCQ075[i,]))
-#       alph      = 0.05                                  # 95% limits
-#       z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-#       p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-#       qq        = quantile(tmpResults$BiasCQ075[i,],p=p)    # Bias-corrected percentile lims.
-#       toReturn$BiasCQ075$BiasCQ025[i] = qq[1]
-#       toReturn$BiasCQ075$BiasCQ075[i] = qq[2]
-#
-#     }
-  }
-  #--------------------------------------------------------------------------
-
-  return(toReturn)
-
-
-}
-
-
-
-
-
-#' investigateRemovalParallel
-#' @description This is the same function as investigateRemoval, but do the calculations with several threads. Remove a proportion of the data in a given way. Return a list regarding changes of summery statistics.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
-#' @param RFA The roundfish area of interest.
-#' @param dat Data object
-#' @param bootstrapProcedure Bootstrap procedure used.
-#' @param B Samples in the bootstrap
-#' @param ALKprocedure ALK procedure used for calculating CPUE
-#' @param whatToRemove What to remove, either CA (otholits) or hauls. (currently not implemented for hauls)
-#' @param typeOfAreaToInvestigate What area to investigate, either equals "RFA" or "NorthSea".
-#' @param species The species of interest.
-#' @param year The year species of interest.
-#' @param quarter The quarter species of interest.
-#' @param nSim The number of times to simulate removal of data.
-#' @param whatToInvestigate If this variable is equal "mean", then we only investigate the effect on the mean which do not require internal bootstrapping.
-#' @param doNotRemoveAbove  Do not remove fish that is larger than this (in cm).
-#' @param lengthDivision  Take one otholit from each intervall (in cm).
-#' @export
-#' @return Returns a list with summary about changes in estimates by removal of data.
-#' @examples
-investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
-                              bootstrapProcedure, B, ALKprocedure,
-                              removeProcedure,
-                              nSim, whatToInvestigate, whatToRemove,typeOfAreaToInvestigate,
-                              doNotRemoveAbove = 9999, propRemove = NULL,
-                              lengthDivision=NULL){
-
-  toReturn= list()
-
-  #Calculate the mCPUE and possibly more with all data---------------------
-  if(whatToInvestigate=="mean"){
-    if(typeOfAreaToInvestigate =="RFA"){
-      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                                      bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-    }else{
-      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-    }
-  }else{
-    if(typeOfAreaToInvestigate =="RFA"){
-      toReturn$WithFullData = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                                      bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
-    }else{
-      toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                                           bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure)
-    }
-  }
-  #--------------------------------------------------------------------------
-
-
-  #Define a data frame were results shall be stored after foreach()----------
-  tmpResults = list()
-  tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$bootstrapMean = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$sd = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$median = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$Q025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$Q975 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCQ025 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-  tmpResults$BiasCQ075 = matrix(0,confALK(species,quarter)$maxAge+1, nSim)
-
-  #--------------------------------------------------------------------------
-
-  #Remove data and calulates mCPUE etc. with usage of several cores----------------
-  resForEach <- foreach(i = 1:nSim,.packages='TestPackage') %dopar%  {
-
-    print("Information about progress in otholit removal simulation: ")
-    print(paste("Simulation ",i))
-
-    datRemoved = removeData(year, quarter,species,dat,removeProcedure,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = propRemove)
-
-    if(whatToInvestigate=="mean"){ #Return only information of changes in point estimate of CPUE to reduce computation time.
-      if(typeOfAreaToInvestigate =="RFA"){
-        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
-                            bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-      }else{
-        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
-                                 bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
-      }
-    }else{ #Do bootstrap with the reduced data set.
-      if(typeOfAreaToInvestigate =="RFA"){
-        resultSim = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = datRemoved,
-                            bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
-      }else{
-        resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = datRemoved,
-                                 bootstrapProcedure = bootstrapProcedure, B, ALKprocedure = ALKprocedure,doBootstrap = TRUE)
-      }
-    }
-
-    k = list() #List to be returned by foreach()
-    k$mCPUE = resultSim$mCPUE
-    k$bootstrapMean =resultSim$bootstrapMean
-    k$median =resultSim$median
-    k$sd =resultSim$sd
-    k$Q025 =resultSim$Q025
-    k$Q975 =resultSim$Q975
-    # bias-corrected---------------------
-    k$BiasCQ025 = resultSim$BiasCQ025
-    k$BiasCQ075 = resultSim$BiasCQ075
-    k
-  }
-  #--------------------------------------------------------------------------
-
-  #Combine the results from foreach() in the list rmpResults-----------------
-
-  for(i in 1:nSim){
-    tmpResults$mCPUE[,i] = resForEach[[i]]$mCPUE
-    tmpResults$bootstrapMean[,i]= resForEach[[i]]$bootstrapMean
-    tmpResults$median[,i]= resForEach[[i]]$median
-    tmpResults$sd[,i]= resForEach[[i]]$sd
-    tmpResults$Q025[,i]= resForEach[[i]]$Q025
-    tmpResults$Q975[,i]= resForEach[[i]]$Q975
-  # bias-corrected------------
-    tmpResults$BiasCQ025[,i]= resForEach[[i]]$BiasCQ025
-    tmpResults$BiasCQ075[,i]= resForEach[[i]]$BiasCQ075
-  }
-  #--------------------------------------------------------------------------
-
-  #Extract what we are interested in (mCPUE, sd and quantiles)----------------
-  if(whatToInvestigate=="mean"){
-    toReturn$mCPUE = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1] ,toReturn$WithFullData[,1],
-                      toReturn$WithFullData[,1] ,toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1])
-    names(toReturn$mCPUE) = c("mean","median", "Q025", "Q975","BiasCQ025", "BiasCQ075", "sd")
-    for(i in 1:dim(toReturn$mCPUE)[1]){
-      toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
-      quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
-      toReturn$mCPUE$Q025[i] = quantile[1]
-      toReturn$mCPUE$Q975[i] = quantile[2]
-      toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
+  toReturn$mCPUE = data.frame(resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1],resultSim[,1])
+  names(toReturn$mCPUE) = c("mean","median", "Q025","Q975","BiasCQ025", "BiasCQ075", "sd")
+  for(i in 1:dim(toReturn$mCPUE)[1]){
+    toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
+    toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
+    quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
+    toReturn$mCPUE$Q025[i] = quantile[1]
+    toReturn$mCPUE$Q975[i] = quantile[2]
+    toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
+    toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
 
     # #bias-corrected-------------
-        b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
-        alph      = 0.05                                  # 95% limits
-        z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
-        p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
-        qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
-        toReturn$mCPUE$BiasCQ025[i] = qq[1]
-        toReturn$mCPUE$BiasCQ075[i] = qq[2]
-
-    }
-  }else{
-    toReturn$mCPUE = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$mCPUE) = c("mean","Q025","Q975", "sd")
-    for(i in 1:dim(toReturn$mCPUE)[1]){
-      toReturn$mCPUE$mean[i] = mean(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$median[i] = median(tmpResults$mCPUE[i,])
-      quantile = quantile(tmpResults$mCPUE[i,],c(0.025,0.975))
-      toReturn$mCPUE$Q025[i] = quantile[1]
-      toReturn$mCPUE$Q975[i] = quantile[2]
-      toReturn$mCPUE$sd[i] = sd(tmpResults$mCPUE[i,])
-      toReturn$mCPUE$cv[i] = toReturn$mCPUE$sd[i]/toReturn$mCPUE$mean[i]
-    }
-
-    toReturn$bootstrapMean = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$bootstrapMean) = c("mean","Q025","Q975", "sd")
-    for(i in 1:dim(toReturn$bootstrapMean)[1]){
-      toReturn$bootstrapMean$mean[i] = mean(tmpResults$bootstrapMean[i,])
-      quantile = quantile(tmpResults$bootstrapMean[i,],c(0.025,0.975))
-      toReturn$bootstrapMean$Q025[i] = quantile[1]
-      toReturn$bootstrapMean$Q975[i] = quantile[2]
-      toReturn$bootstrapMean$sd[i] = sd(tmpResults$bootstrapMean[i,])
-      toReturn$bootstrapMean$cv[i] = toReturn$bootstrapMean$sd[i]/toReturn$bootstrapMean$mean[i]
-    }
-    toReturn$sd = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$sd) = c("mean","Q025","Q975", "sd")
-    for(i in 1:dim(toReturn$sd)[1]){
-      toReturn$sd$mean[i] = mean(tmpResults$sd[i,])
-      quantile = quantile(tmpResults$sd[i,],c(0.025,0.975))
-      toReturn$sd$Q025[i] = quantile[1]
-      toReturn$sd$Q975[i] = quantile[2]
-      toReturn$sd$sd[i] = sd(tmpResults$sd[i,])
-      toReturn$sd$cv[i] = toReturn$sd$sd[i]/toReturn$sd$mean[i]
-    }
-    toReturn$Q025 = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$Q025) = c("mean","Q025","Q975", "sd")
-    for(i in 1:dim(toReturn$Q025)[1]){
-      toReturn$Q025$mean[i] = mean(tmpResults$Q025[i,])
-      quantile = quantile(tmpResults$Q025[i,],c(0.025,0.975))
-      toReturn$Q025$Q025[i] = quantile[1]
-      toReturn$Q025$Q975[i] = quantile[2]
-      toReturn$Q025$sd[i] = sd(tmpResults$Q025[i,])
-      toReturn$Q025$cv[i] = toReturn$Q025$sd[i]/toReturn$Q025$mean[i]
-    }
-    toReturn$Q975 = data.frame(toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1],toReturn$WithFullData[,1] )
-    names(toReturn$Q975) = c("mean","Q025","Q975", "sd")
-    for(i in 1:dim(toReturn$Q975)[1]){
-      toReturn$Q975$mean[i] = mean(tmpResults$Q975[i,])
-      quantile = quantile(tmpResults$Q975[i,],c(0.025,0.975))
-      toReturn$Q975$Q025[i] = quantile[1]
-      toReturn$Q975$Q975[i] = quantile[2]
-      toReturn$Q975$sd[i] = sd(tmpResults$Q975[i,])
-      toReturn$Q975$cv[i] = toReturn$Q975$sd[i]/toReturn$Q975$mean[i]
-    }
+    b= qnorm((sum(tmpResults$mCPUE[i,] > toReturn$WithFullData[i,1])+ sum(tmpResults$mCPUE[i,]==toReturn$WithFullData[i,1])/2)/length(tmpResults$mCPUE[i,]))
+    alph      = 0.05                                  # 95% limits
+    z         = qnorm(c(alph/2,1-alph/2))             # Std. norm. limits
+    p         = pnorm(z-2*b)                          # bias-correct & convert to proportions
+    qq        = quantile(tmpResults$mCPUE[i,],p=p)    # Bias-corrected percentile lims.
+    toReturn$mCPUE$BiasCQ025[i] = qq[1]
+    toReturn$mCPUE$BiasCQ075[i] = qq[2]
   }
   #--------------------------------------------------------------------------
+
+  attributes(toReturn)$nOtolithsRemoved = nOtolithsRemoved
+  attributes(toReturn)$nOtolithsTotal = nOtolithsTotal
   return(toReturn)
 }
+
+
+
 
 
 
@@ -491,105 +89,87 @@ investigateRemovalParallel = function(RFA,species, year, quarter,dat ,
 #' @param species The species of interest.
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
 #' @param whatToRemove
 #' @export
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,species, dat,removeProcedure=1,whatToRemove,doNotRemoveAbove,lengthDivision,propRemove = NULL){
+removeData = function(year, quarter,species, dat,whatToRemove,lengthDivision,samplesWithinEachIntervall = 1){
 
   #Extract data which shall be thinned------------------------
-  datToReturn = dat
-  datToReturn$hh = datToReturn$hh[!is.na(datToReturn$hh$Year) &datToReturn$hh$Year ==year &
-                                    !is.na(datToReturn$hh$Quarter) & datToReturn$hh$Quarter == quarter,]
-  datToReturn$ca_hh = datToReturn$ca_hh[!is.na(datToReturn$ca_hh$Year) &datToReturn$ca_hh$Year ==year &
-                                    !is.na(datToReturn$ca_hh$Quarter) & datToReturn$ca_hh$Quarter == quarter&
-                                      !is.na(datToReturn$ca_hh$Species) &datToReturn$ca_hh$Species ==species,]
-  datToReturn$hl_hh = datToReturn$hl_hh[!is.na(datToReturn$hl_hh$Year) &datToReturn$hl_hh$Year ==year &
-                                    !is.na(datToReturn$hl_hh$Quarter) & datToReturn$hl_hh$Quarter == quarter,]
+  reducedData = dat
+  reducedData$hh = reducedData$hh[!is.na(reducedData$hh$Year) &reducedData$hh$Year ==year &
+                                    !is.na(reducedData$hh$Quarter) & reducedData$hh$Quarter == quarter,]
+  reducedData$ca_hh = reducedData$ca_hh[!is.na(reducedData$ca_hh$Year) &reducedData$ca_hh$Year ==year &
+                                    !is.na(reducedData$ca_hh$Quarter) & reducedData$ca_hh$Quarter == quarter&
+                                      !is.na(reducedData$ca_hh$Species) &reducedData$ca_hh$Species ==species,]
+  reducedData$hl_hh = reducedData$hl_hh[!is.na(reducedData$hl_hh$Year) &reducedData$hl_hh$Year ==year &
+                                    !is.na(reducedData$hl_hh$Quarter) & reducedData$hl_hh$Quarter == quarter,]
   #----------------------------------------------------------
-  print("Removing otholits...")
-  numberOfOtholits = dim(datToReturn$ca_hh)[1]
+  print("Sampling otoliths...")
+  numberOfOtholits = dim(reducedData$ca_hh)[1]
 
   #Remove data-----------------------------------------------
-#  if("HH" %in% whatToRemove)datToReturn$hh = removeDataDetailedHH(datToReturn$hh,removeProcedure,propRemove)
-  if("CA" %in% whatToRemove)datToReturn$ca_hh = removeDataDetailedCA(datDetailed = datToReturn$ca_hh,removeProcedure,species,quarter,doNotRemoveAbove, lengthDivision,propRemove = propRemove)
-#  if("HL" %in% whatToRemove)datToReturn$hl_hh = removeDataDetailedHL(datToReturn$hl_hh,removeProcedure,propRemove)
+  if("CA" %in% whatToRemove)reducedData$ca_hh = removeDataDetailedCA(datDetailed = reducedData$ca_hh,species,quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
   #----------------------------------------------------------
 
   #provide user with information regarding number of otholits removed-------
-  print(paste("Removed ",numberOfOtholits- dim(datToReturn$ca_hh)[1], " otholits out of ", numberOfOtholits,".",sep = ""))
+  nOtolithsRemoved = numberOfOtholits- dim(reducedData$ca_hh)[1]
+  print(paste("Removed ",nOtolithsRemoved, " out of ", numberOfOtholits," otoliths.",sep = ""))
   #----------------------------------------------------------
 
-  return(datToReturn)
+  #TODO retun also the number of otolits removed in each simulation
+
+  toReturn = list()
+  toReturn$reducedData = reducedData
+  toReturn$nOtolithsRemoved = nOtolithsRemoved
+  return(toReturn)
 }
 
 
 #' removeDataDetailedCA
 #' @description .
 #' @param datDetailed The quarter of interest.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
 #' @export
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,removeProcedure,species,quarter,doNotRemoveAbove,lengthDivision,propRemove = NULL){
+removeDataDetailedCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall){
 
   toReturn = datDetailed
-  #Removes data in the procedure selected in "removeProcedure"-----------------------------------
-  if(removeProcedure=="random"){
-    length = dim(toReturn)[1]
-    keep = sample(1:length,ceiling(length*(1-propRemove)))
-    keep = unique(c(keep,which(toReturn$LngtCm>doNotRemoveAbove))) #Do not remove the fish larger than a certain level
-    toReturn = toReturn[keep,]
-
-    return(toReturn)
-  }else if(removeProcedure=="stratified"){
-    dLength = confALK(species = species,quarter = quarter)$lengthClassIntervallLengths
-    if(dLength==1){
-      lengthArray = sort(unique(floor(toReturn$LngtCm)))
-      lengthArray = lengthArray[which(lengthArray<=doNotRemoveAbove)]#Do not remove the fish larger than a certain level
-      for(length in lengthArray){
-        for(RFA in 1:9){
-          tmp = which(floor(toReturn$LngtCm)==length & toReturn$Roundfish==RFA)
-          u = runif(length(tmp))
-          remove = tmp[which(u<propRemove)] #
-          if(length(remove)>0){
-            toReturn = toReturn[-remove,]
-          }
-        }
-      }
+  whichRemoved = rep("",dim(datDetailed)[1]); counter = 1;
+  toReturn = datDetailed[1,]
+  for(id in unique(datDetailed$haul.id)){
+    obsTmp = datDetailed[which(datDetailed$haul.id==id),]
+    obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall)
+    if(dim(obsTmp)[1]>dim(obsReduced)[1]){
+      whichRemoved[counter] = id
+      counter = counter +1
     }
-    return(toReturn)
-  }else if(removeProcedure=="edvin"){#Remove otholits such that only at random only one otholit is read from longer length intervalls
-    toReturn = datDetailed[1,]
-    for(id in unique(datDetailed$haul.id)){
-      obsTmp = datDetailed[which(datDetailed$haul.id==id),]
-      obsReduced = removeObsFromHaul(obsTmp,lengthDivision)
-      toReturn = rbind(toReturn,obsReduced)
-    }
-    toReturn = toReturn[-1,]
-    return(toReturn)
+    toReturn = rbind(toReturn,obsReduced)
   }
-  #---------------------------------------------------------------------------------
+  toReturn = toReturn[-1,]
+
+  whichRemoved = whichRemoved[whichRemoved != ""] #Look at the ones we remove, this shall be deleted later
+ # attributes(toReturn)$removed = whichRemoved
+  return(toReturn)
 }
 
 #' removeObsFromHaul
 #' @description .
 #' @param datDetailed The quarter of interest.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
 #' @param RFA The roundfish area of interest.
 #' @export
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeObsFromHaul = function(obsTmp,lengthDivision){
+removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall){
   toReturn = obsTmp[1,]
   for(i in 2:length(lengthDivision)){
     obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1]  & obsTmp$LngtCm<lengthDivision[i] )
-    if(length(obsInside)>1){
-      obsSelected = sample(obsInside,1)#Sample one of the observations to be keep.
+    if(length(obsInside)>=1){
+      nSample = min(samplesWithinEachIntervall,length(obsInside))
+      obsSelected = sample(obsInside,nSample,replace = TRUE)
     }else{
       obsSelected = obsInside
     }
@@ -599,36 +179,4 @@ removeObsFromHaul = function(obsTmp,lengthDivision){
 
   return(toReturn)
 }
-
-
-
-#' removeDataDetailedHL
-#' @description .
-#' @param datDetailed The quarter of interest.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
-#' @param RFA The roundfish area of interest.
-#' @export
-#' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
-#' observations in a certain procedure.
-#' @examples
-removeDataDetailedHL = function(datDetailed,removeProcedure,RFA){
-
-  return(datDetailed)
-}
-
-
-#' removeDataDetailedHH
-#' @description .
-#' @param datDetailed The quarter of interest.
-#' @param removeProcedure Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.
-#' @param RFA The roundfish area of interest.
-#' @export
-#' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
-#' observations in a certain procedure.
-#' @examples
-removeDataDetailedHH = function(datDetailed,removeProcedure,RFA){
-
-  return(datDetailed)
-}
-
 
