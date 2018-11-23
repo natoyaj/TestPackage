@@ -44,7 +44,7 @@ investigateRemoval = function(species, year, quarter,dat ,
     print("Information about progress in otholit removal simulation: ")
     print(paste("Simulation ",i))
     resultSim = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                             bootstrapProcedure = bootstrapProcedure, B=1, ALKprocedure = ALKprocedure,removeFirst = TRUE, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
+                             bootstrapProcedure = bootstrapProcedure, B=1, ALKprocedure = ALKprocedure,onlySimulate = TRUE, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
     tmpResults$mCPUE[,i] = resultSim$mCPUE
     nOtolithsRemoved[i] = attributes(resultSim)$nOtolithsRemoved
     nOtolithsTotal[i]= attributes(resultSim)$nOtolithsTotal

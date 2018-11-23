@@ -54,7 +54,7 @@ if(species=="Gadus morhua"){
 set.seed(131455)
 for(dl in c(1:5,10,20,30,40,50,60,70,80,90,100)){
   lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = dl))
-  samplesWithinEachIntervall = 5
+  samplesWithinEachIntervall = 1
 
   removeDatras = investigateRemoval(species = species, year = year, quarter = quarter,dat = dat,B = n,
                                                 lengthDivision = lengthDivision,

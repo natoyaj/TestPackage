@@ -303,7 +303,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        removeFirst = FALSE,lengthDivision =NULL,samplesWithinEachIntervall = NULL){
+                        onlySimulate = FALSE,lengthDivision =NULL,samplesWithinEachIntervall = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -313,7 +313,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   #---------------------------------------------------------------
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
-  if(!removeFirst){
+  if(!onlySimulate){
   tmp = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                           dat = dat,ALKprocedure = ALKprocedure,B = B,
                           dimCPUE = dim(mCPUE))
@@ -400,7 +400,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       if(bootstrapProcedure =="stratifiedHLandCA") datTmp$hh = HH#Quickfix todo
 
 
-      if(removeFirst){
+      if(onlySimulate){
         #simulate otolits
         tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
         nOtolithsRemoved = tmp$nOtolithsRemoved
@@ -436,8 +436,8 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1], mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1])
   names(mCPUEsummary) = c("mCPUE","bootstrapMean","median", "Q025","Q975","BiasCQ025","BiasCQ075", "sd")
 
-  if(removeFirst){#Bad code.  Shall use the first (and only ssimulation) if we remove otolits before removing hauls
-    mCPUEsummary$mCPUE = mCPUE[,2] #Clean this up TODO
+  if(onlySimulate){
+    mCPUEsummary$mCPUE = mCPUE[,2]
   }
 
   for(i in 1:dim(mCPUEsummary)[1]){
