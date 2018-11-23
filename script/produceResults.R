@@ -56,13 +56,13 @@ for(dl in c(1:5,10,20,30,40,50,60,70,80,90,100)){
   lengthDivision = c(seq(0,max(round(dat$ca_hh$LngtCm)) + 1,by = dl))
   samplesWithinEachIntervall = 1
 
-  removeDatras = investigateRemoval(species = species, year = year, quarter = quarter,dat = dat,B = n,
+  removeOtoliths = investigateRemoval(species = species, year = year, quarter = quarter,dat = dat,B = n,
                                                 lengthDivision = lengthDivision,
                                                 samplesWithinEachIntervall = samplesWithinEachIntervall)
   #Save work
   if(species=="Gadus morhua"){
-    saveRDS(removeDatras, file = paste(path,"RemovalCodDl",dl,"year",year,"Q",quarter,"n", n,ALKprocedure, sep= ""))
+    saveRDS(removeOtoliths, file = paste(path,"RemovalCodDl",dl,"year",year,"Q",quarter,"n", n,ALKprocedure, sep= ""))
   }else if(species=="Pollachius virens"){
-    saveRDS(removeDatras, file = paste(path,"RemovalSaitheDl",dl,"year",year,"Q",quarter,"n", n,ALKprocedure, sep = ""))
+    saveRDS(removeOtoliths, file = paste(path,"RemovalSaitheDl",dl,"year",year,"Q",quarter,"n", n,ALKprocedure, sep = ""))
   }
 }
