@@ -1,89 +1,105 @@
-path = "Papers/manuscript/results/runOlav/"
-remove1 = readRDS(paste(path, "RemovalCodDl1year2018Q1nSim1000haulBased",sep = ""))
-remove2 = readRDS(paste(path, "RemovalCodDl2year2018Q1nSim1000haulBased",sep = ""))
-remove3 = readRDS(paste(path, "RemovalCodDl3year2018Q1nSim1000haulBased",sep = ""))
-remove4 = readRDS(paste(path, "RemovalCodDl4year2018Q1nSim1000haulBased",sep = ""))
-remove5 = readRDS(paste(path, "RemovalCodDl5year2018Q1nSim1000haulBased",sep = ""))
-original =readRDS(paste(path, "cod2018Q1n1000haulBased",sep = ""))
+path = "Papers/manuscript/results/olav/"
+remove1 = readRDS(paste(path, "RemovalCodDl1year2018Q1n500haulBased",sep = ""))
+remove2 = readRDS(paste(path, "RemovalCodDl2year2018Q1n500haulBased",sep = ""))
+remove3 = readRDS(paste(path, "RemovalCodDl3year2018Q1n500haulBased",sep = ""))
+remove4 = readRDS(paste(path, "RemovalCodDl4year2018Q1n500haulBased",sep = ""))
+remove5 = readRDS(paste(path, "RemovalCodDl5year2018Q1n500haulBased",sep = ""))
+remove10 = readRDS(paste(path, "RemovalCodDl10year2018Q1n500haulBased",sep = ""))
+remove20 = readRDS(paste(path, "RemovalCodDl20year2018Q1n500haulBased",sep = ""))
+remove30 = readRDS(paste(path, "RemovalCodDl30year2018Q1n500haulBased",sep = ""))
+remove40 = readRDS(paste(path, "RemovalCodDl40year2018Q1n500haulBased",sep = ""))
+remove50 = readRDS(paste(path, "RemovalCodDl50year2018Q1n500haulBased",sep = ""))
+remove60 = readRDS(paste(path, "RemovalCodDl60year2018Q1n500haulBased",sep = ""))
+remove70 = readRDS(paste(path, "RemovalCodDl70year2018Q1n500haulBased",sep = ""))
+original =readRDS(paste(path, "cod2018Q1n500haulBased",sep = ""))
 
-dS = matrix(0,5,7)
-for(i in 1:5){
-  eval(parse(text = paste("dS[i,] = remove", i,"$mCPUE$sd/ original$sd*100",sep = "")))
+
+#Plot changes in KI
+nRemove = 13
+dKIL = matrix(0,nRemove,7)
+dKIU = matrix(0,nRemove,7)
+dKIM = matrix(0,nRemove,7)
+tmp = c(1,2,3,4,5,10,20,30,40,50,60,70)
+
+dKIL[1,] = original$Q025
+dKIU[1,] = original$Q975
+dKIM[1,] = original$bootstrapMean
+
+for(i in 2:nRemove){
+  j = tmp[i-1]
+  eval(parse(text = paste("dKIL[i,] = remove", j,"$mCPUE$Q025",sep = "")))
+  eval(parse(text = paste("dKIU[i,] = remove", j,"$mCPUE$Q975",sep = "")))
+  eval(parse(text = paste("dKIM[i,] = remove", j,"$mCPUE$mean",sep = "")))
 }
 
-plot(0:5,c(0,dS[,2]),type = 'l',
+jpeg("removalCodModelKI.jpeg")
+plot(1:nRemove,dKIM[,2],type = 'l',
      xlab = "Lenght group width",
-     ylab = "Removal_SD in percentage of mCPUE_SD",
-     main = "Removing otoliths cod",
-     ylim = c(0,150),lwd = 3,
-     col = "grey")
-legend(x=0.1,y=150,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
+     ylab = "mCPUE",
+     main = "Removing otoliths using haulbased ALK",
+     ylim = c(0,10),lwd = 5,
+     col = "grey",
+     xaxt = 'n')
+axis(1, at = 1:nRemove,labels = c("current",tmp))
+legend(x=10,y=10,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
        ,col=c("grey","blue","black","darkgreen","purple","red"),lty = 1,lwd = 3,box.lty =0)
+points(1:nRemove,dKIL[,2],type = 'l',
+       lwd = 1,lty = 2,
+       col = "grey")
+points(1:nRemove,dKIU[,2],type = 'l',
+       lwd = 1,lty = 2,
+       col = "grey")
 
-points(0:5,c(0,dS[,3]),type = 'l',
-     lwd = 3,
-     col = "blue")
-
-points(0:5,c(0,dS[,4]),type = 'l',
-     lwd = 3,
-     col = "black")
-
-points(0:5,c(0,dS[,5]),type = 'l',
-     lwd = 3,
-     col = "darkgreen")
-
-points(0:5,c(0,dS[,6]),type = 'l',
-     lwd = 3,
-     col = "purple")
-points(0:5,c(0,dS[,7]),type = 'l',
-     lwd = 3,
-     col = "red")
-
-
-
-
-remove1 = readRDS(paste(path, "RemovalSaitheDl1year2017Q3nSim1000haulBased",sep = ""))
-remove2 = readRDS(paste(path, "RemovalSaitheDl2year2017Q3nSim1000haulBased",sep = ""))
-remove3 = readRDS(paste(path, "RemovalSaitheDl3year2017Q3nSim1000haulBased",sep = ""))
-remove4 = readRDS(paste(path, "RemovalSaitheDl4year2017Q3nSim1000haulBased",sep = ""))
-remove5 = readRDS(paste(path, "RemovalSaitheDl5year2017Q3nSim1000haulBased",sep = ""))
-original =readRDS(paste(path, "Saithe2017Q3n1000haulBased",sep = ""))
-
-dS = matrix(0,5,7)
-for(i in 1:5){
-  eval(parse(text = paste("dS[i,] = remove", i,"$mCPUE$sd/ original$sd*100",sep = "")))
+for(j in 3:4){
+  if(j ==3) col = "blue"
+  if(j ==4)col = "black"
+  if(j ==5)col = "darkgreen"
+  if(j ==6)col = "purple"
+  if(j ==7)col = "red"
+  points(1:nRemove,dKIM[,j],type = 'l',
+         lwd = 5,
+         col = col)
+  points(1:nRemove,dKIL[,j],type = 'l',
+         lwd = 1,lty = 2,
+         col = col)
+  points(1:nRemove,dKIU[,j],type = 'l',
+         lwd = 1,lty = 2,
+         col = col)
 }
+dev.off()
 
-plot(0:5,c(0,dS[,1]),type = 'l',
+jpeg("removalCodModelKI2.jpeg")
+plot(1:nRemove,dKIM[,5],type = 'l',
      xlab = "Lenght group width",
-     ylab = "Removal_SD in percentage of mCPUE_SD",
-     main = "Removing otoliths saithe",
-     ylim = c(0,150),lwd = 3,
-     col = "grey")
-legend(x=0.1,y=150,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
+     ylab = "mCPUE",
+     main = "Removing otoliths using haulbased ALK",
+     ylim = c(0,4),lwd = 5,
+     col = "darkgreen",
+     xaxt = 'n')
+axis(1, at = 1:nRemove,labels = c("current",tmp))
+legend(x=1,y=4,legend = c("1 year", "2 year","3 year","4 year","5 year",">5 year")
        ,col=c("grey","blue","black","darkgreen","purple","red"),lty = 1,lwd = 3,box.lty =0)
-
-points(0:5,c(0,dS[,2]),type = 'l',
-       lwd = 3,
-       col = "blue")
-
-points(0:5,c(0,dS[,3]),type = 'l',
-       lwd = 3,
-       col = "blue")
-
-points(0:5,c(0,dS[,4]),type = 'l',
-       lwd = 3,
-       col = "black")
-
-points(0:5,c(0,dS[,5]),type = 'l',
-       lwd = 3,
+points(1:nRemove,dKIL[,5],type = 'l',
+       lwd = 1,lty = 2,
+       col = "darkgreen")
+points(1:nRemove,dKIU[,5],type = 'l',
+       lwd = 1,lty = 2,
        col = "darkgreen")
 
-points(0:5,c(0,dS[,6]),type = 'l',
-       lwd = 3,
-       col = "purple")
-points(0:5,c(0,dS[,7]),type = 'l',
-       lwd = 3,
-       col = "red")
-
-
+for(j in 6:7){
+  if(j ==3) col = "blue"
+  if(j ==4)col = "black"
+  if(j ==5)col = "darkgreen"
+  if(j ==6)col = "purple"
+  if(j ==7)col = "red"
+  points(1:nRemove,dKIM[,j],type = 'l',
+         lwd = 5,
+         col = col)
+  points(1:nRemove,dKIL[,j],type = 'l',
+         lwd = 1,lty = 2,
+         col = col)
+  points(1:nRemove,dKIU[,j],type = 'l',
+         lwd = 1,lty = 2,
+         col = col)
+}
+dev.off()
