@@ -6,9 +6,8 @@
 \usage{
 investigateRemoval(species, year, quarter, dat,
   bootstrapProcedure = "stratifiedHLandCA", B,
-  ALKprocedure = "haulBased", removeProcedure = "reduceEffort",
-  doNotRemoveAbove = 9999, lengthDivision = NULL,
-  samplesWithinEachIntervall = 1)
+  ALKprocedure = "haulBased", doNotRemoveAbove = 9999,
+  lengthDivision = NULL, samplesWithinEachIntervall = 1)
 }
 \arguments{
 \item{species}{The species of interest.}
@@ -24,8 +23,6 @@ investigateRemoval(species, year, quarter, dat,
 \item{B}{Samples in the bootstrap}
 
 \item{ALKprocedure}{ALK procedure used for calculating CPUE}
-
-\item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
 
 \item{doNotRemoveAbove}{Do not remove fish that is larger than this (in cm).}
 
