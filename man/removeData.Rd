@@ -4,8 +4,8 @@
 \alias{removeData}
 \title{removeData}
 \usage{
-removeData(year, quarter, species, dat, removeProcedure, whatToRemove,
-  doNotRemoveAbove, lengthDivision)
+removeData(year, quarter, species, dat, whatToRemove, lengthDivision,
+  samplesWithinEachIntervall = 1)
 }
 \arguments{
 \item{year}{The year of interest.}

@@ -407,7 +407,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
         datTmp = tmp$reducedData
         nOtolithsTotal = dim(CA)[1]
       }else{
-
         lengthDivision = c(seq(0,max(round(datTmp$ca_hh$LngtCm)) + 1,by = 1))
         tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
                          samplesWithinEachIntervall =999999)

@@ -4,12 +4,10 @@
 \alias{removeObsFromHaul}
 \title{removeObsFromHaul}
 \usage{
-removeObsFromHaul(obsTmp, lengthDivision)
+removeObsFromHaul(obsTmp, lengthDivision, samplesWithinEachIntervall)
 }
 \arguments{
 \item{datDetailed}{The quarter of interest.}
-
-\item{removeProcedure}{Removal procedure, given as an integer. removeProcedure==1 means that data is removed at random.}
 
 \item{RFA}{The roundfish area of interest.}
 }
