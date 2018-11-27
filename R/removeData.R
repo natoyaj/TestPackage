@@ -142,9 +142,6 @@ removeDataDetailedCA = function(datDetailed,species,quarter,lengthDivision,sampl
   for(id in unique(datDetailed$haul.id)){
     obsTmp = datDetailed[which(datDetailed$haul.id==id),]
     obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall)
-    obsTmp
-    obsReduced
-
     if(dim(obsTmp)[1]>dim(obsReduced)[1]){
       whichRemoved[counter] = id
       counter = counter +1
@@ -176,7 +173,7 @@ removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall){
     }
     if(length(obsInside)>1){
       nSample = min(samplesWithinEachIntervall,length(obsInside))
-      obsSelected = sample(c(obsInside),nSample,replace = TRUE)
+      obsSelected = sample(obsInside,nSample,replace = TRUE)
     }else{
       obsSelected = obsInside
     }
