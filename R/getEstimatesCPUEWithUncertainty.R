@@ -131,16 +131,16 @@ CPUEage = function(RFA, species, year, quarter,dat,
                                      !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter,]
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
-    ALKNew = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
+    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
+    cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
     #Bad programing, but here we need to inform that we are using simulated ALK with the fisher method
     #TODO simulate model parameters which is further given to calculateALKModel( report =...)
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
-    cpueEst = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
-    ALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
-    cpueEst = calcmCPUErfaWithALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
+    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+    cpueEst = calcmCPUErfaWithALKDatras(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }else{
     stop("Unkown ALKprocedure")
   }
@@ -228,15 +228,15 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
 
       if(ALKprocedure == "haulBased"){
-        simALK = calculateALKNew(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
+        simALK = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
         if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
-        sim = calcmCPUErfaWithALKNew(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+        sim = calcmCPUErfaWithALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
       }else if(ALKprocedure == "modelBased"){
         simALK = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=dat$hh,data = simDataCA)
-        sim = calcmCPUErfaWithALKNew(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+        sim = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
       }else{
-        simALK = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
-        sim = calcmCPUErfaWithALK(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = dat$weightStatRec)
+        simALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
+        sim = calcmCPUErfaWithALKDatras(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = dat$weightStatRec)
       }
       simCPUEs[,i] = sim
 

@@ -8,7 +8,7 @@
 #' @export
 #' @return Returns a matrix with the ALK for the given data, species, time and RFA
 #' @examples
-calculateALK = function(RFA,species,year,quarter,data)
+calculateALKDatras = function(RFA,species,year,quarter,data)
 {
     #Extract the data of interest----------------------
     caInterest = data[which(data$Roundfish==RFA & data$Year==year &
@@ -152,7 +152,7 @@ calculateALK = function(RFA,species,year,quarter,data)
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
+calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -241,7 +241,7 @@ calculateALKNew = function(RFA, species, year, quarter,data,data_hl,dfLength = 1
   neste = 1
 
   #Construct the DATRAS ALK, which is used if there are no trawl haul close by.
-  ALKnormal = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
+  ALKnormal = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
 
   for(id in haulId){
     #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl),

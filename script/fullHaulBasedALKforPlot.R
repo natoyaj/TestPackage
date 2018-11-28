@@ -88,7 +88,7 @@ calculateALKNewFull = function(RFA, species, year, quarter,data,data_hl,dfLength
   neste = 1
 
   #Construct the DATRAS ALK, which is used if there are no trawl haul close by.
-  ALKnormal = calculateALK(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
+  ALKnormal = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = caInterest)
 
   for(id in haulId){
     #Extract which lengts that are of interest (i.e. observed in HL-data by this trawl),

@@ -13,7 +13,7 @@ source("script/fullHaulBasedALKforPlot.R") #Script for defining function which c
 id = "2018:1:SCO:SCO3:GOV:42:42"
 for(RFA in 1:9){
   alk = calculateALKModel(RFA = RFA, species= species, year = year, quarter = quarter,hh = dat$hh,data = dat$ca_hh, fitModel = fit,report = NULL)
-  alkD = calculateALK(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh)
+  alkD = calculateALKDatras(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh)
   alkH = calculateALKNewFull(RFA = RFA, species= species, year = year, quarter = quarter,data = dat$ca_hh,data_hl = dat$hl_hh)
   for(i in 1:length(alk)){
     if(alk[[i]][1,1]==id){
