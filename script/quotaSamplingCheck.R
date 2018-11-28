@@ -7,19 +7,19 @@ library(rworldxtra)
 library(mapplots)
 library(DATRAS)
 
-dataDir <<- system.file("Data", package = "TestPackage")
+dataDir <<- system.file("extdata", package = "IBTSindices")
 dat <- readExchangeDir(dataDir)
 #-------------------------------------------------------
 
 #Read shape file for roundfish areas
 rfa <-
   readOGR(file.path(
-    system.file("shapefiles", package = "TestPackage"),
+    system.file("shapefiles", package = "IBTSindices"),
     "Roundfish_shapefiles"
   ))
 ices <-
   readOGR(file.path(
-    system.file("shapefiles", package = "TestPackage"),
+    system.file("shapefiles", package = "IBTSindices"),
     "ICES_AREA_shapefiles"
   ))
 #Extract the data frames from IBTS-data and merge them---
@@ -37,7 +37,7 @@ HH<-HH[HH$Year==year & HH$Quarter ==quarter,]
 #Read shape file for roundfish areas
 rfa <-
   readOGR(file.path(
-    system.file("shapefiles", package = "TestPackage"),
+    system.file("shapefiles", package = "IBTSindices"),
     "Roundfish_shapefiles"
   ))
 #rfa <- readOGR("Roundfish_shapefiles")
