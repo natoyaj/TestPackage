@@ -5,7 +5,7 @@
 \title{calcmCPUEnorthSea}
 \usage{
 calcmCPUEnorthSea(species, year, quarter, dat, ALKprocedure, B, dimCPUE,
-  fit = NULL, report = NULL)
+  fit = NULL, report = NULL, lengthDivision = 1:299)
 }
 \arguments{
 \item{species}{The species of interest.}

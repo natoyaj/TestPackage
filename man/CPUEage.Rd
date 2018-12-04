@@ -6,7 +6,7 @@
 \usage{
 CPUEage(RFA, species, year, quarter, dat, bootstrapProcedure = "datras",
   B = 10, ALKprocedure = "datras", doBootstrap = TRUE, fit = NULL,
-  report = NULL)
+  report = NULL, lengthDivision)
 }
 \arguments{
 \item{RFA}{The roundfish area of interest.}

@@ -6,7 +6,7 @@
 \usage{
 CPUEnorthSea(species, year, quarter, dat, bootstrapProcedure = "datras",
   B = 10, ALKprocedure = "", doBootstrap = TRUE, useFisher = FALSE,
-  onlySimulate = FALSE, lengthDivision = NULL,
+  onlySimulate = FALSE, lengthDivision = 1:299,
   samplesWithinEachIntervall = NULL)
 }
 \value{

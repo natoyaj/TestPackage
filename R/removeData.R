@@ -16,13 +16,13 @@
 investigateRemoval = function(species, year, quarter,dat ,
                               bootstrapProcedure= "stratifiedHLandCA", B, ALKprocedure = "haulBased",
                               doNotRemoveAbove = 9999,
-                              lengthDivision=NULL, samplesWithinEachIntervall = 1){
+                              lengthDivision, samplesWithinEachIntervall = 1){
 
   toReturn= list()
 
   #Calculate the mCPUE and possibly more with all data---------------------
    toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                                         bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE)
+                                         bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE,lengthDivision = lengthDivision)
   #--------------------------------------------------------------------------
 
   #Define a data frame were results shall be stored -----------------------
@@ -39,6 +39,10 @@ investigateRemoval = function(species, year, quarter,dat ,
 
   nOtolithsRemoved = rep(0,B)
   nOtolithsTotal = rep(0,B)
+  nWithDatras = rep(0,B)
+  nWithoutDatras = rep(0,B)
+  nFoundWithin = rep(0,B)
+  nNotFoundWithin = rep(0,B)
   #Sample hauls, remove data, and calulates mCPUE --------------------------------------
   for(i in 1:B){
     print("Information about progress in otholit removal simulation: ")
@@ -48,6 +52,11 @@ investigateRemoval = function(species, year, quarter,dat ,
     tmpResults$mCPUE[,i] = resultSim$mCPUE
     nOtolithsRemoved[i] = attributes(resultSim)$nOtolithsRemoved
     nOtolithsTotal[i]= attributes(resultSim)$nOtolithsTotal
+
+    nWithDatras[i] = attributes(resultSim)$nWithDatras
+    nWithoutDatras[i]= attributes(resultSim)$nWithoutDatras
+    nFoundWithin[i] = attributes(resultSim)$nFoundWithin
+    nNotFoundWithin[i]= attributes(resultSim)$nNotFoundWithin
   }
   #--------------------------------------------------------------------------
 
@@ -76,6 +85,10 @@ investigateRemoval = function(species, year, quarter,dat ,
 
   attributes(toReturn)$nOtolithsRemoved = nOtolithsRemoved
   attributes(toReturn)$nOtolithsTotal = nOtolithsTotal
+  attributes(toReturn)$nWithDatras = nWithDatras
+  attributes(toReturn)$nWithoutDatras = nWithoutDatras
+  attributes(toReturn)$nFoundWithin = nFoundWithin
+  attributes(toReturn)$nNotFoundWithin = nNotFoundWithin
   return(toReturn)
 }
 

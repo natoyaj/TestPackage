@@ -148,11 +148,10 @@ calculateALKDatras = function(RFA,species,year,quarter,data)
 #' @param quarter The quarter of the year which the ALKs are calculated.
 #' @param data The CA needed for calculating the ALKs.
 #' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
-#' @param dfLength The length of the pooled length class. Default is 1, e.g. 1 length classes in each pooled length class.
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLength = 1){
+calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,lengthDivision = 1:299){
 
   #Define the list which shall be filled with the ALKs and returned-----
   alkToReturn = list()
@@ -280,7 +279,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLeng
       if(dim(dataThisTrawl)[1]>0){
         for(i in 1:dim(dataThisTrawl)[1])
         {
-          if(floor(dataThisTrawl$LngtCm[i])< (minLength+dfLength))
+          if(floor(dataThisTrawl$LngtCm[i])< (minLength+1))
           {
             alkThis[1,floor(dataThisTrawl$Age[i])+3] =
               alkThis[1,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
@@ -292,7 +291,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLeng
             whichIsMissing[dim(alkThis)[1]] = FALSE
 
           }else{
-            hvilke = min(which(alkThis[,2]> floor(dataThisTrawl$LngtCm[i]-dfLength)))
+            hvilke = min(which(alkThis[,2]> floor(dataThisTrawl$LngtCm[i]-1)))
 
             alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] =
               alkThis[hvilke,floor(dataThisTrawl$Age[i])+3] +dataThisTrawl$NoAtALK[i]
@@ -302,6 +301,36 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLeng
         }
       }
     }
+
+    #Use same resultion for the ALK as for the sampling
+    lengthDivision = c(lengthDivision,9999)
+    for(i in 1:(length(lengthDivision)-1)){
+      if(lengthDivision[i+1]<=maxLength & lengthDivision[i]>=minLength){
+        for(j in 3:(3+maxAge)){
+          alkThis[(lengthDivision[i]+1):lengthDivision[i+1]-minLength,j] = sum(alkThis[(lengthDivision[i]+1):lengthDivision[i+1]-minLength,j])
+        }
+      }else if(lengthDivision[i] < minLength & lengthDivision[i+1]>minLength){
+        for(j in 3:(3+maxAge)){
+          alkThis[1:sum(alkThis$Length<lengthDivision[i+1]),j] = sum(alkThis[1:sum(alkThis$Length<lengthDivision[i+1]),j])
+        }
+      }else if(lengthDivision[i+1] > maxLength & lengthDivision[i]<=maxLength ){
+        for(j in 3:(3+maxAge)){
+          alkThis[(lengthDivision[i]+1-minLength):dim(alkThis)[1],j] = sum(alkThis[(lengthDivision[i]+1-minLength):dim(alkThis)[1],j])
+        }
+      }
+    }
+
+    for(i in 1:dim(alkThis)[1]){
+      if(sum(alkThis[i,3:dim(alkThis)[2]])>0){
+        whichIsMissing[i] = FALSE
+      }
+    }
+
+    #Assign attribut which say if the DATRAS-procedure is used
+    foundWithin = rep(TRUE, dim(ALKnormal)[1])
+    foundWithin[whichIsMissing] = FALSE
+    attributes(alkThis)$foundWithin = foundWithin
+
 
     if(length(whichLengtsAreInteresting)==0){
       whichIsMissing = rep(FALSE, dim(alkThis)[1])
@@ -313,50 +342,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLeng
     #------------------------------------------------------
 
 
-    if(sum(whichIsMissing)>0){
-      #Extrapolate the ALK to length calsses were we do not have data by looking at similar length in same haul-----------------------------------
-      #Routine for filling the not observed length classes
-      whichIsMissingTmp = whichIsMissing
-      alkThisTMP = alkThis
-      if(quarter ==1)start = 4
-      if(quarter >1)start = 3
 
-      for(j in start:dim(alkThis)[2])
-      {
-        for(i in 1:dim(alkThis)[1])
-        {
-          if(whichIsMissing[i])
-          {
-            if(i>1){
-              obsInPrevious = (sum(alkThis[i-1,start:dim(alkThis)[2]])>0) #Check if we have an observation in the closest length class
-            }else{
-              obsInPrevious = FALSE
-            }
-            if(i<dim(alkThis)[1]){
-              obsInNext = (sum(alkThis[i+1,start:dim(alkThis)[2]])>0)
-            }else{
-              obsInNext = FALSE
-            }
-            if(obsInPrevious& obsInNext)
-            {
-              alkThisTMP[i,j]= (alkThisTMP[i-1,j] + alkThisTMP[i+1,j])/2
-              whichIsMissingTmp[i] = FALSE
-            }else if(obsInPrevious)
-            {
-              alkThisTMP[i,j]= alkThisTMP[i-1,j]
-              whichIsMissingTmp[i] = FALSE
-            }else if(obsInNext)
-            {
-              alkThisTMP[i,j]= alkThisTMP[i+1,j]
-              whichIsMissingTmp[i] = FALSE
-            }
-          }
-        }
-      }
-      whichIsMissing = whichIsMissingTmp #Inform which we have filled in
-      alkThis = alkThisTMP
-      #--------------------------------------------------------------------------------------------
-    }
 
     #Extrapolate the ALK to length calsses were we do not have data by looking at hauls close by-----------------------------------
     if(sum(whichIsMissing)>0){
@@ -412,8 +398,64 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,dfLeng
       }
     #------------------------------------------------------
     }
-    #Set those we do not find any age  equal the original ALK from datras, this works only if dfLength = 1
+
+    if(sum(whichIsMissing)>0){
+      #Extrapolate the ALK to length calsses were we do not have data by looking at similar length in same haul-----------------------------------
+      #Routine for filling the not observed length classes
+      whichIsMissingTmp = whichIsMissing
+      alkThisTMP = alkThis
+      if(quarter ==1)start = 4
+      if(quarter >1)start = 3
+
+      for(j in start:dim(alkThis)[2])
+      {
+        for(i in 1:dim(alkThis)[1])
+        {
+          if(whichIsMissing[i])
+          {
+            if(i>1){
+              obsInPrevious = (sum(alkThis[i-1,start:dim(alkThis)[2]])>0) #Check if we have an observation in the closest length class
+            }else{
+              obsInPrevious = FALSE
+            }
+            if(i<dim(alkThis)[1]){
+              obsInNext = (sum(alkThis[i+1,start:dim(alkThis)[2]])>0)
+            }else{
+              obsInNext = FALSE
+            }
+            if(obsInPrevious& obsInNext)
+            {
+              alkThisTMP[i,j]= (alkThisTMP[i-1,j] + alkThisTMP[i+1,j])/2
+              whichIsMissingTmp[i] = FALSE
+            }else if(obsInPrevious)
+            {
+              alkThisTMP[i,j]= alkThisTMP[i-1,j]
+              whichIsMissingTmp[i] = FALSE
+            }else if(obsInNext)
+            {
+              alkThisTMP[i,j]= alkThisTMP[i+1,j]
+              whichIsMissingTmp[i] = FALSE
+            }
+          }
+        }
+      }
+      whichIsMissing = whichIsMissingTmp #Inform which we have filled in
+      alkThis = alkThisTMP
+      #--------------------------------------------------------------------------------------------
+    }
+
+
+
+    #Set those we do not find any age  equal the original ALK from datras
     alkThis[whichIsMissing,2:(maxAge+3)] = ALKnormal[whichIsMissing,]
+    if(sum(whichIsMissing)>0)    attributes(alkThis)$MissAgeObservation = TRUE
+
+
+
+    #Assign attribut which say if the DATRAS-procedure is used
+    datrasValue = rep(FALSE, dim(ALKnormal)[1])
+    datrasValue[whichIsMissing] = TRUE
+    attributes(alkThis)$datrasValue = datrasValue
 
     #Store the ALK for this trawl haul in the list to be returned
     alkToReturn[[neste]] = alkThis

@@ -5,7 +5,7 @@
 \title{calculateALKNew}
 \usage{
 calculateALKHaulbased(RFA, species, year, quarter, data, data_hl,
-  dfLength = 1)
+  lengthDivision = 1:299)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}
@@ -19,8 +19,6 @@ calculateALKHaulbased(RFA, species, year, quarter, data, data_hl,
 \item{data}{The CA needed for calculating the ALKs.}
 
 \item{data_hl}{The HL needed for calculating the ALKs (since there can be trawl hauls without age information).}
-
-\item{dfLength}{The length of the pooled length class. Default is 1, e.g. 1 length classes in each pooled length class.}
 }
 \value{
 Returns a list with ALK for each trawl haul

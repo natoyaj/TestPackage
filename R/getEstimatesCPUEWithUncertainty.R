@@ -109,7 +109,7 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
 #' @examples
 CPUEage = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
-                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL){
+                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL,lengthDivision){
 
   if(ALKprocedure=="modelBased" & doBootstrap){
     stop("Uncertainty within only one RFA with model based ALK is not implemented.")
@@ -131,7 +131,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
                                      !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter,]
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
-    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL)
+    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
     cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
     #Bad programing, but here we need to inform that we are using simulated ALK with the fisher method
@@ -145,6 +145,8 @@ CPUEage = function(RFA, species, year, quarter,dat,
     stop("Unkown ALKprocedure")
   }
   #------------------------------------------
+
+
 
   #Investigate if it is observed zero data---
   tmp = dataToSimulateFromCA[!is.na(dataToSimulateFromCA$Roundfish) & dataToSimulateFromCA$Roundfish == RFA&
@@ -228,7 +230,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
 
       if(ALKprocedure == "haulBased"){
-        simALK = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL)
+        simALK = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL,lengthDivision = lengthDivision)
         if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
         sim = calcmCPUErfaWithALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
       }else if(ALKprocedure == "modelBased"){
@@ -243,7 +245,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 
       #Print the progress------------------
       print(i)
-      print(sim)
+      print(sim[1:length(sim)])
       #------------------------------------
 
       if(is.na(sum(sim)))break
@@ -285,9 +287,18 @@ CPUEage = function(RFA, species, year, quarter,dat,
       cpue$Q975BiasCorr[i] = qq[2]
     }
   }
-
-  #TODO: calculate the bias corrected
   #-----------------------------------------------------
+
+  nWithDatras = attributes(cpueEst)$nWithDatras
+  nWithoutDatras = attributes(cpueEst)$nWithoutDatras
+
+  nFoundWithin = attributes(cpueEst)$nFoundWithin
+  nNotFoundWithin = attributes(cpueEst)$nNotFoundWithin
+
+  attributes(cpue)$nWithDatras = nWithDatras
+  attributes(cpue)$nWithoutDatras = nWithoutDatras
+  attributes(cpue)$nFoundWithin = nFoundWithin
+  attributes(cpue)$nNotFoundWithin = nNotFoundWithin
 
   return(cpue)
 }
@@ -303,7 +314,7 @@ CPUEage = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        onlySimulate = FALSE,lengthDivision =NULL,samplesWithinEachIntervall = NULL){
+                        onlySimulate = FALSE,lengthDivision =1:299,samplesWithinEachIntervall = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -312,14 +323,23 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   nOtolithsRemoved = 0
   #---------------------------------------------------------------
 
+  #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
+  nWithDatras = 0
+  nWithoutDatras = 0
+  nFoundWithin = 0
+  nNotFoundWithin = 0
+
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
   if(!onlySimulate){
   tmp = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                           dat = dat,ALKprocedure = ALKprocedure,B = B,
-                          dimCPUE = dim(mCPUE))
+                          dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
   mCPUE[,1] = tmp[[1]]
   #-----------------------------------------------------------------------------------------
   }
+
+
+
   #Simulate data and calculates mCPUE for estimation of unceratinaty------------------------
   if(doBootstrap){
     if(ALKprocedure=="modelBased" &useFisher){
@@ -401,7 +421,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
 
       if(onlySimulate){
-        #simulate otolits
         tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
         nOtolithsRemoved = tmp$nOtolithsRemoved
         datTmp = tmp$reducedData
@@ -421,9 +440,17 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                                         dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
                                         dimCPUE = dim(mCPUE),report)[[1]]
       }else{
-        mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                        dat = datTmp,ALKprocedure = ALKprocedure,B = B,
-                                        dimCPUE = dim(mCPUE))[[1]]
+
+        mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                                dat = datTmp,ALKprocedure = ALKprocedure,B = B,
+                                dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
+        mCPUE[,i+1] = mCPUEThisSimulation[[1]]
+        nWithDatras = attributes(mCPUEThisSimulation[[1]])$nWithDatras
+        nWithoutDatras = attributes(mCPUEThisSimulation[[1]])$nWithoutDatras
+        nFoundWithin = attributes(mCPUEThisSimulation[[1]])$nFoundWithin
+        nNotFoundWithin = attributes(mCPUEThisSimulation[[1]])$nNotFoundWithin
+
+
       }
     }
   }
@@ -459,6 +486,12 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
   }
   #-----------------------------------------------------------------------------------------
+
+  attributes(mCPUEsummary)$nWithDatras = nWithDatras
+  attributes(mCPUEsummary)$nWithoutDatras = nWithoutDatras
+  attributes(mCPUEsummary)$nFoundWithin = nFoundWithin
+  attributes(mCPUEsummary)$nNotFoundWithin = nNotFoundWithin
+
 
   attributes(mCPUEsummary)$nOtolithsRemoved = nOtolithsRemoved
   attributes(mCPUEsummary)$nOtolithsTotal = nOtolithsTotal

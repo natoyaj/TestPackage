@@ -281,6 +281,12 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
 
+  #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
+  nWithDatras = 0
+  nWithoutDatras = 0
+  nFoundWithin = 0
+  nNotFoundWithin = 0
+
   #Investigate if it is observed zero data---
   tmp = dataOfInterest[!is.na(dataOfInterest$Roundfish) & dataOfInterest$Roundfish == RFA&
                          !is.na(dataOfInterest$Species) & dataOfInterest$Species == species,]
@@ -305,6 +311,16 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
     cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
 
     mCPUEstatRec[,i] = as.double(cpueStatRec)
+
+    if(!is.null(attributes(cpueStatRec)$nWithDatras) & !is.null(attributes(cpueStatRec)$nWithoutDatras)){
+      nWithDatras = nWithDatras + attributes(cpueStatRec)$nWithDatras
+      nWithoutDatras = nWithoutDatras + attributes(cpueStatRec)$nWithoutDatras
+    }
+    if(!is.null(attributes(cpueStatRec)$nFoundWithin) & !is.null(attributes(cpueStatRec)$nNotFoundWithin)){
+      nFoundWithin = nFoundWithin + attributes(cpueStatRec)$nFoundWithin
+      nNotFoundWithin = nNotFoundWithin + attributes(cpueStatRec)$nNotFoundWithin
+    }
+
   }
   #---------------------------------------------------------------
 
@@ -325,6 +341,13 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
       mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
     }
   }
+
+  attributes(mCPUE)$nWithDatras = nWithDatras
+  attributes(mCPUE)$nWithoutDatras = nWithoutDatras
+
+  attributes(mCPUE)$nFoundWithin = nFoundWithin
+  attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
+
   return(mCPUE)
   #------------------------------------------------------------
 }
@@ -354,6 +377,11 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
                               !is.na(data$StatRec) & data$StatRec == statRec ,]
   #-----------------------------------------------------
 
+  #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
+  nWithDatras = 0
+  nWithoutDatras = 0
+  nFoundWithin = 0
+  nNotFoundWithin = 0
 
   #Calculates and returns mCPUE-----
   subfactor = dataWithTheSpecies$SubFactor
@@ -395,9 +423,52 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
         CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
         if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }
+      #Store how many was calculated with datras procedure
+      if ("datrasValue" %in% names(attributes(ALK))){
+        if(!is.na(lineInAlkToUse)){
+          if(dataWithTheSpecies$DataType[i]=="R")
+          {
+            if(attributes(ALK)$datrasValue[lineInAlkToUse]){
+              nWithDatras = nWithDatras + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }else{
+              nWithoutDatras = nWithoutDatras + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }
+          }else if(dataWithTheSpecies$DataType[i]=="C")
+          {
+            if(attributes(ALK)$datrasValue[lineInAlkToUse]){
+              nWithDatras = nWithDatras + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }else{
+              nWithoutDatras = nWithoutDatras + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }
+          }
+        }
+      }
+      if ("foundWithin" %in% names(attributes(ALK))){
+        if(!is.na(lineInAlkToUse)){
+          if(dataWithTheSpecies$DataType[i]=="R")
+          {
+            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+              nFoundWithin = nFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }else{
+              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }
+          }else if(dataWithTheSpecies$DataType[i]=="C")
+          {
+            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+              nFoundWithin = nFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }else{
+              nNotFoundWithin = nNotFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }
+          }
+        }
+      }
     }
   }
   mCPUE = CPUE/nHauls
+  attributes(mCPUE)$nWithDatras = nWithDatras
+  attributes(mCPUE)$nWithoutDatras = nWithoutDatras
+  attributes(mCPUE)$nFoundWithin = nFoundWithin
+  attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
 
   return(mCPUE)
   #----------------------------------
@@ -416,8 +487,14 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision = 1:299)
 {
+  #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
+  nWithDatras = 0
+  nWithoutDatras = 0
+  nFoundWithin = 0
+  nNotFoundWithin = 0
+
   #Read shape file for roundfish areas and calcualte area---------
   rfa <-
     readOGR(file.path(
@@ -452,19 +529,34 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
 
     cpueThisRFA = CPUEage(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report)
+                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
 
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
 
     totalArea = totalArea + areaThisRFA
 
+    if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
+      nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras
+      nWithoutDatras = nWithoutDatras + attributes(cpueThisRFA)$nWithoutDatras
+    }
+    if(!is.null(attributes(cpueThisRFA)$nFoundWithin) & !is.null(attributes(cpueThisRFA)$nNotFoundWithin)){
+      nFoundWithin = nFoundWithin + attributes(cpueThisRFA)$nFoundWithin
+      nNotFoundWithin = nNotFoundWithin + attributes(cpueThisRFA)$nNotFoundWithin
+    }
 
   }
   mCPUEvector = mCPUEvector/totalArea
 
   print("Done with one simulation whole North Sea, mCPUE is:")
-  print(mCPUEvector)
+  print(mCPUEvector[1:length(mCPUEvector)])
+
+  attributes(mCPUEvector)$nFoundWithin = nFoundWithin
+  attributes(mCPUEvector)$nNotFoundWithin = nNotFoundWithin
+
+  attributes(mCPUEvector)$nWithDatras = nWithDatras
+  attributes(mCPUEvector)$nWithoutDatras = nWithoutDatras
+
 
   return(list(mCPUEvector,fit))
 

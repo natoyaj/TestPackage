@@ -6,8 +6,8 @@
 \usage{
 investigateRemoval(species, year, quarter, dat,
   bootstrapProcedure = "stratifiedHLandCA", B,
-  ALKprocedure = "haulBased", doNotRemoveAbove = 9999,
-  lengthDivision = NULL, samplesWithinEachIntervall = 1)
+  ALKprocedure = "haulBased", doNotRemoveAbove = 9999, lengthDivision,
+  samplesWithinEachIntervall = 1)
 }
 \arguments{
 \item{species}{The species of interest.}
