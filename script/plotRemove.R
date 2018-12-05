@@ -128,6 +128,7 @@ dev.off()
 
 
 
+
 #Plot proprtions calculated with different ALK steps
 nWithDatras = rep(-1,99)
 nWithoutDatras= rep(-1,99)
@@ -154,6 +155,20 @@ for(dl in dlSec){
   counter = counter +1
 }
 
+year = 2018;quarter = 1; species = "Gadus morhua" #NB Say which species and year
+jpeg("PercentageOfOtolithsRemoved.jpeg",width = 580, height = 580)
+nOtolithsRemoved = nOtolithsRemoved[nOtolithsRemoved>(-1)]
+nOtolithsTotal = nOtolithsTotal[nOtolithsTotal>(-1)]
+plot(dlSec,100-nOtolithsRemoved/(nOtolithsTotal)*100,
+     xlab = "length group",
+     ylab = "Average percentage of otoliths used",
+     ylim = c(0,100),
+     main = paste(species,", year ", year, "Q", quarter))
+abline(h = 0)
+abline(h = 100)
+dev.off()
+
+
 
 jpeg("ALKused3a.jpeg",width = 580, height = 580)
 par(mfrow = c(1,2))
@@ -177,17 +192,34 @@ abline(h = 0)
 abline(h = 100)
 dev.off()
 
-jpeg("PercentageOfOtolithsRemoved.jpeg",width = 580, height = 580)
-nOtolithsRemoved = nOtolithsRemoved[nOtolithsRemoved>(-1)]
-nOtolithsTotal = nOtolithsTotal[nOtolithsTotal>(-1)]
-plot(dlSec,nOtolithsRemoved/(nOtolithsTotal)*100,
-     xlab = "length group",
-     ylab = "Percentage of otoliths removed",
-     ylim = c(0,100),
-     main = paste(species,", year ", year, "Q", quarter))
-abline(h = 0)
-abline(h = 100)
-dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
