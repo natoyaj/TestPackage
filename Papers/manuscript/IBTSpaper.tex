@@ -336,7 +336,8 @@ We define  $N_{\text{s}}$ as the number of hauls in a given statistical rectangl
 %\clearpage
 \section{Case studies}
 \label{sec:data}
-In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for the years 2014-2018, which is obtained from the DATRAS database \citep{datras}. These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, $one$ pair of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample optimization procedure described in Section \ref{sec:optimizationsampling}. The second is that IBTS included age 0 in Q3 surveys, which are available for years 2014-2017. Also, some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed (see Figure \ref{icesroufismap}). Note that both IBTS Q1 and Q3 surveys do not adequately cover the whole stock distribution of saithe but the data collected is considered generally representative \citep{ICESJune2016}. In this research, the species of interest are cod and saithe. The third reason is that data for North Sea otolith exchange are available for year 2016 for both species. These exchanges provide information on the age of cod or saithe between different readers for the same otoliths, including the probability of disagreement on an age for a given pair of otoliths (\nat{Olav would we include this the estimation from the haul and model based approaches?}). Table \ref{tab:realdata2014-2018} in Supplementary Materials \ref{secAp:data} briefly describes the data for the years 2014-2018.
+In this section we apply the methods described in Section \ref{sec:methods} to data from the International Bottom Trawl Survey for the years 2014-2018, which is obtained from the DATRAS database \citep{datras}. These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, $one$ pair of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample optimization procedure described in Section \ref{sec:optimizationsampling}. The second is that IBTS included age 0 in Q3 surveys, which are available for years 2014-2017. Also, some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed (see Figure \ref{icesroufismap}). Note that both IBTS Q1 and Q3 surveys do not adequately cover the whole stock distribution of saithe but the data collected is considered generally representative \citep{ICESJune2016}. In this research, the species of interest are cod and saithe. Table \ref{tab:realdata2014-2018} in Supplementary Materials \ref{secAp:data} briefly describes the data for the years 2014-2018.
+%The third reason is that data for North Sea otolith exchange are available for year 2016 for both species. These exchanges provide information on the age of cod or saithe between different readers for the same otoliths, including the probability of disagreement on an age for a given pair of otoliths (\nat{Olav would we include this the estimation from the haul and model based approaches?})
 
 \subsection{Estimated indices of abundance and variability for cod and saithe}
 \label{sec:codandsaitheresults}
@@ -359,21 +360,10 @@ Figures \ref{percentileBiascorrectedCIcod} gives estimates of indices of abundan
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{figures/cod2018Q1BiasCorr.jpeg}} & \\
+\subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{figures/cod2018Q1n100AllALK.jpeg}} & \\
 \subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3BiasCorr.jpeg}} &
 \end{tabular}
 \caption[]{Estimated confidence intervals ($\mathrm{CI}_{95}$) from bias-corrected  bootstrap method for cod in year 2018 Q1 and saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (Mean)  and Median estimates and the width of the confidence interval (Width CI-95) are also given.}
-\label{percentileBiascorrectedCIcod}
-\end{figure*} 
-
-\clearpage
-\begin{figure*}[h!]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{figuresNotUsed/cod2018Q1n100AllALK.jpeg}} & \\
-%\subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3BiasCorr.jpeg}} &
-\end{tabular}
-\caption[]{Estimated confidence intervals ($\mathrm{CI}_{95}$) from bias-corrected  bootstrap method for cod in year 2018 Q1. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%), bootstrap mean (Mean)  and Median estimates and the width of the confidence interval (Width CI-95) are also given.}
 \label{percentileBiascorrectedCIcod}
 \end{figure*} 
 
@@ -775,9 +765,11 @@ The Bias-Corrected method assumes that there is a montonic increasing function a
 \section{\large IBTS data set for cod and saithe}
 \label{secAp:data}
 
+%\clearpage
 
  \begin{small}
 \begin{table}[h!]
+\setlength\tabcolsep{2.8pt} 
 \centering
 \caption{Age and length data for saithe  and cod . Data collected in the first quarter (Q1) has no age 0 group but this is collected in quarter 3 (Q3) surveys.}
 \begin{footnotesize}
@@ -791,12 +783,22 @@ Species&  & \multicolumn{10}{c}{Years} &   \\[2.0ex]
 & & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
  
   \cmidrule(lr{0.3em}){3-12}  \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
-\raisebox{2.5ex}{\bf cod}           & Trawls &  21 & 10   & 14  & 12.143 & 1.195             &  0.098        & & 345 & 372 &   \\ [1.5ex]
-& Age range (in years)              &  26 & 23   & 32  & 27.654 & 2.297  & & & 0 - 11        &  1 - 12       & \\ [1.5ex]
-& Length range (in cm)              &  65 & 27   & 47  & 38.077 & 3.337  & & & 6 - 112       &  11 - 114     &  \\[1.5ex] 
+ 								  & Trawls &   &  &  387 & 367 & 370&            389   &385 & 345 & 372 &   \\ [1.0ex]
+ 								  & Mean time of hauls (in minutes)&  &    & 28.55  &23.44  & 28.40  &22.47 &29.02 & 29.37 &  29.26 &   \\ [1.5ex]
+\raisebox{2.5ex}{\bf cod}        \\ %   & Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
+& Age range (in years)              &   &    &   &0 --- 8  &1 --- 10   &0 --- 10 &1 --- 11 & 0 --- 11  &  1 --- 12       & \\ [1.5ex]
+& Length range (in cm)              &   &    &   &7 --- 111  &11 --- 109   &5 --- 110 &7 --- 115 & 6 --- 112    &  11 --- 114     &  \\[1.5ex] 
 %& Date of catch                    & 531 & 34   & 56  & 42.041 & 3.785  & & & 18.07 - 31.08 &  15.01 - 28.02   \\ [1.5ex]
-& Mean duration of hauls (in minutes)& 767 & 35  &     &        &        & & & 29.37         &  29.26     &   \\ [1.5ex]
-& Total otoliths                    & 334  & 46  & 78  & 56.876 & 6.105  & & & 2230          & 1600\\[1.5ex] 
+%& Mean duration of hauls (in minutes)&  &    &   &  &   & &29.02 & 29.37         &  29.26     &   \\ [1.5ex]
+& Total otoliths                    &   &    &   &2113  & 2046  &1804 &2501 & 2230          & 1600\\[3.5ex] 
+
+
+\raisebox{2.5ex}{\bf saithe}        \\ [1.0ex] %& Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
+& Age range (in years)              &   &    &1 --- 16   & 0 --- 19 &1 --- 17   &0 --- 19 &1 --- 15 & 0 --- 11 &  1 --- 12 & \\ [1.5ex]
+& Length range (in cm)              &   &    & 13 --- 110  & NA & 16 --- 107  & 12 --- 115  &15 --- 108 & 6 --- 112 &  11 --- 114     &  \\[1.5ex] 
+%& Date of catch                    & 531 & 34   & 56  & 42.041 & 3.785  & & & 18.07 - 31.08 &  15.01 - 28.02   \\ [1.5ex]
+%& Mean duration of hauls (in minutes)&  &    &   &  &   & &29.02 & 29.37         &  29.26     &   \\ [1.5ex]
+& Total otoliths                    &   &    & 600  & 1526 & 581  &1631 &1083 & 2163          & 822\\[3.5ex] 
 
    \hline \\[0.8ex]
 \end{tabular}
@@ -808,30 +810,30 @@ Species&  & \multicolumn{10}{c}{Years} &   \\[2.0ex]
  
  
  
-%\clearpage
-%\begin{small}
-%\begin{table}[h!]
-%\caption{Summary of North Sea IBTS cod and saithe (in parentheses) data for third quarter in year 2017 and first quarter in year 2018.}
-%\begin{tabular}{llllll}
-%\toprule
-%\bf Data&\bf Description \\
-%\midrule
-%Trawl hauls  & Total of 372 trawl hauls in year 2018 Q1; 238 (83)  with length and 230 (81) \\ & with age information. In 2017 Q3, a total of 345  trawl hauls were taken; \\ & 238 (129) with length and 237 (128) with age information. \\[1.7ex]
-%
-%Age &The age varied between 1 (1) to 12 (18) years in year 2018 Q1 and \\ & 0 (0) to 11 (17) in year 2017 Q3. \\[1.7ex]
-%
-%Length & Length information in cm varied between 11 (13) to 114 (106) cm in year 2018 Q1 \\ & and between 6 (10) to 112 (109) cm in year 2017 Q3. \\[1.7ex]
-%
-%Date&Date of catch in year 2018 Q1 varied between 15.01.2018 to 28.02.2018 \\ & and in year 2017 Q3 between 18.07.2017 to 31.08.2018 \\[1.7ex]
-%
-%Duration of haul & Mean duration is 29.37 minutes, with 30 minutes as 83\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of 29.26 minutes \\ & with 30 minutes as 88\% coverage . \\[1.0ex]
-%
-%Total count for all ages & 1600 (822) in year 2018 Q1 and 2330 (2163) 2017 Q3. \\[0.5ex]
-%\bottomrule
-%\end{tabular}
-%\label{tab:data2018}
-%\end{table}
-%\end{small}
+\clearpage
+\begin{small}
+\begin{table}[h!]
+\caption{Summary of North Sea IBTS cod and saithe (in parentheses) data for third quarter in year 2017 and first quarter in year 2018.}
+\begin{tabular}{llllll}
+\toprule
+\bf Data&\bf Description \\
+\midrule
+Trawl hauls  & Total of 372 trawl hauls in year 2018 Q1; 238 (83)  with length and 230 (81) \\ & with age information. In 2017 Q3, a total of 345  trawl hauls were taken; \\ & 238 (129) with length and 237 (128) with age information. \\[1.7ex]
+
+Age &The age varied between 1 (1) to 12 (18) years in year 2018 Q1 and \\ & 0 (0) to 11 (17) in year 2017 Q3. \\[1.7ex]
+
+Length & Length information in cm varied between 11 (13) to 114 (106) cm in year 2018 Q1 \\ & and between 6 (10) to 112 (109) cm in year 2017 Q3. \\[1.7ex]
+
+Date&Date of catch in year 2018 Q1 varied between 15.01.2018 to 28.02.2018 \\ & and in year 2017 Q3 between 18.07.2017 to 31.08.2018 \\[1.7ex]
+
+Duration of haul & Mean duration is 29.37 minutes, with 30 minutes as 83\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of 29.26 minutes \\ & with 30 minutes as 88\% coverage . \\[1.0ex]
+
+Total count for all ages & 1600 (822) in year 2018 Q1 and 2330 (2163) 2017 Q3. \\[0.5ex]
+\bottomrule
+\end{tabular}
+\label{tab:data2018}
+\end{table}
+\end{small}
 
 %\clearpage
 
