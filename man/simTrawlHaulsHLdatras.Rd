@@ -4,7 +4,7 @@
 \alias{simTrawlHaulsHLdatras}
 \title{simTrawlHaulsHLdatras}
 \usage{
-simTrawlHaulsHLdatras(RFA, year, quarter, data)
+simTrawlHaulsHLdatras(RFA, year, quarter, data, ca_hh)
 }
 \arguments{
 \item{RFA}{Roundfish area number.}

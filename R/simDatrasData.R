@@ -42,7 +42,7 @@ simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
 #' @export
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
 #' @examples
-simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
+simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh)
 {
   #Extract the data of interest-------------------------
     dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -51,9 +51,19 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
   #-----------------------------------------------------
 
   #Simulate trawl hauls---------------------------------
-  haulsID = unique(dataOfInterest$haul.id) #TODO: should use the HH-data
+  haulsID = unique(dataOfInterest$haul.id)
   nSim = length(haulsID)
   simHauls = sample(haulsID,nSim,replace = T)
+
+
+  simDataCA = ca_hh[1,]#Define the structure in the data, this line is removed later.
+  for(j in 1:length(simHauls)){
+    tmpCA = ca_hh[which(ca_hh$haul.id== simHauls[j]),]
+    if(dim(tmpCA)[1]>0){
+      simDataCA = rbind(simDataCA,tmpCA)
+    }
+  }
+  simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
 
 
   #Define a help variable for keeping the number of trawl hauls within each statistical rectangle fixed----
@@ -75,7 +85,10 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data)
   simDataToBeReturned  =   do.call(rbind.data.frame,simData)
   #----------------------------------------------------
 
-  return(simDataToBeReturned)
+  toReturn = list()
+  toReturn$ca_hh = simDataCA
+  toReturn$hl_hh = simDataToBeReturned
+  return(toReturn)
 }
 
 
@@ -258,8 +271,6 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
                           !is.na(dataHH$Quarter) & dataHH$Quarter == quarter&
                           !is.na(dataHH$Roundfish) & dataHH$Roundfish == RFA ,]
   #-----------------------------------------------------
-
-
 
   #Simulate trawl hauls---------------------------------
   statRec = unique(dataOfInterest$StatRec)

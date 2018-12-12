@@ -359,12 +359,10 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       for(RFA in 1:9){
         loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
         if(bootstrapProcedure =="datras"){
-          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
-          simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh)
-        }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
-          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
-          simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dat$hl_hh,loc = loc)#TODO: should use the HH-data
-        }else if(bootstrapProcedure =="stratifiedHLandCA"){
+          simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
+          simDataHL = simDataHLList$hl_hh
+          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+        }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
           simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
           simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
           simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
@@ -401,38 +399,54 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
           simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
           simDataHL = simDataHL[-1,]
           simDataHH = simDataHH[-1,]
+          HH = rbind(HH,simDataHH)
+
+          if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+            #Sample ages with DATRAS-procedure
+            simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+          }else{
+            #Sample ages stratified with wrt length and haul, this is done after the for-loop.
+          }
         }else{
           return("Select a valid bootstrap procedure.")
         }
         CA = rbind(CA,simDataCA)
         HL = rbind(HL,simDataHL)
-
-        if(bootstrapProcedure =="stratifiedHLandCA")HH = rbind(HH,simDataHH)#Quickfix todo
       }
+
       CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
       HL = HL[-1,]
-      if(bootstrapProcedure =="stratifiedHLandCA")HH = HH[-1,]
-
       datTmp = dat
       datTmp$ca_hh = CA
       datTmp$hl_hh = HL
 
-      if(bootstrapProcedure =="stratifiedHLandCA") datTmp$hh = HH#Quickfix todo
-
-
-      if(onlySimulate){
-        tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
-        nOtolithsRemoved = tmp$nOtolithsRemoved
-        datTmp = tmp$reducedData
-        nOtolithsTotal = dim(CA)[1]
-      }else{
-        lengthDivision = c(seq(0,max(round(datTmp$ca_hh$LngtCm)) + 1,by = 1))
-        tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
-                         samplesWithinEachIntervall =999999)
-        nOtolithsRemoved = tmp$nOtolithsRemoved
-        datTmp = tmp$reducedData
-        nOtolithsTotal = dim(CA)[1]
+      if(bootstrapProcedure =="stratifiedHLandCA"| bootstrapProcedure =="stratifiedHLdatrasCA"){
+        HH = HH[-1,]
+        datTmp$hh = HH
       }
+
+
+      #Sample ages within hauls-----------------
+      nOtolithsRemoved = 0
+      nOtolithsTotal = dim(CA)[1]
+      if(bootstrapProcedure =="stratifiedHLandCA"){
+        if(onlySimulate){
+          tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
+          nOtolithsRemoved = tmp$nOtolithsRemoved
+          datTmp = tmp$reducedData
+          nOtolithsTotal = dim(CA)[1]
+        }else{
+          lengthDivision = c(seq(0,max(round(datTmp$ca_hh$LngtCm)) + 1,by = 1))
+          tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
+                           samplesWithinEachIntervall =999999)
+          nOtolithsRemoved = tmp$nOtolithsRemoved
+          datTmp = tmp$reducedData
+          nOtolithsTotal = dim(CA)[1]
+        }
+      }else{
+        #Sample ages stratified with wrt length, was done in the for-loop above.
+      }
+      #------------------------------------------
 
       if(ALKprocedure=="modelBased" & useFisher){
         report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
@@ -440,7 +454,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                                         dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
                                         dimCPUE = dim(mCPUE),report)[[1]]
       }else{
-
         mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                 dat = datTmp,ALKprocedure = ALKprocedure,B = B,
                                 dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
@@ -449,8 +462,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
         nWithoutDatras = attributes(mCPUEThisSimulation[[1]])$nWithoutDatras
         nFoundWithin = attributes(mCPUEThisSimulation[[1]])$nFoundWithin
         nNotFoundWithin = attributes(mCPUEThisSimulation[[1]])$nNotFoundWithin
-
-
       }
     }
   }
