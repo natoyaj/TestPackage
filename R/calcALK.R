@@ -40,7 +40,7 @@ calculateALKDatras = function(RFA,species,year,quarter,data)
 
     #Investigate if zero data, if so return the sceleton-
     if(dim(caInterest)[1]==0){
-      warning(paste("No observations in period given in RFA: " ,RFA,sep = ""))
+      warning(paste("No observations in period in RFA: " ,RFA,sep = ""))
       return(alk)
     }
     #----------------------------------------------------
@@ -197,7 +197,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,length
       alkToReturn[[neste]] = alkThis
       neste = neste+1
     }
-    warning(paste("No observations in period given in RFA: " ,RFA,sep = ""))
+    warning(paste("No observations in period in RFA: " ,RFA,sep = ""))
     return(alkToReturn)
   }
   #----------------------------------------------------
@@ -525,8 +525,8 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #---------------------------------------------------
 
 
-  #Abort the calculations if no age information is given in the RFA----
-  if(dim(hh)[1]==0)return("No observations in period given")
+  #Abort the calculations if no age information in the RFA----
+  if(dim(hh)[1]==0)return("No observations in period")
   #-----------------------------------------------------
 
   #Define variables used in the construction of the ALK--

@@ -46,10 +46,9 @@ findLoc = function(dat, quarter,year,RFA){
 #' @export
 #' @return Returns the number of observed fish of a given length
 #' @examples
-obsInHL = function(species, year, hl_hh, id,length)
+obsInHL = function(species, hl_hh, id,length)
 {
-  hl_hhOfInterest = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
-                            !is.na(hl_hh$haul.id) & hl_hh$haul.id == id&
+  hl_hhOfInterest = hl_hh[!is.na(hl_hh$haul.id) & hl_hh$haul.id == id&
                             !is.na(hl_hh$Species) & hl_hh$Species == species&
                             !is.na(hl_hh$LngtCm) & floor(hl_hh$LngtCm) == floor(length),]
 
@@ -66,7 +65,7 @@ obsInHL = function(species, year, hl_hh, id,length)
       nLength =  nLength + (hl_hhOfInterest$Count[i])*subfactor[i]
     }else if(hl_hhOfInterest$DataType[i]=="C")
     {
-      nLength  =  nLength + hl_hhOfInterest$HLNoAtLngt[i]*subfactor[i]*60/hl_hhOfInterest$HaulDur[i]
+      nLength  =  nLength + hl_hhOfInterest$HLNoAtLngt[i]*subfactor[i]/60*hl_hhOfInterest$HaulDur[i]
     }
   }
   return(nLength)

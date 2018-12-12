@@ -23,6 +23,7 @@ investigateRemoval = function(species, year, quarter,dat,
                                          bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE,lengthDivision = lengthDivision)
   #--------------------------------------------------------------------------
 
+
   #Define a data frame were results shall be stored -----------------------
   tmpResults = list()
   tmpResults$mCPUE = matrix(0,confALK(species,quarter)$maxAge+1, B)
@@ -121,7 +122,9 @@ simulateAgeHaulBased = function(year, quarter,species, dat,whatToRemove,lengthDi
   numberOfOtholits = dim(reducedData$ca_hh)[1]
 
   #Remove data-----------------------------------------------
-  if("CA" %in% whatToRemove)reducedData$ca_hh = removeDataCA(datDetailed = reducedData$ca_hh,species,quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
+  if("CA" %in% whatToRemove)reducedData$ca_hh = removeDataCA(datDetailed = reducedData$ca_hh,species,
+                                                             quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
+                                                             hl_hh = reducedData$hl_hh)
   #----------------------------------------------------------
 
   #provide user with information regarding number of otholits removed-------
@@ -143,13 +146,13 @@ simulateAgeHaulBased = function(year, quarter,species, dat,whatToRemove,lengthDi
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall){
+removeDataCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall,hl_hh){
 
   toReturn = datDetailed
   toReturn = datDetailed[1,]
   for(id in unique(datDetailed$haul.id)){
     obsTmp = datDetailed[which(datDetailed$haul.id==id),]
-    obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall)
+    obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall,species = species,hl_hh = hl_hh)
     if(dim(obsTmp)[1]>dim(obsReduced)[1]){
       counter = counter +1
     }
@@ -168,7 +171,7 @@ removeDataCA = function(datDetailed,species,quarter,lengthDivision,samplesWithin
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall){
+removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species,hl_hh){
   toReturn = obsTmp[1,]
   for(i in 2:(length(lengthDivision)+1)){
     if(i <= length(lengthDivision)){
@@ -177,8 +180,13 @@ removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall){
       obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1])
     }
     if(length(obsInside)>1){
+      prob = rep(0,length(obsInside))
+      for(j in 1:length(obsInside)){
+        prob[j] = obsInHL(species = species,hl_hh = hl_hh,id = unique(obsTmp$haul.id),length = obsTmp$LngtCm[obsInside[j]])
+      }
+      prob = prob/sum(prob) #Sample with probability proportional to the number observed at length
       nSample = min(samplesWithinEachIntervall,length(obsInside))
-      obsSelected = sample(obsInside,nSample,replace = TRUE)
+      obsSelected = sample(obsInside,nSample,replace = TRUE,prob = prob)
     }else{
       obsSelected = obsInside
     }
