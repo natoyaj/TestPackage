@@ -97,7 +97,7 @@ investigateRemoval = function(species, year, quarter,dat ,
 
 
 
-#' removeData
+#' simulateAgeHaulbased
 #' @description .
 #' @param species The species of interest.
 #' @param year The year of interest.
@@ -107,7 +107,7 @@ investigateRemoval = function(species, year, quarter,dat ,
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeData = function(year, quarter,species, dat,whatToRemove,lengthDivision,samplesWithinEachIntervall = 1){
+simulateAgeHaulBased = function(year, quarter,species, dat,whatToRemove,lengthDivision,samplesWithinEachIntervall = 1){
 
   #Extract data which shall be thinned------------------------
   reducedData = dat

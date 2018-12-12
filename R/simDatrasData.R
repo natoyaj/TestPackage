@@ -1,38 +1,3 @@
-#' simTrawlHaulsHLSimple
-#' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
-#' @param RFA Roundfish area number.
-#' @param year The year of interest.
-#' @param quarter The quarter of interest.
-#' @export
-#' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
-#' @examples
-simTrawlHaulsHLSimple = function(RFA,year, quarter,data)
-{
-  #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
-                          !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
-  #-----------------------------------------------------
-
-  #Simulate trawl hauls---------------------------------
-  haulsID = unique(dataOfInterest$haul.id)
-  nSim = length(haulsID)
-  simHauls = sample(haulsID,nSim,replace = T)
-
-  simData = list(NULL)
-
-  for(i in 1:nSim)
-  {
-    simData[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
-    simData[[i]]$haul.id = paste(simData[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
-  }
-  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
-  #----------------------------------------------------
-
-  return(simDataToBeReturned)
-}
-
-
 #' simTrawlHaulsHLdatras
 #' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
 #' Keep the number of trawl ahuls within each statistical rectangle fixed, and sample them with replacement from the whole RFA.
@@ -92,98 +57,6 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh)
 }
 
 
-#' simTrawlHaulsHLStratified
-#' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
-#' @param RFA Roundfish area number.
-#' @param year The year of interest.
-#' @param quarter The quarter of interest.
-#' @export
-#' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
-#' The simulated trawl hauls are simulated stratisfied on the statistical rectangles: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
-#' The simulated trawl hauls are simulated stratisfied on the statistical rectangles.
-#' @examples
-simTrawlHaulsHLStratified = function(RFA,year, quarter,data, loc = NULL)
-{
-  #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
-                          !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
-  #-----------------------------------------------------
-
-  #Simulate trawl hauls---------------------------------
-  statRec = unique(dataOfInterest$StatRec)
-  simData = list(NULL)
-  for(i in 1:length(statRec))
-  {
-    rec = statRec[i]
-    trawls = unique(dataOfInterest$haul.id[dataOfInterest$StatRec==rec])
-    if(length(trawls)==1)
-    {
-      idClosest = loc$shortesDist[which(loc$uniqueId == trawls)]
-      toSample = c(toString(idClosest),toString(trawls[1]))
-      sampledTreawls = sample(toSample,1)
-      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls,]
-      dTmp$haul.idReal = trawls[1] #The id to the real trawl taken at that location
-      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here. Used in the model based approach
-      dTmp$StatRec = rec
-    }else{
-      sampledTreawls = sample(trawls,length(trawls),replace = TRUE)
-      dTmp = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[1],]
-      dTmp$haul.idReal = trawls[1] #The id to the real trawl taken at that location
-      dTmp$haul.id = paste(dTmp$haul.id ,"i:",i,sep = "") #Needs unique haul.id, which is achived here. Used in the model based approach
-
-      for(j in 2:length(trawls))
-      {
-        add = dataOfInterest[dataOfInterest$haul.id==sampledTreawls[j],]
-        add$haul.idReal = trawls[j] #The id to the real trawl taken at that location. Used in the model based approach
-        add$haul.id = paste(add$haul.id ,"i:",i," j:",j,sep = "") #Needs unique haul.id, which is achived here.
-        dTmp = rbind(dTmp,add)
-      }
-    }
-    simData[[i]]= dTmp
-
-  }
-  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
-  #----------------------------------------------------
-  return(simDataToBeReturned)
-
-}
-
-
-
-#' simTrawlHaulsCASimple
-#' @description Simulates trawl hauls with both length and age information used in the bootstrap procedure.
-#' @param RFA Roundfish area number.
-#' @param year The year of interest.
-#' @param quarter The quarter of interest.
-#' @export
-#' @return Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
-#' @examples
-simTrawlHaulsCASimple = function(RFA,year, quarter,data)
-{
-  #Extract the data of interest-------------------------
-  dataOfInterest = data[!is.na(data$Year) & data$Year == year&
-                          !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA,]
-  #-----------------------------------------------------
-
-  #Simulate trawl hauls---------------------------------
-  haulsID = unique(dataOfInterest$haul.id)
-  nSim = length(haulsID)
-  simHauls = sample(haulsID,nSim,replace = T)
-
-  simData = list(NULL)
-
-  for(i in 1:nSim)
-  {
-    simData[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
-    simData[[i]]$haul.id = paste(simData[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
-  }
-  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
-  #----------------------------------------------------
-
-  return(simDataToBeReturned)
-}
 
 #' simTrawlHaulsCAStratified
 #' @description Simulates trawl hauls with both length and age information used in the bootstrap procedure.
@@ -194,7 +67,7 @@ simTrawlHaulsCASimple = function(RFA,year, quarter,data)
 #' @return Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
 #' Sample stratisfied with respect to the length observed. This gives meaning since it is assumed that the ALK is similar in the whole roundfish area.
 #' @examples
-simTrawlHaulsCAStratified = function(RFA,year, quarter,data,species = "Gadus morhua")
+simTrawlHaulsCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&

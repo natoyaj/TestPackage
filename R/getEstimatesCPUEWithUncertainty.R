@@ -1,100 +1,4 @@
-#' CPUElength
-#' @description .
-#' @param RFA The roundfish area of interest.
-#' @param species The species of interest.
-#' @param year The year of interest.
-#' @param quarter The quarter of interest.
-#' @param bootstrapProcedure The bootstrap procedure ("simple", ...)
-#' @param B The number of simulations in the selected bootstrap procedure
-#' @export
-#' @return Returns the estimated mCPUE per length class in the given RFA with uncertainty
-#' @examples
-CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simple", B = 10)
-{
-  dataToSimulateFrom = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
-                                !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
-                                !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
-
-  #Estimate CPUEs with uncertainty
-  cpueEst = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = dataToSimulateFrom, weightStatRec = dat$weightStatRec)
-
-  if(bootstrapProcedure =="stratified"){
-    #Find shortest distance to a neigbour trawl location---
-    uniqueId = unique(dataToSimulateFrom$haul.id)
-    loc = data.frame(uniqueId)
-    loc$lat = rep(-999,dim(loc)[1])
-    loc$lon = rep(-999,dim(loc)[1])
-
-    for(i in 1:length(uniqueId))
-    {
-      id = uniqueId[i]
-      indeks = which(dataToSimulateFrom$haul.id== id)[1]
-      loc$lat[i] = dataToSimulateFrom$lat[indeks]
-      loc$lon[i] = dataToSimulateFrom$lon[indeks]
-    }
-
-    coordinates(loc) <- ~lon+lat
-    proj4string(loc) ="+proj=longlat"
-    d = spDists(loc)
-    min.d <- apply(d, 1, function(x) order(x, decreasing=F)[2])
-    loc$shortesDist = uniqueId[min.d]
-    #-----------------------------------------------------
-  }
-
-  simCPUEs = matrix(NA,length(cpueEst),B)
-  for(i in 1:B)
-  {
-    if(bootstrapProcedure=="simple")
-    {
-      data = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFrom)
-    }else if(bootstrapProcedure =="stratified"){
-      data = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFrom,loc = loc)
-    }else if(bootstrapProcedure =="hierarchical"){
-      sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFrom, dataToSimulateFrom)
-      data <- sim$simHL
-    }else if(bootstrapProcedure =="datras"){
-      data = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFrom)
-    }else{
-      return("Select a valid bootstrap procedure.")
-    }
-    sim = calcmCPUErfa(RFA = RFA, species = species, year = year, quarter = quarter, data = data, weightStatRec = dat$weightStatRec)
-
-    if(length(sim)!= dim(simCPUEs)[1]) sim = c(sim,rep(0, dim(simCPUEs)[1] - length(sim))) #TODO: define the length classes and include them such that we can remove this line.
-
-    simCPUEs[,i] = sim
-    print(i)
-  }
-
-  #Construct a data.frame with estimates and C.I.
-  cpue = data.frame(cpueEst)
-  cpue$lQ = rep(0,length(cpueEst))
-  cpue$uQ = rep(0,length(cpueEst))
-  cpue$Q025BiasCorrected = rep(0,length(cpueEst))
-  cpue$Q975BiasCorrected = rep(0,length(cpueEst))
-  cpue$sd = rep(0,length(cpueEst))
-  for(i in 1:length(cpueEst))
-  {
-    quantile = quantile(simCPUEs[i,],c(0.025,0.975))
-    cpue$lQ[i] = quantile[1]
-    cpue$uQ[i] = quantile[2]
-    cpue$sd[i] = sd(simCPUEs[i,])
-
-    b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
-    alph      = 0.05                           # 95% limits
-    z         = qnorm(c(alph/2,1-alph/2))      # Std. norm. limits
-    p         = pnorm(z-2*b)                   # bias-correct & convert to proportions
-    qq        = quantile(simCPUEs[i,],p=p)    # Bias-corrected percentile lims.
-    cpue$Q025BiasCorrected[i] = qq[1]
-    cpue$Q975BiasCorrected[i] = qq[2]
-  }
-
-  return(cpue)
-}
-
-
-
-
-#' CPUEage
+#' CPUErfa
 #' @description .
 #' @param RFA The roundfish area of interest.
 #' @param species The species of interest.
@@ -107,15 +11,12 @@ CPUElength = function(RFA, species, year, quarter,dat, bootstrapProcedure="simpl
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
-CPUEage = function(RFA, species, year, quarter,dat,
+CPUErfa = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
                                ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL,lengthDivision){
 
-  if(ALKprocedure=="modelBased" & doBootstrap){
-    stop("Uncertainty within only one RFA with model based ALK is not implemented.")
-  }
 
-    #Extract the data of interest-------------
+  #Extract the data of interest-------------
   dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
                                  !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter&
                                  !is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA ,]
@@ -129,13 +30,13 @@ CPUEage = function(RFA, species, year, quarter,dat,
                                !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter,]
   dataHLforModel = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                      !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter,]
+  #------------------------------------------
+
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
     cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
-    #Bad programing, but here we need to inform that we are using simulated ALK with the fisher method
-    #TODO simulate model parameters which is further given to calculateALKModel( report =...)
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
     cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
@@ -156,149 +57,20 @@ CPUEage = function(RFA, species, year, quarter,dat,
   }
   #------------------------------------------
 
-  #Find the closest nabour (used in simulation)
-  loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)
-
-  #Simulate CPUES per age B times-------------------------
-  if(doBootstrap){
-    simCPUEs = matrix(NA,length(cpueEst),B)
-    for(i in 1:B)
-    {
-      if(bootstrapProcedure =="simple"){
-        simDataCA = simTrawlHaulsCASimple(RFA,year,quarter, data = dataToSimulateFromCA)
-        simDataHL = simTrawlHaulsHLSimple(RFA,year,quarter, data = dataToSimulateFromHL)
-      }else if(bootstrapProcedure =="hierarchical"){
-        sim <- simTrawlHaulsHiearchical(RFA, year, quarter, dataToSimulateFromHL, dataToSimulateFromCA)
-        simDataCA = sim$simCA
-        simDataHL = sim$simHL
-      }else if(bootstrapProcedure =="datras"){
-        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
-        simDataHL = simTrawlHaulsHLdatras(RFA,year,quarter, data = dataToSimulateFromHL)
-      }else if(bootstrapProcedure =="stratifiedHLdatrasCA"){
-        simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dataToSimulateFromCA, species = species)
-        simDataHL = simTrawlHaulsHLStratified(RFA,year,quarter, data = dataToSimulateFromHL,loc = loc)#TODO: should use the HH-data
-      }else if(bootstrapProcedure =="stratifiedHLandCA" & ALKprocedure != "modelBased"){
-        simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
-        simDataCA = dataToSimulateFromCA[1,]#Define the structure in the data, this line is removed later.
-        simDataHL = dataToSimulateFromHL[1,]#Define the structure in the data, this line is removed later.
-
-        for(j in 1:dim(simHauls)[1]){
-          tmpCA = dataToSimulateFromCA[which(dataToSimulateFromCA$haul.id== simHauls$haul.id[j]),]
-          tmpHL = dataToSimulateFromHL[which(dataToSimulateFromHL$haul.id== simHauls$haul.id[j]),]
-
-          if(dim(tmpCA)[1]>0){
-            tmpCA$StatRec = simHauls$StatRec[j]
-            tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-            simDataCA = rbind(simDataCA,tmpCA)
-          }
-          if(dim(tmpHL)[1]>0){
-            tmpHL$StatRec = simHauls$StatRec[j]
-            tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-            simDataHL = rbind(simDataHL,tmpHL)
-          }
-        }
-        simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
-        simDataHL = simDataHL[-1,]#Removes the first line which was created for defining the structure of the data
-      }else if(bootstrapProcedure =="stratifiedHLandCA" & ALKprocedure == "modelBased"){
-
-        simDataCA = dataCAforModel[1,]#Define the structure in the data, this line is removed later.
-        simDataHL = dataHLforModel[1,]#Define the structure in the data, this line is removed later.
-        for(rfaTmp in 1:9){
-          loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = rfaTmp)
-          simHauls = simCaHlSimultaniousyStratified(rfaTmp,year,quarter, dataHH = dat$hh,loc = loc)
-          for(j in 1:dim(simHauls)[1]){
-            tmpCA = dataCAforModel[which(dataCAforModel$haul.id== simHauls$haul.id[j]),]
-            tmpHL = dataHLforModel[which(dataHLforModel$haul.id== simHauls$haul.id[j]),]
-
-            if(dim(tmpCA)[1]>0){
-              tmpCA$StatRec = simHauls$StatRec[j]
-              tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-              simDataCA = rbind(simDataCA,tmpCA)
-            }
-            if(dim(tmpHL)[1]>0){
-              tmpHL$StatRec = simHauls$StatRec[j]
-              tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-              simDataHL = rbind(simDataHL,tmpHL)
-            }
-          }
-        }
-        simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
-        simDataHL = simDataHL[-1,]#Removes the first line which was created for defining the structure of the data
-      }else{
-        return("Select a valid bootstrap procedure.")
-      }
-
-
-      if(ALKprocedure == "haulBased"){
-        simALK = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA, data_hl = simDataHL,lengthDivision = lengthDivision)
-        if(simALK[1]=="No observations in period given")print("There were simulated zero age observations and the program crash")
-        sim = calcmCPUErfaWithALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
-      }else if(ALKprocedure == "modelBased"){
-        simALK = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh=dat$hh,data = simDataCA)
-        sim = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = simDataHL,ALKNew = simALK,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
-      }else{
-        simALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = simDataCA)
-        sim = calcmCPUErfaWithALKDatras(RFA = RFA, species = species, year = year, quarter = quarter, data = simDataHL,ALK = simALK, weightStatRec = dat$weightStatRec)
-      }
-      simCPUEs[,i] = sim
-
-
-      #Print the progress------------------
-      print(i)
-      print(sim[1:length(sim)])
-      #------------------------------------
-
-      if(is.na(sum(sim)))break
-    }
-  }
-    #-----------------------------------------------------
-
-  #Construct a data.frame with estimates and P.I. of CPUEs per age----
+  #Construct a data.frame with estimates of CPUEs per age----
   cpue = data.frame(cpueEst)
   names(cpue) = "mCPUE"
-  cpue$bootstrapMean = rep(0,length(cpueEst))
-  cpue$median = rep(0,length(cpueEst))
-  cpue$Q025 = rep(0,length(cpueEst))
-  cpue$Q975 = rep(0,length(cpueEst))
-  cpue$Q025BiasCorr = rep(0,length(cpueEst))
-  cpue$Q975BiasCorr = rep(0,length(cpueEst))
-  cpue$sd = rep(0,length(cpueEst))
 
-  if(doBootstrap){
-    for(i in 1:length(cpueEst))
-    {
-      quantile = quantile(simCPUEs[i,],c(0.025,0.975))
-      cpue$Q025[i] = quantile[1]
-      cpue$Q975[i] = quantile[2]
-      cpue$sd[i] = sd(simCPUEs[i,])
-      cpue$bootstrapMean[i] = mean(simCPUEs[i,])
-      cpue$median[i] = median(simCPUEs[i,])
-
-      #Estimating bias-corrected confidence intervals
-      #estimate bias in standard norm deviates
-      #for each i, b must be calculated for the number of simulations ran
-
-      b= qnorm((sum(simCPUEs[i,] > cpueEst[i])+sum(simCPUEs[i,]==cpueEst[i])/2)/length(simCPUEs[i,]))
-      alph      = 0.05                           # 95% limits
-      z         = qnorm(c(alph/2,1-alph/2))      # Std. norm. limits
-      p         = pnorm(z-2*b)                   # bias-correct & convert to proportions
-      qq        = quantile(simCPUEs[i,],p=p)     # Bias-corrected percentile lims.
-      cpue$Q025BiasCorr[i] = qq[1]
-      cpue$Q975BiasCorr[i] = qq[2]
-    }
-  }
-  #-----------------------------------------------------
-
+  #Attach some attributes for internal investigation----
   nWithDatras = attributes(cpueEst)$nWithDatras
   nWithoutDatras = attributes(cpueEst)$nWithoutDatras
-
   nFoundWithin = attributes(cpueEst)$nFoundWithin
   nNotFoundWithin = attributes(cpueEst)$nNotFoundWithin
-
   attributes(cpue)$nWithDatras = nWithDatras
   attributes(cpue)$nWithoutDatras = nWithoutDatras
   attributes(cpue)$nFoundWithin = nFoundWithin
   attributes(cpue)$nNotFoundWithin = nNotFoundWithin
+  #------------------------------------------
 
   return(cpue)
 }
@@ -361,7 +133,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
         if(bootstrapProcedure =="datras"){
           simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
           simDataHL = simDataHLList$hl_hh
-          simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+          simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
         }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
           simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
           simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
@@ -403,7 +175,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
           if(bootstrapProcedure =="stratifiedHLdatrasCA"){
             #Sample ages with DATRAS-procedure
-            simDataCA = simTrawlHaulsCAStratified(RFA,year,quarter, data = dat$ca_hh, species = species)
+            simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
           }else{
             #Sample ages stratified with wrt length and haul, this is done after the for-loop.
           }
@@ -431,13 +203,12 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       nOtolithsTotal = dim(CA)[1]
       if(bootstrapProcedure =="stratifiedHLandCA"){
         if(onlySimulate){
-          tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
+          tmp = simulateAgeHaulBased(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
           nOtolithsRemoved = tmp$nOtolithsRemoved
           datTmp = tmp$reducedData
           nOtolithsTotal = dim(CA)[1]
         }else{
-          lengthDivision = c(seq(0,max(round(datTmp$ca_hh$LngtCm)) + 1,by = 1))
-          tmp = removeData(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
+          tmp = simulateAgeHaulBased(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
                            samplesWithinEachIntervall =999999)
           nOtolithsRemoved = tmp$nOtolithsRemoved
           datTmp = tmp$reducedData
