@@ -7,15 +7,13 @@
 #' @param species The species of interest.
 #' @param year The year species of interest.
 #' @param quarter The quarter species of interest.
-#' @param doNotRemoveAbove  Do not remove fish that is larger than this (in cm).
 #' @param lengthDivision  Take one otholit from each intervall (in cm).
 #' @param samplesWithinEachIntervall  Number of samples taken within each length intervall.
 #' @export
 #' @return Returns a list with summary about changes in estimates by removal of data.
 #' @examples
-investigateRemoval = function(species, year, quarter,dat ,
+investigateRemoval = function(species, year, quarter,dat,
                               bootstrapProcedure= "stratifiedHLandCA", B, ALKprocedure = "haulBased",
-                              doNotRemoveAbove = 9999,
                               lengthDivision, samplesWithinEachIntervall = 1){
 
   toReturn= list()
@@ -123,15 +121,13 @@ simulateAgeHaulBased = function(year, quarter,species, dat,whatToRemove,lengthDi
   numberOfOtholits = dim(reducedData$ca_hh)[1]
 
   #Remove data-----------------------------------------------
-  if("CA" %in% whatToRemove)reducedData$ca_hh = removeDataDetailedCA(datDetailed = reducedData$ca_hh,species,quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
+  if("CA" %in% whatToRemove)reducedData$ca_hh = removeDataCA(datDetailed = reducedData$ca_hh,species,quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall)
   #----------------------------------------------------------
 
   #provide user with information regarding number of otholits removed-------
   nOtolithsRemoved = numberOfOtholits- dim(reducedData$ca_hh)[1]
   print(paste("Removed ",nOtolithsRemoved, " out of ", numberOfOtholits," otoliths.",sep = ""))
   #----------------------------------------------------------
-
-  #TODO retun also the number of otolits removed in each simulation
 
   toReturn = list()
   toReturn$reducedData = reducedData
@@ -140,31 +136,27 @@ simulateAgeHaulBased = function(year, quarter,species, dat,whatToRemove,lengthDi
 }
 
 
-#' removeDataDetailedCA
+#' removeDataCA
 #' @description .
 #' @param datDetailed The quarter of interest.
 #' @export
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-removeDataDetailedCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall){
+removeDataCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall){
 
   toReturn = datDetailed
-  whichRemoved = rep("",dim(datDetailed)[1]); counter = 1;
   toReturn = datDetailed[1,]
   for(id in unique(datDetailed$haul.id)){
     obsTmp = datDetailed[which(datDetailed$haul.id==id),]
     obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall)
     if(dim(obsTmp)[1]>dim(obsReduced)[1]){
-      whichRemoved[counter] = id
       counter = counter +1
     }
     toReturn = rbind(toReturn,obsReduced)
   }
   toReturn = toReturn[-1,]
 
-  whichRemoved = whichRemoved[whichRemoved != ""] #Look at the ones we remove, this shall be deleted later
- # attributes(toReturn)$removed = whichRemoved
   return(toReturn)
 }
 

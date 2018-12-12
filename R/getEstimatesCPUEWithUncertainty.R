@@ -273,10 +273,9 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   attributes(mCPUEsummary)$nWithoutDatras = nWithoutDatras
   attributes(mCPUEsummary)$nFoundWithin = nFoundWithin
   attributes(mCPUEsummary)$nNotFoundWithin = nNotFoundWithin
-
-
   attributes(mCPUEsummary)$nOtolithsRemoved = nOtolithsRemoved
   attributes(mCPUEsummary)$nOtolithsTotal = nOtolithsTotal
+
   return(mCPUEsummary)
 }
 

@@ -34,3 +34,42 @@ findLoc = function(dat, quarter,year,RFA){
 
     return(loc)
 }
+
+
+#' obsInHL
+#' @description
+#' @param species The species of interest.
+#' @param year The year of interest.
+#' @param hl_hh The data of interest.
+#' @param id The id of interest.
+#' @param length The id of interest.
+#' @export
+#' @return Returns the number of observed fish of a given length
+#' @examples
+obsInHL = function(species, year, hl_hh, id,length)
+{
+  hl_hhOfInterest = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
+                            !is.na(hl_hh$haul.id) & hl_hh$haul.id == id&
+                            !is.na(hl_hh$Species) & hl_hh$Species == species&
+                            !is.na(hl_hh$LngtCm) & floor(hl_hh$LngtCm) == floor(length),]
+
+  #Calculates and returns mCPUE-----
+  subfactor = hl_hhOfInterest$SubFactor
+
+  nLength = 0
+  if(dim(hl_hhOfInterest)[1]==0)return(0)
+
+  for(i in 1:dim(hl_hhOfInterest)[1])
+  {
+    if(hl_hhOfInterest$DataType[i]=="R")
+    {
+      nLength =  nLength + (hl_hhOfInterest$Count[i])*subfactor[i]
+    }else if(hl_hhOfInterest$DataType[i]=="C")
+    {
+      nLength  =  nLength + hl_hhOfInterest$HLNoAtLngt[i]*subfactor[i]*60/hl_hhOfInterest$HaulDur[i]
+    }
+  }
+  return(nLength)
+}
+
+

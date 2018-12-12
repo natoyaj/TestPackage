@@ -99,7 +99,7 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
   weightStatRec$StatRec = as.character(weightStatRec$StatRec)
   #-------------------------------------------------------------------
-  hl_hh$haul.idReal = hl_hh$haul.id
+#  hl_hh$haul.idReal = hl_hh$haul.id
 
 
 
