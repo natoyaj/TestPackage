@@ -261,23 +261,27 @@ The model based ALK estimate is obtained by maximizing the likelihood. We maximi
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
-In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-Corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. The bootstrap procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap}.  
+In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-Corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. The bootstrap procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap}.  \olav{(The procedure in \ref{secAP:nonparametricbootstrap} is a general description of a bootstrap procedure, this should  be just included with a reference.)}
 
 A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. This procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap} \olav{(The procedure in \ref{secAP:nonparametricbootstrap} is a general description of a bootstrap procedure, this should  be just included with a reference.)}. In the rest of this research, we refer to this procedure as DATRAS bootstrap procedure, as it is the current procedure outlined in DATRAS for uncertainty estimation of IBTS indices. However, this bootstrap procedure has never been implemented in DATRAS. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE within RFAs. This assumption is likely to be wrong, and would typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE within each statistical rectangle. 
 
-\subsubsection{DATRAS and Stratified bootstrap procedure}
+\subsubsection{Bootstrap procedures and reducing effort}
 \label{sec:datrasstratifiedbootstrap}
 In this section we describe the two bootstrap procedures used in this research. The two procedures differ by how the ages are sampled.  %In \citet{ICES2006Report} the age distribution is assumed constant within each RFA, and  age distribution is assumed constant wit   For each statistical rectangle, the DATRAS bootstrap procedure consists of sampling with replacement $N_{\text{s}}$ hauls in the corresponding RFA, and place them in the statistical rectangle. Ages in a given length class $l$ in a RFA is further sampled with replacement. This procedure is performed independently across all statistical rectangles.  %It should be remembered that this procedure is based on the assumption that ALK is homogeneous in the whole RFA, and the implication of DATRAS bootstrap procedure on indices of abundance is two-fold. Firstly, DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process. This would lead to an overestimation of the uncertainty. Secondly, it ignores the sampling procedure of age-length data collected at the haul level. This would lead  to an underestimation of the uncertainty. So there are biases in both directions, which are difficult to quantify. \olav{This section should only elaborate the procedure and any discussion should come later.}
-Assume there are $N_{\text{s}}$ trawl hauls in a statistical rectangle. The DATRAS and stratified bootstrap procedure are constructed as follows:
+The DATRAS and stratified bootstrap procedure are constructed as follows:
 \begin{enumerate}
-\item For each statistical rectangle sample $N_{\text{s}}$ hauls with replacement from the data in a given RFA. If there is only one haul within a statistical rectangle, sample either that haul or the closest haul.
-\item The DATRAS procedure does (a) and the stratified procedure does (b):
+\item For each statistical rectangle, sample $|H_s|$ hauls with replacement from the corresponding statistical rectangle. If there is only one haul within a statistical rectangle, sample either that haul or the closest haul.
+\item Sample age observations from the simulated hauls obtained by step 1. For the DATRAS procedure this is achieved by (a), and for the stratified procedure this is achieved by (b):
 \begin{enumerate}
-\item Sample with replacement age observations from the resampled hauls in step 1 within each RFA stratified with respect to length. If there is only one observed age from a given length class within the RFA, we sample either that age or an age in the closest length class with observed ages within the RFA.
-\item Sample age observations from the resampled hauls in step 1 within each RFA stratified with respect to length and haul using a pseudo-population bootstrap procedure \citep{mashreghi2016survey} (TODO). If there are observed ages in different cm groups in the same length group, the ages from each cm groups are sampled with probability proportional to the number of fish in that cm group (TODO). If there is only one observed age within a length group in a haul, that age is sampled.
+\item For each \textit{RFA} and length group, sample with replacement $n_{l,a,RFA}$ age observations stratified with respect to RFA and length group. Here $n_{l,a,RFA}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{l,a,RFA} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
+\item For each \textit{haul} and length group, sample without replacement  $n_{l,a,h}$ age observations stratified with respect to \textit{haul} and length group using a pseudo-population bootstrap procedure \citep{mashreghi2016survey} (TODO). Here $n_{l,a,h}$ is the total number of age observations in length group $l$ in the corresponding haul. Ages are sampled with probability  proportional to the number of fish in the corresponding cm group and haul (TODO). If there is only one observed age within a length group in a haul, that age is sampled.
 \end{enumerate}
-\item Repeat 1-2 B times.
+\item Calulate mCPUE defined in (\ref{eq:abundanceestimatornorthsea}).
+\item Repeat 1-3 B times.
 \end{enumerate}
+
+In this research we investigate how the estimated mCPUE is affected by reducing the number of age readings. We simulated reduction of otoliths by choosing $n_{l,a,h}$ in step 2b equal to a pre defined number. In our case study we have chosen $n_{l,a,h}$ equal \textit{one} when simulating the reduced effort. By doing that, the simulated data sets in the bootstrap procedure are possible realisations obtained by collecting only \textit{one} otoliths per length group at sea.
+
 
 
 \iffalse
@@ -304,7 +308,7 @@ Assume there are $N_{\text{s}}$ trawl hauls in a statistical rectangle. The DATR
 \item Estimate indices of abundance by age from the bootstrapped data set for haul  (\ref{eq:cpueALK}), statistical rectangle (\ref{eq:cpueRec}), RFA  (\ref{eq:cpueRFA})  and the whole North sea (\ref{eq:abundanceestimatornorthsea}).
 \item \nat{Olav is there a procedure for the whole Northsea? or how is it incorporated in the above?}
 \end{enumerate}
-\fi
+
 
 
 \subsection{Reducing sampling effort}
@@ -314,6 +318,7 @@ In this Section we investigate the effect on the index of abundance if the sampl
 
 To determine the effect of sampling fewer otoliths on estimated relative abundance, we resampled otoliths in a stratified manner, mimicking a sampling procedure in practice. For sampling fewer otoliths, we define wider length groups, for example $1$ cm, $2$ cm, $3$ cm, and so on,  and resample otoliths  such that only $one$ pair of otoliths is taken from every wider length group.  In principle, we are free to define any length bin to reduce the number of observed otoliths, but to determine whether there is an obvious change in estimated indices of abundance and its uncertainty we resample, at random, $one$ pair of otoliths per fish from the following length bins: $1$ cm, $2$ cm, $3$ cm, $4$ cm or $5$ cm as these would provide reasonable assurance of variability captured within a length bin. Also, wider length bins would reduce the probability of borrowing from neighbour hauls to fill missing age-length keys. For each pre-defined length bin above we estimate relative abundance at age and its uncertainty, using bootstrapping. It is important to re-iterate here that the proposed IBTS sampling procedure from 2018 Q1 is $one$ pair of otoliths per 1 cm length bin but this is not adopted by all nations. We refer to this procedure as the $current$ IBTS sampling procedure and the estimates from this procedure is compared with the estimates from the five procedures we have proposed above, to determine whether there is any difference in the estimates if fewer otoliths are used. We also wish to highlight two issues that are associated with the proposed IBTS sampling procedure of $one$ pair of otoliths per 1 cm length bin; the first is that the variability in age-length data would not be captured,  for example, it is likely that a fish of length 20 cm could be age 1 or age 2 as we have demonstrated in Section \ref{sec:codandsaitheresults}; and the second is that additional uncertainty would be introduced if neighbouring hauls do not contain same age-length data to fill missing age-length keys. We further investigate an alternative sampling strategy of resampling $two$ pairs of otoliths per $4$ cm length bin, and we compare these estimates with the estimates from resampling $one$ pair of otoliths per $2$ cm length bin as described above, as well as with estimates from the $current$ IBTS sampling procedure. The bootstrapping is carried out as follows: 
 
+\iffalse
 We define  $N_{\text{s}}$ as the number of hauls in a given statistical rectangle as in Section \ref{sec:datrasstratifiedbootstrap}.
 \begin{enumerate}
 \item Create a sample of bootstrap hauls, i.e., for each statistical rectangle sample $N_{\text{s}}$ hauls with replacement from the data in a given RFA
@@ -332,8 +337,10 @@ We define  $N_{\text{s}}$ as the number of hauls in a given statistical rectangl
 \end{enumerate}
 \item \nat{Olav would you please fill this with the estimation of abundance by age from the bootstrapped data set}
 \end{enumerate}
+\fi
 
 
+\fi
 
 %\clearpage
 \section{Case studies}
@@ -455,7 +462,7 @@ We also demonstrate the implications of using DATRAS bootstrap procedure for est
 \iffalse
 \olav{In this section we investigate how the mCPUE estimates are affected by reducing the number of otoliths collected. The collection of otoliths is cost full and time consuming, and we therefore want to share light on the impact of reducing the effort spent on age determination. The current sampling procedure for cod and saithe is to collect \textit{one} otolith from every observed cm group in every haul. In this research we remove otoliths such that the reduced data set is a random realisation with a sampling procedure were \textit{one} otolith is collected from every 1,2,...,5 cm group as explained in section \ref{sec:optimizationsampling}. }
 
-\olav{We want to highlight that in some hauls there were collected more than one otholit from some cm groups. In e.g. year 2018 in Q1, a total of 231 otoliths were removed by sampling \textit{one} otolith per cm group for cod. We have noticed that it is mainly surveys conducted by Scotland were those otoliths were collected, mainly from the larger cod and in RFA 1. Intuitively it is reasonable that relatively more effort should be spent on the larger fish since the uncertainty of the age is typically high for the larger fish. One interesting part about the availability of those, in some sense extra, samples is that we are able to give an indication about how the mCPUE is affected by collecting more than one otolith per cm group.}
+\olav{We want to highlight that in some hauls there were collected more than one otholit from some cm groups. In e.g. year 2018 in Q1, a total of 231 otoliths were removed by sampling \textit{one} otolith per cm group for cod. We have noticed that it is mainly surveys conducted by Scotland were those otoliths were collected, mainly from the larger cod and in RFA 1.}
 \fi
 
 
