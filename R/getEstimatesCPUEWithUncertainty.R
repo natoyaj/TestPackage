@@ -100,6 +100,8 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   nWithoutDatras = 0
   nFoundWithin = 0
   nNotFoundWithin = 0
+  nFoundWithinAllData = 0
+  nNotFoundWithinAllData = 0
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
   if(!onlySimulate){
@@ -107,6 +109,9 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                           dat = dat,ALKprocedure = ALKprocedure,B = B,
                           dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
   mCPUE[,1] = tmp[[1]]
+  nFoundWithinAllData = attributes(tmp[[1]])$nFoundWithin
+  nNotFoundWithinAllData = attributes(tmp[[1]])$nNotFoundWithin
+
   #-----------------------------------------------------------------------------------------
   }
 
@@ -269,12 +274,14 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
   }
   #-----------------------------------------------------------------------------------------
 
-  attributes(mCPUEsummary)$nWithDatras = nWithDatras
-  attributes(mCPUEsummary)$nWithoutDatras = nWithoutDatras
-  attributes(mCPUEsummary)$nFoundWithin = nFoundWithin
-  attributes(mCPUEsummary)$nNotFoundWithin = nNotFoundWithin
-  attributes(mCPUEsummary)$nOtolithsRemoved = nOtolithsRemoved
-  attributes(mCPUEsummary)$nOtolithsTotal = nOtolithsTotal
+  attributes(mCPUEsummary)$nWithDatras = round(nWithDatras) #May not be an integer because of data type C
+  attributes(mCPUEsummary)$nWithoutDatras = round(nWithoutDatras)
+  attributes(mCPUEsummary)$nFoundWithin = round(nFoundWithin)
+  attributes(mCPUEsummary)$nNotFoundWithin = round(nNotFoundWithin)
+  attributes(mCPUEsummary)$nOtolithsRemoved = round(nOtolithsRemoved)
+  attributes(mCPUEsummary)$nOtolithsTotal = round(nOtolithsTotal)
+  attributes(mCPUEsummary)$nFoundWithinAllData = round(nFoundWithinAllData)
+  attributes(mCPUEsummary)$nNotFoundWithinAllData = round(nNotFoundWithinAllData)
 
   return(mCPUEsummary)
 }

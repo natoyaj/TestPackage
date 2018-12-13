@@ -129,6 +129,8 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #'
 calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras")
 {
+  nFoundWithin = 0
+  nNotFoundWithin = 0
 
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -160,6 +162,11 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
     {
       cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
       mCPUEstatRec[,i] = as.double(cpueStatRec)
+
+      if(!is.null(attributes(cpueStatRec)$nFoundWithin) & !is.null(attributes(cpueStatRec)$nNotFoundWithin)){
+        nFoundWithin = nFoundWithin + attributes(cpueStatRec)$nFoundWithin
+        nNotFoundWithin = nNotFoundWithin + attributes(cpueStatRec)$nNotFoundWithin
+      }
     }
     #---------------------------------------------------------------
 
@@ -179,8 +186,14 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
     {
       for(j in 1:numberOfStatRectangles){
         mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+
+
       }
     }
+
+    attributes(mCPUE)$nFoundWithin = nFoundWithin
+    attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
+
     return(mCPUE)
     #------------------------------------------------------------
 
@@ -207,6 +220,9 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
 #' @examples
 calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL)
 {
+  nFoundWithin = 0
+  nNotFoundWithin = 0
+
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
 
@@ -248,11 +264,33 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
       {
         CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-1]/sum(ALK[lineInAlkToUse,-1])
       }
+
+      if ("foundWithin" %in% names(attributes(ALK))){
+        if(!is.na(lineInAlkToUse)){
+          if(dataWithTheSpecies$DataType[i]=="R")
+          {
+            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+              nFoundWithin = nFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }else{
+              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+            }
+          }else if(dataWithTheSpecies$DataType[i]=="C")
+          {
+            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+              nFoundWithin = nFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }else{
+              nNotFoundWithin = nNotFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
+            }
+          }
+        }
+      }
     }
   }
   mCPUE = CPUE/nHauls
 
 
+  attributes(mCPUE)$nFoundWithin = nFoundWithin
+  attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
 
   return(mCPUE)
   #----------------------------------
@@ -347,7 +385,6 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
 
   attributes(mCPUE)$nFoundWithin = nFoundWithin
   attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
-
   return(mCPUE)
   #------------------------------------------------------------
 }

@@ -77,6 +77,11 @@ calculateALKDatras = function(RFA,species,year,quarter,data)
       if(sum(alk[i,-1]) == 0)whichIsMissing[i] = TRUE
     }
 
+
+    #Assign attribut which say if age is found within haul and length group
+    foundWithin = rep(TRUE, dim(alk)[1])
+    foundWithin[whichIsMissing] = FALSE
+
     #Set the smallest length groops to age 0 or 1 if there are no observations of them
     first = which(!whichIsMissing)[1]
     if(first>1)
@@ -136,6 +141,7 @@ calculateALKDatras = function(RFA,species,year,quarter,data)
 
     alk = as.data.frame(alk)
     names(alk) = c("length", c(0:maxAge))
+    attributes(alk)$foundWithin = foundWithin
     return(alk)
 }
 
@@ -326,7 +332,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,length
       }
     }
 
-    #Assign attribut which say if the DATRAS-procedure is used
+    #Assign attribut which say if age is found within haul and length group
     foundWithin = rep(TRUE, dim(ALKnormal)[1])
     foundWithin[whichIsMissing] = FALSE
     attributes(alkThis)$foundWithin = foundWithin

@@ -217,12 +217,12 @@ The definition of the CPUE of age includes an ALK, see (\ref{eq:cpueALK}), which
 \subsubsection{Area based ALK}
 \label{sec:datrasalkestimator}
 
-We refer to the ALK used in DATRAS to estimate abundance at age for the IBTS data as an area based ALK, defined as $ALK^{\text{A}}_{a,l,h}$. The area based ALK is defined as constant within each RFA, and is calculated for each RFA by aggregating the age observation from each RFA. $ALK^{\text{A}}_{a,l,h}$ used in equation (\ref{eq:cpueALK}) is defined as the proportion of observed fish with age $a$ in length class $l$ in the RFA $h$. If there are no observed fish in length class $l$ in the RFA, ages from length classes close to $l$ is used. The details of the procedure for borrowing age data from neighbouring length classes are given in Supplementary Materials \ref{secAp:DATRASBorrow}. The underlying assumption of this ALK  is that age-length compositions are homogeneous within the RFAs. This is a rather strong assumption, and any violation would have an unknown impact on the estimates of abundance indices. \citet{aanes2015efficient} illustrated that violation of the assumption of constant ALK leads to biased estimates of CPUEs. 
+We refer to the ALK used in DATRAS to estimate abundance at age for the IBTS data as an area based ALK, defined as $ALK^{\text{A}}_{a,l,h}$. The area based ALK is defined as constant within each RFA, and is calculated for each RFA by aggregating the age observation from each RFA. $ALK^{\text{A}}_{a,l,h}$ used in equation (\ref{eq:cpueALK}) is defined as the proportion of observed fish with age $a$ in length class $l$ in the RFA $h$. If there are no observed fish in length class $l$ in the RFA, ages from length classes close to $l$ is used. The details of the procedure for borrowing age data from neighbouring length classes are given in Supplementary Materials \ref{secAp:DATRASBorrow}. We want to highlight that missing ages occur seldom, in e.g. quarter 1 year 2018, 99.1\% of the cod had an observed age in the corresponding RFA within the same cm group.  The underlying assumption of this ALK  is that age-length compositions are homogeneous within the RFAs. This is a rather strong assumption, and any violation would have an unknown impact on the estimates of abundance indices. \citet{aanes2015efficient} illustrated that violation of the assumption of constant ALK leads to biased estimates of CPUEs. 
 
 
 \subsubsection{Haul based ALK}
 \label{sec:haulestimator}
-We define a haul dependent ALK  by  $ALK^{H}$. The $ALK^{H}_{a,l,h}$  used in equation (\ref{eq:cpueALK}) is defined as the average proportion of observed fish with age $a$ in  length class $l$ in haul $h$. If there are no observed ages of fish in a length class $l$ in the haul, ages from the same length class in the haul close by is used (see Supplementary Materials \ref{secAp:oursBorrow} for the procedure).
+We define a haul dependent ALK  by  $ALK^{H}$. The $ALK^{H}_{a,l,h}$  used in equation (\ref{eq:cpueALK}) is defined as the average proportion of observed fish with age $a$ in  length class $l$ in haul $h$. If there are no observed ages of fish in a length class $l$ in the haul, ages from the same length class in the haul close by is used (see Supplementary Materials \ref{secAp:oursBorrow} for the procedure). We want to highlight that missing ages occur seldom, in e.g. quarter 1 year 2018, 98.6\% of the cod had an observed age in the corresponding haul within the same cm group. 
 
 \subsubsection{Model based ALK}
 \label{sec:spatialModelALK}
@@ -707,27 +707,33 @@ Period &  Species  & Minimum sampling levels of otoliths per length class    \\[
  \end{small}
  
 % \clearpage
-\section{\large Imputation for missing age samples}
+\section{\large Imputing missing ages}
 \label{sec:imputationappendix}
-Catches of the target species are sampled (or subsampled with a size of 100 if the catches are too large) for length, and otoliths are typically collected from a subsample of the individuals sampled for length in the RFA,  or per trawl haul as in the case of Norway for determining age of the fish (see Table \ref{otolithsTable}). In the case of Norway where all trawl hauls are sampled for otoliths, missing age samples would still occur for the following two reasons: 1) the fish is below minimum length for otolith sampling (unreadable otoliths) or 2) otoliths are misplaced. Abundance indices by age group are estimated based on three age-length-keys (ALK): 1) Area based ALK estimator, 2) Haul based ALK estimator, and 3) Model based ALK estimator.
-\subsection{\normalsize Area based ALK Borrowing Approach}
+The current IBTS sampling procedure is that one age reading shall be performed from every cm group in every haul for the species investigated in the research. However, missing ages sometimes do occur, and we describe in this section how that is accounted for. Note that missing ages are automatically accounted for with the model based approach. However, with the area based ALK and for the haul based ALK, some adhoc procedure needs to be followed when age is missing.
+
+
+\subsection{\normalsize Area based ALK}
 \label{secAp:DATRASBorrow}
-The ALK proposed in DATRAS \citep{ICES2013}, which is an aggregation of individual samples from a haul combined over a round fish area (RFA), and missing age samples are imputed as follows: 
-\begin{enumerate}
-\item If there is no ALK for a length in the CPUE dataframe, age information is obtained accordingly
+Assume there do not exist an age reading of a fish of length $l$ in the whole RFA. Just as in \citep{ICES2013}, the following procedure is done for the area based ALK:
 \begin{itemize}
-\item If length class (CPUE) $<$ minimum length class (ALK), then age=1 for the first quarter and age=0 for all other quarters
-\item  If minimum length class (ALK) $<$ length class (CPUE) $<$ maximum length (ALK) then age is set to the nearest ALK. If the ALK file contains values at equal distance, a mean is taken from both values. 
+\item If the $l$ is between the minumum length and maximum length, the age is set to be equal the ALK for the closest length with observed ages. In cases where there are two equally close length groups with observed ages, the average of those two ALKs is used. 
+\item If the $l$ is smaller then the smalles meshured fish in the RFA, the age is set to the minimum age.
+\item If the $l$ is larger or equal the maximum length, the ages is set to the pluss group.
 \end{itemize}
-\item If length class (CPUE) $>$ maximum length (ALK) age is set to the plus group.
-\end{enumerate}
-The underlying assumption of this ALK approach is that age-length compositions are homogeneous within the RFA. 
-\subsection{\normalsize Haul based ALK Borrowing Approach}
+
+
+\subsection{\normalsize Haul based ALK}
 \label{secAp:oursBorrow}
-\indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a RFA, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. To replace missing values for the age distribution in a length class the method of "borrowing" ages from the same length  from neighbouring trawl hauls of maximum radius of two statistical rectangles within the RFA. If there are no observed ages in the length class from the neighbour hauls in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1. 
+Assume there do not exist an age reading of a fish of length $l$ in a haul. The haul based procedure the following is done in sequential order to fill in the ALK for length $l$ in that haul:
+\begin{itemize}
+\item If there exist an age reading of that length group closer than 60 nautical mile in the same RFA, that age is used.
+\item If there exist a fish with length in $(l-1,l+1)$ with age information, that observed age is used.  
+\item If the two first step did not produce an ALK for $l$, there exist little information close in space and length, and the area based ALK is used.
+\end{itemize}
 
 
-%{\bf Since there are few or none observations of ages for each length class in a trawl haul, length classes are therefore pooled in increasing order such that there are five length classes in each pooled length group. To replace missing values for the age distribution in the pooled length groups the method of "borrowing" ages from length groups in trawl hauls closest in air distance within the RFA is used. If there are no observed ages in the pooled length group in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1.  }
+%\indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a RFA, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. To replace missing values for the age distribution in a length class the method of "borrowing" ages from the same length  from neighbouring trawl hauls of maximum radius of two statistical rectangles within the RFA. If there are no observed ages in the length class from the neighbour hauls in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1. 
+
 
 \section{\large Nonparametric Bootstrap Sampling procedure}
 \label{secAP:nonparametricbootstrap}
