@@ -276,7 +276,7 @@ The DATRAS and stratified bootstrap procedure are constructed as follows:
 \item For each \textit{RFA} and length group, sample with replacement $n_{l,a,RFA}$ age observations stratified with respect to RFA and length group. Here $n_{l,a,RFA}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{l,a,RFA} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
 \item For each \textit{haul} and length group, sample without replacement  $n_{l,a,h}$ age observations stratified with respect to \textit{haul} and length group using a pseudo-population bootstrap procedure \citep{mashreghi2016survey} (TODO). Here $n_{l,a,h}$ is the total number of age observations in length group $l$ in the corresponding haul. Ages are sampled with probability  proportional to the number of fish in the corresponding cm group and haul. If there is only one observed age within a length group in a haul, that age is sampled.
 \end{enumerate}
-\item Calulate mCPUE defined in (\ref{eq:abundanceestimatornorthsea}).
+\item Calulate mCPUE as explained from equation (\ref{eq:cpueHaul}) to (\ref{eq:abundanceestimatornorthsea}) with use of the sampled data.
 \item Repeat 1-3 B times.
 \end{enumerate}
 
