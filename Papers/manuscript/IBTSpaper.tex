@@ -709,25 +709,25 @@ Period &  Species  & Minimum sampling levels of otoliths per length class    \\[
 % \clearpage
 \section{\large Imputing missing ages}
 \label{sec:imputationappendix}
-The current IBTS sampling procedure is that one age reading shall be performed from every cm group in every haul for the species investigated in the research. However, missing ages sometimes do occur, and we describe in this section how that is accounted for. Note that missing ages are automatically accounted for with the model based approach. However, with the area based ALK and for the haul based ALK, some adhoc procedure needs to be followed when age is missing.
+With the current IBTS sampling procedure, \textit{one} age reading is collected from every cm group in every haul for cod and saithe. However, missing ages do occur, and in this section we describe how missing ages are accounted for. Note that missing ages are automatically accounted for with the model based approach. However, for the area based ALK and the haul based ALK, some adhoc procedure needs to be followed when age is missing. We want to highlight that missing ages occur relatively seldom. E.g. in 1st. quarter in year 2018 and with length group width equal 1cm, 0.9\% of the cod miss age with respect to the area based ALK. In the same example, 1.4\% of the cod miss age with respect to the haul based ALK.
 
 
 \subsection{\normalsize Area based ALK}
 \label{secAp:DATRASBorrow}
-Assume there do not exist an age reading of a fish of length $l$ in the whole RFA. Just as in \citep{ICES2013}, the following procedure is done for the area based ALK:
+Assume there do not exist an age reading of a fish of length $l$ in a RFA. Just as in \citep{ICES2013}, the following procedure is done for the area based ALK:
 \begin{itemize}
-\item If the $l$ is between the minumum length and maximum length, the age is set to be equal the ALK for the closest length with observed ages. In cases where there are two equally close length groups with observed ages, the average of those two ALKs is used. 
-\item If the $l$ is smaller then the smalles meshured fish in the RFA, the age is set to the minimum age.
-\item If the $l$ is larger or equal the maximum length, the ages is set to the pluss group.
+\item If $l$ is between the minumum length and maximum length, the age is set to be equal the ALK to the closest length group with observed ages in the RFA. In cases where there are two equally close length groups with observed ages, the average of those two ALKs is used. 
+\item If $l$ is smaller then the smallest measured fish in the RFA, the age is set to the minimum age.
+\item If $l$ is larger or equal the maximum length, the age is set to the maximum age.
 \end{itemize}
 
 
 \subsection{\normalsize Haul based ALK}
 \label{secAp:oursBorrow}
-Assume there do not exist an age reading of a fish of length $l$ in a haul. The haul based procedure the following is done in sequential order to fill in the ALK for length $l$ in that haul:
+Assume there do not exist an age reading of a fish of length $l$ in a haul. For the haul based procedure, the following is done in sequential order:
 \begin{itemize}
-\item If there exist an age reading of that length group closer than 60 nautical mile in the same RFA, that age is used.
-\item If there exist a fish with length in $(l-1,l+1)$ with age information, that observed age is used.  
+\item If there exist an age reading of that length group closer than 60 nautical mile in the same RFA, the ALK from the closest haul with such an age reading is used.
+\item If there exist a fish with length in the interval $l\pm 1cm$ with age information in the same haul, that observed age is used.  
 \item If the two first step did not produce an ALK for $l$, there exist little information close in space and length, and the area based ALK is used.
 \end{itemize}
 
