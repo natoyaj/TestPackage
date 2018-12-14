@@ -206,7 +206,7 @@ where $S_{p}$ is the set of all statistical rectangles in RFA $p$, $|S_{p}|$ is 
 
  The mean catch per unit at age in the whole study area is defined as
 \begin{equation}
-\lambda_{a}= \frac{\sum_{p\in {\bf P}} A_{p}  \mathrm{mCPUE}_{p,a}}{A_{\text{total}}}.
+\text{mCPUE}_a= \frac{\sum_{p\in {\bf P}} A_{p}  \mathrm{mCPUE}_{p,a}}{A_{\text{total}}}.
 \label{eq:abundanceestimatornorthsea}
 \end{equation}
 We refer to (\ref{eq:abundanceestimatornorthsea}) as the index of abundance at age, where ${\bf P}$ is the set of RFAs, $A_p$ is the area of RFA $p$, and $A_{\text{total}} = \sum_{p\in {\bf P}} A_{p}$.
@@ -251,7 +251,7 @@ where $\sigma^2_{\gamma}$ is the marginal variance of the spatial field; $||\mat
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.5]{figures/mesh.jpeg}
- \caption{Mesh used in the case study for cod in Section \ref{sec:data} for approximating (\ref{eq:matern}) with the SPDE-procedure. The species specific constant $l^*$ is selected as the mid point between the shortest fish of age A and the longest fish of age M in the corresponding year and quarter. A sensitivity analysis of this constant were performed by adjusting it up and down 5 cm for cod in year 2018 in Q1. The point estimate of the mCPUEs then changed in the forth decimal, which we will consider negligible.}\label{fig:mesh}
+ \caption{Mesh used in the case study for cod in Section \ref{sec:data} for approximating (\ref{eq:matern}) with the SPDE-procedure. The species specific constant $l^*$ is selected as the mid point between the shortest fish of age A and the longest fish of age M in the corresponding year and quarter. A sensitivity analysis of this constant were performed by adjusting it up and down 5 cm for cod in year 2018 in Q1. The point estimate of the $\text{mCPUE}_a$ then changed in the forth decimal, which we will consider negligible.}\label{fig:mesh}
 \end{center}
 \end{figure}
 
@@ -263,7 +263,7 @@ The model based ALK estimate is obtained by maximizing the likelihood. We maximi
 \label{sec:uncertaintyestimation}
 In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with replacement from the original data and approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-Corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. The bootstrap procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap}.  \olav{(The procedure in \ref{secAP:nonparametricbootstrap} is a general description of a bootstrap procedure, this should  be just included with a reference.)}
 
-A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. This procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap} \olav{(The procedure in \ref{secAP:nonparametricbootstrap} is a general description of a bootstrap procedure, this should  be just included with a reference.)}. In the rest of this research, we refer to this procedure as DATRAS bootstrap procedure, as it is the current procedure outlined in DATRAS for uncertainty estimation of IBTS indices. However, this bootstrap procedure has never been implemented in DATRAS. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE within RFAs. This assumption is likely to be wrong, and would typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE within each statistical rectangle. 
+A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. This procedure is given in Supplementary Materials \ref{secAP:nonparametricbootstrap} \olav{(The procedure in \ref{secAP:nonparametricbootstrap} is just a general description of a bootstrap procedure and not what is written in \citet{ICES2006Report}.)}. In the rest of this research, we refer to this procedure as DATRAS bootstrap procedure, as it is the current procedure outlined in DATRAS for uncertainty estimation of IBTS indices \olav{(The procedure for sampling CA data is the exact same, but not sampling the HL-data, we have however implemented that procedure also but i thought we agreed not to use it)}. However, this bootstrap procedure has never been implemented in DATRAS. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE within RFAs \olav{(It assumes constant ALK in the RFA. We have also implemented the procedure from DATRAS for sampling HL-data which assumes constant CPUE in the RFA, but that procedure is not used in the manuscript)}. This assumption is likely to be wrong, and would typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE within each statistical rectangle. 
 
 \subsubsection{Bootstrap procedures and reducing effort}
 \label{sec:datrasstratifiedbootstrap}
@@ -271,16 +271,16 @@ In this section we describe the two bootstrap procedures used in this research. 
 The DATRAS and stratified bootstrap procedure are constructed as follows:
 \begin{enumerate}
 \item For each statistical rectangle, sample $|H_s|$ hauls with replacement from the corresponding statistical rectangle. If there is only one haul within a statistical rectangle, sample either that haul or the closest haul.
-\item Sample age observations from the simulated hauls obtained by step 1. For the DATRAS procedure this is achieved by (a), and for the stratified procedure this is achieved by (b):
+\item Sample age observations from the sampled hauls obtained by step 1. For the DATRAS procedure this is achieved by (a), and for the stratified procedure this is achieved by (b):
 \begin{enumerate}
-\item For each \textit{RFA} and length group, sample with replacement $n_{l,a,RFA}$ age observations stratified with respect to RFA and length group. Here $n_{l,a,RFA}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{l,a,RFA} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
+\item For each \textit{RFA} and length group, sample with replacement $n_{l,a,RFA}$ age observations stratified with respect to \textit{RFA} and length group. Here $n_{l,a,RFA}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{l,a,RFA} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
 \item For each \textit{haul} and length group, sample without replacement  $n_{l,a,h}$ age observations stratified with respect to \textit{haul} and length group using a pseudo-population bootstrap procedure \citep{mashreghi2016survey} (TODO). Here $n_{l,a,h}$ is the total number of age observations in length group $l$ in the corresponding haul. Ages are sampled with probability  proportional to the number of fish in the corresponding cm group and haul. If there is only one observed age within a length group in a haul, that age is sampled.
 \end{enumerate}
-\item Calulate mCPUE as explained from equation (\ref{eq:cpueHaul}) to (\ref{eq:abundanceestimatornorthsea}) with use of the sampled data.
+\item Calulate $\text{mCPUE}_a$, see equation (\ref{eq:abundanceestimatornorthsea}), with use of the sampled data.
 \item Repeat 1-3 B times.
 \end{enumerate}
 
-In this research we investigate how the estimated mCPUE is affected by reducing the number of age readings. We simulated reduction of otoliths by choosing $n_{l,a,h}$ in step 2b equal to a pre defined number. In our case study we have chosen $n_{l,a,h}$ equal \textit{one} when simulating the reduced effort. By doing that, the simulated data sets in the bootstrap procedure are possible realisations obtained by collecting only \textit{one} otoliths per length group at sea.
+In this research we investigate how $\text{mCPUE}_a$ is affected by reducing the number of age readings. We sample realisations of data obtained with a sampling procedure with fewer age reading by choosing $n_{l,a,h}$ in step 2b equal a pre defined number. In our case study we have chosen $n_{l,a,h}$ equal \textit{one} or \textit{two} when sampling the reduced effort. By doing that, the sampled data sets in the bootstrap procedure are possible realisations of data obtained by collecting only \textit{one} or \textit{two} otoliths per length group at sea. In our case study we have chosen the length groups to have width $1\text{cm},2\text{cm},...\text{ or }5\text{cm}$.
 
 
 
