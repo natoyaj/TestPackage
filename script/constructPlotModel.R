@@ -168,6 +168,12 @@ truncationL = setBoundrySpline(species = species, quarter = quarter, ca_hh = dat
 truncationU = setBoundrySpline(species = species, quarter = quarter, ca_hh = dat$ca_hh)$u
 boarder = fit$boarder
 
+prob = list()
+for(i in 1:7){
+  prob[[i]] = nu1*0;
+}
+
+
 if(quarter ==1){
 
   if(truncationL[1]>length | truncationU[1]<length)nu2 = 0
@@ -175,85 +181,78 @@ if(quarter ==1){
   if(truncationL[3]>length | truncationU[3]<length)nu4 = 0
   if(truncationL[4]>length | truncationU[4]<length)nu5 = 0
 
-  prob2 = nu2/(1+nu2)
-  prob3 = nu3/(1+nu3)*(1-prob2)
-  prob4 = nu4/(1+nu4)*(1-prob2-prob3)
-  prob5 = nu5/(1+nu5)*(1-prob2-prob3-prob4)
+  prob[[3]] = nu2/(1+nu2)
+  prob[[4]] = nu3/(1+nu3)*(1-prob[[3]])
+  prob[[5]] = nu4/(1+nu4)*(1-prob[[3]]-prob[[4]])
+  prob[[6]] = nu5/(1+nu5)*(1-prob[[3]]-prob[[4]]-prob[[5]])
 
   if(length<=boarder){
-    prob0 =prob2*0
-    prob1= round(1-prob2-prob3-prob4 -prob5, digits = 3)
-    prob6 = prob2*0
+    prob[[2]]= round(1-prob[[3]] -prob[[4]] -prob[[5]]  -prob[[6]] , digits = 3)
   }else{
-    prob0 = prob2*0
-    prob1 = prob2*0
-    prob6 = round(1-prob2-prob3-prob4 -prob5, digits = 3)
+    prob[[7]] = round(1-prob[[3]] -prob[[4]] -prob[[5]]  -prob[[6]] , digits = 3)
+  }
+}
+if(quarter ==3){
+
+  if(truncationL[1]>length | truncationU[1]<length)nu1 = 0
+  if(truncationL[2]>length | truncationU[2]<length)nu2 = 0
+  if(truncationL[3]>length | truncationU[3]<length)nu3 = 0
+  if(truncationL[4]>length | truncationU[4]<length)nu4 = 0
+  if(truncationL[5]>length | truncationU[5]<length)nu5 = 0
+
+  prob[[2]]  = nu1/(1+nu1)
+  prob[[3]]  = nu2/(1+nu2)*(1-prob[[2]] )
+  prob[[4]]  = nu3/(1+nu3)*(1-prob[[2]] -prob[[3]] )
+  prob[[5]]  = nu4/(1+nu4)*(1-prob[[2]] -prob[[3]] -prob[[4]] )
+  prob[[6]]  = nu5/(1+nu5)*(1-prob[[2]] -prob[[3]] -prob[[4]] -prob[[5]] )
+
+  if(length<=boarder){
+    prob[[1]]= round(1-prob[[2]]-prob[[3]]-prob[[4]]-prob[[5]] -prob[[6]], digits = 3)
+  }else{
+    prob[[7]] = round(1-prob[[2]]-prob[[3]]-prob[[4]]-prob[[5]] -prob[[6]], digits = 3)
   }
 }
 
-
-xlim = c(8,14)
-ylim = c(55,59)
-
-xlim = c(0,14)
-ylim = c(54,59)
-
-xVidde = 5.5;yVidde = 4.5;mainVidde = 3.5
-par(mfrow = c(1,2),mar=c(xVidde,yVidde,mainVidde,3.2))
+xlim = c(-6,14)
+ylim = c(53,62)
 
 low = length-1
 upp = length+1
-hvilke2 = which(dat$ca_hh$Age ==2 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
-hvilke1 = which(dat$ca_hh$Age ==1 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
-noize1 = runif(length(hvilke1))*0.05
-noize12 = runif(length(hvilke1))*0.05
-noize2 = runif(length(hvilke2))*0.05
-noize22 = runif(length(hvilke2))*0.05
+indexAge = list()
+indexAge[[1]] = which(dat$ca_hh$Age ==0 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[2]] = which(dat$ca_hh$Age ==1 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[3]] = which(dat$ca_hh$Age ==2 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[4]] = which(dat$ca_hh$Age ==3 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[5]] = which(dat$ca_hh$Age ==4 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[6]] = which(dat$ca_hh$Age ==5 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
+indexAge[[7]] = which(dat$ca_hh$Age ==6 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
 
-jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.jpeg",sep = ""))
-breaks   = c(0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
-image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob1),col =  colorRampPalette(c("white","yellow", "red"))(10),
-           main = paste("Proportion with age 1 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
-           cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
+#jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.jpeg",sep = ""))
+breaks   = c(0.01,0.02,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
+age = 2
+
+image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob[[age+1]]),col =  colorRampPalette(c("white","yellow", "red"))(11),
+           main = paste("Proportion with age ", age, " among ", length, " cm long ", species,sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
+           cex.lab=1.5, cex.main = 1,cex.axis = 1.2,
            xlim = xlim,
            ylim = ylim,
            breaks   =breaks)
 
-contour(projXY$x, projXY$y,inla.mesh.project(projXY, prob1) ,add = T,labcex  = 1,cex = 1,
+contour(projXY$x, projXY$y,inla.mesh.project(projXY, prob[[age+1]]) ,add = T,labcex  = 1,cex = 1,
         breaks   = breaks,
         zlim = c(0.005,0.9))
 plot(map, col="grey", add=T)
 if (!is.null(polygons)){
   plot(polygons, add=T,lwd = 3)
 }
-points(dat$ca_hh$lon[hvilke2] +noize2,dat$ca_hh$lat[hvilke2] +noize22,col = 'blue' ,lwd = 5)
-points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'green',lwd = 5,pch = 2 )
-pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
-dev.off()
-
-jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age2.jpeg",sep = ""))
-image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob2),col =  colorRampPalette(c("white","yellow", "red"))(10),
-           main = paste("Proportion with age 2 among ", length, " cm long cod",sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
-           cex.lab=1.5, cex.main = 1.6,cex.axis = 1.2,
-           xlim = xlim,
-           ylim = ylim,
-           breaks   =breaks)
-
-contour(projXY$x, projXY$y,inla.mesh.project(projXY, prob2) ,add = T,labcex  = 1,cex = 1,
-        breaks   = breaks,
-        zlim = c(0.005,0.9))
-plot(map, col="grey", add=T)
-if (!is.null(polygons)){
-  plot(polygons, add=T,lwd = 3)
+for(i in 1:7){
+  points(dat$ca_hh$lon[indexAge[[i]]] +runif(length(indexAge[[i]]))*0.1,dat$ca_hh$lat[indexAge[[i]]]+runif(length(indexAge[[i]]))*0.1,col = i ,lwd = 3)
 }
-points(dat$ca_hh$lon[hvilke2] +noize2,dat$ca_hh$lat[hvilke2] +noize22,col = 'blue' ,lwd = 5)
-points(dat$ca_hh$lon[hvilke1] + noize1,dat$ca_hh$lat[hvilke1] + noize12,col = 'green',lwd = 5,pch = 2 )
 pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
-dev.off()
+legend(x=10,y=62,legend = c("0 year", "1 year","2 year","3 year","4 year","5 year", ">5 year")
+       ,col=c(1:7),cex = 1,pch = 1,lwd = 4)
+#dev.off()
 #-----------------------------------------------------------------
-
-
-
 
 
 
