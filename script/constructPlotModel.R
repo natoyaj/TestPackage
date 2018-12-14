@@ -141,6 +141,12 @@ dev.off()
 
 
 #Plot cod 2018 Q1 ALK spatial effect----------------------------------------
+xlim = c(-6,14)
+ylim = c(53,62)
+age = 2
+length = 20
+
+
 polygons <- readOGR("inst/shapefiles/Roundfish_shapefiles")
 
 data(countriesHigh)
@@ -156,7 +162,6 @@ d5 = report$x[,6]/tau[6]
 projXY = fit$projXY
 repLength = report$repLength
 
-length = 20
 maxLength = confALK(species = species,quarter = quarter)$maxLength
 nu1 = exp(repLength[length +maxLength*1] + d1)
 nu2 = exp(repLength[length +maxLength*2] + d2)
@@ -213,8 +218,6 @@ if(quarter ==3){
   }
 }
 
-xlim = c(-6,14)
-ylim = c(53,62)
 
 low = length-1
 upp = length+1
@@ -227,9 +230,7 @@ indexAge[[5]] = which(dat$ca_hh$Age ==4 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtC
 indexAge[[6]] = which(dat$ca_hh$Age ==5 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
 indexAge[[7]] = which(dat$ca_hh$Age ==6 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtCm<=upp)
 
-#jpeg(paste(pathFigures,"spatialALKQ1year2018RFA9Age1.jpeg",sep = ""))
 breaks   = c(0.01,0.02,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
-age = 2
 
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob[[age+1]]),col =  colorRampPalette(c("white","yellow", "red"))(11),
            main = paste("Proportion with age ", age, " among ", length, " cm long ", species,sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
@@ -245,13 +246,21 @@ plot(map, col="grey", add=T)
 if (!is.null(polygons)){
   plot(polygons, add=T,lwd = 3)
 }
-for(i in 1:7){
-  points(dat$ca_hh$lon[indexAge[[i]]] +runif(length(indexAge[[i]]))*0.1,dat$ca_hh$lat[indexAge[[i]]]+runif(length(indexAge[[i]]))*0.1,col = i ,lwd = 3)
-}
+#for(i in 1:7){
+#  points(dat$ca_hh$lon[indexAge[[i]]] +runif(length(indexAge[[i]]))*0.1,dat$ca_hh$lat[indexAge[[i]]]+runif(length(indexAge[[i]]))*0.1,col = i ,lwd = 3)
+#}
+#legend(x=10,y=62,legend = c("0 year", "1 year","2 year","3 year","4 year","5 year", ">5 year")
+#       ,col=c(1:7),cex = 1,pch = 1,lwd = 4)
 pointLabel(coordinates(polygons),labels=polygons$AreaName,cex = 2)
-legend(x=10,y=62,legend = c("0 year", "1 year","2 year","3 year","4 year","5 year", ">5 year")
-       ,col=c(1:7),cex = 1,pch = 1,lwd = 4)
-#dev.off()
+
+points(dat$ca_hh$lon[indexAge[[1]]] +runif(length(indexAge[[1]]))*0.1,dat$ca_hh$lat[indexAge[[1]]]+runif(length(indexAge[[1]]))*0.1,col = "black" ,lwd = 3)
+points(dat$ca_hh$lon[indexAge[[2]]] +runif(length(indexAge[[2]]))*0.1,dat$ca_hh$lat[indexAge[[2]]]+runif(length(indexAge[[2]]))*0.1,col = "green" ,lwd = 3)
+points(dat$ca_hh$lon[indexAge[[3]]] +runif(length(indexAge[[3]]))*0.1,dat$ca_hh$lat[indexAge[[3]]]+runif(length(indexAge[[3]]))*0.1,col = "blue" ,lwd = 3)
+points(dat$ca_hh$lon[indexAge[[4]]] +runif(length(indexAge[[4]]))*0.1,dat$ca_hh$lat[indexAge[[4]]]+runif(length(indexAge[[4]]))*0.1,col = "brown" ,lwd = 3)
+legend(x=10,y=62,legend = c("0 year", "1 year","2 year","3 year")
+         ,col=c("Black","Green","Blue","Brown"),cex = 1,pch = 1,lwd = 4)
+#legend(x=10,y=62,legend = c("0 year", "1 year","2 year","3 year","4 year","5 year", ">5 year")
+#       ,col=c(1:7),cex = 1,pch = 1,lwd = 4)
 #-----------------------------------------------------------------
 
 
