@@ -153,9 +153,6 @@ removeDataCA = function(datDetailed,species,quarter,lengthDivision,samplesWithin
   for(id in unique(datDetailed$haul.id)){
     obsTmp = datDetailed[which(datDetailed$haul.id==id),]
     obsReduced = removeObsFromHaul(obsTmp,lengthDivision, samplesWithinEachIntervall,species = species,hl_hh = hl_hh)
-    if(dim(obsTmp)[1]>dim(obsReduced)[1]){
-      counter = counter +1
-    }
     toReturn = rbind(toReturn,obsReduced)
   }
   toReturn = toReturn[-1,]
