@@ -138,16 +138,13 @@ dev.off()
 
 
 
-
-
 #Plot cod 2018 Q1 ALK spatial effect----------------------------------------
-xlim = c(0,14) #Here you can change the  xlimits
+xlim = c(0,14) #Here you can change the xlimits
 ylim = c(54,59)
 age = 2
 length = 20
 
 polygons <- readOGR("inst/shapefiles/Roundfish_shapefiles")
-
 data(countriesHigh) #load map
 map <- countriesHigh
 
@@ -230,7 +227,7 @@ indexAge[[7]] = which(dat$ca_hh$Age ==6 & dat$ca_hh$LngtCm>=low &dat$ca_hh$LngtC
 
 
 breaks   = c(0.01,0.02,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.01)
-jpeg(paste("spatialLength",length,"Age",age,"Quarter",quarter,".jpeg",sep = ""))
+jpeg(paste("spatialLength",length,"Age",age,"Quarter",quarter,"Species",species,"Year", year,".jpeg",sep = ""))
 image.plot(projXY$x,projXY$y, inla.mesh.project(projXY, prob[[age+1]]),col =  colorRampPalette(c("white","yellow", "red"))(11),
            main = paste("Proportion with age ", age, " among ", length, " cm long ", species,sep = ""), xlab = 'Degrees east', ylab = 'Degrees north',
            cex.lab=1.5, cex.main = 1,cex.axis = 1.2,
@@ -252,9 +249,8 @@ points(dat$ca_hh$lon[indexAge[[2]]] +runif(length(indexAge[[2]]))*0.2,dat$ca_hh$
 points(dat$ca_hh$lon[indexAge[[3]]] +runif(length(indexAge[[3]]))*0.2,dat$ca_hh$lat[indexAge[[3]]]+runif(length(indexAge[[3]]))*0.1,col = "blue" ,lwd = 4)
 points(dat$ca_hh$lon[indexAge[[4]]] +runif(length(indexAge[[4]]))*0.2,dat$ca_hh$lat[indexAge[[4]]]+runif(length(indexAge[[4]]))*0.1,col = "brown" ,lwd = 4)
 points(dat$ca_hh$lon[indexAge[[5]]] +runif(length(indexAge[[5]]))*0.2,dat$ca_hh$lat[indexAge[[5]]]+runif(length(indexAge[[5]]))*0.1,col = "purple" ,lwd = 4)
-dev.off()
 #-----------------------------------------------------------------
-
+dev.off()
 
 
 
