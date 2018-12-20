@@ -99,7 +99,8 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
     {
       if(dataWithTheSpecies$DataType[i]=="R")
       {
-        CPUE[floor(dataWithTheSpecies$LngtCm[i])] =  CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
+  #      CPUE[floor(dataWithTheSpecies$LngtCm[i])] =   CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
+        CPUE[floor(dataWithTheSpecies$LngtCm[i])] =   CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
         CPUE[floor(dataWithTheSpecies$LngtCm[i])]  =  CPUE[floor(dataWithTheSpecies$LngtCm[i])] + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]
