@@ -224,15 +224,22 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
       }
       #------------------------------------------
 
+
+
       if(ALKprocedure=="modelBased" & useFisher){
         report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
         mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                         dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
                                         dimCPUE = dim(mCPUE),report)[[1]]
       }else{
+        #Save current simulation in case something crashes in this run, used for inspection..
         mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                 dat = datTmp,ALKprocedure = ALKprocedure,B = B,
                                 dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
+        if(is.na(sum(mCPUEThisSimulation[[1]]))){
+          print("Something wrong, save the simulated data in the working directory and the program will soon terminate...")
+          saveRDS(datTmp,file = paste("dataResultedInNAcpueDF",lengthDivision[2]-lengthDivision[1],sep = ""))
+        }
         mCPUE[,i+1] = mCPUEThisSimulation[[1]]
         nWithDatras = attributes(mCPUEThisSimulation[[1]])$nWithDatras
         nWithoutDatras = attributes(mCPUEThisSimulation[[1]])$nWithoutDatras
