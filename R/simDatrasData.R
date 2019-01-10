@@ -245,6 +245,7 @@ sampleCAHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species
         obsSelectedCurrent = sample(obsInside,1,prob = prob)#Sample with probability proportional to the number observed at length
         prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] = prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] -1 #Update the probability for sampling the next age observation
         obsSelected = c(obsSelected,obsSelectedCurrent)
+        prob[which(prob<0)] = 0 #The probability may be negative since there are some small round off errors in data
       }
     }else{
       obsSelected = obsInside
