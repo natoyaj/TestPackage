@@ -181,9 +181,13 @@ removeObsFromHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,sp
       for(j in 1:length(obsInside)){
         prob[j] = obsInHL(species = species,hl_hh = hl_hh,id = unique(obsTmp$haul.id),length = obsTmp$LngtCm[obsInside[j]])
       }
-      prob = prob/sum(prob) #Sample with probability proportional to the number observed at length
       nSample = min(samplesWithinEachIntervall,length(obsInside))
-      obsSelected = sample(obsInside,nSample,replace = TRUE,prob = prob)
+      obsSelected=NULL
+      for(i in 1:nSample){
+        obsSelectedCurrent = sample(obsInside,1,prob = prob)#Sample with probability proportional to the number observed at length
+        prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] = prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] -1 #Update the probability for sampling the next age observation
+        obsSelected = c(obsSelected,obsSelectedCurrent)
+      }
     }else{
       obsSelected = obsInside
     }
