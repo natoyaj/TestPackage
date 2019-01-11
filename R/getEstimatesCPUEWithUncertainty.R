@@ -35,13 +35,13 @@ CPUErfa = function(RFA, species, year, quarter,dat,
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
-    cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
-    cpueEst = calcmCPUErfaWithALKHaulbased(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
-    cpueEst = calcmCPUErfaWithALKDatras(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }else{
     stop("Unkown ALKprocedure")
   }
@@ -204,24 +204,23 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
 
       #Sample ages within hauls-----------------
-      nOtolithsRemoved = 0
-      nOtolithsTotal = dim(CA)[1]
+      print("Sampling otoliths...")
+      nOtolithsTotal = dim(datTmp$ca_hh)[1]
       if(bootstrapProcedure =="stratifiedHLandCA"){
         if(onlySimulate){
-          tmp = simulateAgeHaulBased(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),samplesWithinEachIntervall = samplesWithinEachIntervall)
-          nOtolithsRemoved = tmp$nOtolithsRemoved
-          datTmp = tmp$reducedData
-          nOtolithsTotal = dim(CA)[1]
+          datTmp$ca_hh = sampleCA(datDetailed = datTmp$ca_hh,species,
+                                  quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
+                                  hl_hh = datTmp$hl_hh)
         }else{
-          tmp = simulateAgeHaulBased(year, quarter,species,dat = datTmp,lengthDivision =lengthDivision ,whatToRemove = c("CA"),
-                           samplesWithinEachIntervall =999999)
-          nOtolithsRemoved = tmp$nOtolithsRemoved
-          datTmp = tmp$reducedData
-          nOtolithsTotal = dim(CA)[1]
+          datTmp$ca_hh = sampleCA(datDetailed = datTmp$ca_hh,species,
+                                  quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
+                                  hl_hh = datTmp$hl_hh)
         }
       }else{
         #Sample ages stratified with wrt length, was done in the for-loop above.
       }
+      nOtolithsRemoved = nOtolithsTotal - dim(datTmp$ca_hh)[1]
+      print(paste("Removed ",nOtolithsRemoved, " out of ", nOtolithsTotal," otoliths.",sep = ""))
       #------------------------------------------
 
 
@@ -232,7 +231,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
                                         dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
                                         dimCPUE = dim(mCPUE),report)[[1]]
       }else{
-        #Save current simulation in case something crashes in this run, used for inspection..
         mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                 dat = datTmp,ALKprocedure = ALKprocedure,B = B,
                                 dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
@@ -252,7 +250,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
 
 
   #Define a summary that we return (mCPUE, quantiles and sd)--------------------------------
-
   mCPUEsummary = data.frame(mCPUE[,1],mCPUE[,1],mCPUE[,1], mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1],mCPUE[,1])
   names(mCPUEsummary) = c("mCPUE","bootstrapMean","median", "Q025","Q975","BiasCQ025","BiasCQ075", "sd")
 

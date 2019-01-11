@@ -1,5 +1,3 @@
-#This R-file conisist of functions calculating the CPUEs of interest.
-
 #' calcmCPUErfa
 #' @description Calculates CPUE per length class in a given roundfish area.
 #' @param RFA Roundfish area number.
@@ -19,8 +17,6 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatR
                           !is.na(data$Quarter) & data$Quarter == quarter&
                           !is.na(data$Roundfish) & data$Roundfish == RFA ,]
   #-----------------------------------------------------
-
-
 
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
@@ -57,11 +53,7 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatR
   }
   return(mCPUE)
   #------------------------------------------------------------
-
-
 }
-
-
 
 
 #' calcmCPUEstatRec
@@ -99,7 +91,6 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
     {
       if(dataWithTheSpecies$DataType[i]=="R")
       {
-  #      CPUE[floor(dataWithTheSpecies$LngtCm[i])] =   CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
         CPUE[floor(dataWithTheSpecies$LngtCm[i])] =   CPUE[floor(dataWithTheSpecies$LngtCm[i])] + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i]
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
@@ -114,9 +105,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 }
 
 
-
-
-#' calcmCPUErfaWithALK
+#' calcmCPUErfaAreaBasedALK
 #' @description Calculates CPUE per length class in a given roundfish area.
 #' @param RFA Roundfish area number.
 #' @param species The species of interest.
@@ -128,7 +117,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,perc
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras")
+calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras")
 {
   nFoundWithin = 0
   nNotFoundWithin = 0
@@ -161,7 +150,7 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
     if(numberOfStatRectangles==0) return("No observations in RFA")
     for(i in 1:numberOfStatRectangles)
     {
-      cpueStatRec = calcmCPUEstatRecWithALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
+      cpueStatRec = calcmCPUEstatRecAreaBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
       mCPUEstatRec[,i] = as.double(cpueStatRec)
 
       if(!is.null(attributes(cpueStatRec)$nFoundWithin) & !is.null(attributes(cpueStatRec)$nNotFoundWithin)){
@@ -170,7 +159,6 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
       }
     }
     #---------------------------------------------------------------
-
 
     #Average over the statistical recangles and return mCPUE-----
     weightUsed = rep(0,numberOfStatRectangles)
@@ -202,12 +190,9 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
     print("Somethings wrong")
     #------------------------------------------------------------
   }
-
 }
 
-
-
-#' calcmCPUEstatRecWithALK
+#' calcmCPUEstatRecAreaBasedALK
 #' @description Calculates CPUE per length class in a given statistical rectangle.
 #' @param statRec Statistical area.
 #' @param species The species of interest.
@@ -219,7 +204,7 @@ calcmCPUErfaWithALKDatras = function(RFA,species,year, quarter, data, ALK, weigh
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL)
+calcmCPUEstatRecAreaBasedALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL)
 {
   nFoundWithin = 0
   nNotFoundWithin = 0
@@ -260,7 +245,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 
       if(dataWithTheSpecies$DataType[i]=="R")
       {
-        CPUE =  CPUE + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-1]/sum(ALK[lineInAlkToUse,-1])
+        CPUE =  CPUE + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-1]/sum(ALK[lineInAlkToUse,-1])
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
         CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-1]/sum(ALK[lineInAlkToUse,-1])
@@ -271,9 +256,9 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
           if(dataWithTheSpecies$DataType[i]=="R")
           {
             if(attributes(ALK)$foundWithin[lineInAlkToUse]){
-              nFoundWithin = nFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nFoundWithin = nFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }else{
-              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }
           }else if(dataWithTheSpecies$DataType[i]=="C")
           {
@@ -289,7 +274,6 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
   }
   mCPUE = CPUE/nHauls
 
-
   attributes(mCPUE)$nFoundWithin = nFoundWithin
   attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
 
@@ -300,7 +284,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 
 
 
-#' calcmCPUErfaWithALKNew
+#' calcmCPUErfaHaulbasedALK
 #' @description Calculates CPUE per length class in a given roundfish area with  a new procedure TODO:document.
 #' @param RFA Roundfish area number.
 #' @param species The species of interest.
@@ -311,7 +295,7 @@ calcmCPUEstatRecWithALK = function(statRec,species,year, quarter, data, ALK,perc
 #' @export
 #' @return
 #' @examples
-calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL)
+calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL)
 {
 
   #Extract the data of interest-------------------------
@@ -347,7 +331,7 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
   if(numberOfStatRectangles==0) return("No observations in RFA")
   for(i in 1:numberOfStatRectangles)
   {
-    cpueStatRec = calcmCPUEstatRecWithALKNew(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
+    cpueStatRec = calcmCPUEStatRecHaulBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
 
     mCPUEstatRec[,i] = as.double(cpueStatRec)
 
@@ -390,7 +374,7 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
   #------------------------------------------------------------
 }
 
-#' calcmCPUEstatRecWithALKNew
+#' calcmCPUEStatRecHaulBasedALK
 #' @description Calculates CPUE per length class in a given statistical rectangle with the new procedure. TODO: document.
 #' @param statRec Statistical area.
 #' @param species The species of interest.
@@ -402,7 +386,7 @@ calcmCPUErfaWithALKHaulbased = function(RFA,species,year, quarter, data, ALKNew,
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
+calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -454,7 +438,7 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
       }
       if(dataWithTheSpecies$DataType[i]=="R")
       {
-        CPUE =  CPUE + (dataWithTheSpecies$Count[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
+        CPUE =  CPUE + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
         if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
@@ -467,9 +451,9 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
           if(dataWithTheSpecies$DataType[i]=="R")
           {
             if(attributes(ALK)$datrasValue[lineInAlkToUse]){
-              nWithDatras = nWithDatras + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nWithDatras = nWithDatras + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }else{
-              nWithoutDatras = nWithoutDatras + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nWithoutDatras = nWithoutDatras + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }
           }else if(dataWithTheSpecies$DataType[i]=="C")
           {
@@ -486,9 +470,9 @@ calcmCPUEstatRecWithALKNew = function(statRec,species,year, quarter, data, ALKNe
           if(dataWithTheSpecies$DataType[i]=="R")
           {
             if(attributes(ALK)$foundWithin[lineInAlkToUse]){
-              nFoundWithin = nFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nFoundWithin = nFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }else{
-              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$Count[i])*subfactor[i]
+              nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }
           }else if(dataWithTheSpecies$DataType[i]=="C")
           {
@@ -594,7 +578,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
   attributes(mCPUEvector)$nWithDatras = nWithDatras
   attributes(mCPUEvector)$nWithoutDatras = nWithoutDatras
-
 
   return(list(mCPUEvector,fit))
 

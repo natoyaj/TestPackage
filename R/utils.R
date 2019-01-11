@@ -62,7 +62,7 @@ obsInHL = function(species, hl_hh, id,length)
   {
     if(hl_hhOfInterest$DataType[i]=="R")
     {
-      nLength =  nLength + (hl_hhOfInterest$Count[i])*subfactor[i]
+      nLength =  nLength + (hl_hhOfInterest$HLNoAtLngt[i])*subfactor[i]
     }else if(hl_hhOfInterest$DataType[i]=="C")
     {
       nLength  =  nLength + hl_hhOfInterest$HLNoAtLngt[i]*subfactor[i]/60*hl_hhOfInterest$HaulDur[i]
