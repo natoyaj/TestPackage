@@ -43,6 +43,8 @@
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{xcolor}
+%\usepackage{}
+
 
 %\titleformat{\subsection}    
 %       {\normalfont\fontfamily{phv}\fontsize{12}{17}\bfseries\itshape}{\thesubsection}{1em}{}
@@ -147,29 +149,29 @@ In this research we present estimation procedures for calculating abundance at a
 \end{abstract}
 
 
-
+% \citep{ehrhardt1997role}
 \section{Introduction}
-Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{walters1981effects, ludwig1981measurement, berg2014evaluation}. This uncertainty can arise from many sources including natural variability, estimation procedures and lack of knowledge regarding the parameter \citep{ehrhardt1997role}. The North Sea International Bottom Trawl Survey (IBTS) data, coordinated by the International Council for the Exploration of the Sea (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates. As stated by \citet{ludwig1981measurement} it is relevant for managers to take into account the uncertainty related to stock size when making management polices. The indices of abundance at age from IBTS  are based on data obtained from a stratified semi-random sampling approach of trawl stations,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial.  In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
+Fish stock assessments are used by fishery managers for making management decisions regarding catch quotas. The assessments provide fundamental information about the status of the stock, for instance, whether the stock is increasing and support for increased levels of harvest should be given, or whether the stock is decreasing and stricter control on harvest should be implemented. Associated with the parameters used in fish stock assessment is their uncertainty, which should not be ignored when formulating management policies \citep{ludwig1981measurement, berg2014evaluation}. This uncertainty can arise from many sources including natural variability, estimation procedures and statistical fitting. The North Sea International Bottom Trawl Survey (IBTS) data, coordinated by the International Council for the Exploration of the Sea (ICES), provides information on seasonal distribution of stocks and estimates of abundance indices and catch in numbers of fish per age-class without an assessment of the accuracy of these estimates. As stated by \citet{ludwig1981measurement} it is relevant for managers to take into account the uncertainty related to stock size when making management polices. The indices of abundance at age from IBTS  are based on data obtained from a stratified semi-random sampling approach of trawl stations,  and  it is essential to account for the sampling approach so as to produce reliable variance estimates \citep{lehtonen2004practical}. If the sampling approach is ignored, the effect on the variance  of the parameters could be substantial (\olav{This is not necessarily the case when using models to describe the uncertainty. However, we should know how the data was collected such that we do not make stupid models}. \ed{I believe that this statement that is currently written is true whether or not we are using models to describe uncertainty. DATRAS has an approach for estimating uncertainty of parameters but it lacks the potential to account to sampling approach-hierarchical survey design, hence we saw it inflates the uncertainty)}.  In particular, the variance could be greatly inflated  due to the clustering effect, which involves intra-cluster correlation of the variables \citep{aanes2015efficient, lehtonen2004practical}. 
 
-There are two separate stages for generating abundance indices per age from the North Sea International Bottom Trawl Survey (IBTS) data.  The first consist of calculating indices per \textit{length} class, which are obtained by trawling in a stratified manner, sorting the catch by taxa and take biological measurement of the sorted catch. Then that knowledge is transformed to indices with respect to age. The latter part is achieved with an age-length key (ALK), which is constructed by sampling pairs of otoliths (each fish has a pair of otoliths)  in a stratified procedure from each haul and/or sub-area. To our best knowledge, there has been no research on how much the uncertainty of the abundance indices is related to these two distinct parts. The main contribution of this research is to shed light on how the indices estimates and their associated uncertainty estimates change if less effort was spent on collection of otoliths. We achieve the reduction of otoliths by mimicking a defined sampling procedure with less effort. We also focus on the spatial distribution of the ALK, and such spatial structures in the ALK has also been investigated in \citet{berg2012spatial} and  \citet{hirst2012bayesian}.
+There are two separate stages for generating abundance indices per age from the North Sea International Bottom Trawl Survey (IBTS) data.  The first consist of calculating indices per \textit{length} class, which are obtained by trawling in a stratified manner, sorting the catch by taxa and take biological measurement of the sorted catch. Then that knowledge is transformed to indices with respect to age. The latter part is achieved with an age-length key (ALK), which is constructed by sampling pairs of otoliths (each fish has a pair of otoliths)  in a stratified procedure from each haul and/or sub-area. To our best knowledge, there has been no research on how much the uncertainty of the abundance indices is related to these two distinct parts. The main contribution of this research is to shed light on how the indices estimates and their associated uncertainty estimates change if less effort was spent on collection of otoliths. We achieve the reduction of otoliths by mimicking a sampling procedure with less effort. We also focus on the spatial distribution of the ALK. \nat{Spatial structures in the ALK have also been investigated in \citet{berg2012spatial} and  \citet{hirst2012bayesian}}.
 
 Currently, abundance indices from IBTS are reported in DATRAS \citep{datras} using an age-length key (ALK) \citep{fridriksson1934calculation} which is assumed to be constant over relatively large areas. In this research we propose two ALKs which accounts for spatial variation: i) a nonparametric  haul based ALK, and ii) a spatial model based ALK. These ALKs are described in Section \ref{sec:methods}. %In section \ref{sec:modelBasedALK} we introduce a spatial model based ALK, and see figure \ref{fig:40cmCod2015} for an illustration of spatial variation in the ALK. 
-A spatial model based ALK \citep{berg2012spatial, berg2014evaluation} known as the NS-IBTS Delta-GAM index \citep{ICES2016b} is currently being used to calculate standardized age-based survey indices used in assessment for the North Sea stock (haddock and cod). And, as far as we are aware the variance estimates of parameters estimated from NS-IBTS Delta-GAM index  are \textit{only} utilized for assessment of Herring (\textit{Clupea harengus}) in the North Sea.
+A spatial model based ALK \citep{berg2012spatial, berg2014evaluation} known as the NS-IBTS Delta-GAM \citep{ICES2016b} is currently being used to calculate standardized age-based survey indices used in assessment for the North Sea stock (haddock and cod). And, as far as we are aware the variance estimates of parameters estimated from NS-IBTS Delta-GAM index  are \textit{only} utilized for assessment of Herring (\textit{Clupea harengus}) in the North Sea.
 
 The spatial ALK model introduced in \citet{berg2012spatial} is similar to the model used in this paper; the main difference is that we include the spatial structure through a spatial random field \citep{lindgren2011explicit} and not through two dimensional splines \citep{wood2017generalized}.
 
- An  overview of the  North Sea International Bottom Trawl Survey is given in Section \ref{overview}. The current estimators for ALK and catch per unit effort (CPUE) used by ICES in their database for trawl surveys (DATRAS) and our proposed ALK estimators are given in Section \ref{sec:methods}. We apply these ALK methods to two case studies in Section  \ref{sec:data}, and a discussion is given in Section \ref{sec:discussion}.
-
-R-code for reproducing the results can be fund at github (\href{https://github.com/natoyaj/TestPackage.git}{https://github.com/natoyaj/TestPackage.git}).
+ An  overview of the  North Sea International Bottom Trawl Survey is given in Section \ref{overview}. The current estimators for ALK and catch per unit effort (CPUE) used by ICES in their database for trawl surveys (DATRAS) and our proposed ALK estimators are given in Section \ref{sec:methods}. We apply these ALK methods to two case studies in Section  \ref{sec:data}, and a discussion is given in Section \ref{sec:discussion}. The R-code for reproducing the results can be fund at github (\href{https://github.com/natoyaj/TestPackage.git}{https://github.com/natoyaj/TestPackage.git}).
  
 
 \subsection{Overview of the North Sea International Bottom Trawl Survey}
 \label{overview}
-\indent The North Sea International Bottom Trawl Survey was formed in 1991, to combine the International Young Herring Survey (IYHS) and eight national surveys in the North Sea, Skagerrak and Kattegat areas. These surveys began in the 1960's, and the 1970's and 1980's, respectively. The IYHS was developed with the aim of obtaining annual recruitment indices for the combined North Sea herring (\textit{Clupea harengus}) stock \citep{ICES2012}, but yielded valuable information on other fish species such as cod (\textit{Gadus morhua}) and haddock (\textit{Melanogrammus aeglefinus}).\\
-\indent The North Sea IBTS began with quarterly surveys providing information on seasonal distribution of stocks sampled, hydrography and the environment, which allows changes in fish stock to be monitored and abundance of all fish species to be determined. These quarterly surveys, however became difficult to sustain as countries experienced budget cuts making it impossible to maintain high levels of research vessel effort. As such, in 1997 countries carried out a survey only twice a year; a first quarter survey (January-February) and a third quarter survey (July-September). The target species of IBTS fished from 1991-2018 includes standard pelagic species: Herring (\textit{Clupea harengus}), Sprat (\textit{Sprattus sprattus}) and Mackerel (\textit{Scomber scombrus}); and standard roundfish species: Cod (\textit{Gadus morhua}), Haddock (\textit{Melanogrammus aeglefinus}), Saithe (\textit{Pollachius virens}),  Norway Pout (\textit{Trisopterus esmarkii})  and Whiting (\textit{Merlangius merlangus}). There are also several by-catch species \citep[see for example,][]{ICES2006Report}
+\indent The North Sea International Bottom Trawl Survey was formed in 1991, to combine the International Young Herring Survey (IYHS) and eight national surveys in the North Sea, Skagerrak and Kattegat areas. These surveys began in the 1960's, and the 1970's and 1980's, respectively. The IYHS was developed with the aim of obtaining annual recruitment indices for the combined North Sea herring (\textit{Clupea harengus}) stock \citep{ICES2012}, but yielded valuable information on other fish species such as cod (\textit{Gadus morhua}) and haddock (\textit{Melanogrammus aeglefinus}).
 
-Research vessels from seven nations in the first quarter (Q1) and six nations in the third quarter (Q3) are used for conducting surveys on all finfish species in the North Sea during January-February and July-August, respectively, between 1997-2018 (Table \ref{countries} in Supplementary Materials \ref{secAp:areasfishedappendix} gives details of the research vessels). The sampling frame is defined by the ICES index or roundfish areas (RFA) as shown in Figure \ref{icesroufismap} numbered 1 to 10. These  roundfish areas were substratified into small strata defined by non-overlapping statistical rectangles of roughly $30 \times 30$ nautical miles ($1^{o} \  \mathrm{Longitude} \ \times  \  0.5^{o} \ \mathrm{Latitude}$), and were convenient to use for IBTS as they were already being used for fisheries management purposes. Most statistical rectangles contain a number of possible tows that are deemed free of obstructions (found in databases of national safe tows or DATRAS or commercial fishing data), and vessels are free to choose any position in the rectangles as long as the hauls are separated by at least 10 nautical miles within and between rectangles \citep{ICES2018}. However, all countries select tows based on a semi-random approach from datababes of national safe tows or DATRAS or commercial fishing data, except Sweden who uses fixed stations and in some cases depth-stratified semi-random sampling design \citep{ICES2018}; and England who also uses fixed stations and only conduct surveys during the third quarter. In some rectangles, sampling may be further stratified due to significant changes in seabed depth which may, in turn, cause variations in the fish population. In particular, the North Sea IBTS herring, saithe and sprat data are weighted by depth strata in the statistical rectangle (see Table \ref{tab:weights} in Supplementary Materials \ref{secAp:weightings}). But this weighting is not included in the current estimation procedure in DATRAS. It is also a requirement that countries avoid clustering their stations between adjacent rectangles in order to reduce positive serial correlation, and thereby maximize survey precision.  The latest major reallocation of rectangles occurred in 1991, but since then the survey has tried to keep at least one vessel in every subarea in which it had fished in the most recent years. Minor reallocation of rectangles between Norway, Scotland and Germany was done in 2013. Each rectangle was  typically sampled twice by two different countries before 1997, but after that target coverage of two trawl hauls per rectangle per survey  was introduced because of national financial constraints \citep{ICES2015}. But in some rectangles in the Eastern English Channel, Southern North Sea and Central North Sea intensified sampling is carried out.\\
-\indent The recommended standard trawling gear of the North Sea IBTS is the mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl \citep{ICES2012}, which has been used on all participating vessels since 1992, while different pelagic and bottom trawls suitable for fishing finfish species were used before 1992. Standardized trawling protocols were adopted with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. From 2000-2018 trawling is done during the daylight hours, which are considered 15 minutes before sunrise to 15 minutes  after sunset \citep{ICES2012}. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught (to 0.1 $\cm$ below for shellfish, to 0.5 $\cm$ below for herring and sprat and to 1 $\cm$ below for all other species) are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 100 fish is selected. A pair of otoliths are collected on board from a small fraction of all the target species from all RFAs (Figure \ref{icesroufismap}) to retrieve age reading. Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} gives the minimum sampling levels of otoliths for the target species.
+\indent The North Sea IBTS began with quarterly surveys providing information on seasonal distribution of stocks, which allows changes in fish stock to be monitored and abundance of all fish species to be determined. These quarterly surveys, however became difficult to sustain as countries experienced budget cuts making it impossible to maintain high levels of research vessel effort. As such, in 1997 countries carried out a survey only twice a year; a first quarter survey (January-February) and a third quarter survey (July-September). The target species of IBTS fished from 1991-2018 includes standard pelagic species: Herring (\textit{Clupea harengus}), Sprat (\textit{Sprattus sprattus}) and Mackerel (\textit{Scomber scombrus}); and standard roundfish species: Cod (\textit{Gadus morhua}), Haddock (\textit{Melanogrammus aeglefinus}), Saithe (\textit{Pollachius virens}),  Norway Pout (\textit{Trisopterus esmarkii})  and Whiting (\textit{Merlangius merlangus}). There are also several by-catch species \citep{ICES2006Report}
+
+Research vessels from seven nations in the first quarter (Q1) and six nations in the third quarter (Q3) are used for conducting surveys on all finfish species in the North Sea during January-February and July-August, respectively, between 1997-2018. Table \ref{countries} in Supplementary Materials \ref{secAp:areasfishedappendix} gives details of the research vessels. The sampling frame is defined by the ICES index or roundfish areas (RFA) as shown in Figure \ref{icesroufismap} numbered 1 to 10. These  roundfish areas were substratified into small strata defined by non-overlapping statistical rectangles of roughly $30 \times 30$ nautical miles ($1^{o} \  \mathrm{Longitude} \ \times  \  0.5^{o} \ \mathrm{Latitude}$), and were convenient to use for IBTS as they were already being used for fisheries management purposes. \nat{Most statistical rectangles contain a number of possible trawl hauls or tows that are deemed free of obstructions. These tows, which are referred to as   "safe tows", are taken from national databases of participating countries, DATRAS \citep{datras} or commercial fishing data. While nations are free to choose any position within a statistical rectangle to sample, tows are generally selected based on a semi-random approach from these safe tow locations. However, some nations such as Sweden and England use fixed tows, and in some cases Sweden utilizes a depth-stratified semi-random sampling design of tows \citep{ICES2018}. Sampling may be further stratified, in some statistical rectangles, due to significant changes in seabed depth which may, in turn, cause variations in the fish population. In particular, the North Sea IBTS herring, saithe and sprat data are weighted by depth strata in the statistical rectangle \citep{ICES2013}. It is a requirement that tow locations be at least 10 nautical miles within and between statistical rectangles so as to reduce positive serial correlation, and maximize survey precision \citep{ICES2018}. Also, a target coverage of two tows is required per statistical rectangle\citep{ICES2015}, but in some statistical rectangles in the Eastern English Channel, Southern North Sea and Central North Sea intensified sampling is carried out.}
+
+The recommended standard trawling gear of the North Sea IBTS is the mulitpurpose chalut {\`a} Grande Ouverture Verticale (GOV) trawl \citep{ICES2012}, which has been used on all participating vessels since 1992, while different pelagic and bottom trawls suitable for fishing finfish species were used before 1992. Standardized trawling protocols were adopted with a towing speed of 4 knots but depending on vessel performance, tide and weather conditions the average towing speed can be at minimum 3.5 and maximum 4.5 knots. From 2000-2018 trawling is done during the daylight hours, which are considered 15 minutes before sunrise to 15 minutes  after sunset \citep{ICES2012}. After each trawl the total catch of the different species is weighed on board and biological parameters such as length for all fish species caught are collected. Where the numbers of individuals are too large for all of them  to be measured to obtain the length distribution, a representative subsample of 100 fish is selected. A pair of otoliths are collected on board from a small fraction of all the target species from all RFAs (Figure \ref{icesroufismap}) to retrieve age reading. Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} gives the minimum sampling levels of otoliths for the target species.
 
 %\clearpage
 \begin{figure*}[h!]
@@ -183,7 +185,8 @@ Research vessels from seven nations in the first quarter (Q1) and six nations in
 
 \section{\large METHODS}
 \label{sec:methods}
-This section gives the estimators of abundance indices. The estimators are haul-duration based and utilizes an ALK approach. We consider the ALK approach used in DATRAS and we propose two ALK estimators. The ALK used in DATRAS for computing abundance indices does not account explicitly for the spatial distribution in age-length structures over large areas. As differences in age-length structures may exist over large areas, these differences do have the potential to result in a biased ALK \citep{gerritsen2006simple,kimura1977statistical}. These differences may be caused either by variation in length-at-age distributions or by variations in the relative abundance of age classes, that is age-at-length distributions \citep{gerritsen2006simple}.  To account for the spatial distribution we propose a design-based ALK estimator that is haul dependent (Section \ref{sec:haulestimator}) and a model based ALK estimator (\ref{sec:spatialModelALK}).
+This section gives the estimators of abundance indices. The estimators are haul-duration based and utilizes an ALK approach. We consider the ALK approach used in DATRAS and we propose two ALK estimators. The ALK used in DATRAS assumes constant  age-length structures over large areas.  As differences in age-length structures may exist over large areas, these differences do have the potential to result in a biased ALK \citep{gerritsen2006simple,kimura1977statistical}. To account for the spatial distribution we propose a design-based ALK that is haul dependent (Section \ref{sec:haulestimator}) and a model based ALK  (\ref{sec:spatialModelALK}).
+
 \subsection{Catch per unit effort}
 \label{sec:cpueestimators}
 In this research, the catch per unit effort (CPUE) is defined as the number of fish of a certain species and age or length which are caught per hour trawl. In this section we define the CPUE mathematically, which explains how the index is calculated. For a given species of interest, let $n_{h,l}$ be the number of fish with length $l$ caught by trawl haul $h$. The CPUE for a given length $l$ by trawl haul $h$ is defined as 
@@ -194,7 +197,7 @@ were $d_h$ is the duration of the trawl in hours. The CPUE per age class is furt
 \begin{equation}\label{eq:cpueALK}
 \mathrm{CPUE}_{h,a} =\sum_{l \in {\bf L}}\mathrm{CPUE}_{h, l} \times ALK_{a,l,h},
 \end{equation}
-where ${\bf L}$ is the set of all length classes and $ALK_{a,l,h}$ is the age length key, which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$. For a given number of trawl hauls in a statistical rectangle, the mean CPUE defined as  mCPUE  in a statistical rectangle can be expressed as the average CPUE of the trawl hauls in the statistical rectangle:
+where ${\bf L}$ is the set of all length classes and $ALK_{a,l,h}$ is the age length key, which represents the estimated proportion of fish with age $a$ in $l$th length class in haul $h$. The mean CPUE per age in a statistical rectangle $s$ is further defined as
 \begin{equation}\label{eq:cpueRec}
 \mathrm{mCPUE}_{s,a} =\frac{\sum_{h \in H_{s}} \mathrm{CPUE}_{h,a}}{|H_{s}|}.
 \end{equation}
@@ -202,7 +205,7 @@ Here $H_{s}$ represents the set of trawl hauls taken in statistical rectangle $s
 \begin{equation}\label{eq:cpueRFA}
 \mathrm{mCPUE}_{p,a} = \frac{ \sum_{s \in S_{p}} \mathrm{mCPUE}_{s,a}}{|S_{p}|} \omega_s,
 \end{equation}
-where $S_{p}$ is the set of all statistical rectangles in RFA $p$, $|S_{p}|$ is the number of statistical rectangles in RFA $p$, and $\omega_s$ is a weight factor for each statistical rectangle (see Table \ref{tab:weights} in Supplementary Materials \ref{secAp:weightings}). For species such as saithe, herring, and sprat the indices at age are calculated using the mean over rectangles, weighted for the percentage of area with water depths between 10m-200m, and for RFAs 8 and 9 water depths between 10m-250m \citep{ICES2013}.
+where $S_{p}$ is the set of all statistical rectangles in RFA $p$, $|S_{p}|$ is the number of statistical rectangles in RFA $p$, and $\omega_s$ is a weight factor for each \nat{statistical rectangle \citep{ICES2013}}. For species such as saithe, herring, and sprat the indices at age are calculated using the mean over rectangles, weighted for the percentage of area with water depths between 10m-200m, and for RFAs 8 and 9 water depths between 10m-250m \citep{ICES2013}.
 
  The mean catch per unit at age in the whole study area is defined as
 \begin{equation}
@@ -213,15 +216,15 @@ We refer to (\ref{eq:abundanceestimatornorthsea}) as the index of abundance at a
 %mCPUE_{N,a} 
 \subsection{ALK estimators}
 \label{sec:alkmethods}
-The definition of the CPUE of age includes an ALK, see (\ref{eq:cpueALK}), which we described in this section. Three ALK estimators are included in this research, which are named as follows:  \textit{i}) DATRAS ALK, \textit{ii}) haul based ALK and \textit{iii}) model based ALK.
+The definition of the CPUE of age includes an ALK, see (\ref{eq:cpueALK}), which we described in this section. Three ALK estimators are included in this research, which are named as follows:  \textit{i}) Area based ALK, \textit{ii}) haul based ALK and \textit{iii}) model based ALK.
 \subsubsection{Area based ALK}
 \label{sec:datrasalkestimator}
 
-We refer to the ALK used in DATRAS to estimate abundance at age for the IBTS data as an area based ALK, defined as $ALK^{\text{A}}_{a,l,h}$. The area based ALK is defined as constant within each RFA, and is calculated for each RFA by aggregating the age observation from each RFA. $ALK^{\text{A}}_{a,l,h}$ used in equation (\ref{eq:cpueALK}) is defined as the proportion of observed fish with age $a$ in length class $l$ in the RFA $h$. If there are no observed fish in length class $l$ in the RFA, ages from length classes close to $l$ is used. This is referred to as borrowing of ALKs for imputation of missing values. Note that borrowing of ALKs for imputation is a common practice in analysis of both fishery-independent and fishery-dependent monitoring data \citep[see for example,][]{aanes2015efficient,catchpole2017challenges}. The details of the procedure for borrowing age data from neighbouring length classes are given in Supplementary Materials \ref{secAp:DATRASBorrow}.  The underlying assumption of this ALK  is that age-length compositions are homogeneous within the RFAs. This is a rather strong assumption, and any violation would have an unknown impact on the estimates of abundance indices. \citet{aanes2015efficient} illustrated that violation of the assumption of constant ALK leads to biased estimates of CPUEs. 
+\nat{We refer to the ALK used in DATRAS  as an area based ALK, denoted here as $ALK^{\text{A}}_{a,l,h}$}. The area based ALK is defined as constant within each RFA, and is calculated for each RFA by aggregating the age observation from each RFA. $ALK^{\text{A}}_{a,l,h}$ used in equation (\ref{eq:cpueALK}) is defined as the proportion of observed fish with age $a$ in length class $l$ in the \nat{corresponding RFA}. If there are no observed fish in length class $l$ in the RFA, ages from length classes close to $l$ is used. This is referred to as borrowing of ALKs for imputation of missing values. Note that borrowing of ALKs for imputation is a common practice in analysis of both fishery-independent and fishery-dependent monitoring data \citep[see for example,][]{aanes2015efficient,catchpole2017challenges}. The details of the procedure for borrowing age data from neighbouring length classes are given in Supplementary Materials \ref{secAp:DATRASBorrow}.  The underlying assumption of this ALK  is that age-length compositions are homogeneous within the RFAs. This is a rather strong assumption, and any violation would have an unknown impact on the estimates of abundance indices. \citet{aanes2015efficient} illustrated that violation of the assumption of constant ALK leads to biased estimates of CPUEs. 
 
 \subsubsection{Haul based ALK}
 \label{sec:haulestimator}
-We define a haul dependent ALK  by  $ALK^{H}$. The $ALK^{H}_{a,l,h}$  used in equation (\ref{eq:cpueALK}) is defined as the average proportion of observed fish with age $a$ in  length class $l$ in haul $h$. If there are no observed ages of fish in a length class $l$ in the haul, ages from the same length class in the haul close by is used (see Supplementary Materials \ref{secAp:oursBorrow} for the procedure). 
+We \nat{denote the} haul dependent ALK  by  $ALK^{H}$. The $ALK^{H}_{a,l,h}$  used in equation (\ref{eq:cpueALK}) is defined as the average proportion of observed fish with age $a$ in  length class $l$ in haul $h$. If there are no observed ages of fish in a length class $l$ in the haul, ages from the same length class in the haul close by is used (see Supplementary Materials \ref{secAp:oursBorrow} for the procedure). 
 
 \subsubsection{Model based ALK}
 \label{sec:spatialModelALK}
@@ -235,34 +238,32 @@ where \vspace{-5mm} $p_a(l,s)$ is the probability of a fish with length $l$ at l
 \begin{equation}\label{eq:linearPred}
 \log \left[ \frac{\pi_a[y(l,{\bf s})]}{1-\pi_a[y(l,{\bf s})]}\right] = f_a(l) + \gamma_a({\bf s}),
 \end{equation}
-where $ f_a(l)$ is a continuous function of length and $\pmb{\gamma}$ is a mean zero Gaussian spatial random field with Mat\'{e}rn covariance function \citep{stein2012interpolation}. The spline $f_a (l)$ is intended to account for the fact that longer fish are typically older, and the spatial random field, $\pmb{\gamma}$, is intended to account for spatial variation in the ALK. 
-%\nat{( I agree here with edvin, and the parameters given in Table \ref{tab:parameters} are not shown in the equation nor have they been mentioned before. If a reference for $\gamma$ is given then we do not need to explain the these parameters, but we define $\gamma$ and these parameters are given then explanations are required. Also, we could write these parameters and their descriptions as sentences within the text to avoid having too many figures?!)}
- The continuous function $f_a(l)$ in (\ref{eq:linearPred}) is modelled with usage of P-splines \citep{wood2017generalized}, and these spline regression coefficients are included as a mean zero Gaussian random effect. The precision matrix for the spline regression coefficients is constructed such that wiggliness is penalized, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for extracting the precision matrix needed for the spline regression coefficients. The marginal variance of the P-splines regression coefficients, $\sigma_f^2$, is estimated in our inference procedure.
+where $ f_a(l)$ is a continuous function of length and $\pmb{\gamma}$ is a mean zero Gaussian spatial random field with Mat\'{e}rn covariance function \citep{stein2012interpolation}. The spline $f_a (l)$ is intended to account for the fact that longer fish are typically older, and the spatial random field, $\pmb{\gamma}$, is intended to account for spatial variation in the ALK. The continuous function $f_a(l)$ in (\ref{eq:linearPred}) is modelled with usage of P-splines \citep{wood2017generalized}, and these spline regression coefficients are included as a mean zero Gaussian random effect. The precision matrix for the spline regression coefficients is constructed such that wiggliness is penalized, see \citet[page 239]{wood2017generalized} for details. The R package mgcv \citep{wood2015package} is used for extracting the precision matrix needed for the spline regression coefficients. The marginal variance of the P-splines regression coefficients, $\sigma_f^2$, is estimated in our inference procedure.
 
 We assume that the spatially Gaussian random field in (\ref{eq:linearPred}), $\pmb{\gamma}$, follows a stationary Mat\'{e}rn covariance structure defined as
 \begin{equation}\label{eq:matern}
  \text{Cov}(\gamma(\mathbf{s}_1),\gamma(\mathbf{s}_2)) = \frac{\sigma^2_{\gamma}}{2^{\nu-1}\Gamma(\nu)}(\kappa||\mathbf{s}_1 -\mathbf{s}_2||)^{\nu}K_{\nu}(\kappa||\mathbf{s}_1-\mathbf{s}_2||),
 \end{equation}
-where $\sigma^2_{\gamma}$ is the marginal variance of the spatial field; $||\mathbf{s}_1-\mathbf{s}_2||$ is the distance between $\mathbf{s}_1$ and $\mathbf{s}_2$ in kilometres; $\kappa$ is a spatial scale parameter of the spatial field; $\nu$ is a smoothing parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$.  The spatial field is estimated with the stochastic partial differential equation (SPDE) procedure described in \citet{lindgren2011explicit}. The main concept behind the SPDE procedure is that the precision matrix of a spatial field with Mat\'{e}rn  covariance function can be approximated by a sparse matrix on a grid covering the area of interest. Such a grid and sparse precision matrix are constructed with use of the R-INLA package \citep{rue2009approximate}. Figure \ref{fig:mesh} gives an illustration of the mesh used for approximating  (\ref{eq:matern}) for one of our focal species (cod), which we describe in Section \ref{sec:data}. Detail regarding the construction of the mesh can be found at github (\href{https://github.com/OlavNikolaiBreivik/IBTSspatialALK}{https://github.com/OlavNikolaiBreivik/IBTSspatialALK}).
+where $\sigma^2_{\gamma}$ is the marginal variance of the spatial field; $||\mathbf{s}_1-\mathbf{s}_2||$ is the distance between $\mathbf{s}_1$ and $\mathbf{s}_2$ in kilometres; $\kappa$ is a spatial scale parameter of the spatial field; $\nu$ is a smoothing parameter and $K_{\nu}(\cdot)$ is the modified Bessel function of the second kind with $\nu = 1$.  The spatial field is estimated with the stochastic partial differential equation (SPDE) procedure described in \citet{lindgren2011explicit}. The main concept behind the SPDE procedure is that the precision matrix of a spatial field with Mat\'{e}rn  covariance function can be approximated by a sparse matrix on a grid covering the area of interest. Such a grid and sparse precision matrix are constructed with use of the R-INLA package \citep{rue2009approximate}. Figure \ref{fig:mesh} gives an illustration of the mesh used for approximating  (\ref{eq:matern}) for one of our focal species (cod), which we describe in Section \ref{sec:data}. The species specific constant $l^*$ (\ed{what is $l^{*}$? is this length or something else?}) is selected as the mid point between the shortest fish of age A and the longest fish of age M in the corresponding year and quarter. A sensitivity analysis of this constant were performed by adjusting it up and down 5 cm for cod in year 2018 in Q1. The point estimate of the $\text{mCPUE}_a$ then changed in the forth decimal, which we will consider negligible. The details regarding the construction of the mesh can be found at github (\href{https://github.com/OlavNikolaiBreivik/IBTSspatialALK}{https://github.com/OlavNikolaiBreivik/IBTSspatialALK}).
 
 
 \clearpage
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.5]{figures/mesh.jpeg}
- \caption{Mesh used in the case study for cod in Section \ref{sec:data} for approximating (\ref{eq:matern}) with the SPDE-procedure. The species specific constant $l^*$ is selected as the mid point between the shortest fish of age A and the longest fish of age M in the corresponding year and quarter. A sensitivity analysis of this constant were performed by adjusting it up and down 5 cm for cod in year 2018 in Q1. The point estimate of the $\text{mCPUE}_a$ then changed in the forth decimal, which we will consider negligible.}\label{fig:mesh}
+ \caption{\nat{Mesh used in the case study for cod in Section \ref{sec:data} for approximating (\ref{eq:matern}) with the SPDE-procedure.}}\label{fig:mesh}
 \end{center}
 \end{figure}
 
-
 The model based ALK estimate is obtained by maximizing the likelihood. We maximize the likelihood with use of an R-Package called Template Model Building {\sffamily TMB} \citep{kristensen2015tmb}, combined with the optimizing function {\sffamily nlminb} in R. In this application {\sffamily TMB} is advantageous as it uses Laplace approximation for the latent fields gaining computational efficiency, it also utilizes sparse structures in the latent fields, and uses automatic derivation. 
-
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
 In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with from the original data and approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. 
 
-A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. In the rest of this research, we refer to this procedure as DATRAS bootstrap procedure, as it is the current procedure outlined in DATRAS for uncertainty estimation of IBTS indices \olav{(The procedure for sampling CA data is the exact same, but not sampling the HL-data, we have however implemented that procedure also but i thought we agreed not to use it. \nat{Yes, we agreed not to use it but we have to mention that they provide a procedure, which was never implemented, and state the issues with that procedure})}. However, this bootstrap procedure has never been implemented in DATRAS. The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The DATRAS bootstrap procedure is based on the assumption of homogeneous CPUE (\nat{is this CPUE per length or age or both?}) within RFAs \olav{(It assumes constant ALK in the RFA. We have also implemented the procedure from DATRAS for sampling HL-data which assumes constant CPUE in the RFA, but that procedure is not used in the manuscript)}. This assumption is likely to be wrong, and would typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE (\nat{is this CPUE per length or age or both?}) within each statistical rectangle. 
+A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. However, this bootstrap procedure, which uses constant ALK and CPUE in the RFAs,  has never been implemented in DATRAS. Here we provide a modification of the bootstrap procedure proposed by DATRAS (\ed{Olav I think we should say here why the procedure was modified, if it's with regards to implementation etc. Please address this)}. This procedure, which we refer to as the modified-DATRAS bootstrap procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The modified-DATRAS bootstrap procedure is also based on the assumption of constant ALK and CPUE within RFAs. The assumption of constant ALK and CPUE is likely to be wrong, and would typically cause an overestimation of the uncertainty. 
+
+%The DATRAS procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}).  homogeneous CPUE (\nat{is this CPUE per length or age or both?}) within RFAs \olav{(It assumes constant ALK in the RFA. We have also implemented the procedure from DATRAS for sampling HL-data which assumes constant CPUE in the RFA, but that procedure is not used in the manuscript)}. This assumption is likely to be wrong, and would typically cause an overestimation of the uncertainty.  Therefore, we have included a bootstrap procedure, defined as the stratified bootstrap procedure, which instead assumes constant CPUE (\nat{is this CPUE per length or age or both?}) within each statistical rectangle. 
 
 \subsubsection{Bootstrap procedures}
 \label{sec:datrasstratifiedbootstrap}
@@ -280,16 +281,14 @@ In this section we describe the two bootstrap procedures used in this research. 
 
 \subsection{Reducing the number of otoliths sampled for age determination}
 \label{sec:reducingeffort}
-We also investigate how relative abundance at age, $\text{mCPUE}_a$, and its uncertainty are affected if the  number of otoliths sampled for age determination is reduced. We sample realisations of data obtained with a sampling procedure with fewer age readings by choosing the number of age observations in length group $l$ in the corresponding haul,  $n_{l,a,h}$ (defined in step 2 (b) in Section \ref{sec:datrasstratifiedbootstrap}) to be equal to a pre-defined number. We choose $n_{l,a,h}$ equal \textit{one} or \textit{two} when sampling the reduced effort. By doing that, the sampled data sets in the bootstrap procedure are possible realisations of data obtained by collecting only \textit{one} pair or \textit{two} pairs of otoliths per length group at sea. We choose the length groups to have width $1 \text{cm},2\text{cm},...\text{ or }5\text{cm}$ as these would do the following: 1) provide reasonable assurance of the variability captured within the length group, and 2) determine sufficient sample sizes of age readings required to give information on relative abundance at age in the North Sea.
-\nat{I do not think that we should combine bootstrap procedure with reducing effort in a single section. They are two separate methods. Reducing effort is the selling point of the paper, and therefore must be highlighted separately (in its own section), even if the description is short} 
+We also investigate how relative abundance at age, $\text{mCPUE}_a$, and its uncertainty are affected if the  number of otoliths sampled for age determination is reduced. We sample realisations of data obtained with a sampling procedure with fewer age readings by choosing the number of age observations in length group $l$ in the corresponding haul,  $n_{l,a,h}$ (defined in step 2 (b) in Section \ref{sec:datrasstratifiedbootstrap}) to be equal to a pre-defined number. We choose $n_{l,a,h}$ equal \textit{one} or \textit{two} when sampling the reduced effort. By doing that, the sampled data sets in the bootstrap procedure are possible realisations of data obtained by collecting only \textit{one} pair or \textit{two} pairs of otoliths per length group at sea. We choose the length groups to have width $1 \text{cm},2\text{cm},...\text{ or }5\text{cm}$ as these would do the following: 1) \nat{capture the variability in age-length data}, and 2) determine sufficient sample sizes of age readings required to give information on relative abundance at age in the North Sea.
 
-%\clearpage
 \section{Case studies}
 \label{sec:data}
-In this section we apply the methods described in Section \ref{sec:methods} to data for cod and saithe from the International Bottom Trawl Survey for the years 2017-2018, which is obtained from the DATRAS database \citep{datras} (\nat{url  for this reference does not show up in Reference}). These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, $one$ pair of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample procedure of reducing the number of otoliths read for age determination (Section \ref{sec:datrasstratifiedbootstrap}). The second is that IBTS included age 0 in Q3 surveys. Also, for some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed \citep{ICESJune2016}; see Figure \ref{icesroufismap}. Furthermore, these years provide extensive sample data for cod and saithe with quarterly sampling effort varying between 345 and 385 trawl hauls. For each of these hauls sampled in the years 2017-2018, concurrent length measurements and otoliths for age determination were obtained from a subsample of cod and saithe. The subsample of otoliths taken for age determination varied between 1456 and 2501 for cod, and between 822 and 2163 for saithe. Table \ref{tab:realdata2017-2018} briefly describes the data for the years 2017-2018.\\
+In this section we apply the methods described in Section \ref{sec:methods} to data for cod and saithe from the International Bottom Trawl Survey for the years 2017-2018, which is obtained from the DATRAS database \citep{datras} (\ed{url  for this reference does not show up in Reference}). These years are chosen for two reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, $one$ pair of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for the sampling procedures for each target species), and this data is appropriate for the application of our proposed sample procedure of reducing the number of otoliths read for age determination (Section \ref{sec:datrasstratifiedbootstrap}). The second is that IBTS included age 0 in Q3 surveys. Also, for some species such as saithe that occupies the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps}, the IBTS Q3 data is relevant for analyses compared with data from IBTS Q1 surveys, which do not adequately cover these areas where saithe is distributed \citep{ICESJune2016}; see Figure \ref{icesroufismap}. Furthermore, these years provide extensive sample data for cod and saithe with quarterly sampling effort varying between 345 and 385 trawl hauls. For each of these hauls sampled in the years 2017-2018, concurrent length measurements and otoliths for age determination were obtained from a subsample of cod and saithe. The subsample of otoliths taken for age determination varies between 1456 and 2501 for cod, and between 822 and 2163 for saithe. Table \ref{tab:realdata2017-2018} briefly describes the data for the years 2017-2018.\\
 %. attributes(mCPUEStratifiedHL) 
 
-\clearpage
+%\clearpage
  \begin{small}
 \begin{table}[h!]
 \setlength\tabcolsep{5.2pt} 
@@ -333,94 +332,52 @@ In this section we apply the methods described in Section \ref{sec:methods} to d
 \end{footnotesize}
 \end{table}
  \end{small}
-  
+ 
 \subsection{Estimated indices of abundance and variability for cod and saithe}
 \label{sec:codandsaitheresults}
-In this section we apply the three ALK methods given in Section \ref{sec:alkmethods} for estimation of relative abundance at age, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance. In this section we apply the three ALK methods, given in section \ref{sec:alkmethods}, for estimating abundance at age and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap}, for estimating variability of estimated indices of abundance.  The main assumption of the area based ALK is that the age-length compositions of species over large areas are the same. Figure \ref{fig:proportionSkagerak} illustrates the predicted probability of age of cod given length using the spatial model based ALK  (\ref{eq:linearPred}).  Figure \ref{fig:proportionSkagerak} illustrates that the main assumption of the area based ALK of constant age-length compositions over large areas is not valid as a fish of length 20 cm could be of age 1 or age 2 in Skagerak area (see Figure \ref{fig:proportionSkagerak}).  This trend can be seen over the years 2017-2018 of IBTS time series, which also discredits the assumption of constant ALK over large areas in the North sea. Figure \ref{fig:proportionYearsAppendix} illustrates that age given length of 20 cm long cod varies over large areas in the years 2014-2018, while Figure\ref{fig:proportionLengthsAppendix} provides more illustrative examples of different length groups further discrediting the assumption of constant ALK over large areas in the North Sea (\nat{Please check that the colours of observations on the graph are associated with the correct age in the description of the plots}).
+In this section we apply the three ALK methods given in Section \ref{sec:alkmethods} for estimation of relative abundance at age, and the bias-corrected bootstrap method, given in Section \ref{sec:datrasstratifiedbootstrap} for estimating variability of estimated indices of abundance.   The main assumption of the area based ALK is that the age-length compositions of species over large areas are the same. Figure \ref{fig:proportionSkagerak} illustrates the predicted probability of age of cod given length using the spatial model based ALK  (\ref{eq:linearPred}).  Figure \ref{fig:proportionSkagerak} indicates that the main assumption of the area based ALK of constant age-length compositions over large areas is not valid as the ALK seems to vary within RFA 9 (see Figure \ref{fig:proportionSkagerak}).  This trend can be seen over the years 2017-2018 in the first quarter of the IBTS time series, which also discredits the assumption of constant ALK over large areas in the North sea. Figure \ref{fig:proportionSkagerak1} indicates that age given length of 30 cm or 40 cm long cod varies over large areas in the first quarter of 2018. Figures \ref{fig:proportionSkagerak2} and \ref{fig:proportionSkagerak3} provide more illustrative examples of different length groups in year 2017 Q1, further discrediting the assumption of constant ALK over large areas in the North Sea.
 
-%in Supplementary Materials \ref{secAp:proportionofagegivenlengthManyYears}
-%\clearpage
 \begin{figure}[h!]
 \centering
 \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age1Quarter1codYear2018.jpeg}}
 \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age2Quarter1codYear2018.jpeg}}
 \captionsetup{font=small, width = 14.5cm}{
- \caption{Estimated proportion of age 1 and 2 year-old Gadus morhua (cod) of length 20 cm long in Skagerak. The green circles $(\mycirc[green])$ and blue circles $(\mycirc[blue])$ are observations of one and two year old cod, respectively, which are in the length interval 19 cm to 21 cm. }\label{fig:proportionSkagerak}}
+ \caption{Estimated proportion of age 1 and 2 year-old Gadus morhua (cod) of length 20 cm long. The green circles $(\mycirc[green])$ and blue circles $(\mycirc[blue])$ are observations of one and two year old cod, respectively, which are in the length interval 19 cm to 21 cm. }\label{fig:proportionSkagerak}}
 \end{figure}
 
-\nat{Please look at the plots below for the different ages given different lengths; see Figure \ref{fig:proportionLengthsAppendix}. I am a bit confused with the colours of the different ages. Please clearly explain which colour is associated with what age. The codes say age 1 = black, age 2 = green, age 3 = blue, but it's somewhat confusing on the plots (see Figure \ref{fig:proportionSkagerak} above for example, which shows that for length 20 cm the points are for ages 2 and 3 based on the colours, but what I plotted is ages 1 and 2 given length 20 cm). Also, I have not noticed in the codes any colour associated with age 0. There is also the graph showing the probability of age given length 20 cm for years 2017-2018 in Q1 and Q3; see Figure \ref{fig:proportionYearsAppendix}.  These plots will go in the appendix.}
+Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replicates are estimated from the three ALK methods. The three ALK methods gave similar estimates of indices of abundance at age for both species (\ed{we need to discuss results in the plots}). 
 
-\clearpage
-\begin{figure}[h!]
-\centering
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age2Quarter1codYear2018.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age3Quarter1codYear2018.jpeg}}
- \quad
- \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age3Quarter1codYear2018.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age4Quarter1codYear2018.jpeg}}
-\quad
- \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength50Age4Quarter1codYear2018.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength50Age5Quarter1codYear2018.jpeg}}
-\captionsetup{font=small, width = 14.5cm}{
- \caption{\nat{I am not sure about these colours for the different ages} }\label{fig:proportionLengthsAppendix}}
-\end{figure}
+As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the spatial model based ALK generally gave shorter interval widths for both species (Figure \ref{BiascorrectedALK}). Furthermore, compared with the area based ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. 
 
-
-\clearpage
-\begin{figure}[h!]
-\centering
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age1Quarter1codYear2017.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age2Quarter1codYear2017.jpeg}}
- \quad
- \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age1Quarter3codYear2017.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age2Quarter3codYear2017.jpeg}}
-\quad
- \subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age1Quarter3codYear2018.jpeg}}
-\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength20Age2Quarter3codYear2018.jpeg}}
-\captionsetup{font=small, width = 14.5cm}{
- \caption{\nat{I am not sure about these colours for the different ages} }\label{fig:proportionYearsAppendix}}
-\end{figure}
-
-
-\clearpage
-
-Figures \ref{percentileBiascorrectedCIcod} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replication are estimated from the three ALK methods (\nat{Please have a look at the estimates in the graph below for cod in year 2018 Q1, using 1000 simulations. I am currently running the codes for saithe}).\\
-
-%\ed{I think we need to run 'production' run on larger number of iterations before interpreting too much}. The stratified procedure described in \ref{sec:datrasstratifiedbootstrap} is used in the sampling process to estimate bootstrap confidence intervals.   Figures \ref{percentileBiascorrectedCIcod}  shows that the resulting indices of abundance for cod and saithe turned out to be similar for all ALKs. IBTS is a complex multistage survey design, and since the ALKs are estimated from cluster-correlated data the resulting effective sample for estimating age-composition of fish would be lower than the number of fish measured \citep{ICES2013PICS3}. Hence, the ALKs are subject to large sampling errors. For example, the estimated percentage relative standard errors from the spatial ALKs for the plus group (6+) for cod are $>$ 25\%, suggesting high sampling error in the ALKs. \ed{(Which parameter is tested here (age, length or something else)? Could the observation also be explained by high natural variation and the collapsing of potentially hetergenous length and ages into one group?} Also, it should be remembered that DATRAS ALK is constant.   \citet{aanes2015efficient} showed that in such cases, and where only the variability of  length compositions are allowed for, the estimated age-distributions may appear to be more precise than they truly are since the ALK itself is subject to sampling errors, see for example the estimated relative standard standard errors for ages 2, and the older fish (4, 5 and 6+) for both species. 
 %\clearpage
 
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{figures/codALKs2018Q1n1000.jpeg}} & \\
-%\subfloat[Saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3BiasCorr.jpeg}} &
+\subfloat[cod in year 2018 Q1]{\includegraphics[width=0.95\textwidth]{figures/codALKs2018Q1n1000.jpeg}} & \\
+\subfloat[saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{figures/saitheALKs2017Q3n1000.jpeg}} &
 \end{tabular}
 \caption[]{Estimated confidence intervals ($\mathrm{CI}_{95}$) from bias-corrected  bootstrap method for cod in year 2018 Q1 and saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), percentage relative standard error (RSE\%) and the width of the confidence interval (Width CI-95) are also given.}
-\label{percentileBiascorrectedCIcod}
+\label{BiascorrectedALK}
 \end{figure*} 
 
 
-As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the spatial model based ALK generally gave shorter interval widths for both species (Figure \ref{percentileBiascorrectedCIcod}). Furthermore, compared with the area based ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. Figure \ref{fig:proportionRFA1CodQ1} illustrates the estimated age compositions as a function of length for a given haul in RFA 1. The haul selected is the haul with the most number of observed ages of cod in 2018 Q1. Notice that the the model based ALK is smooth, while the area based ALK and the haul based ALK are not. This is an important advantage of the model based ALK, and it is surprising that it did not result in a larger difference in the estimated index of abundance as shown Figure \ref{percentileBiascorrectedCIcod}. An intuitive reason for this is presumably because there are enough observed ages per length group for the haul based ALK to be representative. But, there are some limitations of the spatial model based ALK. For instance, the uncertainty of relative abundance from the spatial model based ALK is calculated using bootstrapping, as approximation of the joint distribution of the regression coefficient and spatial effect, in some cases, fails to account for the  negative correlations between ages. Also, estimating relative abundance at age and its precision from the spatial ALK model can be computationally intensive. 
 
-
-\begin{figure}[h!]
-\centering
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKdatrasQ1year2018RFA1.jpeg}}
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKhaulQ1year2018RFA1.jpeg}}
-\subfloat[]{\includegraphics[scale=0.33]{figures/ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg}}
-\captionsetup{font=small, width = 14.5cm}{
- \caption{Estimated age compositions of cod as a function of length in a given haul in RFA 1 using a) Area based ALK, b) haul based ALK and c) model based ALK. Note that explanation of the colours are only given in c). Each coloured point in c) defines an observed cod with the corresponding length and age in the haul. The haul selected is the haul with most observed ages of cod in 2018 Q1. }\label{fig:proportionRFA1CodQ1}}
-\end{figure}
-
-%We also demonstrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance (see Figure \ref{DatrasStratified} in Supplementary Materials \ref{secAp:resultsdatrasALK}). Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups, suggesting that it is highly relevant to account for the variation in the data over large areas. 
-
-
-%\clearpage
+\clearpage
 \subsection{Sufficient number of otoliths to sample for age determination}
 \label{sec:optimumeffortresults}
-In this section we investigate the effect of sampling fewer otoliths on estimated relative abundance at age and its uncertainty using the procedure described in Section \ref{sec:reducingeffort}. \nat{As mentioned before and confirmed by Jon Helge,  we should plot the percentage relative standard error $(uncertainty/estimate \times 100)$ for all the data versus the percentage relative standard for each length group: 1cm, 2cm, 3cm, 4cm or 5cm, for each age group for comparison.}
+In this section we investigate the effect of sampling fewer otoliths on estimated relative abundance at age and its uncertainty using the procedure described in Section \ref{sec:reducingeffort}. We use the haul based ALK but the model based ALK could also be used to estimate the indices of abundance (\ed{ this plot is what Jon Helge expects us to produce. Perhaps you or Edvin can produce more sophisticated plots showing the same thing. If there was a bug in the codes it could explain that issue with age 2 saithe, and perhaps including pseudo would give better estimates. Generally we expect RSE to decline with wider length resolutions but this is clearly not the case for age 2 and 5. A similar plot is required for cod data}). 
 
-
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+{\includegraphics[width=0.95\textwidth]{figures/remavalSaitheHaul2017.jpeg}} & \\
+%\subfloat[saithe in year 2017 Q3]{\includegraphics[width=0.95\textwidth]{figures/codALKs2018Q1n1000.jpeg}} &
+\end{tabular}
+\caption[]{Expected relative standard error (RSE) for estimated abundance at age for all the otoliths sampled for North Sea IBTS saithe in year 2017 Q3 versus the expected relative standard for different length resolutions: 1cm, 2cm, 3cm, 4cm or 5 cm}
+\label{RemovalSaithe}
+\end{figure*} 
 
 \clearpage
 \section{DISCUSSION}
@@ -434,7 +391,16 @@ The spatial ALK model based estimator appears to be a useful tool to detect sign
 
 
 
+Figure \ref{fig:proportionRFA1CodQ1} illustrates the estimated age compositions as a function of length for a given haul in RFA 1. The haul selected is the haul with the most number of observed ages of cod in 2018 Q1. Notice that the the model based ALK is smooth, while the area based ALK and the haul based ALK are not. This is an important advantage of the model based ALK, and it is surprising that it did not result in a larger difference in the estimated index of abundance as shown Figure \ref{percentileBiascorrectedCIcod}. An intuitive reason for this is presumably because there are enough observed ages per length group for the haul based ALK to be representative. But, there are some limitations of the spatial model based ALK. For instance, the uncertainty of relative abundance from the spatial model based ALK is calculated using bootstrapping, as approximation of the joint distribution of the regression coefficient and spatial effect, in some cases, fails to account for the  negative correlations between ages. Also, estimating relative abundance at age and its precision from the spatial ALK model can be computationally intensive. 
 
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKdatrasQ1year2018RFA1.jpeg}}
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKhaulQ1year2018RFA1.jpeg}}
+\subfloat[]{\includegraphics[scale=0.33]{figures/ALKmodelQ1year2018RFA1HaulWithMostObservations.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated age compositions of cod as a function of length in a given haul in RFA 1 using a) Area based ALK, b) haul based ALK and c) model based ALK. Note that explanation of the colours are only given in c). Each coloured point in c) defines an observed cod with the corresponding length and age in the haul. The haul selected is the haul with most observed ages of cod in 2018 Q1. }\label{fig:proportionRFA1CodQ1}}
+\end{figure}
 
 \clearpage
 
@@ -448,7 +414,7 @@ The spatial ALK model based estimator appears to be a useful tool to detect sign
 \clearpage
 
 \bibliographystyle{apalike}
-\bibliography{ibtsBib}
+\bibliography{BibliographyIbts}
 
 \clearpage
 
@@ -514,7 +480,7 @@ Sweden  &  Dana &  January-February  &  Dana &  August                  \\[0.5ex
 %\clearpage
 \section{\large Otolith sampling per fish species}
 \label{secAp:otolithappendix}
-From 1991-2017, most countries conducted quota sampling of otoliths per length group in a RFA. But from 2013 Norway has been sampling one otolith per length class from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species). From the first quarter in 2018 all countries are required to sample one otolith per length class per trawl haul.  Table \ref{tab:otolithsTable} gives the minimum sampling levels of otoliths for the target species. However, for the smallest size groups, that presumably contain only one age group, the number of otoliths per length class may be reduced, and more otoliths per length are required for the larger length classes. %\\
+From 1991-2017, most countries conducted quota sampling of otoliths per length group in a RFA. But from 2013 Norway has been sampling one otolith per length class from each trawl haul (to 0.1$\cm$ below for shellfish, to 0.5$\cm$ below for herring and sprat and to 1$\cm$ below for all other species). From the first quarter in 2018 all countries are required to sample one otolith per length class per trawl haul.  Table \ref{tab:otolithsTable} gives the minimum sampling levels of otoliths for the target species. However, for the smallest size groups, that presumably contain only one age group, the number of otoliths per length class may be reduced, and more otoliths per length are required for the larger length classes.\\ %\\
 %\clearpage
 \begin{small}
 \begin{table}[h!]
@@ -556,73 +522,7 @@ Period &  Species  & Minimum sampling levels of otoliths per length class    \\[
 \end{table}
 \end{small}
 
-%\clearpage
- \section{\large Weightings of Statistical Rectangles}
- \label{secAp:weightings}
- 
- The weightings of the some statistical rectangles are alloted to species such as sprat, saithe and herring by depth strata between 10m -200m and for RFA 8 and 9 water depths between 10m-250m. Table \ref{tab:weights} gives these weights, which are used in the analysis of the saithe data \citep{ICES2013}.\\
- 
-%\clearpage 
- \begin{small}
-\begin{table}[h!]
-\centering
-\caption{Weights used for Pollachius virens in equation (\ref{eq:cpueRec}).}
-\begin{footnotesize}
-\begin{tabular}{clclclclcl}
-  \hline \\ [0.3ex]
- StatRec & Weight & StatRec & Weight & StatRec & Weight & StatRec & Weight & StatRec & Weight  \\ [1.0ex]
-  \hline \\ [0.3ex]
- 31F1 &  0.6 & 38F0 &    1 & 41F7 &    1 & 44F3 &    1 & 48E7 &    1 \\ 
- 31F2 &  0.8 & 38F1 &    1 & 41F8 &  0.1 & 44F4 &    1 & 48E8 &  0.9 \\ 
- 31F3 & 0.05 & 38F2 &    1 & 41G0 &  0.2 & 44F5 &  0.9 & 48E9 &    1 \\ 
- 32F1 &  0.8 & 38F3 &    1 & 41G1 & 0.97 & 44F8 & 0.25 & 48F0 &    1 \\ 
- 32F2 &    1 & 38F4 &    1 & 41G2 & 0.53 & 44F9 &  0.8 & 48F1 &    1 \\ 
- 32F3 &  0.8 & 38F5 &    1 & 42E7 &  0.4 & 44G0 & 0.94 & 48F2 &    1 \\ 
- 32F4 & 0.01 & 38F6 &    1 & 42E8 &    1 & 44G1 &  0.6 & 48F3 &  0.5 \\ 
- 33F1 &  0.3 & 38F7 &    1 & 42E9 &    1 & 45E6 &  0.4 & 48G0 & 0.02 \\ 
- 33F2 &    1 & 38F8 &  0.3 & 42F0 &    1 & 45E7 &    1 & 49E6 &  0.8 \\ 
- 33F3 &    1 & 39E8 &  0.5 & 42F1 &    1 & 45E8 &    1 & 49E7 &    1 \\ 
- 33F4 &  0.4 & 39E9 &    1 & 42F2 &    1 & 45E9 &    1 & 49E8 &  0.4 \\ 
- 34F1 &  0.4 & 39F0 &    1 & 42F3 &    1 & 45F0 &    1 & 49E9 &    1 \\ 
- 34F2 &    1 & 39F1 &    1 & 42F4 &    1 & 45F1 &    1 & 49F0 &    1 \\ 
- 34F3 &    1 & 39F2 &    1 & 42F5 &    1 & 45F2 &    1 & 49F1 &    1 \\ 
- 34F4 &  0.6 & 39F3 &    1 & 42F6 &    1 & 45F3 &    1 & 49F2 &    1 \\ 
- 35F0 &  0.8 & 39F4 &    1 & 42F7 &    1 & 45F4 &  0.6 & 49F3 &  0.5 \\ 
- 35F1 &    1 & 39F5 &    1 & 42F8 &  0.2 & 45F8 &  0.3 & 50E6 &  0.1 \\ 
- 35F2 &    1 & 39F6 &    1 & 42G0 & 0.32 & 45F9 & 0.02 & 50E7 &  0.6 \\ 
- 35F3 &    1 & 39F7 &    1 & 42G1 & 0.89 & 45G0 & 0.24 & 50E8 &  0.7 \\ 
- 35F4 &  0.9 & 39F8 &  0.4 & 42G2 & 0.64 & 45G1 & 0.55 & 50E9 &  0.9 \\ 
- 35F5 &  0.1 & 40E7 & 0.04 & 43E7 & 0.03 & 46E6 &  0.4 & 50F0 &    1 \\ 
- 36F0 &  0.9 & 40E8 &  0.8 & 43E8 &  0.9 & 46E7 &  0.9 & 50F1 &    1 \\ 
- 36F1 &    1 & 40E9 &    1 & 43E9 &    1 & 46E8 &    1 & 50F2 &    1 \\ 
- 36F2 &    1 & 40F0 &    1 & 43F0 &    1 & 46E9 &    1 & 50F3 &  0.2 \\ 
- 36F3 &    1 & 40F1 &    1 & 43F1 &    1 & 46F0 &    1 & 51E6 &    0 \\ 
- 36F4 &    1 & 40F2 &    1 & 43F2 &    1 & 46F1 &    1 & 51E7 &    0 \\ 
- 36F5 &    1 & 40F3 &    1 & 43F3 &    1 & 46F2 &    1 & 51E8 &  0.5 \\ 
- 36F6 &  0.9 & 40F4 &    1 & 43F4 &    1 & 46F3 &  0.8 & 51E9 &    1 \\ 
- 36F7 &  0.4 & 40F5 &    1 & 43F5 &    1 & 46F9 &  0.3 & 51F0 &    1 \\ 
- 36F8 &  0.5 & 40F6 &    1 & 43F6 &    1 & 46G0 & 0.52 & 51F1 &    1 \\ 
- 37E9 &  0.2 & 40F7 &    1 & 43F7 &    1 & 46G1 &  0.2 & 51F2 &  0.5 \\ 
- 37F0 &    1 & 40F8 &  0.1 & 43F8 & 0.94 & 47E6 &  0.8 & 51F3 &    0 \\ 
- 37F1 &    1 & 41E6 & 0.03 & 43F9 & 0.41 & 47E7 &  0.6 & 52E6 &    0 \\ 
- 37F2 &    1 & 41E7 &  0.8 & 43G0 & 0.21 & 47E8 &    1 & 52E7 &    0 \\ 
- 37F3 &    1 & 41E8 &    1 & 43G1 &  0.7 & 47E9 &    1 & 52E8 &    0 \\ 
- 37F4 &    1 & 41E9 &    1 & 43G2 &  0.3 & 47F0 &    1 & 52E9 &  0.1 \\ 
- 37F5 &    1 & 41F0 &    1 & 44E6 &  0.5 & 47F1 &    1 & 52F0 &  0.2 \\ 
- 37F6 &    1 & 41F1 &    1 & 44E7 &  0.5 & 47F2 &    1 & 52F1 &  0.5 \\ 
- 37F7 &    1 & 41F2 &    1 & 44E8 &  0.9 & 47F3 &  0.6 & 52F2 &  0.1 \\ 
- 37F8 &  0.8 & 41F3 &    1 & 44E9 &    1 & 47F9 & 0.01 &  &  \\ 
- 38E8 &  0.2 & 41F4 &    1 & 44F0 &    1 & 47G0 &  0.3 &  &  \\ 
- 38E9 &  0.9 & 41F5 &    1 & 44F1 &    1 & 47G1 & 0.02 &  &  \\ 
- 52F3 &    0 & 41F6 &    1 & 44F2 &    1 & 48E6 &    1 &  &  \\ 
-   \hline \\[0.8ex]
-\end{tabular}
-\label{tab:weights}
-\end{footnotesize}
-\end{table}
- \end{small}
- 
-% \clearpage
+ \clearpage
 \section{\large Imputing missing ages}
 \label{sec:imputationappendix}
 With the current IBTS sampling procedure, \textit{one} age reading is collected from every cm group in every haul for cod and saithe. However, missing ages do occur, and in this section we describe how missing ages are accounted for. Note that missing ages are automatically accounted for with the model based approach. However, for the area based ALK and the haul based ALK, some adhoc procedure needs to be followed when age is missing. We want to highlight that missing ages occur relatively seldom. E.g. in 1st. quarter in year 2018 and with length group width equal 1cm, 0.9\% of the cod miss age with respect to the area based ALK. In the same example, 1.4\% of the cod miss age with respect to the haul based ALK.
@@ -648,114 +548,9 @@ If there does not exist an age reading of a fish of length $l$ in a haul we prop
 \end{itemize}
 
 
-%\indent  The second is an a haul dependent ALK estimator which we propose, and is denoted by $\mathrm{ALK}^{H}$. Since the age-length composition of fish may be space-variant, that is, there may be variation in age-length compositions between trawl stations within a RFA, the spatial dependence of the age-length composition must be accounted for to produce reliable estimates of the CPUE per age estimates. If this spatial dependence is ignored not only will estimates of abundance be biased but the impact on the variance may be substantial. So for each trawl haul an $\mathrm{ALK}^{H}$ is produced. To replace missing values for the age distribution in a length class the method of "borrowing" ages from the same length  from neighbouring trawl hauls of maximum radius of two statistical rectangles within the RFA. If there are no observed ages in the length class from the neighbour hauls in the RFA, missing values for the age distribution are replaced following the procedure outlined in the DATRAS ALK procedure (\ref{secAp:DATRASBorrow}) in step 1. 
-
-
-%\section{\large Nonparametric Bootstrap Sampling procedure}
-%\label{secAP:nonparametricbootstrap}
-%Nonparametric bootstrapping is attractive as it makes no distributional assumption, and is suitable for estimating confidence interval for indices of abundance. Suppose we have a vector $\bf x$ of $m$ independent observations, and we are interested in estimating a parameter $\hat{\theta} ({\bf x})$ and its variance. The general nonparametric bootstrap algorithm is as follows:
-%\begin{enumerate}
-%\item Sample $m$ observations randomly with replacement from ${\bf x}$ to obtain a bootstrap data set, denoted by ${\bf {x}^{*}}$.
-%\item Calculate the bootstrap version of the statistic of interest, ${\theta}^{*} = \hat{\theta}({\bf {x}^{*}})$.
-%\item Repeat steps 1 and 2 a large number of times, say $B$, to obtain an estimate of the bootstrap distribution
-%\item calculate the average of the bootstrapped statistics, $\sum_{b=1}^{B} {{\theta}^{*}}_{(b)}/B$ 
-%\item compute the variance of the estimator $\hat{\theta}({\bf x})$ through the variance of the set ${{\theta}^{*}}_{(b)}, \ b = 1,2,...,B,$ given by 
-%\begin{equation}
-%\frac{ \sum_{b=1}^{B} {\left({{\theta}^{*}}_{(b)} - {{\theta}^{*}}_{(\cdot)} \right)}^{2}  }{(B-1)} 
-%\end{equation}
-%where ${{\theta}^{*}}_{(\cdot)} = \sum_{b=1}^{B} {{\theta}^{*}}_{(b)}/B. $
-%\end{enumerate}
-%The Bias-Corrected method assumes that there is a montonic increasing function and the estimator $\hat{\lambda}_{a}$ has a monotonic increasing function $f()$ such that the transformed values $f(\hat{\lambda}_{a})$ are normally distributed with mean $f(\lambda_{a}) - z_{0}$ and standard deviation one, where $z_{0}$ are the standard normal limits \citep{puth2015variety, karlsson2009bootstrap}. Now, let $P^{*} \left(\hat{\theta} ({\bf x^{*}}) \leq \hat{\theta} ({\bf x}) \right) $ denote the proportion of $\hat{\theta} {({\bf x^{*}})}^{'} \mathrm{s}$ in the bootstrap sample that have a value lower than the value of the parameter estimate $\hat{\theta} ({\bf x})$, and le $z_{0}$ be defined as
-%\begin{equation}
-% z_{0} = \Phi^{-1} \left\{ P^{*} \left(\hat{\theta} ({\bf x^{*}}) \leq \hat{\theta} ({\bf x}) \right) \right\}, 
-%\end{equation}
-%\noindent where $  \Phi $  denotes the cumulative distribution function of the standard normal distribution. Also let $\tilde{\alpha}_{1} $ and $\tilde{\alpha}_{2} $ be defined as
-%\begin{equation}
-%\tilde{\alpha}_{1} = \Phi(2z_{0} + z_{\alpha}), 
-%\end{equation}
-%\noindent and 
-%\begin{equation}
-%\tilde{\alpha}_{2} = \Phi(2z_{0} + z_{1-\alpha}), 
-%\end{equation}
-%\noindent respectively.  A $100(1-2 \alpha)$ percent confidence interval for $ \theta ({\bf x})$ is then given by
-%\begin{equation}
-%\hat{\theta}_{\left(\tilde{\alpha}_{1}(B +1) \right)} ({\bf {x}^{*}})  \leq \hat{\theta} ({\bf x}) \leq \hat{\theta}_{\left((\tilde{\alpha}_{2} -1)(B +1) \right)} ({\bf {x}^{*}}). 
-%\end{equation}
-
 \section{\large IBTS data set for cod and saithe}
 \label{secAp:data}
 
-%\clearpage
-
- \begin{small}
-\begin{table}[h!]
-\setlength\tabcolsep{3.2pt} 
-\centering
-\caption{Age and length data for saithe  and cod . Data collected in the first quarter (Q1) has no age 0 group but this is collected in quarter 3 (Q3) surveys.}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
-  \hline \\ [0.3ex]
-Species&  & \multicolumn{10}{c}{Years} &   \\[2.0ex]
-%\hline\\
-  \cmidrule(lr{0.3em}){3-12}  \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
-&  &\multicolumn{2}{c}{2014} &\multicolumn{2}{c}{2015}& \multicolumn{2}{c}{2016} & \multicolumn{2}{c}{2017} & \multicolumn{2}{c}{2018}   \\ [1.0ex]
- % \hline \\ [0.3ex]
-& & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
- 
-  \cmidrule(lr{0.3em}){3-12}  \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
- 	& Trawls &352   & 333 &  387 & 367 & 370&            389   &385 & 345 & 372 &365   \\ [1.0ex]
- 	& Mean time of hauls (in minutes)&29.20  & 28.91   & 28.55  &23.44  & 28.40  &22.47 &29.02 & 29.37 &  29.26 & 29.13 \\ [1.5ex]
-\raisebox{2.5ex}{\bf cod}        \\ %   & Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
-& Age range (in years)              & 1 - 9  & 0 - 10  &1 - 9   &0 - 8  &1 - 10   &0 - 10 &1 - 11 & 0 - 11  &  1 - 12 & 0 - 11\\ [1.5ex]
-& Length range (in cm)              & 8 - 113&  NA  &9 - 113  &7 - 111  &11 - 109   &5 - 110 &7 - 115 & 6 - 112 &  11 - 114 & 5 - 107  \\[1.5ex] 
-%& Date of catch                    & 531 & 34   & 56  & 42.041 & 3.785  & & & 18.07 - 31.08 &  15.01 - 28.02   \\ [1.5ex]
-%& Mean duration of hauls (in minutes)&  &    &   &  &   & &29.02 & 29.37         &  29.26     &   \\ [1.5ex]
-& Total otoliths                    &  1903   &  2399  & 2895  &2113  & 2046  &1804 &2501 & 2230  & 1600 & 1456 \\[3.5ex] 
-
-
-\raisebox{2.5ex}{\bf saithe}        \\ %& Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
-& Age range (in years)              &1 - 16   &  0 - 15  &1 - 16   & 0 - 19 &1 - 17   &0 - 19 &1 - 15 & 0 - 11 &  1 - 12 & 0 - 13 \\ [1.5ex]
-& Length range (in cm)             & 15 - 105  & 8 - 108   & 13 - 110  & NA & 16 - 107  & 12 - 115  &15 - 108 & 6 - 112 &  11 - 114 & 7 - 109     &  \\[1.5ex] 
-%& Date of catch                    & 531 & 34   & 56  & 42.041 & 3.785  & & & 18.07 - 31.08 &  15.01 - 28.02   \\ [1.5ex]
-%& Mean duration of hauls (in minutes)&  &    &   &  &   & &29.02 & 29.37         &  29.26     &   \\ [1.5ex]
-& Total otoliths                    & 584  & 1182   & 600  & 1526 & 581  &1631 &1083 & 2163  & 822 & 1085\\[3.5ex] 
-
-   \hline \\[0.8ex]
-\end{tabular}
-\label{tab:realdata2014-2018}
-\end{footnotesize}
-\end{table}
- \end{small}
-
- 
- 
- 
-\clearpage
-\begin{small}
-\begin{table}[h!]
-\caption{Summary of North Sea IBTS cod and saithe (in parentheses) data for third quarter in year 2017 and first quarter in year 2018.}
-\begin{tabular}{llllll}
-\toprule
-\bf Data&\bf Description \\
-\midrule
-Trawl hauls  & Total of 372 trawl hauls in year 2018 Q1; 238 (83)  with length and 230 (81) \\ & with age information. In 2017 Q3, a total of 345  trawl hauls were taken; \\ & 238 (129) with length and 237 (128) with age information. \\[1.7ex]
-
-Age &The age varied between 1 (1) to 12 (18) years in year 2018 Q1 and \\ & 0 (0) to 11 (17) in year 2017 Q3. \\[1.7ex]
-
-Length & Length information in cm varied between 11 (13) to 114 (106) cm in year 2018 Q1 \\ & and between 6 (10) to 112 (109) cm in year 2017 Q3. \\[1.7ex]
-
-Date&Date of catch in year 2018 Q1 varied between 15.01.2018 to 28.02.2018 \\ & and in year 2017 Q3 between 18.07.2017 to 31.08.2018 \\[1.7ex]
-
-Duration of haul & Mean duration is 29.37 minutes, with 30 minutes as 83\% coverage interval \\ & in year 2018 Q1; and in 2017 Q3 with mean duration of 29.26 minutes \\ & with 30 minutes as 88\% coverage . \\[1.0ex]
-
-Total count for all ages & 1600 (822) in year 2018 Q1 and 2330 (2163) 2017 Q3. \\[0.5ex]
-\bottomrule
-\end{tabular}
-\label{tab:data2018}
-\end{table}
-\end{small}
-
-%\clearpage
 
  \begin{small}
 \begin{table}[h!]
@@ -800,297 +595,48 @@ Total count for all ages & 1600 (822) in year 2018 Q1 and 2330 (2163) 2017 Q3. \
 \subsection{Proportion of age given length of cod}
 \label{secAp:proportionofagegivenlengthManyYears}
 
-Figure \ref{fig:proportionYearsAppendix} shows that age-length structure of cod varies over several years: the first quarter (Q1) in years 2014-2017. This indicates that the assumption of constant ALK over large areas proposed in DATRAS is invalid. The plots in Figure \ref{fig:proportionSkagerakAppendix}, which shows the proportion of age  given different lengths of cod in 2018 Q1 further discredit this assumption  as a fish of length 30 cm can be of age 2 (green triangle \mytriangle[green]) or age 3 (blue circle $\mycirc[blue]$) in the northern North Sea; see Figure \ref{fig:proportionSkagerakAppendix}  (a). 
+Figures \ref{fig:proportionSkagerak1}  \ref{fig:proportionSkagerak2}, and \ref{fig:proportionSkagerak3} show that age-length structure of cod varies over the years of interest: the first quarter (Q1) in years 2017-2018. This indicates that the assumption of constant ALK over large areas proposed in DATRAS is invalid. %The plots in Figure \ref{fig:proportionSkagerakAppendix}, which shows the proportion of age  given different lengths of cod in 2018 Q1 further discredit this assumption  as a fish of length 30 cm can be of age 2 (green triangle \mytriangle[green]) or age 3 (blue circle $\mycirc[blue]$) in the northern North Sea; see Figure \ref{fig:proportionSkagerakAppendix}  (a). 
 
-%\begin{figure}[h!]
-%\centering
-%%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2014RFA9Age1.jpeg}}
-%%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2014RFA9Age2.jpeg}}
-%  \quad
-%%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2015RFA9Age1.jpeg}}
-%%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2015RFA9Age2.jpeg}}
-%  \quad
-%% \subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age1.jpeg}}
-%% \subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age2.jpeg}}
-%  \quad
-%% \subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age1.jpeg}}
-%%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age2.jpeg}}
-%% \caption*{Estimated proportion of age 2 and 3 year-old cod of length 30 cm in the North Sea, where \mytriangle[green] are observations of 2-year olds and $\mycirc[blue]$ are  observations of 3-year olds in the length interval 29 cm to 31 cm. }
-% \caption{Estimated proportion of age 1 and 2 year-old cod of length 20 cm in the North Sea in the first quarter (Q1) in years 2014-2017. The green triangles (\mytriangle[green]) are observations of 1-year olds and the blue circles ($\mycirc[blue]$) are  observations of 2-year olds in the length interval 19 cm to 21 cm. \label{fig:proportionYearsAppendix} }
-%\end{figure}
-% 
-% 
-% \begin{figure}[h!]
-%\centering
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2014RFA9Age1.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2014RFA9Age2.jpeg}}
-%  \quad
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2015RFA9Age1.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2015RFA9Age2.jpeg}}
-%  \quad
-% \subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2016RFA9Age1.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2016RFA9Age2.jpeg}}
-%  \quad
-% \subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age1.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.28]{figures/spatialALKQ1year2017RFA9Age2.jpeg}}
-% \caption*{Estimated proportion of age 2 and 3 year-old cod of length 30 cm in the North Sea, where \mytriangle[green] are observations of 2-year olds and $\mycirc[blue]$ are  observations of 3-year olds in the length interval 29 cm to 31 cm. }
-% \caption{Estimated proportion of age 1 and 2 year-old cod of length 20 cm in the North Sea in the first quarter (Q1) in years 2014-2017. The green triangles (\mytriangle[green]) are observations of 1-year olds and the blue circles ($\mycirc[blue]$) are  observations of 2-year olds in the length interval 19 cm to 21 cm. \label{fig:proportionYearsAppendix} }
-%\end{figure}
-% 
+
+%\clearpage
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age2Quarter1codYear2018.jpeg}}
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age3Quarter1codYear2018.jpeg}}
+\quad
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age2Quarter1codYear2018.jpeg}}
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age3Quarter1codYear2018.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated proportion of age 2 and 3 year-old Gadus morhua (cod) of length 30 cm or 40 cm long. The blue circles $(\mycirc[blue])$ and brown circles $(\mycirc[brown])$ are observations of two and three year old cod, respectively, which are in the length interval 29 cm to 31 cm or 39 cm to 40 cm. The purple circles $(\mycirc[purple])$ are 4 year-old cod within the interval 39 cm to 41 cm. The plots indicate that a fish of length 30 cm or 40 cm is more likely to be of age 2 in some areas or age 3 in other areas.  }\label{fig:proportionSkagerak1}}
+\end{figure}
+
+
 
 \clearpage
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age1Quarter1codYear2017.jpeg}}
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength30Age2Quarter1codYear2017.jpeg}}
 
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated proportion of age 1 and 2 year-old Gadus morhua (cod) of length 30 cm long in year 2017 Q1. The green circles $(\mycirc[green])$ and blue circles $(\mycirc[blue])$ are observations of one and two year old cod, respectively, which are in the length interval 29 cm to 31 cm. The brown circles $(\mycirc[brown])$  are observations of 3 year-old cod in the length interval 29 cm to 31 cm. The plots suggest that a cod of length 30 cm ismore likely to be of age 2. }\label{fig:proportionSkagerak2}}
+\end{figure}
 
-%\begin{figure}[h!]
-%\centering
-%\subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age2a.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age3.jpeg}}
-%\captionsetup{font=small, width = 14.5cm}{
-% \caption*{Estimated proportion of age 2 and 3 year-old cod of length 30 cm in the North Sea, where \mytriangle[green] are observations of 2-year olds and $\mycirc[blue]$ are 3-year olds in the length interval 29 cm to 31 cm in 2018 Q1.  }}
-%  \quad
-% \subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age3a.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age4.jpeg}}
-% \caption*{Estimated proportion of age 3 and 4 year-old cod of length 40 cm in North Sea, where \mytriangle[green] are 3-year olds in the length interval 39 cm to 41 cm in 2018 Q1.}
-%  \quad
-% \subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age4a.jpeg}}
-%\subfloat[]{\includegraphics[scale=0.32]{figures/spatialALKQ1year2018RFA9Age5.jpeg}}
-% \caption*{Estimated proportion of age 4 and 5 year-old cod of length 50 cm in Skagerak, where \mytriangle[green] are 4-year olds in the length interval 49 cm to 51 cm in 2018 Q1.}
-% \caption{Proportion of age given lengths 20 cm, 40 cm or 50 cm of cod in 2018 Q1 in the North Sea.\label{fig:proportionSkagerakAppendix} }
-%\end{figure}
- 
 %\clearpage
-%\subsection{\large Estimates from DATRAS and Stratified bootstrap procedures}
-%\label{secAp:resultsdatrasALK}
-%The bootstrap procedure proposed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. The results (Figure\ref{DatrasStratified}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.\\
-%
-%%\clearpage
-%\begin{figure*}[h!]
-%\centering
-%\begin{tabular}{@{}ccc@{}}
-%\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3DATRASStratifedBiasCorr.jpeg}} & 
-%\end{tabular}
-%\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{95}$) from DATRAS and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), bootstrap mean (Mean), Median estimates, percentage relative standard error (RSE \%) and width of confidence intervals  are also given.}
-%\label{DatrasStratified}
-%\end{figure*} 
+\begin{figure}[h!]
+\centering
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age2Quarter1codYear2017.jpeg}}
+\subfloat[]{\includegraphics[scale=0.4]{figures/spatialLength40Age3Quarter1codYear2017.jpeg}}
+\captionsetup{font=small, width = 14.5cm}{
+ \caption{Estimated proportion of age 2 and 3 year-old Gadus morhua (cod) of length 40 cm long in year 2017 Q1. The blue circles $(\mycirc[blue])$ and brown circles $(\mycirc[brown])$ are observations of two and three year old cod, respectively, which are in the length interval 29 cm to 31 cm. The purple circles $(\mycirc[purple])$ are 4 year-old cod within the interval 39 cm to 41 cm. The plots suggest that a cod of length 40 cm is more likely to be of age 2. }\label{fig:proportionSkagerak3}}
+\end{figure}
+
+\clearpage
 
 
 \subsection{Estimates from different sampling procedures}
 \label{secAP:resultssamplingprocedure}
 
-\clearpage
- \begin{small}
-\begin{table}[h!]
-\centering
-\setlength\tabcolsep{11.5pt} 
-\captionsetup{font=small, width = 13.0cm}{
-\caption{Comparison of estimated uncertainty from proposed sampling procedures with estimated uncertainty from original data}\label{codresults2018}}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclcl}
-  \hline \\ [0.3ex]
-  age & mCPUE  & SE.resampled &  SE & RSE.resampled & RSE \\ [1.0ex]
-\hline \\
-  \raisebox{1ex}{\bf  1 cm}  \\ [1.0ex]
- 1 & 0.86  & 0.122 &0.119  &14.179 & 13.895\\
- 2 & 6.50  &1.002  &0.902  &15.426 &13.897\\
- 3 & 1.57  & 0.180 &0.140  &11.518 &8.934\\
- 4 & 1.58  &0.294  &0.304  &18.611 &19.223\\
- 5 &0.74   &0.122  &0.113  &16.560 &15.269\\
- 6+&  1.07 & 0.275 & 0.289 & 25.623& 26.968\\[3.5ex]
 
-  \raisebox{1ex}{\bf 2 cm}  \\ [1.0ex]
-1 & 0.86 & 0.126 & 0.119  &14.697  & 13.895\\
-2 & 6.50 &  1.048 & 0.902 & 16.149 & 13.897\\
-3 & 1.57 & 0.161 & 0.140  & 10.239 & 8.934\\
-4 & 1.58 & 0.299 & 0.304 & 18.769 & 19.223\\
-5 & 0.74 & 0.141 & 0.113 & 19.257 & 15.269\\
-6+ &  1.07 & 0.263& 0.289 & 24.643 & 26.968\\[3.5ex]
-
-  \raisebox{1ex}{\bf  3 cm}  \\ [1.0ex]
-    
- 1  &0.86 &0.133  &0.119 & 15.478 & 13.895 \\
- 2  &6.50 &1.059  & 0.902 &16.311 & 13.897\\
- 3  &1.57 &0.192  & 0.140 & 12.279 &8.934\\
- 4  &1.58 &0.298  &0.304 &18.714  &19.223\\
- 5  &0.74 &0.132 & 0.113 &17.767 & 15.269\\
-6+  &1.07 &0.311 &0.289 & 29.178 & 26.968\\[3.5ex]
-
-  \raisebox{1ex}{\bf  4 cm}  \\ [1.0ex]
-  
-1  &0.86 & 0.132  & 0.119 & 15.384  &13.895 \\
-2  &6.50 &0.938 &0.902 & 14.476    & 13.897\\
-3  &1.57 &0.187 &0.140 & 11.844 & 8.934\\
-4  &1.58 &0.349 &0.304 & 21.842 & 19.223\\
-5  &0.74 &0.159 &0.113 & 21.702 & 15.269\\
-6+ & 1.07 & 0.280& 0.289& 26.335 & 26.968\\ [3.5ex]
-
-
-  \raisebox{1ex}{\bf  5 cm}  \\ [1.0ex]
-  1 & 0.86 & 0.129 & 0.119  & 15.126  & 13.895 \\
- 2  & 6.50 & 0.995 & 0.902  & 15.338 & 13.897 \\
- 3  & 1.57 & 0.163 & 0.140  & 10.381 & 8.934 \\
- 4  & 1.58 & 0.320 & 0.304  &  20.095 & 19.223 \\
- 5  & 0.74 & 0.208 & 0.113  & 27.857 & 15.269 \\
-6+  & 1.07 & 0.289 & 0.289  & 27.193 & 26.968 \\
-
-  \hline \\
-\end{tabular}
-\end{footnotesize}
-\end{table}
- \end{small}
-
-
-\clearpage
- \begin{small}
-\begin{table}[h!]
-\centering
-\setlength\tabcolsep{11.5pt} 
-\captionsetup{font=small, width = 16.0cm}{
-\caption{Estimated abundance ($\hat{\lambda}_{a}$) for cod from the original data in year 2018 Q1 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$). The median estimated indices, estimated standard error of $\hat{\lambda}_{a}^{*}$ (SE($\hat{\lambda}_{a}^{*}$)), the percentage relative standard error (RSE\%) and  mean square error (MSE) are also given.}\label{codresults2018}}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclcl}
-  \hline \\ [0.3ex]
-&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$ & SE($\hat{\lambda}_{a}^{*}$) & RSE\%  & MSE  &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-\hline \\
- \raisebox{1ex}{\bf age 1}  \\ [1.0ex]
-&   1 cm & 0.863 &    0.863  & 0.863 &         0.00910& 0.000 & 0.0000  & (0.86, 0.86)\\
-&   2 cm & 0.863 &    0.865  & 0.867 &         0.00939& 1.085 & 0.00009 & (0.84, 0.88)\\
-&   3 cm & 0.863 &    0.856  & 0.861 &         0.02803& 3.274 & 0.00083 & (0.80, 0.90) \\
-&   4 cm & 0.863 &    0.857  & 0.859 &         0.02791& 3.257 & 0.00082 & (0.81, 0.91) \\
-&   5 cm & 0.863 &    0.845  & 0.847 &         0.03694& 4.370 & 0.00044 & (0.81, 0.92)\\
-&   6 cm & 0.863 &    0.860  & 0.861 &         0.03514& 4.088 & 0.00125 & (0.79, 0.93)\\
-&   7 cm & 0.863 &    0.854  & 0.853 &         0.03803& 4.454 & 0.00153 & (0.80, 0.93)\\[1.5ex]
-
- \raisebox{1ex}{\bf age 2}  \\ [1.0ex]
-&    1 cm & 6.496 &    6.496 & 6.491 &          0.00552& 0.085 & 0.00003 & (6.49, 6.50)\\
-&    2 cm & 6.496 &    6.486 & 6.486 &          0.02073& 0.320 & 0.00053 & (6.46, 6.53)\\
-&    3 cm & 6.496 &    6.504 & 6.506 &          0.05414& 0.832 & 0.00299 & (6.38, 6.60)\\
-&    4 cm & 6.496 &    6.498 & 6.500 &          0.05351& 0.823 & 0.00287 & (6.38, 6.60)\\
-&    5 cm & 6.496 &    6.514 & 6.517 &          0.07322& 1.124 & 0.00567 & (6.32, 6.65)\\
-&    6 cm & 6.496 &    6.503 & 6.507 &          0.07862& 1.209 & 0.00623 & (6.30, 6.65)\\
-&    7 cm & 6.496 &    6.486 & 6.491 &          0.09414& 1.452 & 0.00897 & (6.31, 6.64)\\[1.5ex]
-
- \raisebox{1ex}{\bf age 3}  \\ [1.0ex]
-&   1 cm & 1.571 &    1.572  & 1.571 &         0.04499& 2.861  & 0.00203 & (1.49, 1.66)\\
-&   2 cm & 1.571 &    1.578  & 1.572 &         0.07268& 4.605  & 0.00533 & (1.45, 1.74)\\
-&   3 cm & 1.571 &    1.557  & 1.554 &         0.09893& 6.353  & 0.00999 & (1.41, 1.77)\\
-&   4 cm & 1.571 &    1.640  & 1.632 &         0.10687& 6.517  & 0.00161 & (1.38, 1.86)\\
-&   5 cm & 1.571 &    1.634  & 1.632 &         0.12411& 7.593  & 0.01940 & (1.31, 1.87)\\
-&   6 cm & 1.571 &    1.649  & 1.643 &         0.13337& 8.086  & 0.02390 & (1.31, 1.93)\\
-&   7 cm & 1.571 &    1.748  & 1.740 &         0.14741& 8.432  & 0.05300 & (1.28, 2.06) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 4}  \\ [1.0ex]
-&   1 cm & 1.584 &    1.581  & 1.581 &         0.06670& 4.219   & 0.00446 & (1.45, 1.71)\\
-&   2 cm & 1.584 &    1.597  & 1.596 &         0.11810& 7.397   & 0.01410 & (1.35, 1.83)\\
-&   3 cm & 1.584 &    1.613  & 1.619 &         0.14715& 9.123   & 0.02250 & (1.25, 1.89)\\
-&   4 cm & 1.584 &    1.563  & 1.568 &         0.14581& 9.326   & 0.02170 & (1.30, 1.84)\\
-&   5 cm & 1.584 &    1.586  & 1.581 &         0.15534& 9.794   & 0.02410 & (1.30, 1.90)\\
-&   6 cm & 1.584 &    1.596  & 1.595 &         0.16125& 10.104  & 0.02620 & (1.26, 1.93)\\
-&   7 cm & 1.584 &    1.502  & 1.500 &         0.16988& 11.311  & 0.03550 & (1.33, 1.83) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 5}  \\ [1.0ex]
-&   1 cm & 0.742 &    0.746 & 0.751 &          0.06817& 9.1440 & 0.00466 & (0.61, 0.87)\\
-&   2 cm & 0.742 &    0.738 & 0.729 &          0.10457& 14.170 & 0.01100 & (0.58, 0.96)\\
-&   3 cm & 0.742 &    0.765 & 0.756 &          0.11506& 15.040 & 0.01380 & (0.53, 1.00)\\
-&   4 cm & 0.742 &    0.764 & 0.757 &          0.11686& 15.299 & 0.01410 & (0.54, 1.00)\\
-&   5 cm & 0.742 &    0.801 & 0.787 &          0.12230& 15.270 & 0.01840 & (0.55, 1.07)\\
-&   6 cm & 0.742 &    0.779 & 0.765 &          0.11546& 14.817 & 0.01470 & (0.58, 1.02)\\
-&   7 cm & 0.742 &    0.828 & 0.814 &          0.12779& 15.435 & 0.02360 & (0.54, 1.11) \\[1.5ex]
-
- \raisebox{1ex}{\bf age 6+}  \\ [1.0ex]
-&   1 cm & 1.074 &    1.073 & 1.065 &          0.06707& 6.251  & 0.00450 & (0.95, 1.20)\\
-&   2 cm & 1.074 &    1.067 & 1.060 &          0.10236& 9.595  & 0.01050 & (0.90, 1.28)\\
-&   3 cm & 1.074 &    1.036 & 1.028 &          0.11648& 11.247 & 0.01510 & (0.90, 1.26)\\
-&   4 cm & 1.074 &    1.009 & 1.003 &          0.11837& 11.735 & 0.01830 & (0.90, 1.25)\\
-&   5 cm & 1.074 &    0.950 & 0.944 &          0.11578& 12.184 & 0.02880 & (0.96, 1.19)\\
-&   6 cm & 1.074 &    0.944 & 0.930 &          0.11745& 12.446 & 0.03090 & (0.95, 1.20)\\
-&   7 cm & 1.074 &    0.913 & 0.905 &          0.11462& 12.553 & 0.03910 & (1.00, 1.14) \\[1.5ex]
-  \hline \\
-\end{tabular}
-\end{footnotesize}
-\end{table}
- \end{small}
-
-
-
-\clearpage
- \begin{small}
-\begin{table}[h!]
-\centering
-\setlength\tabcolsep{10.5pt} 
-\captionsetup{font=small, width = 16cm}{
-\caption{Estimated abundance ($\hat{\lambda}_{a}$) for saithe from the original data in year 2017 Q3 compared with estimated abundance ($\hat{\lambda}_{a}^{*}$) from the reduced data for different sampling procedures of length groups ($l$).}\label{saitheresults2017}}
-\begin{footnotesize}
-\begin{tabular}{clclclclclclclcl}
-  \hline \\ [0.3ex]
-&  $l$ & $\hat{\lambda}_{a}$  & $\hat{\lambda}_{a}^{*}$ & (median) $\hat{\lambda}_{a}^{*}$  & SE($\hat{\lambda}_{a}^{*}$) & RSE\%& MSE &  CI-95 ($\hat{\lambda}_{a}^{*}$) \\ [1.0ex]
-\hline \\
- \raisebox{1ex}{\bf age 0}  \\ [1.0ex]
-&   1 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   2 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   3 cm & 0.282  &    0.289 &  0.295 &  0.00626 & 2.17 & 0.00008 & (0.28, 0.29)\\
-&   4 cm & 0.282  &    0.290 &  0.295 &  0.00592 & 2.04 & 0.00010 & (0.28, 0.29)\\
-&   5 cm & 0.282  &    0.282 &  0.282 &  0.00000 & 0.00 & 0.00000 & (0.28, 0.28)\\
-&   6 cm & 0.282  &    0.297 &  0.295 &  0.01022 & 3.44 & 0.00030 & (0.28, 0.31)\\
-&   7 cm & 0.282  &    0.290 &  0.295 &  0.00594 & 2.05 & 0.00010 & (0.28, 0.29)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 1}&  \\ [1.0ex]
-&   1 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
-&   2 cm & 0.123 &      0.123  & 0.123 & 0.00000  & 0.00 & 0.00000 & (0.12, 0.12)\\
-&   3 cm & 0.123 &      0.117  & 0.111 & 0.00626  & 5.36 & 0.00008 & (0.11, 0.12)\\
-&   4 cm & 0.123 &      0.118  & 0.115 & 0.00673  & 5.71 & 0.00008 & (0.11, 0.13) \\
-&   5 cm & 0.123 &      0.125  & 0.123 & 0.00139  & 1.12 & 0.000003 & (0.12, 0.13) \\
-&   6 cm & 0.123 &      0.112  & 0.114 & 0.01059  & 9.46 & 0.00024 & (0.11, 0.13)\\
-&   7 cm & 0.123 &      0.116  & 0.114 & 0.00628  & 5.43 & 0.00009 & (0.11, 0.13)\\[1.2ex]
-
-\raisebox{1ex}{\bf age 2} &  \\ [1.0ex]
-&   1 cm & 0.929 &    0.930  & 0.923 &   0.16851& 18.13 & 0.02840 & (0.64, 1.28)\\
-&   2 cm & 0.929 &    0.916  & 0.861 &   0.28468& 31.06 & 0.08120 & (0.55, 1.53) \\
-&   3 cm & 0.929 &    0.966  & 0.902 &   0.33158& 34.32 & 0.11000 & (0.53, 1.71)\\
-&   4 cm & 0.929 &    0.955  & 0.900 &   0.31885& 33.38 & 0.10200 & (0.49, 1.66)\\
-&   5 cm & 0.929 &    0.992  & 0.942 &   0.31609& 31.85 & 0.10400 & (0.48, 1.75)\\
-&   6 cm & 0.929 &    0.966  & 0.893 &   0.36374& 37.66 & 0.13400 & (0.47, 1.83)\\
-&   7 cm & 0.929 &    0.989  & 0.933 &   0.34996& 35.40 & 0.12600 & (0.45, 1.80)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 3} \\ [1.0ex]
-&   1 cm & 11.238  &  11.270 & 11.249 &  0.53506& 4.75  & 0.28700 & (10.19, 12.30)\\
-&   2 cm & 11.238  &  11.179 & 11.187 &  0.92312& 8.26  & 0.85600 & (9.57, 13.11)\\
-&   3 cm & 11.238  &  11.109 & 11.082 &  1.07691& 9.69  & 1.18000 & (9.30, 13.27)\\
-&   4 cm & 11.238  &  11.000 & 11.009 &  1.08989& 9.91  & 1.24000 & (9.21, 13.15)\\
-&   5 cm & 11.238  &  10.891 & 10.871 &  1.11346& 10.22 & 1.36000 & (9.41, 13.03)\\
-&   6 cm & 11.238  &  10.920 & 10.905 &  1.06856& 9.79  & 1.24000 & (9.46, 13.04)\\
-&   7 cm & 11.238  &  10.840 & 10.839 &  1.08304& 9.99  & 1.33000 & (9.53, 13.05)\\[1.5ex]
-
- \raisebox{1ex}{\bf age 4} &  \\ [1.0ex]
- &  1 cm & 12.789 &   12.757 & 12.754 &  0.52780& 4.14 & 0.28000 & (11.79, 13.73) \\
- &  2 cm & 12.789 &   12.816 & 12.827 &  0.93741& 7.31 & 0.87900 & (10.76, 14.60) \\
- &  3 cm & 12.789 &   12.863 & 12.856 &  1.06438& 8.27 & 1.14000 & (10.68, 14.93) \\
- &  4 cm & 12.789 &   12.950 & 12.954 &  1.09842& 8.48 & 1.23000 & (10.56, 15.14) \\
- &  5 cm & 12.789 &   13.096 & 13.087 &  1.12912& 8.62 & 1.37000 & (10.51, 15.31) \\
- &  6 cm & 12.789 &   13.061 & 13.051 &  1.08819& 8.33 & 1.26000 & (10.42, 15.11) \\
- &  7 cm & 12.789 &   13.176 & 13.187 &  1.09385& 8.30 & 1.35000 & (10.33, 15.18) \\[1.2ex]
-
- \raisebox{1ex}{age 5}  \\ [1.0ex]
-&  1 cm  & 2.971 &     2.971   & 2.966 & 0.13399& 4.51  & 0.01800 & (2.72, 3.24) \\
-&   2 cm & 2.971 &     3.048   & 3.037 & 0.27486& 9.02  & 0.08150 & (2.52, 3.62) \\
-&   3 cm & 2.971 &     3.000   & 2.974 & 0.31856& 10.62 & 0.10200 & (2.42, 3.65) \\
-&   4 cm & 2.971 &     3.038   & 3.005 & 0.34723& 11.43 & 0.12500 & (2.40, 3.77) \\
-&   5 cm & 2.971 &     2.971   & 2.968 & 0.33433& 11.25 & 0.11200 & (2.35, 3.64)\\
-&   6 cm & 2.971 &     2.980   & 2.964 & 0.38418& 12.89 & 0.14800 & (2.28, 3.77)\\
-&   7 cm & 2.971 &     2.940   & 2.922 & 0.39677& 13.49 & 0.15800 & (2.32, 3.76)\\[1.2ex]
-
- \raisebox{1ex}{\bf age 6+} &   \\ [1.0ex]
-&   1 cm & 2.819  &   2.818 & 2.820 & 0.05409& 1.92 & 0.00293 & (2.71, 2.92) \\
-&   2 cm & 2.819  &   2.787 & 2.784 & 0.08700& 3.12 & 0.00860 & (2.68, 2.96) \\
-&   3 cm & 2.819  &   2.808 & 2.808 & 0.11451& 4.08 & 0.01320 & (2.60, 3.04) \\
-&   4 cm & 2.819  &   2.800 & 2.795 & 0.12424& 4.44 & 0.01580 & (2.61, 3.06) \\
-&   5 cm & 2.819  &   2.793 & 2.791 & 0.13520& 4.84 & 0.01890 & (2.58, 3.07) \\
-&   6 cm & 2.819  &   2.814 & 2.823 & 0.14353& 5.10 & 0.02060 & (2.54, 3.10)  \\
-&   7 cm & 2.819  &   2.800 & 2.794 & 0.16239& 5.80 & 0.02670 & (2.55, 3.14)  \\[0.1ex]
-   \hline \\
-\end{tabular}
-\end{footnotesize}
-\end{table}
- \end{small}
- 
  
 \end{document}
