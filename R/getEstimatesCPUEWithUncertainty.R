@@ -84,7 +84,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @export
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
-CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure="datras",
+CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
                         onlySimulate = FALSE,lengthDivision =1:299,samplesWithinEachIntervall = NULL){
 

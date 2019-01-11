@@ -235,18 +235,34 @@ sampleCAHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species
       obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1])
     }
     if(length(obsInside)>1){
-      prob = rep(0,length(obsInside))
-      for(j in 1:length(obsInside)){
-        prob[j] = obsInHL(species = species,hl_hh = hl_hh,id = unique(obsTmp$haul.id),length = obsTmp$LngtCm[obsInside[j]])
+      whichLengthsInside = sort(unique(floor(obsTmp$LngtCm[obsInside])))
+      psaudoPopulation = NULL
+      counter = 1
+      for(j in 1:length(whichLengthsInside)){
+        insideThisLength = round(obsInHL(species = species,hl_hh = hl_hh,id = unique(obsTmp$haul.id),length = whichLengthsInside[j]))
+
+        nTmp = sum(floor(obsTmp$LngtCm)==whichLengthsInside[j])#Number of observed ages in this sub length group
+        repeatedObs =  rep(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),
+                            floor(insideThisLength/nTmp))
+        extraObs = sample(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),(insideThisLength %% nTmp),replace = FALSE)
+
+        if(insideThisLength!=0){
+          psaudoPopulation[counter:(counter + insideThisLength-1)] = c(repeatedObs,extraObs)
+          counter = counter + insideThisLength
+        }else{
+          #This should not happen, a length was reported in CA data but not in HL data.
+          #print("Observation in CA data was not in HL data")
+          #print("Length")
+          #print(whichLengthsInside[j])
+          #print("ID: ")
+          #print(unique(obsTmp$haul.id))
+          psaudoPopulation[counter] = c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs)
+          counter = counter + 1
+        }
       }
+
       nSample = min(samplesWithinEachIntervall,length(obsInside))
-      obsSelected=NULL
-      for(i in 1:nSample){
-        obsSelectedCurrent = sample(obsInside,1,prob = prob)#Sample with probability proportional to the number observed at length
-        prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] = prob[which(obsTmp$LngtCm[obsInside]== obsTmp$LngtCm[obsSelectedCurrent])] -1 #Update the probability for sampling the next age observation
-        obsSelected = c(obsSelected,obsSelectedCurrent)
-        prob[which(prob<0)] = 0 #The probability may be negative since there are some small round off errors in data
-      }
+      obsSelected = sample(psaudoPopulation,size = nSample, replace = FALSE) #Sample without replecement from the psaudo population
     }else{
       obsSelected = obsInside
     }

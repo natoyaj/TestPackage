@@ -117,5 +117,9 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
 
   toReturn$weightStatRec = weightStatRec
 
+
+  toReturn$hl_hh$LngtCm = floor(toReturn$hl_hh$LngtCm) #This must be changed if length groups are more detailed than 1 cm
+  toReturn$ca_hh$LngtCm = floor(toReturn$ca_hh$LngtCm)
+
   return(toReturn)
 }
