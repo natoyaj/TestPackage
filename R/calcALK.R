@@ -191,19 +191,22 @@ calculateALKHaulbased = function(RFA, species, year, quarter,data,data_hl,length
   alk[,2] = seq(minLength,maxLength,by = lengthClassIntervallLengths)
   #----------------------------------------------------
 
-  #Investigate if zero data, if so return the sceleton-
+  #Investigate if zero data, if so return the sceleton with equal proportions for all ages-
   if(dim(caInterest)[1]==0){
     idHaul = unique(c(as.character(hlInterest$haul.id),as.character(caInterest$haul.id)))
     neste=1
+    alkFictive = alk
+    alkFictive[,3:(maxAge+3)] = 1/(maxAge+1)
     for(id in idHaul){
       idTmp = as.character(id)
-      alkThis = as.data.frame(alk)
+      alkThis = as.data.frame(alkFictive)
       names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
       alkThis$ID[1] = idTmp
       alkToReturn[[neste]] = alkThis
       neste = neste+1
     }
     warning(paste("No observations in period in RFA: " ,RFA,sep = ""))
+
     return(alkToReturn)
   }
   #----------------------------------------------------
