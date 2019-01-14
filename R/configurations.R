@@ -21,7 +21,7 @@ confALK = function(species,quarter)
       maxLength = 90
     }
   }else if(species == "Pollachius virens"){
-    maxAge = 9
+    maxAge = 10
     minLength = 7
     maxLength = 110
     lengthClassIntervallLengths = 1
