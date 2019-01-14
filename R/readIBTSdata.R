@@ -104,7 +104,7 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = F
   weightStatRec$StatRec = as.character(weightStatRec$StatRec)
 
   if(!useWeights){
-    dat$weightStatRec$Weight = rep(1,dim(dat$weightStatRec)[1])
+    weightStatRec$Weight = rep(1,dim(dat$weightStatRec)[1])
   }
   #-------------------------------------------------------------------
 
