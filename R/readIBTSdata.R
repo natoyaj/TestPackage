@@ -7,7 +7,7 @@
 #' @return
 #' @examples
 #'
-readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = FALSE)
+readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = TRUE)
 {
   #Read IBTS-data-----------------------------------------
   dataDir <- system.file("extdata", package = "IBTSindices")
