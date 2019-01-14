@@ -41,9 +41,14 @@ calculateALKDatras = function(RFA,species,year,quarter,data)
     #Investigate if zero data, if so return the sceleton-
     if(dim(caInterest)[1]==0){
       warning(paste("No observations in period in RFA: " ,RFA,sep = ""))
+      alk[,2:(maxAge+2)] = 1/(maxAge+1)
+      alk = as.data.frame(alk)
+      names(alk) = c("length", c(0:maxAge))
+      attributes(alk)$foundWithin = rep(FALSE, dim(alk)[1])
       return(alk)
     }
     #----------------------------------------------------
+
 
     #Truncate all old fish to the pluss group------------
     caInterest$Age[caInterest$Age > maxAge] = maxAge

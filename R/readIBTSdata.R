@@ -7,7 +7,7 @@
 #' @return
 #' @examples
 #'
-readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
+readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = FALSE)
 {
   #Read IBTS-data-----------------------------------------
   dataDir <- system.file("extdata", package = "IBTSindices")
@@ -46,14 +46,18 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
             !is.na(ca$Quarter) & ca$Quarter == quarter&
             !is.na(ca$Species) & ca$Species == species,]
   hl = hl[!is.na(hl$Year) & hl$Year == year&
-            !is.na(hl$Quarter) & hl$Quarter == quarter,]
+            !is.na(hl$Quarter) & hl$Quarter == quarter&
+            !is.na(hl$Species),]
+
 
   for(id in unique(hl$haul.id)){
     if(sum(!is.na(hl$Species[hl$haul.id==id])& hl$Species[hl$haul.id==id]==species)==0){
       hvilke = which(hl$haul.id==id);
       if(length(hvilke)>1)hl = hl[-hvilke[-1],]
     }else{
-      hl = hl[-which(!is.na(hl$haul.id)&!is.na(hl$Species)&hl$haul.id==id &hl$Species!=species),]
+      if(length(which(!is.na(hl$haul.id)&!is.na(hl$Species)&hl$haul.id==id &hl$Species!=species))>1){
+        hl = hl[-which(!is.na(hl$haul.id)&!is.na(hl$Species)&hl$haul.id==id &hl$Species!=species),]
+      }
     }
   }
 
@@ -98,8 +102,12 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species)
   weightsDir <<- system.file("weightsSaithe", package = "IBTSindices")
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
   weightStatRec$StatRec = as.character(weightStatRec$StatRec)
+
+  if(!useWeights){
+    dat$weightStatRec$Weight = rep(1,dim(dat$weightStatRec)[1])
+  }
   #-------------------------------------------------------------------
-#  hl_hh$haul.idReal = hl_hh$haul.id
+
 
 
 

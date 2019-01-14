@@ -77,8 +77,9 @@ simTrawlHaulsCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua"
                           !is.na(data$Age),]
   #-----------------------------------------------------
 
-  if(dim(dataOfInterest)[1]==0)return(dataOfInterest)
-
+  if(dim(dataOfInterest)[1]==0){
+    return(dataOfInterest)
+  }
   #Simulate trawl hauls---------------------------------
   lengths = unique(sort(floor(dataOfInterest$LngtCm)))
   simData = list(NULL)
@@ -145,6 +146,11 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
                           !is.na(dataHH$Roundfish) & dataHH$Roundfish == RFA ,]
   #-----------------------------------------------------
 
+  if(dim(dataOfInterest)[1] ==1){
+    warning(paste("Only one haul in the whole RFA: ", RFA, sep = ""))
+    dataOfInterest$originalIdAtThisLocation = toString(dataOfInterest$haul.id[1])
+    return(dataOfInterest)
+  }
   #Simulate trawl hauls---------------------------------
   statRec = unique(dataOfInterest$StatRec)
   simData = list(NULL)
@@ -256,8 +262,8 @@ sampleCAHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species
           #print(whichLengthsInside[j])
           #print("ID: ")
           #print(unique(obsTmp$haul.id))
-          psaudoPopulation[counter] = c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs)
-          counter = counter + 1
+          psaudoPopulation[counter:((counter + length(c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs))-1))] = c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs)
+          counter = counter + length(c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs))
         }
       }
 

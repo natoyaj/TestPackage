@@ -134,61 +134,63 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       HH$originalIdAtThisLocation = 0; #Removed later
 
       for(RFA in 1:9){
-        loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
-        if(bootstrapProcedure =="datras"){
-          simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
-          simDataHL = simDataHLList$hl_hh
-          simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
-        }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
-          simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
-          simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
-          simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
-          simDataHH = dat$hh[1,]#Define the structure in the data, this line is removed later.
-          simDataHH$originalIdAtThisLocation = 0; #Removed later
-          for(j in 1:dim(simHauls)[1]){
-            tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
-            tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
-            tmpHH = dat$hh[which(dat$hh$haul.id== simHauls$haul.id[j]),]
+        if(dim(dat$hh[dat$hh$Roundfish==RFA,])[1]>0){
+          loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
+          if(bootstrapProcedure =="datras"){
+            simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
+            simDataHL = simDataHLList$hl_hh
+            simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+          }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
+            simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
+            simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
+            simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
+            simDataHH = dat$hh[1,]#Define the structure in the data, this line is removed later.
+            simDataHH$originalIdAtThisLocation = 0; #Removed later
+            for(j in 1:dim(simHauls)[1]){
+              tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
+              tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
+              tmpHH = dat$hh[which(dat$hh$haul.id== simHauls$haul.id[j]),]
 
-            if(dim(tmpCA)[1]>0){
-              tmpCA$StatRec = simHauls$StatRec[j]
-              tmpCA$lon = simHauls$lon[j]
-              tmpCA$lat = simHauls$lat[j]
-              tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-              simDataCA = rbind(simDataCA,tmpCA)
+              if(dim(tmpCA)[1]>0){
+                tmpCA$StatRec = simHauls$StatRec[j]
+                tmpCA$lon = simHauls$lon[j]
+                tmpCA$lat = simHauls$lat[j]
+                tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+                simDataCA = rbind(simDataCA,tmpCA)
+              }
+              if(dim(tmpHL)[1]>0){
+                tmpHL$StatRec = simHauls$StatRec[j]
+                tmpHL$lon = simHauls$lon[j]
+                tmpHL$lat = simHauls$lat[j]
+                tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+                simDataHL = rbind(simDataHL,tmpHL)
+              }
+              if(dim(tmpHH)[1]>0){
+                tmpHH$StatRec = simHauls$StatRec[j]
+                tmpHH$lon = simHauls$lon[j]
+                tmpHH$lat = simHauls$lat[j]
+                tmpHH$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+                tmpHH$originalIdAtThisLocation = simHauls$originalIdAtThisLocation[j]
+                simDataHH = rbind(simDataHH,tmpHH)
+              }
             }
-            if(dim(tmpHL)[1]>0){
-              tmpHL$StatRec = simHauls$StatRec[j]
-              tmpHL$lon = simHauls$lon[j]
-              tmpHL$lat = simHauls$lat[j]
-              tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-              simDataHL = rbind(simDataHL,tmpHL)
-            }
-            if(dim(tmpHH)[1]>0){
-              tmpHH$StatRec = simHauls$StatRec[j]
-              tmpHH$lon = simHauls$lon[j]
-              tmpHH$lat = simHauls$lat[j]
-              tmpHH$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
-              tmpHH$originalIdAtThisLocation = simHauls$originalIdAtThisLocation[j]
-              simDataHH = rbind(simDataHH,tmpHH)
-            }
-          }
-          simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
-          simDataHL = simDataHL[-1,]
-          simDataHH = simDataHH[-1,]
-          HH = rbind(HH,simDataHH)
+            simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+            simDataHL = simDataHL[-1,]
+            simDataHH = simDataHH[-1,]
+            HH = rbind(HH,simDataHH)
 
-          if(bootstrapProcedure =="stratifiedHLdatrasCA"){
-            #Sample ages with DATRAS-procedure
-            simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
+            if(bootstrapProcedure =="stratifiedHLdatrasCA"){
+              #Sample ages with DATRAS-procedure
+              simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
+            }else{
+              #Sample ages stratified with wrt length and haul, this is done after the for-loop.
+            }
           }else{
-            #Sample ages stratified with wrt length and haul, this is done after the for-loop.
+            return("Select a valid bootstrap procedure.")
           }
-        }else{
-          return("Select a valid bootstrap procedure.")
+          CA = rbind(CA,simDataCA)
+          HL = rbind(HL,simDataHL)
         }
-        CA = rbind(CA,simDataCA)
-        HL = rbind(HL,simDataHL)
       }
 
       CA = CA[-1,]#Removes the first line which was created for defining the structure of the data
