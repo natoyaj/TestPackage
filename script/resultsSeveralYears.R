@@ -1,9 +1,9 @@
 library(xlsx)
 quarter = 3
 species = "Pollachius virens"
-n=2
+n=100
 
-yearStart = 2012
+yearStart = 1992
 yearStop = 2018
 minAge = 0
 maxAge = 10
@@ -17,7 +17,7 @@ estimatesSD = estimatesMean
 counterYear = 1
 for(year in yearStart:yearStop){
   dat = readIBTSData(survey = "NS-IBTS", year = year, quarter = quarter,species = species)
-  dat$weightStatRec$Weight = rep(1,dim(dat$weightStatRec)[1])
+ # dat$weightStatRec$Weight = rep(1,dim(dat$weightStatRec)[1])
   #-------------------
 
   #Calculates CPUEs on age-level in the whole North Sea---------
@@ -30,6 +30,8 @@ for(year in yearStart:yearStop){
   estimatesMean[,counterYear] = mCPUEStratifiedHL$mCPUE
   estimatesSD[,counterYear] = mCPUEStratifiedHL$sd
   counterYear = counterYear+1
+
+  print(year)
 }
 
 
@@ -40,5 +42,5 @@ names(estimatesSD) = seq(yearStart,yearStop,by = 1)
 rownames(estimatesMean) = seq(minAge,maxAge)
 rownames(estimatesSD) = seq(minAge,maxAge)
 
-write.xlsx(estimatesMean, "meanToJennifer.xlsx")
-write.xlsx(estimatesSD, "sdToJennifer.xlsx")
+write.xlsx(estimatesMean, "meanToJenniferWithWeights.xlsx")
+write.xlsx(estimatesSD, "sdToJenniferWithWeights.xlsx")
