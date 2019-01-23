@@ -519,14 +519,15 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
     stop("Abort because of convergence issues")
   }
   #Extract the estimated continuous GRF-----------------
+  conf = confALK(species = species,quarter = quarter)
+
   Apred = fitModel$Apred
-  field1 = Apred %*%report$x[,2]/exp(report$logTau[2])
-  field2 = Apred %*%report$x[,3]/exp(report$logTau[3])
-  field3 = Apred %*%report$x[,4]/exp(report$logTau[4])
-  field4 = Apred %*%report$x[,5]/exp(report$logTau[5])
-  field5 = Apred %*%report$x[,6]/exp(report$logTau[6])
 
+  field = matrix(0,conf$maxAge,dim(Apred)[1])
 
+  for(i in 1:conf$maxAge){
+    field[i,] = as.numeric(Apred %*%report$x[,i]/exp(report$logTau[i]))
+  }
 
   #beta0 = report$beta0
   repLength = report$repLength
@@ -544,8 +545,8 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
   #-----------------------------------------------------
 
   #Define variables used in the construction of the ALK--
-  conf = confALK(species = species,quarter = quarter)
   maxAge = conf$maxAge
+  minAge = conf$minAge
   minLength = conf$minLength
   maxLength = conf$maxLength
   lengthClassIntervallLengths = conf$lengthClassIntervallLengths
@@ -569,89 +570,47 @@ calculateALKModel = function(RFA, species, year, quarter,hh,data, fitModel = NUL
       omr = which(listWithOrderedId==originalId)
     }else{
       omr = which(listWithOrderedId==id)
-
     }
 
-    #Construct the parts of the ALK were we have data-------------------
     if(species=="Gadus morhua" | species=="Pollachius virens")
     {
       idTmp = as.character(id)
       alkThis = as.data.frame(alk)
-      names(alkThis) = c("ID","Length","0","1","2","3","4","5","6")
+      names(alkThis) = c("ID","Length",0:maxAge)
       alkThis$ID[1] = idTmp
 
-      if(quarter ==1){
-        for(l in 1:length(minLength:maxLength))
-        {
-          length = (minLength:maxLength)[l]
-          nu2 = exp(repLength[length +maxLength*2] +field2[omr])
-          nu3 = exp(repLength[length +maxLength*3] +field3[omr])
-          nu4 = exp(repLength[length +maxLength*4] +field4[omr])
-          nu5 = exp(repLength[length +maxLength*5] +field5[omr])
-
-
-          if(truncationL[1]>length | truncationU[1]<length)nu2 = 0
-          if(truncationL[2]>length | truncationU[2]<length)nu3 = 0
-          if(truncationL[3]>length | truncationU[3]<length)nu4 = 0
-          if(truncationL[4]>length | truncationU[4]<length)nu5 = 0
-
-          prob2 = nu2/(1+nu2)
-          prob3 = nu3/(1+nu3)*(1-prob2)
-          prob4 = nu4/(1+nu4)*(1-prob2-prob3)
-          prob5 = nu5/(1+nu5)*(1-prob2-prob3-prob4)
-
-          if(length<=boarder){
-            alkThis$'0'[l] = 0
-            alkThis$'1'[l] = round(1-prob2-prob3-prob4 -prob5, digits = 3)
-            alkThis$'6'[l] = 0
-          }else{
-            alkThis$'0'[l] = 0
-            alkThis$'1'[l] = 0
-            alkThis$'6'[l] = round(1-prob2-prob3-prob4 -prob5, digits = 3)
-          }
-
-          alkThis$'2'[l] = round(prob2,digits = 3)
-          alkThis$'3'[l] = round(prob3,digits = 3)
-          alkThis$'4'[l] = round(prob4,digits = 3)
-          alkThis$'5'[l] = round(prob5,digits = 3)
+      for(l in 1:length(minLength:maxLength))
+      {
+        length = (minLength:maxLength)[l]
+        nu =rep(0,maxAge)
+        for(a in 1:(maxAge)){
+          nu[a] = repLength[length +maxLength*(a-1)] +field[a,omr]
         }
-      }else if(quarter ==3){
-        for(l in 1:length(minLength:maxLength))
-        {
-          length = (minLength:maxLength)[l]
-          nu1 = exp(repLength[length +maxLength]   +field1[omr])
-          nu2 = exp(repLength[length +maxLength*2] +field2[omr])
-          nu3 = exp(repLength[length +maxLength*3] +field3[omr])
-          nu4 = exp(repLength[length +maxLength*4] +field4[omr])
-          nu5 = exp(repLength[length +maxLength*5] +field5[omr])
 
-          if(truncationL[1]>l | truncationU[1]<l)nu1 = 0
-          if(truncationL[2]>l | truncationU[2]<l)nu2 = 0
-          if(truncationL[3]>l | truncationU[3]<l)nu3 = 0
-          if(truncationL[4]>l | truncationU[4]<l)nu4 = 0
-          if(truncationL[5]>l | truncationU[5]<l)nu5 = 0
+        expNu = exp(nu)
 
-          prob1 = nu1/(1+nu1)
-          prob2 = nu2/(1+nu2)*(1-prob1)
-          prob3 = nu3/(1+nu3)*(1-prob1-prob2)
-          prob4 = nu4/(1+nu4)*(1-prob1-prob2-prob3)
-          prob5 = nu5/(1+nu5)*(1-prob1-prob2-prob3-prob4)
+        for(a in 1:maxAge){
+          if(truncationL[a+1]>length | truncationU[a]<length)expNu[a] = 0
+        }
 
-          if(length<=boarder){
-            alkThis$'0'[l] =round(1-prob1 -prob2-prob3-prob4 -prob5, digits = 3)
-            alkThis$'6'[l] = 0
-          }else{
-            alkThis$'0'[l] = 0
-            alkThis$'6'[l] = round(1-prob1 -prob2-prob3-prob4 -prob5, digits = 3)
-          }
+        prob = rep(0,maxAge +1)
+        for(a in (minAge+1):(maxAge-1)){
+          prob[a+1] =expNu[a+1]/(sum(expNu[(minAge+1):(maxAge-1) + 1])+1)
+        }
 
-          alkThis$'1'[l] = round(prob1,digits = 3)
-          alkThis$'2'[l] = round(prob2,digits = 3)
-          alkThis$'3'[l] = round(prob3,digits = 3)
-          alkThis$'4'[l] = round(prob4,digits = 3)
-          alkThis$'5'[l] = round(prob5,digits = 3)
+
+        if(length<=boarder){
+          prob[minAge + 1] = 1-sum(prob[(minAge+1):(maxAge-1) +1])
+        }else{
+          prob[maxAge + 1 ] = 1-sum(prob[(minAge+1):(maxAge-1) + 1])
+        }
+
+        for(a in 0:maxAge){
+          eval(parse(text = paste("alkThis$'",a,"'[l] = round(prob[a+1],digits = 3)",sep = "")))
         }
       }
+
+
     }
     #Store the ALK for this trawl haul in the list to be returned
     alkToReturn[[neste]] = alkThis
