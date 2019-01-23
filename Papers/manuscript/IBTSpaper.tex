@@ -368,10 +368,12 @@ In this section we apply the three ALK methods given in Section \ref{sec:alkmeth
  \caption{Estimated proportion of age 1 and 2 year-old Gadus morhua (cod) of length 20 cm long. The green circles $(\mycirc[green])$ and blue circles $(\mycirc[blue])$ are observations of one and two year old cod, respectively, which are in the length interval 19 cm to 21 cm. }\label{fig:proportionSkagerak}}
 \end{figure}
 
-Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replicates are estimated from the three ALK methods. (\ed{Now that we know that DATRAS do provide uncertainty estimates using their bootstrap procedure, we should use their approach here and compare with our stratified method!?})
+Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replicates are estimated from the three ALK methods. 
 
 %The three ALK methods gave similar estimates of indices of abundance at age for both species (\ed{we need to discuss results in the plots}). 
 %As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the spatial model based ALK generally gave shorter interval widths for both species (Figure \ref{BiascorrectedALK}). Furthermore, compared with the area based ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. 
+(\ed{Now that we know that DATRAS do provide uncertainty estimates using their bootstrap procedure, we should use their approach here and compare with our stratified method. The explanation below is for old results. This should be undated})
+\nat{We also demonstrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance (see Figure \ref{DatrasStratified} in Supplementary Materials \ref{secAp:resultsdatrasALK}). DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. Thus, the two steps counteract each other. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups of saithe in year 2017 Q3, suggesting that it is highly relevant to account for the variation in the data over large areas.} 
 
 %\clearpage
 
@@ -385,7 +387,17 @@ Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod i
 \label{BiascorrectedALK}
 \end{figure*} 
 
-
+%
+%
+%\clearpage
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3DATRASStratifedBiasCorr.jpeg}} & 
+%\end{tabular}
+%\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{95}$) from DATRAS and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), bootstrap mean (Mean), Median estimates, percentage relative standard error (RSE \%) and width of confidence intervals  are also given.}
+%\label{DatrasStratified}
+%\end{figure*} 
 
 \clearpage
 \subsection{Evaluation of sampling strategy of otoliths for age determination}
@@ -716,6 +728,25 @@ Figures \ref{fig:proportionSkagerak1}  \ref{fig:proportionSkagerak2}, and \ref{f
 \end{figure}
 
 \clearpage
+
+
+\clearpage
+
+
+
+\section{\large Estimates from DATRAS and Stratified bootstrap procedures}
+\label{secAp:resultsdatrasALK}
+The bootstrap procedure proposed by DATRAS lacks the potential to account for the spatial variation in the data. The DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. The results (Figure\ref{DatrasStratified}) shows an overestimation of the uncertainty for all age groups, suggesting that it is relevant to account for the fine-scale stratification when resampling the data.
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[Datras and Stratified bootstrap Procedures]{\includegraphics[width=0.95\textwidth]{figures/saithe2017Q3DATRASStratifedBiasCorr.jpeg}} & 
+\end{tabular}
+\caption[]{Comparison of estimated confidence intervals ($\mathrm{CI}_{95}$) from DATRAS and stratified bootstrap procedures. The bias-corrected bootstrap method is used to give estimates for saithe in year 2017 Q3. Estimated indices of abundance (Estimate), and its standard error (SE), bootstrap mean (Mean), Median estimates, percentage relative standard error (RSE \%) and width of confidence intervals  are also given.}
+\label{DatrasStratified}
+\end{figure*} 
 
 
 \subsection{Estimates from different sampling procedures}
