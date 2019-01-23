@@ -5,12 +5,11 @@
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
-#' @param ALK the ALK.
 #' @export
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatRec = NULL)
+calcmCPUErfa = function(RFA,species,year, quarter, data, weightStatRec = NULL)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -63,11 +62,10 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, ALK = NULL, weightStatR
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRec = function(statRec,species,year, quarter, data, ALK = NULL,percentOfAreaRepresentative = NULL,nLengthClass)
+calcmCPUEstatRec = function(statRec,species,year, quarter, data,nLengthClass)
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -175,8 +173,7 @@ calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weight
     {
       for(j in 1:numberOfStatRectangles){
         mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
-
-
+#      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]#NB!!!!!
       }
     }
 
@@ -199,12 +196,11 @@ calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weight
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param ALK the ALK.
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEstatRecAreaBasedALK = function(statRec,species,year, quarter, data, ALK,percentOfAreaRepresentative = NULL)
+calcmCPUEstatRecAreaBasedALK = function(statRec,species,year, quarter, data, ALK)
 {
   nFoundWithin = 0
   nNotFoundWithin = 0
@@ -381,12 +377,11 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param ALK List with the ALKs for each trawl haul. First element of each ALK in the list is a vector with the first element eual the haulId. This haulId is used when finding which of the ALK which are used.
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALKNew,procedure = "",percentOfAreaRepresentative = NULL)
+calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALKNew,procedure = "")
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -504,7 +499,6 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @param year The year of interest.
 #' @param quarter The quarter of interest.
 #' @param data the datras-data needed.
-#' @param percentOfAreaRepresentative the percentage of the statical recangle within sea depth intervall
 #' @param column column in the mCPUE matrix to calculate mCPUE
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
@@ -540,21 +534,23 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   totalArea = 0
   for(RFA in 1:9){
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
-
     #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
-    if(RFA ==5)areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
-
+    if(RFA ==5){
+      areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
+    }
 
     if(species== "Pollachius virens"){
       areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
+      #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
+      if(RFA ==5){#TODO: DATRAS-data do not consist of RFA 10 information.
+        areaThisRFA = areaThisRFA #+ rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
+      }
     }
-
 
     cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                           ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
-
     totalArea = totalArea + areaThisRFA
 
     if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
