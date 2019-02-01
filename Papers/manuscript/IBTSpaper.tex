@@ -260,25 +260,34 @@ The model based ALK estimate is obtained by maximizing the likelihood. We maximi
 
 \subsection{Uncertainty estimation}
 \label{sec:uncertaintyestimation}
-In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. In nonparametric bootstrapping independent samples of lengths and age are drawn with from the original data and approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data. The bias-corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. 
+In this section we describe how the uncertainty of the CPUE estimates are calculated. We use nonparametric bootstrapping to quantify the uncertainty of the CPUEs. Nonparametric resampling allows us to estimate the sampling distribution of the CPUE empirically without making assumptions concerning the data.  A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea was suggested in \citet{ICES2006Report}. In this research we have implemented that procedure, along with a modification, and a suggestion for a design based procedure. The next sub section elaborate these three procedures.
 
-A bootstrap procedure for estimating the uncertainty of CPUEs in the North Sea is suggested in \citet{ICES2006Report}. This bootstrap procedure, which we refer to as the DATRAS bootstrap, uses constant ALK and CPUE in the RFAs. Here we provide a modification of the bootstrap procedure proposed by DATRAS (\ed{Olav I think we should say here why the procedure was modified, if it's with regards to implementation etc. Please address this)}. \nat{This procedure, which we refer to as the modified-DATRAS bootstrap procedure is divided into two parts; one part which samples CPUE per length (\ref{eq:cpueHaul}), and another part which samples the ALK used in (\ref{eq:cpueALK}). The modified-DATRAS bootstrap procedure is also based on the assumption of constant ALK and CPUE within RFAs. The assumption of constant ALK and CPUE is likely to be wrong, and would typically cause an overestimation of the uncertainty. \ed{(Perhaps we should say here also what the modified-DATRAS procedure does, for example stratified with respect to rectangle? I am not sure of the difference between the two, but we need to distinguish between DATRAS and the modified-DATRAS procedure)}} 
+
+Approximate $95\%$ confidence intervals are obtained using bias-corrected percentile method  \citep{carpenter2000bootstrap}. The bias-corrected method adjusts for the bias and skew of the sampling distribution of the data \citep{puth2015variety, karlsson2009bootstrap}. 
 
 
 \subsubsection{Bootstrap procedures}
 \label{sec:datrasstratifiedbootstrap}
-In this section we describe the three bootstrap procedures used in this research. The two procedures differ by how the ages are sampled. The modified-DATRAS and stratified bootstrap procedures are constructed as follows:
+This section describes the bootstrap procedures used in this research. The bootstrap procedures are constructed as follows:
 \begin{enumerate}
-\item For each statistical rectangle, sample $|H_s|$ hauls with replacement from the corresponding statistical rectangle. If there is only one haul within a statistical rectangle, sample either that haul or the closest haul.
-\item Sample age observations from the resampled hauls obtained in step 1. For the DATRAS procedure this is achieved by (a), and for the stratified procedure this is achieved by (b) \ed{(Is (a) for the DATRAS procedure or modified-DATRAS procedure (stratified with respect to rectangle)? If (a) is for DATRAS procedure then perhaps we need a (c) included below for modified-DATRAS procedure also?)} :
+\item For each statistical rectangle $s$, sample $|H_s|$ hauls and assign them to statistical rectangle $s$. We have implemented the following two procedure for this step. The procedure (a) was suggested by \citep{ICES2006Report}, and procedure (b) is our suggestion and is intended to account for the sampling procedure.: 
 \begin{enumerate}
-\item For each \textit{RFA} and length group, sample with replacement $n_{l,a,RFA}$ age observations stratified with respect to \textit{RFA} and length group. Here $n_{l,a,RFA}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{l,a,RFA} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
-\item For each haul and length group, sample without replacement  $n_{l,a,h}$ age observations stratified with respect to haul and length group using a pseudo-population bootstrap procedure \citep{mashreghi2016survey}. Here $n_{l,a,h}$ is the total number of age observations in length group $l$ in the corresponding haul. Ages are sampled with probability  proportional to the number of fish in the corresponding length group and haul. If there is only one observed age within a length group in a haul, that age is sampled. The pseudo bootstrap procedure is presented in Supplementary Materials \ref{secAp:pseudobootstrap}. 
+\item Sample $|H_s|$ hauls with replacement from the corresponding RFA.
+\item sample $|H_s|$ hauls with replacement from the corresponding statistical rectangle. If there is only one haul within a statistical rectangle, sample either that haul or the closest haul.
+\end{enumerate}
+\item Sample age observations from the resampled hauls obtained in step 1. We have implemented the following two procedure for this step. Again, the procedure (a) was suggested by \citep{ICES2006Report}, and procedure (b) is our suggestion and is intended to account for the sampling procedure.: 
+\begin{enumerate}
+\item For each \textit{RFA} and length group $l$, sample with replacement $n_{RFA,l,a}$ age observations stratified with respect to \textit{RFA} and length group. Here $n_{RFA,l,a}$ is the total number of age observations in length group $l$ in the corresponding RFA. If there is only one observed age from a given length group, i.e. $n_{RFA,l,a} = 1$, we sample either that age or an age in the closest length class with observed ages within the RFA.
+\item For each haul and length group, sample without replacement  $n_{l,a,h}$ age observations stratified with respect to haul and length group using a pseudo-population bootstrap procedure \citep{mashreghi2016survey}. Here $n_{l,a,h}$ is the total number of age observations in length group $l$ in the corresponding haul. If there is only one observed age within a length group in a haul, that age is sampled. The pseudo bootstrap procedure is presented in Supplementary Materials \ref{secAp:pseudobootstrap}. 
 
 \end{enumerate}
 \item Calculate the relative abundance at age, $\text{mCPUE}_a$ in (\ref{eq:abundanceestimatornorthsea}), using the sampled data.
 \item Repeat 1-3 B times, where B is the number of bootstrap replications.
 \end{enumerate}
+
+The three bootstrap procedures include in this resarach are: 1) The DATRAS procedure, which does 1a and 2a. 2) The modified DATRAS procedure, which does 1b and 2a. 3) The design based procedure , which does 1b and 2b.
+
+
 
 \subsection{Reducing the number of otoliths sampled for age determination}
 \label{sec:reducingeffort}
@@ -564,19 +573,16 @@ If there does not exist an age reading of a fish of length $l$ in a haul we prop
 
 \section{Pseudo bootstrap method}
 \label{secAp:pseudobootstrap}
-Assume each length group has $n_{l}$ sub length groups. Assume further in a given haul and a length group that the vector of number of observed lengths and ages within each sub length group are ${\bf x} = \left(x_{1},...,x_{nl}\right)$ and ${\bf a} = \left(a_{1},...,a_{nl}\right)$.  The pseudo bootstrap procedure is defined as follows:
+Assume a length $l$ group has $n_{l}$ sub length groups. Assume further in a given haul and a length group that the vector of number of observed lengths and ages within each sub length group are ${\bf x} = \left(x_{1},...,x_{nl}\right)$ and ${\bf a} = \left(a_{1},...,a_{nl}\right)$.  The pseudo bootstrap procedure is defined as follows:
 
 \begin{enumerate}
-\item Sample hauls with replacement
-\item For a given length group, do the following for each sub length group, $i$ inside the length group: Define $k$ as the largest value such that $ka_{i} \leq x_{i}$. Sample without replacement $x_{i} - k a_{i}$ observed ages in the given haul and the given sub length group, and denote these samples as $a^{\mathrm{extra}}_{i}$. Define the pseudo population of age observation in sub length group $i$, $a^{(s)*}_{i}$, as the union of $k$ replications of the observed ages in the sub length group and $a^{\mathrm{extra}}_{i}$.
+\item For a given length group, do the following for each sub length group, $i$, inside the length group: Define $k$ as the largest value such that $ka_{i} \leq x_{i}$. Sample without replacement $x_{i} - k a_{i}$ observed ages in the given haul and the given sub length group, and denote these samples as $a^{\mathrm{extra}}_{i}$. Define the pseudo population of age observation in sub length group $i$, $a^{(s)*}_{i}$, as the union of $k$ replications of the observed ages in the sub length group and $a^{\mathrm{extra}}_{i}$.
 
 \item Define $a^{*}_{l} = \cup_{i = 1}^{n_{l}} a^{(s)*}_{i} $, where $a^{(s)*}_{i}, \ i \in \left(1,...,n_{l} \right)$, are the pseudo populations obtained in step 2.
 
 \item Sample without replacement $\sum_{i = 1}^{n_{l}} a_{i}$ samples from $a^{*}_{l} $.
 
 \item Repeat steps $2-4$ for each haul and length group.
-\item Use the sampled hauls and ages in steps $1-5$ to calculate the mCPUE per age.
-\item Repeat steps $1-6$ $B$ times.
 \end{enumerate}
 
 \clearpage
