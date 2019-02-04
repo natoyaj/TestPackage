@@ -34,13 +34,13 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
-    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA, data_hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
+    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
     cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
     cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
-    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,data = dataToSimulateFromCA)
+    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA)
     cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }else{
     stop("Unkown ALKprocedure")
@@ -86,7 +86,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        onlySimulate = FALSE,lengthDivision =1:299,samplesWithinEachIntervall = NULL){
+                        onlySimulate = FALSE,lengthDivision =1:199,samplesWithinEachIntervall = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -139,7 +139,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
           if(bootstrapProcedure =="datras"){
             simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
             simDataHL = simDataHLList$hl_hh
-            simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+            simDataCA = simCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
           }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
             simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
             simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
@@ -181,7 +181,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
 
             if(bootstrapProcedure =="stratifiedHLdatrasCA"){
               #Sample ages with DATRAS-procedure
-              simDataCA = simTrawlHaulsCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
+              simDataCA = simCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
             }else{
               #Sample ages stratified with wrt length and haul, this is done after the for-loop.
             }

@@ -67,7 +67,7 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh)
 #' @return Returns simulations of the dataras-data with both length and age information on a similar format as the data used in the functions for calculating the CPUEs
 #' Sample stratisfied with respect to the length observed. This gives meaning since it is assumed that the ALK is similar in the whole roundfish area.
 #' @examples
-simTrawlHaulsCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
+simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -86,7 +86,7 @@ simTrawlHaulsCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua"
 
   for(i in 1:length(lengths)){
     l = lengths[i]
-    n = sum(floor(dataOfInterest$LngtCm)==l)
+    n = sum(floor(dataOfInterest$LngtCm)==l) #If we are to reduce the number of otoliths we mush change this value.
     if(n ==1)
     {
       if(l<max(lengths) & l>min(lengths))

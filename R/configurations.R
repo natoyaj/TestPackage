@@ -32,7 +32,17 @@ confALK = function(species,quarter)
       maxLength = 90
     }
   }else{
-    #See Annex 1 in datras procedure document for configurations regarding ALK for different species
+    maxAge = 6
+    minLength = 7
+    maxLength = 110
+    lengthClassIntervallLengths = 1
+    if(quarter == 1)
+    {
+      minAge = 1
+      minLength = 15
+      maxLength = 90
+    }
+    print("Warning, dont know the max age, tryes the same settings as for cod")
   }
 
   conf = list()
