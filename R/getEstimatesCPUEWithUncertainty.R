@@ -102,6 +102,9 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   nNotFoundWithin = 0
   nFoundWithinAllData = 0
   nNotFoundWithinAllData = 0
+  nWithDatrasAllData = 0
+  nWithoutDatrasAllData = 0
+
 
   #Calcualte the mCPUE for each RFA and calcualtes scaled average w.r.t. area----------------
   if(!onlySimulate){
@@ -111,7 +114,8 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   mCPUE[,1] = tmp[[1]]
   nFoundWithinAllData = attributes(tmp[[1]])$nFoundWithin
   nNotFoundWithinAllData = attributes(tmp[[1]])$nNotFoundWithin
-
+  nWithDatrasAllData = attributes(tmp[[1]])$nWithDatras
+  nWithoutDatrasAllData = attributes(tmp[[1]])$nWithoutDatras
   #-----------------------------------------------------------------------------------------
   }
 
@@ -210,11 +214,11 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       nOtolithsTotal = dim(datTmp$ca_hh)[1]
       if(bootstrapProcedure =="stratifiedHLandCA"){
         if(onlySimulate){
-          datTmp$ca_hh = sampleCA(datDetailed = datTmp$ca_hh,species,
+          datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
                                   hl_hh = datTmp$hl_hh)
         }else{
-          datTmp$ca_hh = sampleCA(datDetailed = datTmp$ca_hh,species,
+          datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
                                   hl_hh = datTmp$hl_hh)
         }
@@ -288,7 +292,8 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   attributes(mCPUEsummary)$nOtolithsTotal = round(nOtolithsTotal)
   attributes(mCPUEsummary)$nFoundWithinAllData = round(nFoundWithinAllData)
   attributes(mCPUEsummary)$nNotFoundWithinAllData = round(nNotFoundWithinAllData)
-
+  attributes(mCPUEsummary)$nWithDatrasAllData = round(nWithDatrasAllData)
+  attributes(mCPUEsummary)$nWithoutDatrasAllData = round(nWithoutDatrasAllData)
   return(mCPUEsummary)
 }
 

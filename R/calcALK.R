@@ -8,7 +8,7 @@
 #' @export
 #' @return Returns a matrix with the ALK for the given data, species, time and RFA
 #' @examples
-calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:200)
+calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150)
 {
     dimALK = max(lengthDivision)
     #Extract the data of interest----------------------
@@ -156,7 +156,7 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:200
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivision = 1:200){
+calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivision = 1:150){
 
   dimALK = max(lengthDivision)
   #Define the list which shall be filled with the ALKs and returned-----

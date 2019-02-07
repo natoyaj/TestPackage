@@ -206,16 +206,16 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 
 #' sampleCA
 #' @description .
-#' @param datDetailed The quarter of interest.
+#' @param ca_hh The quarter of interest.
 #' @export
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-sampleCA = function(datDetailed,species,quarter,lengthDivision,samplesWithinEachIntervall,hl_hh){
-  toReturn = datDetailed
-  toReturn = datDetailed[1,]
-  for(id in unique(datDetailed$haul.id)){
-    obsTmp = datDetailed[which(datDetailed$haul.id==id),]
+sampleCA = function(ca_hh,species,quarter,lengthDivision,samplesWithinEachIntervall,hl_hh){
+  toReturn = ca_hh
+  toReturn = ca_hh[1,]
+  for(id in unique(ca_hh$haul.id)){
+    obsTmp = ca_hh[which(ca_hh$haul.id==id),]
     obsReduced = sampleCAHaul(obsTmp,lengthDivision, samplesWithinEachIntervall,species = species,hl_hh = hl_hh)
     toReturn = rbind(toReturn,obsReduced)
   }
@@ -267,7 +267,10 @@ sampleCAHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species
         }
       }
 
-      nSample = min(samplesWithinEachIntervall,length(obsInside))
+      if(length(psaudoPopulation)<length(obsInside)){
+        warning(paste("Haul with ID ", obsTmp$haul.id[1], " in year ", obsTmp$Year[1], " had more age observations of length ", i," than lenght observations." ))
+      }
+      nSample = min(samplesWithinEachIntervall,length(obsInside),length(psaudoPopulation))
       obsSelected = sample(psaudoPopulation,size = nSample, replace = FALSE) #Sample without replecement from the psaudo population
     }else{
       obsSelected = obsInside

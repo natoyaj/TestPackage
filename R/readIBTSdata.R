@@ -16,17 +16,13 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   #d =  readRDS(paste(dataDir,"/1992-2018NSIBTS.rds",sep = ""))
   #-------------------------------------------------------
 
-#  ca = getDATRAS(record = "CA", "NS-IBTS", year, quarter)
-#  hl = getDATRAS(record = "HL", "NS-IBTS", year, quarter)
-#  hh = getDATRAS(record = "HH", "NS-IBTS", year, quarter)
-
   #Extract the data frames from IBTS-data and merge them---
   ca <- d[["CA"]]
   hl <- d[["HL"]]
   hh <- d[["HH"]]
 
   remove = c("RecordType", "GearExp", "DoorType", "SpecCode","AreaType","Valid_Aphia","Survey",
-             "Stratum","HaulVal","HydroStNo","StdSpecRecCode","BycSpecRecCode","Rigging",
+             "Stratum","HydroStNo","StdSpecRecCode","BycSpecRecCode","Rigging",
              "Tickler","Warplngt", "Warpdia","WarpDen","DoorSurface","DoorSpread","WingSpread",
              "Buoyancy","KiteDim","WgtGroundRope","TowDir","SurCurDir","SpeedWater","SurCurSpeed","BotCurDir","BotCurSpeed",
              "WindDir","WindSpeed","SwellDir","SwellHeight","SurTemp","BotTemp","SurSal","BotSal",
@@ -38,10 +34,15 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   hl = hl[,which(!(names(hl) %in% remove))]
   hh = hh[,which(!(names(hh) %in% remove))]
 
-  #Remove test hauls without observations----------------------------------
-  hh = hh[hh$HaulDur>5,] #Is there a way to know it is a test haul?
-  #-------------------------------------------------------------------------
+  #Remove hauls with haulVal == "I"
+  idsToRemove = hh$haul.id[which(hh$HaulVal =="I")]
+  ca = ca[which(! (ca$haul.id %in% idsToRemove)), ]
+  hl = hl[which(! (hl$haul.id %in% idsToRemove)), ]
+  hh = hh[which(! (hh$haul.id %in% idsToRemove)), ]
 
+  #Remove test hauls without observations----------------------------------
+  hh = hh[hh$HaulDur>5,] #Is there a way to know it is a test haul? Remove hauls with haulVal ="V".
+  #-------------------------------------------------------------------------
 
   #Remove data without the speceis of interest, not we include one line of teh hl-data if there are zero observation of the speceis in the haul---
   ca = ca[!is.na(ca$Year) & ca$Year == year&
@@ -50,7 +51,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   hl = hl[!is.na(hl$Year) & hl$Year == year&
             !is.na(hl$Quarter) & hl$Quarter == quarter&
             !is.na(hl$Species),]
-
 
   for(id in unique(hl$haul.id)){
     if(sum(!is.na(hl$Species[hl$haul.id==id])& hl$Species[hl$haul.id==id]==species)==0){
@@ -96,10 +96,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   ca_hh$haul.id = as.character(ca_hh$haul.id)
   hl_hh$haul.id = as.character(hl_hh$haul.id)
 
-
-#  downloadExchange("NS-IBTS", years = 2015)
-#  ca = getDATRAS(record = "CA", survey = "NS-IBTS", year = 2015, quarter = 1)
-
   #Read weights describing the proportion of statrecs of interest-----
   weightsDir <<- system.file("weightsSaithe", package = "IBTSindices")
   weightStatRec = readRDS(paste(weightsDir,"/WeightsStatRecHerringSpratSaithe.Rda",sep = ""))
@@ -111,14 +107,10 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   #-------------------------------------------------------------------
 
 
-
-
   removeHL = c("Quarter.HL","Country.HL","Year.HL")
   hl_hh = hl_hh[,which(!(names(hl_hh) %in% removeHL))]
   removeCA = c("Quarter.CA","Country.CA","Year.CA")
   ca_hh = ca_hh[,which(!(names(ca_hh) %in% removeCA))]
-
-
 
   toReturn = list()
   toReturn$hh = hh

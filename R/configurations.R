@@ -40,9 +40,9 @@ confALK = function(species,quarter)
     {
       minAge = 1
       minLength = 15
-      maxLength = 90
+      maxLength = 110
     }
-    print("Warning, dont know the max age, tryes the same settings as for cod")
+    print("Warning, dont know the max age or min age")
   }
 
   conf = list()
