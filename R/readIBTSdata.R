@@ -11,9 +11,9 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
 {
   #Read IBTS-data-----------------------------------------
   dataDir <- system.file("extdata", package = "IBTSindices")
-  #d<- readExchangeDir(dataDir)
+  d<- readExchangeDir(dataDir)
   #saveRDS(d,"1992-2018NSIBTS.rds")
-  d =  readRDS(paste(dataDir,"/1992-2018NSIBTS.rds",sep = ""))
+  #d =  readRDS(paste(dataDir,"/1992-2018NSIBTS.rds",sep = ""))
   #-------------------------------------------------------
 
   #Extract the data frames from IBTS-data and merge them---
