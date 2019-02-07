@@ -11,9 +11,9 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
 {
   #Read IBTS-data-----------------------------------------
   dataDir <- system.file("extdata", package = "IBTSindices")
-  d<- readExchangeDir(dataDir)
+  #d<- readExchangeDir(dataDir)
   #saveRDS(d,"1992-2018NSIBTS.rds")
-  #d =  readRDS(paste(dataDir,"/1992-2018NSIBTS.rds",sep = ""))
+  d =  readRDS(paste(dataDir,"/1992-2018NSIBTS.rds",sep = ""))
   #-------------------------------------------------------
 
   #Extract the data frames from IBTS-data and merge them---
@@ -39,10 +39,6 @@ readIBTSData = function(survey = "NS-IBTS", year, quarter,species,useWeights = T
   ca = ca[which(! (ca$haul.id %in% idsToRemove)), ]
   hl = hl[which(! (hl$haul.id %in% idsToRemove)), ]
   hh = hh[which(! (hh$haul.id %in% idsToRemove)), ]
-
-  #Remove test hauls without observations----------------------------------
-  hh = hh[hh$HaulDur>5,] #Is there a way to know it is a test haul? Remove hauls with haulVal ="V".
-  #-------------------------------------------------------------------------
 
   #Remove data without the speceis of interest, not we include one line of teh hl-data if there are zero observation of the speceis in the haul---
   ca = ca[!is.na(ca$Year) & ca$Year == year&
