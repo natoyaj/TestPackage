@@ -76,39 +76,18 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150
     foundWithin = rep(TRUE, dim(alk)[1])
     foundWithin[whichIsMissing] = FALSE
 
-    for(i in 1:(minLength-1)){
-      if(whichIsMissing[i]){
-        if(quarter==1)
-        {
-          alk[i,3] = 1
-        }else if(quarter>1)
-        {
-          alk[i,2] = 1
-        }
-        whichIsMissing[i] = FALSE
-      }
-    }
-    for(i in (maxLength+1):dimALK){
-      if(whichIsMissing[i]){
-        if(quarter==1)
-        {
-          alk[i,dim(alk)[2]] = 1
-        }
-        whichIsMissing[i] = FALSE
-      }
-    }
+
 
     #Routine for filling the not observed length classes by looking at length groups close by
-    distToNext = which(!whichIsMissing)[1]
-    distToPrevious = 999999
-    nextValue = NA
-
     if(quarter ==1)start = 3
     if(quarter >1)start = 2
 
     for(j in start:dim(alk)[2])
     {
-      for(i in 1:dim(alk)[1])
+      distToPrevious = 999999
+      distToNext = which(!whichIsMissing)[1]  -minLength-1
+      nextValue =alk[minLength+ distToNext+1,j]
+      for(i in (minLength+1):(maxLength-1))
       {
         if(whichIsMissing[i])
         {
@@ -139,6 +118,26 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150
       }
     }
     #--------------------------------------------------------------------------------------------
+
+    #Fill in ages above max lengh, and below min length
+    for(i in 1:minLength){
+      if(whichIsMissing[i]){
+        if(quarter==1)
+        {
+          alk[i,3] = 1
+        }else if(quarter>1)
+        {
+          alk[i,2] = 1
+        }
+        whichIsMissing[i] = FALSE
+      }
+    }
+    for(i in maxLength:dimALK){
+      if(whichIsMissing[i]){
+        alk[i,dim(alk)[2]] = 1
+        whichIsMissing[i] = FALSE
+      }
+    }
 
     attributes(alk)$foundWithin = foundWithin
     return(alk)
