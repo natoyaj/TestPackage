@@ -162,7 +162,11 @@ calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weight
     weightUsed = rep(0,numberOfStatRectangles)
     for(i in 1:numberOfStatRectangles){
       if(species =="Pollachius virens"){
-        weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+        if(statRects[i] %in% weightStatRec$StatRec){
+          weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+        }else{
+          weightUsed[i] =  0 #Haul is in RFA 10 which is not included in the index for Saithe, this should have been included in the weighting file
+        }
       }else{
         weightUsed[i] = 1
       }
@@ -347,7 +351,11 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
   weightUsed = rep(0,numberOfStatRectangles)
   for(i in 1:numberOfStatRectangles){
     if(species =="Pollachius virens"){
-      weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+      if(statRects[i] %in% weightStatRec$StatRec){
+        weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+      }else{
+        weightUsed[i] =  0 #Haul is in RFA 10 which is not included in the index for Saithe, this should have been included in the weighting file
+      }
     }else{
       weightUsed[i] = 1
       }
@@ -541,14 +549,11 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
     if(species== "Pollachius virens"){
       areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
-      #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
-      if(RFA ==5){#TODO: DATRAS-data do not consist of RFA 10 information.
-        areaThisRFA = areaThisRFA #+ rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
-      }
     }
 
     cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                           ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
+
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
     totalArea = totalArea + areaThisRFA
