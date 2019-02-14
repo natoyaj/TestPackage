@@ -332,12 +332,18 @@ In this section we apply the methods described in Section \ref{sec:methods} to d
 
 \subsection{Evaluation of ALK methods}
 \label{sec:codandsaitheresults}
-In this section we apply the two ALK methods given in Section \ref{sec:alkmethods} for estimation of relative abundance at age, and the bias-corrected bootstrap method for estimating variability of estimated indices of abundance.   Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replicates are estimated from the three ALK methods. 
+
+Results from analyses of North Sea cod show that the area based ALK and haul based ALK estimators can give similar point estimates of abundance at age, except for age groups 3 and 4 in year 2017, and age groups 3 and 6+ in year 2018, suggesting that (Figure \ref{AreaHaulEstimatesAllYearsQ1} (c) and (d))  
+
+\clearpage
+%In this section we apply the two ALK methods given in Section \ref{sec:alkmethods} for estimation of relative abundance at age, and the bias-corrected bootstrap method for estimating variability of estimated indices of abundance.   Figures \ref{BiascorrectedALK} gives estimates of indices of abundance for cod in  2018 Q1 and for saithe in  2017 Q3. Approximate 95\% confidence intervals from the bias-corrected bootstrap method for 1000 bootstrap replicates are estimated from the three ALK methods. 
 
 %%The three ALK methods gave similar estimates of indices of abundance at age for both species (\ed{we need to discuss results in the plots}). 
 %%As regards to which spatial ALK method to adopt, it is difficult to identify a method that gives the best performance over all age groups. While both methods seem to give reasonable estimates, the spatial model based ALK generally gave shorter interval widths for both species (Figure \ref{BiascorrectedALK}). Furthermore, compared with the area based ALK and the haul based ALK, the spatial model based ALK allows smooth functions of the spatial effects predicting numbers-at-age. 
 %(\ed{Now that we know that DATRAS do provide uncertainty estimates using their bootstrap procedure, we should use their approach here and compare with our stratified method. The explanation below is for old results. This should be undated})
 %\nat{We also demonstrate the implications of using DATRAS bootstrap procedure for estimating the uncertainty around indices of abundance (see Figure \ref{DatrasStratified} in Supplementary Materials \ref{secAp:resultsdatrasALK}). DATRAS bootstrap procedure ignores the fine-scale stratification in the sampling process, leading to an overestimation of the uncertainty; and ignores the age-length data collected at the haul level, resulting in an underestimation of the uncertainty. Thus, the two steps counteract each other. Compared with the stratified bootstrap procedure, DATRAS bootstrap procedure gives an overestimation of the uncertainty for all age groups of saithe in year 2017 Q3, suggesting that it is highly relevant to account for the variation in the data over large areas.} 
+
+%The nonparametric bias-corrected bootstrap method is adopted for estimating confidence intervals of indices of abundance, and although this method has the advantage of correcting for the bias and skew of the sampling distribution of the data; accounting for some of the variability in the sampling distribution of the CPUE;  and does not assume any distribution for the data, there are some limitations of the bootstrap approach. The most important limitation is the assumption that the distribution of the data represented by the sample is a reasonable estimate of the population function from which the data are sampled. If this assumption is violated the random sampling  performed in the bootstrap procedure may add another level of sampling error, resulting in invalid statistical estimations \citep{haukoos2005advanced}. As discussed in Section \ref{overview} the selection of the trawling locations for IBTS surveys is semi-random where cruise leaders selects "clear" tow locations or "blind" tow locations if no clear tow exists by checking the proposed trawl track for hazardous seabed obstructions with acoustic methods. More recently, selection of tow locations is based on pre-proposed valid tow locations with start and end positions executed in the period 2000-2018. Hence, the lack of a fully randomized sampling process has the potential to result in biased estimates of parameters and their uncertainty. Additionally, prior to 2013, all nations were sampling 8 pairs of otoliths per 1 cm length group for our focal species (Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix}), and these samples could be acquired from, for example the first haul (or first few trawl hauls), resulting in an unrepresentative sample of the population. From 2013, some nations adopted the current sampling procedure outlined by ICES for IBTS 2018 surveys of 1 pair of otolith per 1 cm length group from each haul, while other nations continued with sampling 8 pairs of otoliths per 1 cm length group. So, bias was still introduced via the sampling  procedure. Another limitation of the bootstrap is the smaller the original sample the less likely it is to represent the entire population, thus the more difficult it becomes to compute valid confidence intervals. Note that the bootstrap relies heavily on the tails of the estimated sampling distribution when computing \\
 
 %\clearpage
 
@@ -395,7 +401,7 @@ In this section we apply the two ALK methods given in Section \ref{sec:alkmethod
 
 \clearpage
 \subsection{Comparison of bootstrap procedures for uncertainty estimation}
-
+The different resampling procedures considered for estimating boo 
 
 %\clearpage
 \begin{figure*}[h!]
@@ -647,10 +653,10 @@ Assume a length $l$ group has $n_{l}$ sub length groups. Assume further in a giv
 \begin{tabular}{@{}ccc@{}}
 \subfloat[saithe in year 2015 Q1 ]{\includegraphics[width=0.5\textwidth]{figures/SaitheAreaHaulEstimates2015Q1.jpeg}} & 
 \subfloat[saithe in year 2016 Q1 ]{\includegraphics[width=0.5\textwidth]{figures/SaitheAreaHaulEstimates2016Q1.jpeg}} & \\
-%\subfloat[cod in year 2017 Q1]{\includegraphics[width=0.5\textwidth]{figures/SaitheAreaHaulEstimates2017Q1.jpeg}} & 
+%\subfloat[saithe in year 2017 Q1]{\includegraphics[width=0.5\textwidth]{figures/SaitheAreaHaulEstimates2017Q1.jpeg}} & 
 \subfloat[saithe in year 2018 Q1]{\includegraphics[width=0.5\textwidth]{figures/SaitheAreaHaulEstimates2018Q1.jpeg}} & 
 \end{tabular}
-\caption[]{Estimated abundance at age for North Sea saithe for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter (Q1). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 200 bootstrap samples. The age of cod ranged from $1$ to $10+$ in the first quarter and $0$ to $10+$ in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.  }
+\caption[]{Estimated abundance at age of North Sea saithe by the area based ALK and haul based ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter (Q1). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 200 bootstrap samples. The age of cod ranged from $1$ to $10+$ in the first quarter and $0$ to $10+$ in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.  }
 \label{SaitheAreaHaulEstimatesAllYearsQ1}
 \end{figure*} 
  
@@ -664,7 +670,7 @@ Assume a length $l$ group has $n_{l}$ sub length groups. Assume further in a giv
 \begin{tabular}{@{}ccc@{}}
 \subfloat[cod in year 2015 Q3]{\includegraphics[width=0.5\textwidth]{figures/AreaHaulAreaMod2015Q3.jpeg}} & 
 \subfloat[cod in year 2016 Q3]{\includegraphics[width=0.5\textwidth]{figures/AreaHaulAreaMod2016Q3.jpeg}} & \\
-%\subfloat[cod in year 2017 Q1]{\includegraphics[width=0.5\textwidth]{figures/AreaHaulAreaMod2017.jpeg}} & 
+\subfloat[cod in year 2017 Q3]{\includegraphics[width=0.5\textwidth]{figures/AreaHaulAreaMod2017Q3.jpeg}} & 
 \subfloat[cod in year 2018 Q3]{\includegraphics[width=0.5\textwidth]{figures/AreaHaulAreaMod2018Q3.jpeg}} & 
 \end{tabular}
 \caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS cod in years 2015-2018 in the third quarter (Q3). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to area based age-length key (ALK) and the stratified bootstrap procedure. The age of cod ranged from $1$ to $6+$ in the first quarter and $0$ to $6+$ in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.}
