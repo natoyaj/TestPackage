@@ -1,0 +1,32 @@
+library(IBTSindices)
+path = "Papers/manuscript/results/olav/"
+quarter = 3
+n = 300
+procedure = "haulBased"
+art = "cod"
+#art = "Saithe"
+
+if(art=="cod"){
+  conf = confALK(species = "Gadus morhua", quarter = quarter)
+  minAge = conf$minAge
+  maxAge = conf$maxAge
+  minAgePlot = minAge;maxAgePlot = maxAge
+}else if(art=="Saithe"){
+  conf = confALK(species = "Pollachius virens", quarter = quarter)
+  minAge = conf$minAge
+  maxAge = conf$maxAge
+  minAgePlot = 3;maxAgePlot = 8
+}
+
+library(RColorBrewer)
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+col_vector = col_vector[-c(4,6,9)] #Exclude yellow and some other similar colors.
+
+for(year in 2015:2018){
+  #x11()
+  jpeg(paste(path,"removal",art,year,"Q",quarter,".jpeg", sep = ""),height = 500,width = 500)
+  plotRemoval(year,art,quarter,n,procedure ,minAge,maxAge,minAgePlot,maxAgePlot,path)
+  dev.off()
+}
+
