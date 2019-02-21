@@ -5,15 +5,20 @@
 #' @param year The year which the ALK is calculated.
 #' @param quarter The quarter of the year which the ALK is calculated.
 #' @param ca The ca needed for calculating the ALK.
+#' @param lengthDivision A vector giving the breakpoints in the length division.
+#' @param dat All data, this is needed when filling the ALK using different RFAs. If dat==null, then ALK is not borrowed from other RFAs.
 #' @export
 #' @return Returns a matrix with the ALK for the given data, species, time and RFA
 #' @examples
-calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150)
+calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision,dat = NULL)
 {
     dimALK = max(lengthDivision)
+
     #Extract the data of interest----------------------
-    caInterest = ca[which(ca$Roundfish==RFA & ca$Year==year &
-                            ca$Quarter == quarter & ca$Species == species),]
+    caInterest = ca[which(!is.na(ca$Roundfish) & ca$Roundfish==RFA &
+                            !is.na(ca$Year) & ca$Year==year &
+                            !is.na(ca$Quarter) & ca$Quarter == quarter &
+                            ca$Species == species),]
 
     caInterest = caInterest[which(!is.na(caInterest$Age) & !is.na(caInterest$LngtCm)),]
     #---------------------------------------------------
@@ -36,9 +41,12 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150
     #Investigate if zero data, if so return the sceleton-
     if(dim(caInterest)[1]==0){
       warning(paste("No observations in period in RFA: " ,RFA,sep = ""))
-      alk[,2:(maxAge+2)] = 1/(maxAge+1)
+      alk[,2:(maxAge+2)] = 0
       alk = as.data.frame(alk)
       names(alk) = c("length", c(0:maxAge))
+      if(!is.null(dat)){
+        alk = borrowALKfromNeighbourRFAs(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,ALK = alk, lengthDivision = lengthDivision)
+      }
       attributes(alk)$foundWithin = rep(FALSE, dim(alk)[1])
       return(alk)
     }
@@ -150,12 +158,13 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision = 1:150
 #' @param species The species of interest.
 #' @param year The year which the ALKs are calculated.
 #' @param quarter The quarter of the year which the ALKs are calculated.
-#' @param data The CA needed for calculating the ALKs.
-#' @param data_hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
+#' @param ca The CA needed for calculating the ALKs.
+#' @param hl The HL needed for calculating the ALKs (since there can be trawl hauls without age information).
+#' @param dat All data, this is needed when filling the ALK using different RFAs. If dat==null, then ALK is not borrowed from other RFAs.
 #' @export
 #' @return Returns a list with ALK for each trawl haul
 #' @examples
-calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivision = 1:150){
+calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivision, dat = NULL){
 
   dimALK = max(lengthDivision)
   #Define the list which shall be filled with the ALKs and returned-----
@@ -195,12 +204,14 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
     idHaul = unique(c(as.character(hlInterest$haul.id),as.character(caInterest$haul.id)))
     neste=1
     alkFictive = alk
-    alkFictive[,3:(maxAge+3)] = 1/(maxAge+1)
+    alkFictive[,3:(maxAge+3)] = 0
+    ALKborrow = borrowALKfromNeighbourRFAs(RFA= RFA, species= species, year = year, quarter= quarter, dat = dat,ALK = as.data.frame(alkFictive[,-1]), lengthDivision = lengthDivision)
     for(id in idHaul){
       idTmp = as.character(id)
       alkThis = as.data.frame(alkFictive)
       names(alkThis) = c("ID","Length",0:maxAge)
       alkThis$ID[1] = idTmp
+      alkThis[,3:dim(alkThis)[2]] = ALKborrow[2:dim(ALKborrow)[2]]
       alkToReturn[[neste]] = alkThis
       neste = neste+1
     }
@@ -246,7 +257,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
   neste = 1
 
   #Construct the DATRAS ALK, which is used if there are no trawl haul close by.
-  ALKnormal = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = caInterest)
+  ALKnormal = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = caInterest,dat = dat,lengthDivision = lengthDivision)
 
   for(id in haulId){
     #Extract which lengts that are of interest (i.e. observed in either HL-data or CA-data in this trawl),
@@ -427,6 +438,52 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
   return(alkToReturn)
   #-------------------------------
 }
+
+#' calculateALKModel
+#' @description
+#' @param RFA Roundfish area number.
+#' @param species The species of interest.
+#' @param year The year which the ALKs are calculated.
+#' @param quarter The quarter of the year which the ALKs are calculated.
+#' @param ca Data with age information
+#' @export
+#' @return Returns a list with ALK for each trawl haul
+#' @examples
+borrowALKfromNeighbourRFAs = function(RFA, species, year, quarter, dat,ALK, lengthDivision){
+
+  neighborRFA = list()
+  neighborRFA[[1]] = c(2,3)
+  neighborRFA[[2]] = c(1,3,4,6,7)
+  neighborRFA[[3]] = c(1,2,4)
+  neighborRFA[[4]] = c(2,3,5,6)
+  neighborRFA[[5]] = c(4,6,10)
+  neighborRFA[[6]] = c(2,4,5,7)
+  neighborRFA[[7]] = c(2,6,8)
+  neighborRFA[[8]] = c(7,9)
+  neighborRFA[[9]] = c(8)
+  neighborRFA[[10]] = c(5)
+
+
+
+  ALK[,2:dim(ALK)[[2]]] = 0
+  for(i in 1:length(neighborRFA[[RFA]])){
+    ALKtmp =  calculateALKDatras(RFA = neighborRFA[[RFA]][i], species = species, year = year, quarter = quarter,ca = dat$ca_hh,lengthDivision = lengthDivision,dat =  NULL) #Note that dat is null, if not the function retrun the borrowed ALK
+    ALK[,2:dim(ALK)[[2]]] = ALK[,2:dim(ALK)[[2]]] + ALKtmp[,2:dim(ALK)[[2]]]
+  }
+
+  #Check if the neighbors have age reading, if not use the whole North Sea
+  if(sum(ALK[,2:dim(ALK)[[2]]])==0){
+    for(RFAall in 1:10){
+      for(i in 1:length(neighborRFA[[RFAall]])){
+        ALKtmp =  calculateALKDatras(RFA = neighborRFA[[RFAall]][i], species = species, year = year, quarter = quarter,ca = dat$ca_hh,lengthDivision = lengthDivision, dat = NULL)
+        ALK[,2:dim(ALK)[[2]]] =ALK[,2:dim(ALK)[[2]]] + ALKtmp[,2:dim(ALK)[[2]]]
+      }
+    }
+  }
+
+  return(ALK)
+}
+
 
 
 #' calculateALKModel

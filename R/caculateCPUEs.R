@@ -511,7 +511,7 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision = 1:299)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision)
 {
   #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
   nWithDatras = 0
@@ -553,7 +553,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
     cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                           ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
-
 
     mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
     totalArea = totalArea + areaThisRFA

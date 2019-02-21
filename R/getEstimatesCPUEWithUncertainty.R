@@ -34,9 +34,9 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
-    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision)
+    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision,dat = dat)
     if(length(ALKNew)==0){
-      ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA)
+      ALK = borrowALKfromNeighbourRFAs(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,lengthDivision = lengthDivision)
       cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
     }else{
       cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
@@ -45,7 +45,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
     cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
   }else if(ALKprocedure == "datras"){
-    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA)
+    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA,dat = dat,lengthDivision = lengthDivision)
     cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
   }else{
     stop("Unkown ALKprocedure")
@@ -91,7 +91,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        onlySimulate = FALSE,lengthDivision =1:199,samplesWithinEachIntervall = NULL){
+                        onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
