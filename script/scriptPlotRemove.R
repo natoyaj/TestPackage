@@ -1,6 +1,6 @@
 library(IBTSindices)
-path = "Papers/manuscript/results/olav/"
-quarter = 3
+path = "Papers/manuscript/results/olav/resampling/"
+quarter =1
 n = 300
 procedure = "haulBased"
 art = "cod"
@@ -27,6 +27,14 @@ for(year in 2015:2018){
   #x11()
   jpeg(paste(path,"removal",art,year,"Q",quarter,".jpeg", sep = ""),height = 500,width = 500)
   plotRemoval(year,art,quarter,n,procedure ,minAge,maxAge,minAgePlot,maxAgePlot,path)
+  dev.off()
+}
+
+
+for(year in 2015:2018){
+  #x11()
+  jpeg(paste(path,"removal",art,year,"Q",quarter,"DL5.jpeg", sep = ""),height = 500,width = 500)
+  plotRemoval(year,art,quarter,n,procedure ,minAge,maxAge,minAgePlot,maxAgePlot,path,dl = 5)
   dev.off()
 }
 
