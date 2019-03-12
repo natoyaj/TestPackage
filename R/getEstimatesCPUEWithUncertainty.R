@@ -91,7 +91,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL){
+                        onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL,nSimHauls = NULL){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -149,6 +149,12 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
             simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
             simDataHL = simDataHLList$hl_hh
             simDataCA = simCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+          }else if(bootstrapProcedure =="datrasHLstratifiedCA"){
+            nSimHaulsThisRFA = round(mean(dat$hh$Roundfish[!is.na(dat$hh$Roundfish)]==RFA)*nSimHauls)
+            if(nSimHaulsThisRFA<2)stop(paste("Too few hauls in RFA" , RFA))
+            simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh,nSimHauls = nSimHaulsThisRFA)
+            simDataHL = simDataHLList$hl_hh
+            simDataCA = simDataHLList$ca_hh
           }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
             simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
             simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
@@ -217,7 +223,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       #Sample ages within hauls-----------------
       print("Sampling otoliths...")
       nOtolithsTotal = dim(datTmp$ca_hh)[1]
-      if(bootstrapProcedure =="stratifiedHLandCA"){
+      if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="datrasHLstratifiedCA"){
         if(onlySimulate){
           datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,

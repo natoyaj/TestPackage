@@ -7,7 +7,7 @@
 #' @export
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
 #' @examples
-simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh)
+simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh,nSimHauls = NULL)
 {
   #Extract the data of interest-------------------------
     dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -17,7 +17,11 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh)
 
   #Simulate trawl hauls---------------------------------
   haulsID = unique(dataOfInterest$haul.id)
-  nSim = length(haulsID)
+  if(is.null(nSimHauls)){
+    nSim = length(haulsID)
+  }else{
+    nSim = nSimHauls
+  }
   simHauls = sample(haulsID,nSim,replace = T)
 
 
