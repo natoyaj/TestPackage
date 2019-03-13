@@ -68,7 +68,7 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision,dat = N
     #Use same resultion for the ALK as for the sampling---
     for(i in 1:(length(lengthDivision)-1)){
      for(j in 2:(dim(alk)[2])){
-       alk[(lengthDivision[i]+1):lengthDivision[i+1],j] = sum(alk[(lengthDivision[i]+1):lengthDivision[i+1],j])
+       alk[(lengthDivision[i]):(lengthDivision[i+1]-1),j] = sum(alk[(lengthDivision[i]):(lengthDivision[i+1]-1),j])
      }
     }
     #-----------------------------------------------------
@@ -289,7 +289,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
     #Use same resultion for the ALK as for the sampling
     for(i in 1:(length(lengthDivision)-1)){
         for(j in 3:dim(alkThis)[2]){
-          alkThis[(lengthDivision[i]+1):lengthDivision[i+1],j] = sum(alkThis[(lengthDivision[i]+1):lengthDivision[i+1],j])
+          alkThis[(lengthDivision[i]):(lengthDivision[i+1]-1),j] = sum(alkThis[(lengthDivision[i]):(lengthDivision[i+1]-1),j])
         }
     }
 
