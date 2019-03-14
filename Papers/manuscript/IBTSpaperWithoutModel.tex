@@ -218,7 +218,8 @@ where $S_{p}$ is the set of all statistical rectangles in RFA $p$, $|S_{p}|$ is 
 \text{mCPUE}_a= \frac{\sum_{p\in {\bf P}} A_{p}  \mathrm{mCPUE}_{p,a}}{A_{\text{total}}}.
 \label{eq:abundanceestimatornorthsea}
 \end{equation}
-We refer to (\ref{eq:abundanceestimatornorthsea}) as the index of abundance at age, where ${\bf P}$ is the set of RFAs, $A_p$ is the area of RFA $p$, and $A_{\text{total}} = \sum_{p\in {\bf P}} A_{p}$.
+We refer to (\ref{eq:abundanceestimatornorthsea}) as the index of abundance at age, where ${\bf P}$ is the set of RFAs, $A_p$ is the area of RFA $p$, and $A_{\text{total}} = \sum_{p\in {\bf P}} A_{p}$. This index takes into account, the entire survey area of the North Sea IBTS (Figure \ref{icesroufismap}). 
+
 %mCPUE_{N,a} 
 \subsection{ALK estimators}
 \label{sec:alkmethods}
@@ -273,134 +274,217 @@ This section describes the bootstrap procedures used in this research. The boots
 \end{enumerate}
 
 
-
 \subsection{Reducing the number of otoliths sampled for age determination}
 \label{sec:reducingeffort}
-We also investigate how relative abundance at age, $\text{mCPUE}_a$, and its uncertainty are affected if the  number of otoliths sampled for age determination is reduced. We sample realisations of data obtained with a sampling procedure with fewer age readings by choosing the number of age observations in length group $l$ in the corresponding haul,  $n_{l,a,h}$ (defined in step 2 (b) in Section \ref{sec:datrasstratifiedbootstrap}) to be equal to a pre-defined number. We choose $n_{l,a,h}$ equal \textit{one} or \textit{two} when sampling the reduced effort. By doing that, the sampled data sets in the bootstrap procedure are possible realisations of data obtained by collecting only \textit{one} pair or \textit{two} pairs of otoliths per length group at sea. We choose the length groups to have width 1 \text{cm},2\text{cm},...\text{ or }5\text{cm} as these would do the following: 1) capture the variability in age-length data, and 2) determine sufficient sample sizes of age readings required to give information on relative abundance at age in the North Sea. 
-%We also investigate the effect on abundance indices if \textit{one pair} of otoliths is sampled from a length group width of 2 cm for fish up to length 40 cm and \textit{one pair} of otoliths is sampled from a length group width of 1 cm for fish longer than 40 cm.
+We also investigate how relative abundance at age, $\text{mCPUE}_a$, and its uncertainty are affected if the  number of otoliths sampled for age determination is reduced. We sample realisations of data obtained with a sampling procedure with fewer age readings by choosing the number of age observations in length group $l$ in the corresponding haul,  $n_{l,a,h}$ (defined in step 2 (b) in Section \ref{sec:datrasstratifiedbootstrap}) to be equal to a pre-defined number. We choose $n_{l,a,h}$ equal \textit{one} or \textit{two} when sampling the reduced effort. By doing that, the sampled data sets in the bootstrap procedure are possible realisations of data obtained by collecting a pre-defined number of otoliths. We investigate the effect on estimated abundance and its variability by considering two sampling procedures. In the first procedure, we sample \textit{one} pair of otoliths from length group width 1 \text{cm}, 2\text{cm},...\text{ or }5\text{cm}. In the second procedure, we set a length group width of 5\text{cm} and we sample \textit{one} pair, \textit{two} pairs, \textit{three} pairs, \textit{four} pairs or \textit{five} pairs of otoliths. These procedures would capture the variability in age-length data, and allow sufficient sample sizes of otoliths required to give information on relative abundance at age in the North Sea to be determined. 
+\clearpage
+
+\subsection{Evaluating the effect of the number trawl hauls on relative abundance}
+\label{sec:evaluatingtrawlhauls}
+Since the variability in the data is more likely to be driven by the haul variance, rather than the fish variance, we investigate the effect of reducing (or increasing) the number of hauls on the expected relative standard error of abundance at age. We use the area based ALK method (Section \ref{sec:datrasalkestimator}) since the number of trawl hauls in each statistical rectangle is at most 2. Sampling hauls from a larger area provides....... The bootstrap procedure used to trawl hauls is described below. Let $N$ be the number of trawls to be sampled:
+\begin{enumerate}
+\item Sample $N$ hauls
+     \begin{enumerate}
+      \item stratified with respect to RFA
+      \item from each RFA such that the proportion of hauls between RFAs is the same as the original survey design. No fewer than two hauls in an RFA must be sampled
+      \end{enumerate} 
+\item Sample age stratified with respect to length from the hauls sampled in step 1) above
+\item Calculate CPUE per age using the area based ALK
+\item Repeat 1-3 B times, where B is the number of bootstrap replicates
+\end{enumerate}
+
+
 
 
 \section{Case studies}
 \label{sec:data}
+In this section we apply the methods described in Section \ref{sec:methods} to data for Cod from the International Bottom Trawl Survey for the years 2015-2018, which is obtained from the DATRAS database (\href{https://datras.ices.dk}{https://datras.ices.dk}). These years are chosen for three reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, \textit{one pair} of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for sampling procedures). The second is that IBTS included age 0 in Q3 surveys and these data must be included when creating the age-length keys. The years 2015-2018 also provide extensive sample data for Cod and Saithe with quarterly sampling effort varying between 345 and 387 trawl hauls.  For each of these hauls sampled in the years 2015-2018, concurrent length measurements and otoliths for age determination were obtained from a subsample of Cod and Saithe. The subsample of otoliths taken varies between 1456 and 2895 for Cod, and between 822 and 2163 for Saithe.  In the stock assessment of the North Sea Cod,  ICES considers age groups 0 to $6+$ from IBTS surveys data, where the last group is referred to as a ``plus group'', and which consists of fish of age 6 or older.  In this research we consider age groups 1 to $6+$ in the first quarter and 0 to $6+$ in the third quarter for Cod. Table \ref{tab:realdata2017-2018Cod}  gives a brief summary of the data in the years 2015-2018.\\
 
-In this section we apply the methods described in Section \ref{sec:methods} to data for Cod and Saithe from the International Bottom Trawl Survey for the years 2015-2018, which is obtained from the DATRAS database (\href{https://datras.ices.dk}{https://datras.ices.dk}). These years are chosen for three reasons. The first is that in year 2018 new sampling procedures proposed by ICES for the collection of otoliths were introduced in the surveys. For instance, \textit{one pair} of otoliths per length group is sampled for most target species (see Table \ref{tab:otolithsTable} in Supplementary Materials \ref{secAp:otolithappendix} for sampling procedures). The second is that IBTS included age 0 in Q3 surveys and these data must be included when creating the age-length keys. However, in 2015 Q3 there were no fish of age 0 sampled for Saithe. Also, some species such as Saithe occupy the deeper waters in the northern part of the North Sea and in the Skagerrak and Kattegat, along the shelf edge \citep{ICESFishMaps} during IBTS Q1 surveys so these surveys do not sample much of the population. For the Q3 surveys however,  Saithe are found on the northern part of the shelf, along the shelf boundary, and in the Skagerrak (Figure \ref{icesroufismap}). The amount the caught within the area differs generally from that in  Q1, but the distribution is fairly consistent  \citep{ICES2016Report}. Hence, IBTS Q3 survey data is more relevant for analyses. The third reason is that data for the years prior to 2018 are appropriate for the application of our proposed sample procedure of reducing the number of otoliths read for age determination (Section \ref{sec:datrasstratifiedbootstrap}). The years 2015-2018 also provide extensive sample data for Cod and Saithe with quarterly sampling effort varying between 345 and 387 trawl hauls.  For each of these hauls sampled in the years 2015-2018, concurrent length measurements and otoliths for age determination were obtained from a subsample of Cod and Saithe. The subsample of otoliths taken varies between 1456 and 2895 for Cod, and between 822 and 2163 for Saithe.  Table \ref{tab:realdata2017-2018}  in Supplementary Materials \ref{secAP:realdataanalysis} gives a brief summary of the data in the years 2015-2018.
+%\clearpage
+ \begin{small}
+\begin{table}[h!]
+\setlength\tabcolsep{3.5pt} 
+\centering
+\captionsetup{font=small, width = 15cm}{
+\caption{Summary of North Sea Cod data in years 2015-2018.  Data collected in the third quarter (Q3) has age 0 group but this is not collected in quarter 1 (Q1) surveys.}\label{tab:realdata2017-2018Cod}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
+  \hline \\ [0.3ex]
+{} &  & \multicolumn{8}{c}{\bf Years and quarters} &   \\[1.0ex]
+%\hline\\
+%  \cmidrule(lr{0.3em}){3-6} \\ [0.5ex]% \cmidrule(lr{0.3em}){5-6}  \\ [0.5ex]
+&  & \multicolumn{2}{c}{2015} & \multicolumn{2}{c}{2016}  & \multicolumn{2}{c}{2017} & \multicolumn{2}{c}{2018}   \\ [1.0ex]
+ \hline \\ [0.3ex]
+& & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
+%\hline \\ 
+  \cmidrule(lr{0.3em}){3-10}  \\ [0.5ex]% \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
+ 	& Number of hauls   & 380 & 352 & 360 & 381 &377 & 337 & 372 &349   \\ [1.0ex]
+% 	& Mean time of hauls (in minutes) & 28.55 & 23.44 & 28.40 & 22.47 &29.02 & 29.37 &  29.26 & 29.13 \\ [1.5ex]
+& Total otoliths sampled for age determination               & 2895 &2113 & 2046 & 1804    &2501 & 2230  & 1600 & 1456 \\[1ex] 
+& Number of hauls with length data & 305 &216 & 251 & 230& 306 & 237  & 237 & 199 \\[1ex]
+& Number of hauls with age data    & 301 &209 & 243 & 224 & 293 & 236 & 229 & 195 \\[1ex]
+& Cod with missing age in RFAs     & 0.30\%& 0.13\% & 0.13\% & 0.34\% & 0.68\% &  0.07\% & 0.51\%  & 0.11\%  \\[1ex]  
+& Cod with missing age in hauls    & 10.06\% & 14.20\% & 6.18\%& 6.32\% & 2.25\% &0.27\%   & 1.40\%   & 0.77\% \\[0.1ex] 
+   \hline \\[0.1ex]
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+ 
+ 
+ Figure \ref{AreaHaulEstimatesAllYearsQ1} and \ref{AreaHaulEstimatesAllYearsQ3} give estimates of abundance of the North Sea Cod and its uncertainty in 2015-2018 Q1 and Q3, respectively.  The area based ALK and haul based ALK gave similar point estimates of abundance, and we expected similar performances between the two ALK estimators with respect to variability since the variance in the ALK is considered \citep{aanes2015efficient}. In the first quarter estimates are dominated by  2-year-old fish in 2015 and by 1-year-old fish in 2017. A similar trend is observed in the third quarter, where juvenile Cod (2-year-old and the 0-group) dominates the estimates. In 2018 Q3, the uncertainty in 3-year-old and 4-year-old fish is high compared to the younger age classes, and with expected relative standard error exceeding 25\%. This high variance is driven by a single haul (Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}), which dominates the catch of 3 and 4-year-old fish. The expected relative standards from the ICES-IBTS bootstrap procedure, generally exceed those from the modified ICES-IBTS and stratified bootstrap procedures (Figure \ref{AreaHaulEstimatesAllYearsQ1} and Figure \ref{AreaHaulEstimatesAllYearsQ3}, right panel). ICES-IBTS bpptstrap procedure procedure ignores the fine scale stratification at the first stage (step 1. (a)  in Section \ref{sec:datrasstratifiedbootstrap}), resulting in an overestimation of the uncertainty. ICES-IBTS bpptstrap procedure also ignores age-length data collected at the haul level, resulting in an underestimation the uncertainty, hence, there is bias in both direction. The expected relative standard error of abundance (Figures \ref{AreaHaulEstimatesAllYearsQ1} and  \ref{AreaHaulEstimatesAllYearsQ3}) and  Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}  suggest that the variance is primarily driven by the primary sampling units, hence, the overestimation of the variance from ICES-IBTS bootstrap procedure.
 
-In the stock assessment of the North Sea Cod,  ICES considers age groups 0 to $6+$ from IBTS surveys data, where the last group is referred to as a ``plus group'', and which consists of fish of age 6 or older. For Saithe however, ICES considers age groups 3 to 8 in the assessment, where age group 8 is not a plus group. But the data is aggregated for age groups 0 to $10+$. In this research we consider age groups 1 to $6+$ in the first quarter and 0 to $6+$ in the third quarter for Cod. While for Saithe we consider age groups 1 to $10+$ in the first quarter and  0 to $10+$ in the third quarter. Figure \ref{HaulsAgeTotalAllYears} gives the number of hauls in which age data for the North Sea Cod and Saithe were sampled in years 2015-2018. The abundance of junenile Cod (ages 1-3) is generally much higher  compared with the older fish; Figure \ref{HaulsAgeTotalAllYears} (a) - (d). While for Saithe the abundance of fish between age 3-6 is generally higher in the summer season compared with the other ages, see Figure \ref{HaulsAgeTotalAllYears} (e)-(h). 
 
 
-\clearpage
+%\clearpage
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Cod.jpeg}}
+\subfloat[]{\includegraphics[width=0.35\textwidth]{figures/Age3Cod2018Q3.jpeg}}
 \qquad  
-\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Cod.jpeg}} 
-\qquad
-\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Cod.jpeg}} \\
-\qquad
-\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Cod.jpeg}} 
-\qquad 
-\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Saithe.jpeg}} 
-\qquad
-\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Saithe.jpeg}} \\
-\qquad
-\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Saithe.jpeg}}
-\qquad
-\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Saithe.jpeg}} 
+\subfloat[]{\includegraphics[width=0.35\textwidth]{figures/Age4Cod2018Q3.jpeg}}  
 \end{tabular}
 \captionsetup{font=small, width = 14.5cm}{
-\caption[]{Number of hauls with age data for North Sea Cod and Saithe in quarters 1 an 3, respectively in the years 2015-2018. In Q3 surveys data is collected for age 0 group in the North Sea, however, no age 0 group data for Saithe were collected  in 2015 Q3.}
-\label{HaulsAgeTotalAllYears}}
-\end{figure*} 
-
-
-
-\subsection{Evaluation of ALK methods}
-\label{sec:codandsaitheresults}
-
-Results from analyses of North Sea Cod  show that the area based ALK and haul based ALK estimators can give similar point estimates of abundance at age (Figure \ref{AreaHaulEstimatesAllYearsQ1}). The estimates are dominated by 2-year old in 2015, and by the 2 and 3-year olds in 2016. 
-\begin{itemize}
-\item uncertainty estimates for cohorts (juvenile Cod 1 and 2-year olds) in  2015-2016 does not correspond presumably because of 1) haul-to-haul variation in catch rates (see Figure \ref{AgeSCodALLYearsQ1} in Supplementary Materials \ref{secAP:realdataanalysis})?; 2) lower catch rates of 1-year old because who are typically not found in the North Sea during the winter but migrates to North Sea at age 2?
-\item For Saithe, estimates of abundance at age from the two ALK estimators are rather different, particularly for 2, 3 or 4-year old in 2015-2016. Possible reasons for this?. Huge uncertainty captured in the 3-year old in 2016 Q3,which is not captured in 2-year old in 2015 Q3. Similarly in 2017 Q3 uncertainty in 1-year old is marginal, but this is huge in 2018 Q3 for the 2-year old.
-\item  Estimates for Cod and Saithe quarters 3, and 1, respectively are given in Figure \ref{AreaHaulEstimatesAllYearsQ3} and \ref{AreaHaulEstimatesAllYearsQ3}, respectively in Supplementary Materials \ref{secAP:realdataanalysis}.
-\end{itemize}
-%The uncertainty in the 2-year olds in 2016 is quite large, which is not captured in 1-year olds in the previous year.
-
-
-%\begin{itemize}
-%\item Pool all hauls in a RFA, sample with replacement and put sampled hauls into relevant rectangles
-%\item Sample with replacement the pooled age with a given length in a RFA
-
-
-
-
-%\clearpage
-
-\begin{figure*}[h!]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulEstimates2015Q1.jpeg}} & 
-\subfloat[ ]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulEstimates2016Q1.jpeg}} & \\
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulEstimates2017Q1.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulEstimates2018Q1.jpeg}} & 
-\end{tabular}
-\captionsetup{font=small, width = 14.5cm}{
-\caption[]{Estimated abundance at age for North Sea Cod for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter (Q1). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. The age of Cod ranges from $1$ year to $6+$ years in the first quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.  }\label{AreaHaulEstimatesAllYearsQ1}}
+\caption[]{Hauls with 3-year-old and 4-year-old North Sea Cod in 2018 Q3. }\label{HaulsAgeTotalAllYearsCod2018Q3}}
 \end{figure*} 
 
 \clearpage
 \begin{figure*}[h!]
 \centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[ ]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2015Q3.jpeg}} & 
-\subfloat[ ]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2016Q3.jpeg}} & \\
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2017Q3.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2018Q3.jpeg}} & 
+\begin{tabular}{@{}ccccc@{}}
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2015Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2015Q1.jpeg}} & \\
+\subfloat[ ]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2016Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2016Q1.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2017Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2017Q1.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2018Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2018Q1.jpeg}} & \\
 \end{tabular}
 \captionsetup{font=small, width = 14.5cm}{
-\caption[]{Estimated abundance at age for North Sea Saithe for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the third quarter (Q3). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. The age of Saithe ranges from  $0$ year to $10+$ years in the third quarter, where $10+$ is the "plus group consisting of all fish of age $10$ and older.  }\label{SaitheAreaHaulEstimatesAllYearsQ3}}
+\caption[]{Estimated abundance at age for North Sea Cod for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter Q1 (left pannel). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. Expected relative standard error (RSE) for estimated abundance at age (mCPUE) are also given in the right panel. The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. }\label{AreaHaulEstimatesAllYearsQ1}}
 \end{figure*} 
-
-
-%\clearpage
-\subsection{Comparison of bootstrap procedures for uncertainty estimation}
-\begin{itemize}
-\item stratified and modified-ICES boostrap procedures gave similar performances
-\item ICES bootstrap procedure overestimates the uncertainty for both Cod and Saithe over the time series. This procedure ignores the fine scale stratification at the first stage, hence overestimation of the uncertainty; and gnores age-length data collected at the haul level, hence underestimates the uncertainty. So there is bias in both direction. 
-\item Uncertainty in 2-year old Cod is typically higher compared with 1-year old even though 2-year olds were captured in at least 1.5 times more hauls than the 1-year olds in years 2015, 2016 and 2018 (Figure \ref{HaulsAgeTotalAllYears} (a) and (b)). The reason for this is because of the huge haul-to-haul variation in the catch rates;  see Figure \ref{AgeSCodALLYearsQ1} in Supplementary Materials \ref{secAP:realdataanalysis}.
-\item Similarly for Saithe in the third quarter, uncertainty in the estimates of 2-year old is typical high, particularly in 2018. While 2-year old Saithe is caught in more hauls compared with 1-year olds (Figure \ref{HaulsAgeTotalAllYears} (h)), only one haul had approximately 36\% of the data, while the other hauls had at most 8\% of the data; see Figure \ref{AgeSaitheALLYearsQ3} (f) in Supplementary Materials \ref{secAP:realdataanalysis}.
-\end{itemize}
-
-%\clearpage
-\begin{figure*}[h!]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2015Q1.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2016Q1.jpeg}} & \\
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2017Q1.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2018Q1.jpeg}} & 
-\end{tabular}
-\captionsetup{font=small, width = 14.5cm}{
-\caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Cod in years 2015-2018 in the first quarter (Q1). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Cod ranged from $1$ to $6+$ in the first quarter and $0$ year to $6+$ years in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.}}
-\label{AreaAreaModAllYearsQ1}
-\end{figure*} 
-
-
+%The age of Cod ranged from $1$ to $6+$ in the first quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.
 
 \clearpage
 
 \begin{figure*}[h!]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2015Q3.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2016Q3.jpeg}} & \\
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2017Q3.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2018Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2015Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2015Q3.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2016Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2016Q3.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2017Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2017Q3.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2018Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2018Q3.jpeg}} & 
 \end{tabular}
 \captionsetup{font=small, width = 14.5cm}{
-\caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Saithe in years 2015-2018 in the third quarter (Q3). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Saithe ranged from $1$ year to $10+$ years in the first quarter and $0$ to $10+$ in the third quarter, where $10+$ is the "plus group consisting of all fish of age $10$ and older.}}
-\label{AreaAreaModAllYearsQ1}
+\caption[]{Estimated abundance at age for North Sea Cod for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the third quarters Q3 (left pannel). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. Expected relative standard error (RSE) for estimated abundance at age (mCPUE) are also given in the right panel. The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. }\label{AreaHaulEstimatesAllYearsQ3}}
 \end{figure*} 
+
+\clearpage
+
+
+
+%\clearpage
+\subsection{Evaluation of sampling strategy of otoliths}
+\label{sec:optimumeffortresultsOtoliths}
+In this section we investigate the effect of reducing effort with respect to otolith collection. The details of how the reduction is achieved are given in section \ref{sec:reducingeffort}. We illustrate the effect by investigating how the expected relative standard error (RSE) of relative abundance at age (\ref{eq:abundanceestimatornorthsea}) changes, and how the spawning stock biomass changes in an assessment study. 
+
+Firstly, we sample \textit{one} pair of otoliths in length group widths: 5cm, 4cm, 3cm, 2cm, or 1cm and investigate the effect on the expected relative standard error (Figure \ref{fig:removal1OtolithCodQ1}). Table \ref{resamplingOtoliths2015-2018} gives the number of otoliths sampled in each length group width (percentage of otoliths sampled are given in parentheses). In all years and quarters, at most, 53\% of otoliths are sampled in length group width 5cm, and the difference in expected relative standard error between 5cm and 1cm length width group is marginal for age classes (Figure \ref{fig:removal1OtolithCodQ1}). This suggests that the number of otoliths to be sampled could be reduced by at least 50\% without loss of information. We also investigate the effect on expected RSE if we sample \textit{one} pair, \textit{two} pairs, \textit{three} pairs, \textit{four} pairs  or \textit{five} pairs of otoliths per 5cm length group width (Figure  \ref{fig:removalCod5cmQ1}). The results show that for all age classes, except for age 6+ in 2017, the difference in expected relative standard is marginal whether \textit{one} pair or \textit{five} pairs of otoliths are sampled. A similar trend is observed in the third quarter in 2015-2018 and these results are presented  in Supplementary Materials \ref{secAp:evalutionofotoliths} \\
+
+\begin{small}
+\begin{table}[h!]
+\setlength\tabcolsep{6.5pt} 
+\centering
+\captionsetup{font=small, width = 13cm}{
+\caption{Average number of otoliths sampled in length group widths: 5cm, 4cm,...,1cm (percentages are in parentheses). \textit{One} pair of otoliths are sampled in each length group width in the first quarter (Q1) in 2015-2018. The total number of otoliths sampled in a given year is also given.}\label{resamplingOtoliths2015-2018}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclcl}
+  \hline \\ [0.3ex]
+{\bf Year}   & \multicolumn{5}{c}{\bf Length group width  } & \thead{\bf Total otoliths }  \\[1.0ex]
+&   {5cm} & {4cm}  & {3cm} & {2cm}  & {1cm} \\ [1.0ex]
+ \hline \\ [0.3ex]
+	
+{ 2015} & 1163 (40\%) & 1272 (44\%) & 1459 (50\%) & 1711 (59\%) &  2189 (76\%)   & 2895\\[1ex]
+
+{ 2016}   &1163 (48\%) & 1272 (53\%) & 1459 (60\%) & 1711 (69\%) &  2189 (85\%)   &2046\\[1ex]
+
+{ 2017} & 1180 (47\%) & 1295 (52\%) & 1466 (57\%) & 1719 (69\%) &  2189 (88\%)   &2501\\[1ex]
+
+{ 2018}  & 803 (50\%) & 881 (55\%) & 980 (61\%) & 1134 (71\%) &  1357 (85\%)   &1600\\[1ex]
+   \hline \\[0.1ex]
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+ 
+Secondly, we investigate the effect of sampling \textit{one} pair of otoliths in length group widths: 5cm, 4cm, 3cm, 2cm, or 1cm on spawning stock biomass (SSB) in an assessment study (Figure.....).
+
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2015Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2016Q1.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2017Q1.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2018Q1.jpeg}} & 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Exepcted relative standard error for Cod in Q1 in year 2015-2018 with different length group widths for 300 bootstrap samples. We sample \textit{one} pair of otoliths in the following length group widths: 5cm, 4cm, 3cm, 2cm and 1cm, which is represented by the squares.  Here, 1cm (All) is the expected RSE with all otoliths of cod sampled in North Sea IBTS, which is represented by the horizontal lines. While the current smapling strategy recommended by ICES for North Sea cod is \textit{one} pair of otoliths per 1cm length group width, some nations sampled more than \textit{one} pair per 1cm. The numbers 1 through 6+ (and associated colours) represent the age of Cod, where 6+ is all fish of age 6 or older.}\label{fig:removal1OtolithCodQ1}}
+\end{figure*} 
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2015Q1DL5.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2016Q1DL5.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2017Q1DL5.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.45\textwidth]{results/olav/resampling/removalCod2018Q1DL5.jpeg}} & 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Exepcted relative standard error for Cod in Q1 in year 2015-2018 with different length group widths for 300 bootstrap samples. We sample the following number of otliths in a 5cm length group width (bin): 1, 2, 3, 4 or 5, which is represented by the squares.  Here, current is the expected RSE with all otoliths of cod sampled in North Sea IBTS, which is represented by the circle and horizontal lines. The current smapling strategy recommended by ICES for North Sea cod is \textit{one} pair of otoliths per 1cm length group width.}\label{fig:removalCod5cmQ1}}
+\end{figure*} 
+
+
+
+\subsection{Evaluation of sampling strategy of otoliths and hauls}
+\label{sec:optimumeffortresultsHaul}
+In this section we investigate the effect on the expected relative standard if \textit{one} pair or \textit{five} pairs of otoliths are sampled per 5cm length group width, and if fewer or more hauls are taken in a survey.  
+
+
+\clearpage
+\subsection{Comparing estimates from the haul based ALK with Delta-GAM method}
+
+The Delta-GAM index method \citep{berg2014evaluation}
+
+\begin{itemize}
+\item predefined index area for cod (not the whole North sea)
+\item remove rectangles and compute estimates using haul based or area based method
+\end{itemize}
+\clearpage
+%
+%\clearpage
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[ ]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2015Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2015Q3.jpeg}} & \\
+%\subfloat[ ]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2016Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2016Q3.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2017Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2017Q3.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2018Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2018Q3.jpeg}} & 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Estimated abundance at age for North Sea Saithe for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the third quarters Q3 (left pannel). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. Expected relative standard error (RSE) for estimated abundance at age (mCPUE) are also given in the right panel. The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Cod ranged from $1$ to $10+$ in the first quarter, where $10+$ is the "plus group consisting of all fish of age $10$ and older.  }\label{SaitheAreaHaulEstimatesAllYearsQ3}}
+%\end{figure*} 
+
 
 
 
@@ -423,30 +507,8 @@ The estimated SSBs with usage of the two different ALKs are illustrated in Figur
 \end{figure*} 
 
 
-%\clearpage
-\subsection{Evaluation of sampling strategy of otoliths}
-\label{sec:optimumeffortresults}
-In this section we investigate the effect of reducing effort with respect to otolith collection. The details of how the reduction is achieved are given in section \ref{sec:reducingeffort}.  We illustrate the effect by investigating how the relative standard error of the mCPUE (\ref{eq:abundanceestimatornorthsea}) changes, and how the spawning stock biomass changes in an assessment study. 
-
-\subsection{Effect on the relative standard error}
-Figure \ref{fig:removalCodQ1} illustrates the relative standard error (RSE) with several selections of length groups in year 2015-2018 Q1.  We see that the RSE typically increases as length group width increases. This increase seems to be particularly strong for Cod in age range 3-5 years. Compared to the original RSE, we see from Figure \ref{fig:removalCodQ1} that the RSE is almost unchanged when using twice as wide length groups below 40cm and the original length groups above 40cm.  At the same time, the number of sampled otoliths is typically reduce with approximately 30\% with that length group's selection (\ed{this is not very clear}). This observation gives a strong case for sampling fewer otoliths from short (and perhaps younger) fish as the effect on the mCPUE is minor. %(\ed{we should use relative standard error (RSE) instead of CV}).
-
-%\clearpage
-\begin{figure*}[h!]
-\centering
-\begin{tabular}{@{}ccc@{}}
-\subfloat[]{\includegraphics[width=0.45\textwidth]{figures/removalCod2015Q1.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.45\textwidth]{figures/removalCod2016Q1.jpeg}} & \\
-\subfloat[]{\includegraphics[width=0.45\textwidth]{figures/removalCod2017Q1.jpeg}} & 
-\subfloat[]{\includegraphics[width=0.45\textwidth]{figures/removalCod2018Q1.jpeg}} & 
-\end{tabular}
-\captionsetup{font=small, width = 14.5cm}{
-\caption[]{Illustration of the CV for Cod in Q1 in year 2015-2018 with different length groups.  The squares illustrates CVs with use of length groups width 1cm, 2cm, ..., 5cm. The stars illustrates the CV with 2 cm length group width up to 40cm, and 1 cm above 40cm.  Only \textit{one} otolith is sampled inside each length group, and 200 bootstrap simulations are used. The horizontal lines illustrates the original CV with all data.}\label{fig:removalCodQ1}}
-\end{figure*} 
 
 
-
-\subsection{Effect on assessment}
 \clearpage
 \section{DISCUSSION}
 \label{sec:discussion}
@@ -466,6 +528,19 @@ In this research we determine sufficient sampling efforts of otoliths for target
 %\end{figure}
 
 
+
+%In this section we investigate the effect of reducing effort with respect to otolith collection. The details of how the reduction is achieved are given in section \ref{sec:reducingeffort}. We illustrate the effect by investigating how the expected relative standard error (RSE) of relative abundance at age (\ref{eq:abundanceestimatornorthsea}) changes (\ref{sec:otolithsrelativeSE}), and how the spawning stock biomass changes in an assessment study (\ref{sec:otolithsStockassessment}). 
+%\subsubsection{Effect on the relative standard error}
+%\label{sec:otolithsrelativeSE}
+%In this section we investigate the effect on the relative standard effect .....using two sampling procedures of otoliths for age determination. 
+%Figure \ref{fig:removalCodQ1} compares expected relative standard (RSE) of abundance at age of sampling \textit{one} pair of otoliths in length group width: 5cm, 4cm,..., 1cm  \\
+
+
+
+ %We see that the RSE typically increases as length group width increases. This increase seems to be particularly strong for Cod in age range 3-5 years. Compared to the original RSE, we see from Figure \ref{fig:removalCodQ1} that the RSE is almost unchanged when using twice as wide length groups below 40cm and the original length groups above 40cm.  At the same time, the number of sampled otoliths is typically reduce with approximately 30\% with that length group's selection (\ed{this is not very clear}). This observation gives a strong case for sampling fewer otoliths from short (and perhaps younger) fish as the effect on the mCPUE is minor.
+ %Figure \ref{fig:removalCodQ1} illustrates the relative standard error (RSE) with several length group widths in year 2015-2018 Q1. We also give the expected relative standard error when all otoliths sampled according the current sampling strategy.  \\ 
+ 
+ %Due to the variability of catch characteristics among items in the population, a good practice in data collections is to apply scientific sample designs in the sample selection process to reduce the risk of biased estimates of, e.g., the catch composition across all trips in the fleet. Inferences about the population (e.g., length composition of the total catch of a species in all trips, or numbers at age from length-stratified sampling within trips) are based on the information from the sample survey data. In order to make statistically valid inferences for the population (e.g., all trips), the sample design must be incorporated in the data analysis. Design-based methods for analyzing survey data can be implemented using readily available computer programs in several user-friendly software packages.
 
 \clearpage
 
@@ -599,6 +674,7 @@ Assume a length $l$ group has $n_{l}$ sub length groups. Assume further in a giv
 \section{\large IBTS data set for Cod and Saithe}
 \label{secAp:data}
 
+In this section we give a summary of the of the data for Cod and Saithe in years 2015:2018. Figures \ref{HaulsAgeTotalAllYearsCod} and \ref{HaulsAgeTotalAllYearsSaithe} give the number of hauls with age data for Cod and Saithe respectively. Table \ref{tab:realdata2017-2018} gives a brief summary of Cod and Saithe data in years 2015-2018.\\
 %Table \ref{tab:realdata2017-2018} describes the data for the years 2015-2018.
 
 %\clearpage
@@ -647,10 +723,99 @@ Assume a length $l$ group has $n_{l}$ sub length groups. Assume further in a giv
  \end{small}
  
  
+\clearpage
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Cod.jpeg}}
+\qquad  
+\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Cod.jpeg}} \\
+\qquad
+\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Cod.jpeg}} 
+\qquad
+\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Cod.jpeg}} \\
+\qquad 
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q3Cod.jpeg}} 
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q3Cod.jpeg}} \\
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q3Cod.jpeg}}
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q3Cod.jpeg}} 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Number of hauls with age data for North Sea Cod in quarters 1 an 3 in the years 2015-2018. In Q3 surveys data is collected for age 0 group in the North Sea.}
+\label{HaulsAgeTotalAllYearsCod}}
+\end{figure*} 
+
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Saithe.jpeg}} 
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Saithe.jpeg}} \\
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Saithe.jpeg}}
+\qquad
+\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Saithe.jpeg}} 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Number of hauls with age data for North Sea Cod and Saithe in quarters 1 an 3, respectively in the years 2015-2018. In Q3 surveys data is collected for age 0 group in the North Sea, however, no age 0 group data for Saithe were collected  in 2015 Q3.}
+\label{HaulsAgeTotalAllYearsSaithe}}
+\end{figure*} 
+
+
+ %\clearpage
+ 
+ 
+%%%\clearpage
+% \begin{small}
+%\begin{table}[h!]
+%\setlength\tabcolsep{3.5pt} 
+%\centering
+%\captionsetup{font=small, width = 15cm}{
+%\caption{Summary of North Sea Cod and Saithe data in years 2015-2018.  Data collected in the third quarter (Q3) has age 0 group but this is not collected in quarter 1 (Q1) surveys.}\label{tab:realdata2017-2018}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
+%  \hline \\ [0.3ex]
+%{\bf Species} &  & \multicolumn{8}{c}{\bf Years and quarters} &   \\[1.0ex]
+%%\hline\\
+%%  \cmidrule(lr{0.3em}){3-6} \\ [0.5ex]% \cmidrule(lr{0.3em}){5-6}  \\ [0.5ex]
+%&  & \multicolumn{2}{c}{2015} & \multicolumn{2}{c}{2016}  & \multicolumn{2}{c}{2017} & \multicolumn{2}{c}{2018}   \\ [1.0ex]
+% \hline \\ [0.3ex]
+%& & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
+%%\hline \\ 
+%  \cmidrule(lr{0.3em}){3-10}  \\ [0.5ex]% \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
+% 	
+%\raisebox{2.5ex}{\bf Cod}        \\ %   & Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
+%
+%& Cod with missing age in RFAs     & 0.30\%& 0.13\% & 0.13\% & 0.34\% & 0.68\% &  0.07\% & 0.51\%  & 0.11\%  \\[2.8ex]  
+%& Cod with missing age in hauls    & 10.06\% & 14.20\% & 6.18\%& 6.32\% & 2.25\% &0.27\%   & 1.40\%   & 0.77\% \\[4.2ex] 
+%
+%
+%\raisebox{2.5ex}{\bf Saithe}        \\
+%
+%&Cod with missing age in RFAs      &1.2\% & 0\%		& 0\%  & 0.03\% &0.14\%  &  0.05\% & 0.03\%  & 0\%  \\[2.8ex]  
+%& Cod with missing age in hauls     &21.6\%& 0.17\%	& 0.4\%&0.22\%  &20.1\%  &   0.08\% & 0.06\%  & 0.02\%  \\[1.5ex]
+%
+%   \hline \\[0.1ex]
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small}
+% 
+ 
+ %\clearpage
 %\clearpage
 \section{Real data analysis}
 \label{secAP:realdataanalysis}
-In this Section we give results for Cod in the third quarter (Q3) and for Saithe in the first quarter (Q1)  in years 2015-2018. Section \ref{secAp:comparisonOfALK} compares the ALK estimators used to compute abundance at age indices of Cod and Saithe. In Section \ref{secAP:uncertaintyBootstrapMethods}, we compare the relative standard error of abundance at age from the  three bootstrap procedures. Figures \ref{AgeSCodALLYearsQ1} and \ref{AgeSaitheALLYearsQ3} give the  number of North Sea juvenile Cod and Saithe, respectively, sampled in years 2015, 2016 and 2018. Haul-to-haul variation in catch rates of 2-year old Cod is much higher compared with 1-year old Cod in 2016 and 2018. Similarly for Saithe in Q3, haul-to-haul variation is high for 2-year olds in 2016 and 2018 compared with 1-year olds (Figure \ref{AgeSaitheALLYearsQ3}).
+%In this Section we give results for Cod in the third quarter (Q3) and for Saithe in the first quarter (Q1)  in years 2015-2018. Section \ref{secAp:comparisonOfALK} compares the ALK estimators used to compute abundance at age indices of Cod and Saithe. In Section \ref{secAP:uncertaintyBootstrapMethods}, we compare the relative standard error of abundance at age from the  three bootstrap procedures. Figures \ref{AgeSCodALLYearsQ1} and \ref{AgeSaitheALLYearsQ3} give the  number of North Sea juvenile Cod and Saithe, respectively, sampled in years 2015, 2016 and 2018. Haul-to-haul variation in catch rates of 2-year old Cod is much higher compared with 1-year old Cod in 2016 and 2018. Similarly for Saithe in Q3, haul-to-haul variation is high for 2-year olds in 2016 and 2018 compared with 1-year olds (Figure \ref{AgeSaitheALLYearsQ3}).
+
+
 
 \clearpage
 \begin{figure*}[h!]
@@ -711,7 +876,7 @@ The results show that the two ALK estimators can give similar estimates of abund
 \subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulEstimates2018Q3.jpeg}} & 
 \end{tabular}
 \caption[]{Estimated abundance at age of North Sea Cod by the area based ALK and haul based ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter (Q1). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. The age of Cod ranges from $1$ year to $10+$ years, where $6+$ is the "plus group consisting of all fish of age $6$ and older.  }
-\label{AreaHaulEstimatesAllYearsQ3}
+\label{AreaHaulEstimatesAllYearsCodQ3}
 \end{figure*} 
 
 
@@ -725,7 +890,7 @@ The results show that the two ALK estimators can give similar estimates of abund
 \subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulEstimates2018Q1.jpeg}} & 
 \end{tabular}
 \caption[]{Estimated abundance at age of North Sea Saithe by the area based ALK and haul based ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first quarter (Q1). The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. The age of Saithe ranges from $1$ year to $10+$ years, where $10+$ is the "plus group consisting of all fish of age $10$ and older.  }
-\label{SaitheAreaHaulEstimatesAllYearsQ1}
+\label{SaitheAreaHaulEstimatesAllYearsSaitheQ1}
 \end{figure*} 
  
 \clearpage
@@ -742,7 +907,7 @@ The results show that the two ALK estimators can give similar estimates of abund
 \subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2018Q3.jpeg}} & 
 \end{tabular}
 \caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Cod in years 2015-2018 in the third quarter (Q3). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures for 500 replicates. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Cod ranges $0$ year to $6+$ years in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.}
-\label{AreaAreaModAllYearsQ3}
+\label{AreaAreaModAllYearsCodQ3}
 \end{figure*} 
 
 \clearpage
@@ -756,7 +921,208 @@ The results show that the two ALK estimators can give similar estimates of abund
 \subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2018Q1.jpeg}} & 
 \end{tabular}
 \caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Saithe in years 2015-2018 in the first quarter (Q1). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Saithe ranges from $1$ year to $10+$ years in the first quarter, where $10+$ is the "plus group consisting of all fish of age $10$ and older.}
-\label{AreaAreaModAllYearsQ1}
+\label{AreaAreaModAllYearsSaitheQ1}
 \end{figure*} 
+
+\clearpage
+
+\subsection{Evaluating sampling strategies of otoliths collection in IBTS Q3 surveys}
+\label{secAp:evalutionofotoliths}
+
+
+\begin{small}
+\begin{table}[h!]
+\setlength\tabcolsep{6.5pt} 
+\centering
+\captionsetup{font=small, width = 14cm}{
+\caption{Average number of otoliths sampled in length group widths: 5cm, 4cm,...,1cm (percentages are in parentheses). \textit{One} pair of otoliths are sampled in each length group width in the third quarter in 2015-2018. The total number of otoliths sampled in a given year and quarter is also given.}\label{resamplingOtoliths2015-2018Q3}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
+  \hline \\ [0.3ex]
+{\bf Year} &   \multicolumn{5}{c}{\bf Length group width  } & \thead{\bf Total otoliths }  \\[1.0ex]
+  & {5cm} & {4cm}  & {3cm} & {2cm}  & {1cm} \\ [1.0ex]
+ \hline \\ [0.1ex]
+	
+{2015} &  928 (44\%) & 1021 (48\%)  & 1153 (55\%) & 1337 (63\%) & 1669 (79\%)  & 2113\\ [1ex]
+
+{ 2016} &  965 (53\%) & 1037 (57\%)  & 1157 (64\%) & 1322 (73\%) & 1669 (91\%)  & 1804             & \\ [1ex]
+
+{ 2017}   &  938 (42\%) & 1015 (45\%)  & 1171 (53\%) & 1393 (62\%) & 1795 (80\%)  & 2230             & \\ [1ex]
+
+{ 2018} &  711 (49\%) & 794 (55\%)  & 866 (59\%) & 990 (68\%) & 1198 (82\%)  & 1456            & \\ [0.1ex]
+   \hline \\[0.1ex]
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+ 
+% \clearpage
+%\begin{small}
+%\begin{table}[h!]
+%\setlength\tabcolsep{6.5pt} 
+%\centering
+%\captionsetup{font=small, width = 14cm}{
+%\caption{Average number of otoliths sampled in length group widths: 5cm, 4cm,...,1cm (percentages are in parentheses). \textit{One} pair of otoliths are sampled in each length group width in the first and third quarters in 2015-2018. The total number of otoliths sampled in a given year and quarter is also given.}\label{resamplingOtoliths2015-2018}}
+%\begin{footnotesize}
+%\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
+%  \hline \\ [0.3ex]
+%{\bf Year} &  & \multicolumn{5}{c}{\bf Length group width  } & \thead{\bf Total otoliths }  \\[1.0ex]
+%&  & {5cm} & {4cm}  & {3cm} & {2cm}  & {1cm} \\ [1.0ex]
+% \hline \\ [0.3ex]
+%	
+%\raisebox{2.0ex}{\bf 2015}         \\[0.1ex] 
+%&{\bf Q1} & 1163 (40\%) & 1272 (44\%) & 1459 (50\%) & 1711 (59\%) &  2189 (76\%)   & 2895\\[1ex]
+%&{\bf Q3} &  928 (44\%) & 1021 (48\%)  & 1153 (55\%) & 1337 (63\%) & 1669 (79\%)  & 2113\\             & \\ [0.5ex]
+%
+%
+%\raisebox{2.0ex}{\bf 2016}         \\[0.1ex]  
+%&{\bf Q1} & 1163 (48\%) & 1272 (53\%) & 1459 (60\%) & 1711 (69\%) &  2189 (85\%)   &2046\\[1ex]
+%&{\bf Q3} &  965 (53\%) & 1037 (57\%)  & 1157 (64\%) & 1322 (73\%) & 1669 (91\%)  & 1804\\             & \\ [0.51ex]
+%
+%\raisebox{2.0ex}{\bf 2017}        \\[0.1ex] 
+%&{\bf Q1} & 1180 (47\%) & 1295 (52\%) & 1466 (57\%) & 1719 (69\%) &  2189 (88\%)   &2501\\[1ex]
+%&{\bf Q3} &  938 (42\%) & 1015 (45\%)  & 1171 (53\%) & 1393 (62\%) & 1795 (80\%)  & 2230\\             & \\ [0.5ex]
+%
+%\raisebox{2.0ex}{\bf 2018}        \\[0.1ex] 
+%&{\bf Q1} & 803 (50\%) & 881 (55\%) & 980 (61\%) & 1134 (71\%) &  1357 (85\%)   &1600\\[1ex]
+%&{\bf Q3} &  711 (49\%) & 794 (55\%)  & 866 (59\%) & 990 (68\%) & 1198 (82\%)  & 1456\\             & \\ [1ex]
+%
+%   \hline \\[0.1ex]
+%\end{tabular}
+%\end{footnotesize}
+%\end{table}
+% \end{small} 
+ 
+ 
+%\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2015Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2016Q3.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2017Q3.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2018Q3.jpeg}} & 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Exepcted relative standard error for Cod in Q1 in year 2015-2018 with different length group widths for 300 bootstrap samples. We sample \textit{one} pair of otoliths in the following length group widths: 5cm, 4cm, 3cm, 2cm and 1cm, which is represented by the squares.  Here, 1cm (All) is the expected RSE with all otoliths of cod sampled in North Sea IBTS, which is represented by the horizontal lines. While the current smapling strategy recommended by ICES for North Sea cod is \textit{one} pair of otoliths per 1cm length group width, some nations sampled more than \textit{one} pair per 1cm.}\label{fig:removalCodQ3}}
+\end{figure*} 
+
+\clearpage
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2015Q3DL5.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2016Q3DL5.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2017Q3DL5.jpeg}} & 
+\subfloat[]{\includegraphics[width=0.36\textwidth]{results/olav/resampling/removalCod2018Q3DL5.jpeg}} & 
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{Exepcted relative standard error for Cod in Q1 in year 2015-2018 with different length group widths for 300 bootstrap samples. We sample the following number of otliths in a 5cm length group width (bin): 1, 2, 3, 4 or 5, which is represented by the squares.  Here, current is the expected RSE with all otoliths of cod sampled in North Sea IBTS, which is represented by the circle and horizontal lines. The current smapling strategy recommended by ICES for North Sea cod is \textit{one} pair of otoliths per 1cm length group width.}\label{fig:removalCod5cmQ3}}
+\end{figure*} 
+
+%\clearpage
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Cod.jpeg}}
+%\qquad  
+%\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Cod.jpeg}} 
+%\qquad
+%\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Cod.jpeg}} \\
+%\qquad
+%\subfloat[]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Cod.jpeg}} 
+%\qquad 
+%\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2015Q1Saithe.jpeg}} 
+%\qquad
+%\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2016Q1Saithe.jpeg}} \\
+%\qquad
+%\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2017Q1Saithe.jpeg}}
+%\qquad
+%\subfloat[ ]{\includegraphics[width=0.28\textwidth]{figures/HaulsAndAge2018Q1Saithe.jpeg}} 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Number of hauls with age data for North Sea Cod and Saithe in quarters 1 an 3, respectively in the years 2015-2018. In Q3 surveys data is collected for age 0 group in the North Sea, however, no age 0 group data for Saithe were collected  in 2015 Q3.}
+%\label{HaulsAgeTotalAllYears}}
+%\end{figure*} 
+
+
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccccc@{}}
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2015Q1.jpeg}} & 
+%\subfloat[ ]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2016Q1.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2017Q1.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2018Q1.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2015Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2016Q3.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2017Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulEstimates2018Q3.jpeg}} & 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Estimated abundance at age for North Sea Cod for the two ALK estimators based on data from the International Bottom Trawl Survey in 2015-2018 in the first and third quarters, Q1 and Q3, respectively. The error bars are estimated 95\% confidence intervals using the bias corrected (see Methods) and 500 bootstrap samples. The age of Cod ranges from $1$ year to $6+$ years in the first quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.  }\label{AreaHaulEstimatesAllYearsQ1}}
+%\end{figure*} 
+
+
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2015Q1.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2016Q1.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2017Q1.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2018Q1.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2015Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2016Q3.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2017Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.33\textwidth]{figures/CodAreaHaulAreaMod2018Q3.jpeg}} & 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Cod in years 2015-2018 in the first and third quarters,  Q1 and Q3, respectively. The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Cod ranged from $1$ to $6+$ in the first quarter and $0$ year to $6+$ years in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.}}
+%\label{AreaAreaModAllYearsQ1}
+%\end{figure*} 
+
+
+
+%\clearpage
+%\subsection{Comparison of bootstrap procedures for uncertainty estimation}
+%\begin{itemize}
+%\item stratified and modified-ICES boostrap procedures gave similar performances
+%\item ICES bootstrap procedure overestimates the uncertainty for both Cod and Saithe over the time series. This procedure ignores the fine scale stratification at the first stage, hence overestimation of the uncertainty; and gnores age-length data collected at the haul level, hence underestimates the uncertainty. So there is bias in both direction. 
+%\item Uncertainty in 2-year old Cod is typically higher compared with 1-year old even though 2-year olds were captured in at least 1.5 times more hauls than the 1-year olds in years 2015, 2016 and 2018 (Figure \ref{HaulsAgeTotalAllYears} (a) and (b)). The reason for this is because of the huge haul-to-haul variation in the catch rates;  see Figure \ref{AgeSCodALLYearsQ1} in Supplementary Materials \ref{secAP:realdataanalysis}.
+%\item Similarly for Saithe in the third quarter, uncertainty in the estimates of 2-year old is typical high, particularly in 2018. While 2-year old Saithe is caught in more hauls compared with 1-year olds (Figure \ref{HaulsAgeTotalAllYears} (h)), only one haul had approximately 36\% of the data, while the other hauls had at most 8\% of the data; see Figure \ref{AgeSaitheALLYearsQ3} (f) in Supplementary Materials \ref{secAP:realdataanalysis}.
+%\end{itemize}
+%
+%%\clearpage
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2015Q1.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2016Q1.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2017Q1.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/AreaHaulAreaMod2018Q1.jpeg}} & 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Cod in years 2015-2018 in the first quarter (Q1). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Cod ranged from $1$ to $6+$ in the first quarter and $0$ year to $6+$ years in the third quarter, where $6+$ is the "plus group consisting of all fish of age $6$ and older.}}
+%\label{AreaAreaModAllYearsQ1}
+%\end{figure*} 
+%
+%
+%
+%\clearpage
+%
+%\begin{figure*}[h!]
+%\centering
+%\begin{tabular}{@{}ccc@{}}
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2015Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2016Q3.jpeg}} & \\
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2017Q3.jpeg}} & 
+%\subfloat[]{\includegraphics[width=0.4\textwidth]{figures/SaitheAreaHaulAreaMod2018Q3.jpeg}} & 
+%\end{tabular}
+%\captionsetup{font=small, width = 14.5cm}{
+%\caption[]{Expected relative standard error (RSE) for estimated abundance at age (mCPUE) for North Sea IBTS Saithe in years 2015-2018 in the third quarter (Q3). The ICES-IBTS bootstrap procedure is compared with the modified ICES-IBTS and stratified bootstrap procedures. The ICES-IBTS bootstrap procedures are applied to the area based age-length key (ALK) and the stratified bootstrap procedure is applied to the haul based ALK. The age of Saithe ranged from $1$ year to $10+$ years in the first quarter and $0$ to $10+$ in the third quarter, where $10+$ is the "plus group consisting of all fish of age $10$ and older.}}
+%\label{AreaAreaModAllYearsQ1}
+%\end{figure*} 
+%
+
+
 
 \end{document}
