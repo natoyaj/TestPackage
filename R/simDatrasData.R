@@ -25,38 +25,50 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh,nSimHauls = NULL)
   simHauls = sample(haulsID,nSim,replace = T)
 
 
-  simDataCA = ca_hh[1,]#Define the structure in the data, this line is removed later.
-  for(j in 1:length(simHauls)){
-    tmpCA = ca_hh[which(ca_hh$haul.id== simHauls[j]),]
-    if(dim(tmpCA)[1]>0){
-      simDataCA = rbind(simDataCA,tmpCA)
-    }
-  }
-  simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
-
-
   #Define a help variable for keeping the number of trawl hauls within each statistical rectangle fixed----
-  rectangleID = rep(NA,nSim)
-  for(i in 1:nSim)
+  rectangleID = rep(NA,length(haulsID))
+  for(i in 1:length(haulsID))
   {
     rectangleID[i] = as.character(unique(dataOfInterest$StatRec[dataOfInterest$haul.id== haulsID[i]]))
   }
+  if(!is.null(nSimHauls)){#Shuffel and expand the rectangleID to keep the number of trawl hauls within each statistical rectangle approximately fixed when not resampling all hauls.
+    rectangleID = sample(rectangleID,length(rectangleID),replace = FALSE)
+    rectangleID = c(rectangleID, sample(rectangleID,length(rectangleID),replace = FALSE))
+    rectangleID = c(rectangleID, sample(rectangleID,length(rectangleID),replace = FALSE))
+  }
   #-----------------------------------------------------
 
-  simData = list(NULL)
+
+#  simDataCA = ca_hh[1,]#Define the structure in the data, this line is removed later.
+#  for(j in 1:length(simHauls)){
+#    tmpCA = ca_hh[which(ca_hh$haul.id== simHauls[j]),]
+#    if(dim(tmpCA)[1]>0){
+#      simDataCA = rbind(simDataCA,tmpCA)
+#    }
+#  }
+#  simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
+
+  simDataHL = list(NULL)
+  simDataCA = list(NULL)
   for(i in 1:nSim)
   {
-    simData[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
-    simData[[i]]$haul.id = paste(simData[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
+    simDataHL[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
+    simDataHL[[i]]$haul.id = paste(simDataHL[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
+    simDataHL[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
 
-    simData[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
+    if(sum(ca_hh$haul.id==simHauls[i])>0){
+      simDataCA[[i]] = ca_hh[ca_hh$haul.id==simHauls[i],]
+      simDataCA[[i]]$haul.id = paste(simDataCA[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
+      simDataCA[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
+    }
   }
-  simDataToBeReturned  =   do.call(rbind.data.frame,simData)
+  simCAToBeReturned  =   do.call(rbind.data.frame,simDataCA)
+  simHLToBeReturned  =   do.call(rbind.data.frame,simDataHL)
   #----------------------------------------------------
 
   toReturn = list()
-  toReturn$ca_hh = simDataCA
-  toReturn$hl_hh = simDataToBeReturned
+  toReturn$ca_hh = simCAToBeReturned
+  toReturn$hl_hh = simHLToBeReturned
   return(toReturn)
 }
 
@@ -216,7 +228,6 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 #' observations in a certain procedure.
 #' @examples
 sampleCA = function(ca_hh,species,quarter,lengthDivision,samplesWithinEachIntervall,hl_hh){
-  toReturn = ca_hh
   toReturn = ca_hh[1,]
   for(id in unique(ca_hh$haul.id)){
     obsTmp = ca_hh[which(ca_hh$haul.id==id),]
