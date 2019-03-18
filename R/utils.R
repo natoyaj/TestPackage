@@ -72,3 +72,36 @@ obsInHL = function(species, hl_hh, id,length)
 }
 
 
+
+#' extractStatRecAll
+#' @description
+#' @export
+#' @return return a list with all the statistical rectangles in all RFAs
+#' @examples
+extractStatRecAll = function(){
+  dataDir <- system.file("extdata", package = "IBTSindices")
+  all = read.csv2(paste0(dataDir,"/CPUEallRec.csv"),sep = ",")
+  all = all[,c("Area","SubArea")]
+
+  toReturn = list()
+  for(rfa in unique(all$Area)){
+    toReturn[[rfa]] = sort(as.character(unique(all$SubArea[all$Area==rfa])))
+  }
+}
+
+#' extractStatRecAll
+#' @description
+#' @export
+#' @return return a vector with all the statistical rectangles in the index area
+#' @examples
+extractStatRecIndexArea = function(species){
+  dataDir <- system.file("extdata", package = "IBTSindices")
+
+  if(species=="Gadus morhua"){
+    indexArea = read.csv2(paste0(dataDir,"/NS_Cod_TS_IndexArea.csv"),sep = ";")
+  }
+  indexArea = indexArea[,"Code"]
+  indexArea = as.character(indexArea)
+
+  return(indexArea)
+}
