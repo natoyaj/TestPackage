@@ -24,7 +24,6 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh,nSimHauls = NULL)
   }
   simHauls = sample(haulsID,nSim,replace = T)
 
-
   #Define a help variable for keeping the number of trawl hauls within each statistical rectangle fixed----
   rectangleID = rep(NA,length(haulsID))
   for(i in 1:length(haulsID))
@@ -37,16 +36,6 @@ simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh,nSimHauls = NULL)
     rectangleID = c(rectangleID, sample(rectangleID,length(rectangleID),replace = FALSE))
   }
   #-----------------------------------------------------
-
-
-#  simDataCA = ca_hh[1,]#Define the structure in the data, this line is removed later.
-#  for(j in 1:length(simHauls)){
-#    tmpCA = ca_hh[which(ca_hh$haul.id== simHauls[j]),]
-#    if(dim(tmpCA)[1]>0){
-#      simDataCA = rbind(simDataCA,tmpCA)
-#    }
-#  }
-#  simDataCA = simDataCA[-1,]#Removes the first line which was created for defining the structure of the data
 
   simDataHL = list(NULL)
   simDataCA = list(NULL)
@@ -143,8 +132,6 @@ simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
 }
 
 
-
-
 #' simCaHlSimultaniousyStratified
 #' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
 #' @param RFA Roundfish area number.
@@ -230,8 +217,8 @@ simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 sampleCA = function(ca_hh,species,quarter,lengthDivision,samplesWithinEachIntervall,hl_hh){
   toReturn = ca_hh[1,]
   for(id in unique(ca_hh$haul.id)){
-    obsTmp = ca_hh[which(ca_hh$haul.id==id),]
-    obsReduced = sampleCAHaul(obsTmp,lengthDivision, samplesWithinEachIntervall,species = species,hl_hh = hl_hh)
+    obsThisHaul = ca_hh[which(ca_hh$haul.id==id),]
+    obsReduced = sampleCAHaul(obsThisHaul,lengthDivision, samplesWithinEachIntervall,species = species,hl_hh = hl_hh)
     toReturn = rbind(toReturn,obsReduced)
   }
   toReturn = toReturn[-1,]
@@ -247,50 +234,45 @@ sampleCA = function(ca_hh,species,quarter,lengthDivision,samplesWithinEachInterv
 #' @return Returns a modified data set of the data used for calculating the CPUE. The data is modified by removing
 #' observations in a certain procedure.
 #' @examples
-sampleCAHaul = function(obsTmp,lengthDivision,samplesWithinEachIntervall,species,hl_hh){
-  toReturn = obsTmp[1,]
+sampleCAHaul = function(obsThisHaul,lengthDivision,samplesWithinEachIntervall,species,hl_hh){
+  toReturn = obsThisHaul[1,]
   for(i in 2:(length(lengthDivision)+1)){
     if(i <= length(lengthDivision)){
-      obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1]  & obsTmp$LngtCm<lengthDivision[i])
+      obsInside = which(obsThisHaul$LngtCm>=lengthDivision[i-1]  & obsThisHaul$LngtCm<lengthDivision[i])
     }else if(i>length(lengthDivision)){
-      obsInside = which(obsTmp$LngtCm>=lengthDivision[i-1])
+      obsInside = which(obsThisHaul$LngtCm>=lengthDivision[i-1])
     }
     if(length(obsInside)>1){
-      whichLengthsInside = sort(unique(floor(obsTmp$LngtCm[obsInside])))
+      whichLengthsInside = sort(unique(floor(obsThisHaul$LngtCm[obsInside])))
       psaudoPopulation = NULL
       counter = 1
       for(j in 1:length(whichLengthsInside)){
-        insideThisLength = round(obsInHL(species = species,hl_hh = hl_hh,id = unique(obsTmp$haul.id),length = whichLengthsInside[j]))
+        insideThisLength = round(obsInHL(species = species,hl_hh = hl_hh,id = unique(obsThisHaul$haul.id),length = whichLengthsInside[j]))
 
-        nTmp = sum(floor(obsTmp$LngtCm)==whichLengthsInside[j])#Number of observed ages in this sub length group
-        repeatedObs =  rep(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),
+        nTmp = sum(floor(obsThisHaul$LngtCm)==whichLengthsInside[j])#Number of observed ages in this sub length group
+        repeatedObs =  rep(which(floor(obsThisHaul$LngtCm)==whichLengthsInside[j]),
                             floor(insideThisLength/nTmp))
-        extraObs = sample(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),(insideThisLength %% nTmp),replace = FALSE)
+        extraObs = sample(which(floor(obsThisHaul$LngtCm)==whichLengthsInside[j]),(insideThisLength %% nTmp),replace = FALSE)
 
         if(insideThisLength!=0){
           psaudoPopulation[counter:(counter + insideThisLength-1)] = c(repeatedObs,extraObs)
           counter = counter + insideThisLength
         }else{
           #This should not happen, a length was reported in CA data but not in HL data.
-          #print("Observation in CA data was not in HL data")
-          #print("Length")
-          #print(whichLengthsInside[j])
-          #print("ID: ")
-          #print(unique(obsTmp$haul.id))
-          psaudoPopulation[counter:((counter + length(c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs))-1))] = c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs)
-          counter = counter + length(c(which(floor(obsTmp$LngtCm)==whichLengthsInside[j]),extraObs))
+          psaudoPopulation[counter:((counter + length(c(which(floor(obsThisHaul$LngtCm)==whichLengthsInside[j]),extraObs))-1))] = c(which(floor(obsThisHaul$LngtCm)==whichLengthsInside[j]),extraObs)
+          counter = counter + length(c(which(floor(obsThisHaul$LngtCm)==whichLengthsInside[j]),extraObs))
         }
       }
 
       if(length(psaudoPopulation)<length(obsInside)){
-        warning(paste("Haul with ID ", obsTmp$haul.id[1], " in year ", obsTmp$Year[1], " had more age observations of length ", i," than lenght observations." ))
+        warning(paste("Haul with ID ", obsThisHaul$haul.id[1], " in year ", obsThisHaul$Year[1], " had more age observations of length ", i," than lenght observations." ))
       }
       nSample = min(samplesWithinEachIntervall,length(obsInside),length(psaudoPopulation))
       obsSelected = sample(psaudoPopulation,size = nSample, replace = FALSE) #Sample without replecement from the psaudo population
     }else{
       obsSelected = obsInside
     }
-    toReturn = rbind(toReturn,obsTmp[obsSelected,])
+    toReturn = rbind(toReturn,obsThisHaul[obsSelected,])
   }
   toReturn = toReturn[-1,]
 

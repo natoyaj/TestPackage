@@ -9,7 +9,7 @@
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfa = function(RFA,species,year, quarter, data, weightStatRec = NULL)
+calcmCPUErfa = function(RFA,species,year, quarter, data, weightStatRec = NULL, useICESindexArea = FALSE)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = data[!is.na(data$Year) & data$Year == year&
@@ -19,6 +19,11 @@ calcmCPUErfa = function(RFA,species,year, quarter, data, weightStatRec = NULL)
 
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
+  if(useICESindexArea){
+    #Exclude some of the statistical rectanlges not included in the index area.
+    statRecsOfinterest = extractStatRecIndexArea(species)
+    statRects = statRects[which(statRects %in% statRecsOfinterest)]
+  }
   numberOfStatRectangles = length(statRects)
   nLengthClass = max(floor(dataOfInterest$LngtCm[which(dataOfInterest$Species ==species)])) #This is to be changed, e.g. find te lenght classes from ALK. TODO
   mCPUEstatRec = matrix(NA,nLengthClass,numberOfStatRectangles)
@@ -115,7 +120,7 @@ calcmCPUEstatRec = function(statRec,species,year, quarter, data,nLengthClass)
 #' @return Returns the mCPUE per length class in the given roundfish area.
 #' @examples
 #'
-calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras")
+calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weightStatRec = NULL, ALKprocedure = "datras", useICESindexArea = FALSE)
 {
   nFoundWithin = 0
   nNotFoundWithin = 0
@@ -136,61 +141,62 @@ calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weight
   }
   #------------------------------------------
 
-  if(ALKprocedure=="datras"){
-    #Construct a matrix with mCPUEs for each statistical rectangel---
-    statRects = unique(dataOfInterest$StatRec)
-    numberOfStatRectangles = length(statRects)
-    nAgeClasses = dim(ALK)[2]-1
-    mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
-    #---------------------------------------------------------------
-
-    #Calculate the mCPUEs for each statistical rectangangle---------
-    if(numberOfStatRectangles==0) return("No observations in RFA")
-    for(i in 1:numberOfStatRectangles)
-    {
-      cpueStatRec = calcmCPUEstatRecAreaBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
-      mCPUEstatRec[,i] = as.double(cpueStatRec)
-
-      if(!is.null(attributes(cpueStatRec)$nFoundWithin) & !is.null(attributes(cpueStatRec)$nNotFoundWithin)){
-        nFoundWithin = nFoundWithin + attributes(cpueStatRec)$nFoundWithin
-        nNotFoundWithin = nNotFoundWithin + attributes(cpueStatRec)$nNotFoundWithin
-      }
-    }
-    #---------------------------------------------------------------
-
-    #Average over the statistical recangles and return mCPUE-----
-    weightUsed = rep(0,numberOfStatRectangles)
-    for(i in 1:numberOfStatRectangles){
-      if(species =="Pollachius virens"){
-        if(statRects[i] %in% weightStatRec$StatRec){
-          weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
-        }else{
-          weightUsed[i] =  0 #Haul is in RFA 10 which is not included in the index for Saithe, this should have been included in the weighting file
-        }
-      }else{
-        weightUsed[i] = 1
-      }
-    }
-
-    mCPUE = rep(0,nAgeClasses)
-    for(i in 1:nAgeClasses)
-    {
-      for(j in 1:numberOfStatRectangles){
-        mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
-#      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]#NB!!!!!
-      }
-    }
-
-    attributes(mCPUE)$nFoundWithin = nFoundWithin
-    attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
-
-    return(mCPUE)
-    #------------------------------------------------------------
-
-  }else if(ALKprocedure=="haulBased" |ALKprocedure== "modelBased"){
-    print("Somethings wrong")
-    #------------------------------------------------------------
+  #Construct a matrix with mCPUEs for each statistical rectangel---
+  statRects = unique(dataOfInterest$StatRec)
+  if(useICESindexArea){
+    #Exclude some of the statistical rectanlges not included in the index area.
+    statRecsOfinterest = extractStatRecIndexArea(species)
+    statRects = statRects[which(statRects %in% statRecsOfinterest)]
   }
+  numberOfStatRectangles = length(statRects)
+  nAgeClasses = dim(ALK)[2]-1
+  mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
+  #---------------------------------------------------------------
+
+  #Calculate the mCPUEs for each statistical rectangangle---------
+  if(numberOfStatRectangles==0) return("No observations in RFA")
+  for(i in 1:numberOfStatRectangles)
+  {
+    cpueStatRec = calcmCPUEstatRecAreaBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK)
+    mCPUEstatRec[,i] = as.double(cpueStatRec)
+
+    if(!is.null(attributes(cpueStatRec)$nFoundWithin) & !is.null(attributes(cpueStatRec)$nNotFoundWithin)){
+      nFoundWithin = nFoundWithin + attributes(cpueStatRec)$nFoundWithin
+      nNotFoundWithin = nNotFoundWithin + attributes(cpueStatRec)$nNotFoundWithin
+    }
+  }
+  #---------------------------------------------------------------
+
+  #Average over the statistical recangles and return mCPUE-----
+  weightUsed = rep(0,numberOfStatRectangles)
+  for(i in 1:numberOfStatRectangles){
+    if(species =="Pollachius virens"){
+      if(statRects[i] %in% weightStatRec$StatRec){
+        weightUsed[i] =  weightStatRec$Weight[which(weightStatRec$StatRec== statRects[i])]
+      }else{
+        weightUsed[i] =  0 #Haul is in RFA 10 which is not included in the index for Saithe, this should have been included in the weighting file
+      }
+    }else{
+      weightUsed[i] = 1
+    }
+  }
+
+  mCPUE = rep(0,nAgeClasses)
+  for(i in 1:nAgeClasses)
+  {
+    for(j in 1:numberOfStatRectangles){
+      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
+#      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]#NB!!!!!
+    }
+  }
+
+  attributes(mCPUE)$nFoundWithin = nFoundWithin
+  attributes(mCPUE)$nNotFoundWithin = nNotFoundWithin
+
+  return(mCPUE)
+  #------------------------------------------------------------
+
+
 }
 
 #' calcmCPUEstatRecAreaBasedALK
@@ -295,7 +301,7 @@ calcmCPUEstatRecAreaBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @export
 #' @return
 #' @examples
-calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL)
+calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL, useICESindexArea = FALSE)
 {
 
   #Extract the data of interest-------------------------
@@ -322,6 +328,11 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
 
   #Construct a matrix with mCPUEs for each statistical rectangel---
   statRects = unique(dataOfInterest$StatRec)
+  if(useICESindexArea){
+    #Exclude some of the statistical rectanlges not included in the index area.
+    statRecsOfinterest = extractStatRecIndexArea(species)
+    statRects = statRects[which(statRects %in% statRecsOfinterest)]
+  }
   numberOfStatRectangles = length(statRects)
   nAgeClasses = dim(ALKNew[[1]])[2]-2
   mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
@@ -511,7 +522,7 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision, useICESindexArea = FALSE)
 {
   #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
   nWithDatras = 0
@@ -547,25 +558,34 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
       areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
     }
 
+    if(useICESindexArea){
+      allRectanlges = extractStatRecAll()[[RFA]]
+      rectanglesOfInterest = extractStatRecIndexArea(species)
+      proportionOfInterest = mean(allRectanlges %in% rectanglesOfInterest)
+      areaThisRFA = areaThisRFA *proportionOfInterest
+    }
+
     if(species== "Pollachius virens"){
       areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
     }
 
-    cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                          ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
+    if(sum(!is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish==RFA
+           & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species)>0){
+      cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
+                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
 
-    mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
-    totalArea = totalArea + areaThisRFA
+      mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
+      totalArea = totalArea + areaThisRFA
 
-    if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
-      nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras
-      nWithoutDatras = nWithoutDatras + attributes(cpueThisRFA)$nWithoutDatras
+      if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
+        nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras
+        nWithoutDatras = nWithoutDatras + attributes(cpueThisRFA)$nWithoutDatras
+      }
+      if(!is.null(attributes(cpueThisRFA)$nFoundWithin) & !is.null(attributes(cpueThisRFA)$nNotFoundWithin)){
+        nFoundWithin = nFoundWithin + attributes(cpueThisRFA)$nFoundWithin
+        nNotFoundWithin = nNotFoundWithin + attributes(cpueThisRFA)$nNotFoundWithin
+      }
     }
-    if(!is.null(attributes(cpueThisRFA)$nFoundWithin) & !is.null(attributes(cpueThisRFA)$nNotFoundWithin)){
-      nFoundWithin = nFoundWithin + attributes(cpueThisRFA)$nFoundWithin
-      nNotFoundWithin = nNotFoundWithin + attributes(cpueThisRFA)$nNotFoundWithin
-    }
-
   }
   mCPUEvector = mCPUEvector/totalArea
 

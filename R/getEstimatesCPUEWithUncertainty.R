@@ -13,7 +13,7 @@
 #' @examples
 CPUErfa = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
-                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL,lengthDivision){
+                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL,lengthDivision, useICESindexArea = FALSE){
 
 
   #Extract the data of interest-------------
@@ -36,17 +36,18 @@ CPUErfa = function(RFA, species, year, quarter,dat,
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision,dat = dat)
     if(length(ALKNew)==0){
-      ALK = borrowALKfromNeighbourRFAs(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,lengthDivision = lengthDivision)
-      cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
+      print("line 39 CPUErfa, this should not happen")
+#      ALK = borrowALKfromNeighbourRFAs(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,lengthDivision = lengthDivision)
+#      cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
     }else{
-      cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec)
+      cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
     }
   }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
-    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA,dat = dat,lengthDivision = lengthDivision)
-    cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec)
+    cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else{
     stop("Unkown ALKprocedure")
   }
@@ -91,7 +92,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                         B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
-                        onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL,nSimHauls = NULL){
+                        onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL,nSimHauls = NULL, useICESindexArea = FALSE){
 
   #Defines the matrix with cpue to be returned--------------------
   maxAge = confALK(species = species, quarter = quarter)$maxAge
@@ -115,7 +116,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   if(!onlySimulate){
   tmp = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                           dat = dat,ALKprocedure = ALKprocedure,B = B,
-                          dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
+                          dimCPUE = dim(mCPUE),lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
   mCPUE[,1] = tmp[[1]]
   nFoundWithinAllData = attributes(tmp[[1]])$nFoundWithin
   nNotFoundWithinAllData = attributes(tmp[[1]])$nNotFoundWithin
@@ -123,8 +124,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   nWithoutDatrasAllData = attributes(tmp[[1]])$nWithoutDatras
   #-----------------------------------------------------------------------------------------
   }
-
-
 
   #Simulate data and calculates mCPUE for estimation of unceratinaty------------------------
   if(doBootstrap){
@@ -143,7 +142,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       HH$originalIdAtThisLocation = 0; #Removed later
 
       for(RFA in 1:9){
-        if(dim(dat$hh[dat$hh$Roundfish==RFA,])[1]>0){
+        if(dim(dat$hh[which(dat$hh$Roundfish==RFA & !is.na(dat$hh$haul.id)),])[1]>0){
           loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
           if(bootstrapProcedure =="datras"){
             simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
@@ -228,7 +227,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
           datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
                                   hl_hh = datTmp$hl_hh)
-        }else{
+        }else{#TODO, should clean this part. This if-else should not be included, needs some checking before i can remove it...
           datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
                                   hl_hh = datTmp$hl_hh)
@@ -246,11 +245,11 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
         report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
         mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                         dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
-                                        dimCPUE = dim(mCPUE),report)[[1]]
+                                        dimCPUE = dim(mCPUE),report = report,useICESindexArea = useICESindexArea)[[1]]
       }else{
         mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                                 dat = datTmp,ALKprocedure = ALKprocedure,B = B,
-                                dimCPUE = dim(mCPUE),lengthDivision = lengthDivision)
+                                dimCPUE = dim(mCPUE),lengthDivision = lengthDivision, useICESindexArea = useICESindexArea)
         if(is.na(sum(mCPUEThisSimulation[[1]]))){
           print("Something wrong, save the simulated data in the working directory and the program will soon terminate...")
           saveRDS(datTmp,file = paste("dataResultedInNAcpueDF",lengthDivision[2]-lengthDivision[1],sep = ""))
