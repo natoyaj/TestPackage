@@ -332,7 +332,7 @@ In this section we apply the methods described in Section \ref{sec:methods} to d
  \end{small}
  
  
- Figure \ref{AreaHaulEstimatesAllYearsQ1} and \ref{AreaHaulEstimatesAllYearsQ3} give estimates of abundance of the North Sea Cod and its uncertainty in 2015-2018 Q1 and Q3, respectively.  The area based ALK and haul based ALK gave similar point estimates of abundance, and we expected similar performances between the two ALK estimators with respect to variability since the variance in the ALK is considered \citep{aanes2015efficient}. In the first quarter estimates are dominated by  2-year-old fish in 2015 and by 1-year-old fish in 2017. A similar trend is observed in the third quarter, where juvenile Cod (2-year-old and the 0-group) dominates the estimates. In 2018 Q3, the uncertainty in 3-year-old and 4-year-old fish is high compared to the younger age classes, and with expected relative standard error exceeding 25\%. This high variance is driven by a single haul (Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}), which dominates the catch of 3 and 4-year-old fish. The expected relative standards from the ICES-IBTS bootstrap procedure, generally exceed those from the modified ICES-IBTS and stratified bootstrap procedures (Figure \ref{AreaHaulEstimatesAllYearsQ1} and Figure \ref{AreaHaulEstimatesAllYearsQ3}, right panel). ICES-IBTS bpptstrap procedure procedure ignores the fine scale stratification at the first stage (step 1. (a)  in Section \ref{sec:datrasstratifiedbootstrap}), resulting in an overestimation of the uncertainty. ICES-IBTS bpptstrap procedure also ignores age-length data collected at the haul level, resulting in an underestimation the uncertainty, hence, there is bias in both direction. The expected relative standard error of abundance (Figures \ref{AreaHaulEstimatesAllYearsQ1} and  \ref{AreaHaulEstimatesAllYearsQ3}) and  Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}  suggest that the variance is primarily driven by the primary sampling units, hence, the overestimation of the variance from ICES-IBTS bootstrap procedure.
+ Figure \ref{AreaHaulEstimatesAllYearsQ1} and \ref{AreaHaulEstimatesAllYearsQ3} give estimates of abundance of the North Sea Cod and its uncertainty in 2015-2018 Q1 and Q3, respectively.  The area based ALK and haul based ALK gave similar point estimates of abundance, and we expected similar performances between the two ALK estimators with respect to variability since the variance in the ALK is considered \citep{aanes2015efficient}. In the first quarter estimates are dominated by  2-year-old fish in 2015 and by 1-year-old fish in 2017. A similar trend is observed in the third quarter, where juvenile Cod (2-year-old and the 0-group) dominates the estimates. In 2018 Q3, the uncertainty in 3-year-old and 4-year-old fish is high compared to the younger age classes, and with expected relative standard error exceeding 25\%. This high variance is driven by a single haul (Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}), which dominates the catch of 3 or 4-year-old fish. The expected relative standards from the ICES-IBTS bootstrap procedure, generally exceed those from the modified ICES-IBTS and stratified bootstrap procedures (Figure \ref{AreaHaulEstimatesAllYearsQ1} and Figure \ref{AreaHaulEstimatesAllYearsQ3}, right panel). ICES-IBTS bpptstrap procedure procedure ignores the fine scale stratification at the first stage (step 1. (a)  in Section \ref{sec:datrasstratifiedbootstrap}), resulting in an overestimation of the uncertainty. ICES-IBTS bpptstrap procedure also ignores age-length data collected at the haul level, resulting in an underestimation the uncertainty, hence, there is bias in both direction. The expected relative standard error of abundance (Figures \ref{AreaHaulEstimatesAllYearsQ1} and  \ref{AreaHaulEstimatesAllYearsQ3}) and  Figure \ref{HaulsAgeTotalAllYearsCod2018Q3}  suggest that the variance is primarily driven by the primary sampling units, hence, the overestimation of the variance from ICES-IBTS bootstrap procedure.
 
 
 
@@ -465,6 +465,30 @@ Secondly, we investigate the effect of sampling \textit{one} pair of otoliths in
 \subsection{Evaluation of sampling strategy of otoliths and hauls}
 \label{sec:optimumeffortresultsHaul}
 In this section we investigate the effect on the expected relative standard if \textit{one} pair or \textit{five} pairs of otoliths are sampled per 5cm length group width, and if fewer or more hauls are taken in a survey.  
+
+\begin{itemize}
+\item RSE reduces with increasing trawl stations
+\item generally similar RSE, whether 1 or 5 pairs of otoliths are sampled in a 5cm length group
+\item RSE of sampling one otolith per 5cm does not increase with reducing trawl hauls because fish caught at a trawl location have very similar age given length compared to variation across stations (high intra-haul correlation)
+\item can correlation be estimated? cluster-specific correlation structure
+\item  If samples are taken proportionally to the size of the catch, then it is to be expected that the counts in a given length cell should behave in a similar overdispersed fashion. In addition, fish of similar sizes tend to aggregate together, and hence, even for a fixed sample size, more variation should be expected than predicted by a multinomial model. This effect is termed the intra-haul correlation (Pennington and Volstad 1994).
+\end{itemize}
+
+
+
+\clearpage
+
+\begin{figure*}[h!]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[]{\includegraphics[width=0.79\textwidth]{figuresNotUsed/removalNandOcod2016Q1DL5datras.jpeg}} & \\
+\subfloat[]{\includegraphics[width=0.99\textwidth]{figuresNotUsed/removalNandOcod2016Q3DL5datras.jpeg}} & 
+
+\end{tabular}
+\captionsetup{font=small, width = 14.5cm}{
+\caption[]{ }\label{OtolithHauls}}
+\end{figure*} 
+
 
 
 \clearpage
@@ -776,51 +800,51 @@ In this section we give a summary of the of the data for Cod and Saithe in years
 
 
 %
-%%\clearpage
-% \begin{small}
-%\begin{table}[h!]
-%\setlength\tabcolsep{3.5pt} 
-%\centering
-%\captionsetup{font=small, width = 15cm}{
-%\caption{Summary of North Sea Cod and Saithe data in years 2015-2018.  Data collected in the third quarter (Q3) has age 0 group but this is not collected in quarter 1 (Q1) surveys.}\label{tab:realdata2017-2018}}
-%\begin{footnotesize}
-%\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
-%  \hline \\ [0.3ex]
-%{\bf Species} &  & \multicolumn{8}{c}{\bf Years and quarters} &   \\[1.0ex]
-%%\hline\\
-%%  \cmidrule(lr{0.3em}){3-6} \\ [0.5ex]% \cmidrule(lr{0.3em}){5-6}  \\ [0.5ex]
-%&  & \multicolumn{2}{c}{2015} & \multicolumn{2}{c}{2016}  & \multicolumn{2}{c}{2017} & \multicolumn{2}{c}{2018}   \\ [1.0ex]
-% \hline \\ [0.3ex]
-%& & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
-%%\hline \\ 
-%  \cmidrule(lr{0.3em}){3-10}  \\ [0.5ex]% \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
-% 	& Number of hauls   & 380 & 352 & 360 & 381 &377 & 337 & 372 &349   \\ [1.0ex]
-% 	& Mean time of hauls (in minutes) & 28.55 & 23.44 & 28.40 & 22.47 &29.02 & 29.37 &  29.26 & 29.13 \\ [1.2ex]
-%\raisebox{2.5ex}{\bf Cod}        \\ %   & Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
-%& Age range (in years)               & 1 - 9 & 0 - 8 & 1 - 10 & 0 - 10 & 1 - 11 & 0 - 11  &  1 - 12 & 0 - 11\\ [1.2ex]
-%%& Length range (in cm)               & 9 - 113 &7 - 111 &11 - 109 & 5 - 110 & 7 - 115 & 6 - 112 &  11 - 114 & 5 - 107  \\[1.5ex] 
-%& Total otoliths sampled for age determination               & 2895 &2113 & 2046 & 1804    &2501 & 2230  & 1600 & 1456 \\[1.2ex] 
-%& Number of hauls with length data & 305 &216 & 251 & 230& 306 & 237  & 237 & 199 \\[1.2ex]
-%& Number of hauls with age data    & 301 &209 & 243 & 224 & 293 & 236 & 229 & 195 \\[1.2ex]
-%& Cod with missing age in RFAs     & 0.30\%& 0.13\% & 0.13\% & 0.34\% & 0.68\% &  0.07\% & 0.51\%  & 0.11\%  \\[1.2ex]  
-%& Cod with missing age in hauls    & 10.06\% & 14.20\% & 6.18\%& 6.32\% & 2.25\% &0.27\%   & 1.40\%   & 0.77\% \\[2.2ex] 
-%
-%
-%\raisebox{2.5ex}{\bf Saithe}        \\
-%& Age range (in years)                         &1 - 16   & 0 - 19 &1 - 17   &0 - 19 &1 - 15 & 0 - 11 &  1 - 12 & 0 - 13 \\ [1.2ex]
-%& Total otoliths sampled for age determination & 600  & 1526 & 581  &1631 &1083 & 2163  & 822 & 1085\\[1.2ex] 
-%%& Length range (in cm)           & 13 - 110  & 21 - 109 & 16 - 107  & 12 - 115  &15 - 108 & 6 - 112 &  11 - 114 & 7 - 109     &  \\[1.5ex] 
-%& Number of hauls with length data & 73 &117 &97 & 135& 122& 128  & 83 & 98\\[1.2ex]
-%& Number of hauls with age data    & 71 &116 & 74& 132 & 111& 127 & 81 & 97\\[1.2ex]
-%& Saithe with missing age in RFAs      &1.2\% & 0\%		& 0\%  & 0.03\% &0.14\%  &  0.05\% & 0.03\%  & 0\%  \\[1.2ex]  
-%& Saithe with missing age in hauls     &21.6\%& 0.17\%	& 0.4\%&0.22\%  &20.1\%  &   0.08\% & 0.06\%  & 0.02\%  \\[0.5ex]
-%
-%   \hline \\[0.1ex]
-%\end{tabular}
-%\end{footnotesize}
-%\end{table}
-% \end{small}
-% 
+%\clearpage
+ \begin{small}
+\begin{table}[h!]
+\setlength\tabcolsep{3.5pt} 
+\centering
+\captionsetup{font=small, width = 15cm}{
+\caption{Summary of North Sea Cod and Saithe data in years 2015-2018.  Data collected in the third quarter (Q3) has age 0 group but this is not collected in quarter 1 (Q1) surveys.}\label{tab:realdata2015-2018}}
+\begin{footnotesize}
+\begin{tabular}{clclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclclcl}
+  \hline \\ [0.3ex]
+{\bf Species} &  & \multicolumn{8}{c}{\bf Years and quarters} &   \\[1.0ex]
+%\hline\\
+%  \cmidrule(lr{0.3em}){3-6} \\ [0.5ex]% \cmidrule(lr{0.3em}){5-6}  \\ [0.5ex]
+&  & \multicolumn{2}{c}{2015} & \multicolumn{2}{c}{2016}  & \multicolumn{2}{c}{2017} & \multicolumn{2}{c}{2018}   \\ [1.0ex]
+ \hline \\ [0.3ex]
+& & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & Q1  & Q3 & \\
+%\hline \\ 
+  \cmidrule(lr{0.3em}){3-10}  \\ [0.5ex]% \cmidrule(lr{0.3em}){13-20}  \\ [0.5ex]
+ 	& Number of hauls   & 380 & 352 & 360 & 381 &377 & 337 & 372 &349   \\ [1.0ex]
+ 	& Mean time of hauls (in minutes) & 28.55 & 23.44 & 28.40 & 22.47 &29.02 & 29.37 &  29.26 & 29.13 \\ [1.2ex]
+\raisebox{2.5ex}{\bf Cod}        \\ %   & Trawls &   &  &   & & &               & & 345 & 372 &   \\ [1.5ex]
+& Age range (in years)               & 1 - 9 & 0 - 8 & 1 - 10 & 0 - 10 & 1 - 11 & 0 - 11  &  1 - 12 & 0 - 11\\ [1.2ex]
+%& Length range (in cm)               & 9 - 113 &7 - 111 &11 - 109 & 5 - 110 & 7 - 115 & 6 - 112 &  11 - 114 & 5 - 107  \\[1.5ex] 
+& Total otoliths sampled for age determination               & 2895 &2113 & 2046 & 1804    &2501 & 2230  & 1600 & 1456 \\[1.2ex] 
+& Number of hauls with length data & 305 &216 & 251 & 230& 306 & 237  & 237 & 199 \\[1.2ex]
+& Number of hauls with age data    & 301 &209 & 243 & 224 & 293 & 236 & 229 & 195 \\[1.2ex]
+& Cod with missing age in RFAs     & 0.30\%& 0.13\% & 0.13\% & 0.34\% & 0.68\% &  0.07\% & 0.51\%  & 0.11\%  \\[1.2ex]  
+& Cod with missing age in hauls    & 10.06\% & 14.20\% & 6.18\%& 6.32\% & 2.25\% &0.27\%   & 1.40\%   & 0.77\% \\[2.2ex] 
+
+
+\raisebox{2.5ex}{\bf Saithe}        \\
+& Age range (in years)                         &1 - 16   & 0 - 19 &1 - 17   &0 - 19 &1 - 15 & 0 - 11 &  1 - 12 & 0 - 13 \\ [1.2ex]
+& Total otoliths sampled for age determination & 600  & 1526 & 581  &1631 &1083 & 2163  & 822 & 1085\\[1.2ex] 
+%& Length range (in cm)           & 13 - 110  & 21 - 109 & 16 - 107  & 12 - 115  &15 - 108 & 6 - 112 &  11 - 114 & 7 - 109     &  \\[1.5ex] 
+& Number of hauls with length data & 73 &117 &97 & 135& 122& 128  & 83 & 98\\[1.2ex]
+& Number of hauls with age data    & 71 &116 & 74& 132 & 111& 127 & 81 & 97\\[1.2ex]
+& Saithe with missing age in RFAs      &1.2\% & 0\%		& 0\%  & 0.03\% &0.14\%  &  0.05\% & 0.03\%  & 0\%  \\[1.2ex]  
+& Saithe with missing age in hauls     &21.6\%& 0.17\%	& 0.4\%&0.22\%  &20.1\%  &   0.08\% & 0.06\%  & 0.02\%  \\[0.5ex]
+
+   \hline \\[0.1ex]
+\end{tabular}
+\end{footnotesize}
+\end{table}
+ \end{small}
+ 
  
 \clearpage
 
