@@ -87,6 +87,7 @@ extractStatRecAll = function(){
   for(rfa in unique(all$Area)){
     toReturn[[rfa]] = sort(as.character(unique(all$SubArea[all$Area==rfa])))
   }
+  return(toReturn)
 }
 
 #' extractStatRecAll
@@ -99,9 +100,13 @@ extractStatRecIndexArea = function(species){
 
   if(species=="Gadus morhua"){
     indexArea = read.csv2(paste0(dataDir,"/NS_Cod_TS_IndexArea.csv"),sep = ";")
+#    indexArea = read.csv2(paste0(dataDir,"/NS_Cod_EXT_TS_IndexArea.csv"),sep = ";")
   }
   indexArea = indexArea[,"Code"]
   indexArea = as.character(indexArea)
+
+  #Only visited areas shall be included in the index area
+  indexArea = indexArea[which(indexArea %in% as.character(unique(dat$hh$StatRec)))]
 
   return(indexArea)
 }
