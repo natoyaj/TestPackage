@@ -432,7 +432,6 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
     for(i in 1:dim(dataWithTheSpecies)[1])
     {
       trawlId = dataWithTheSpecies$haul.id[i]
- #    if(procedure=="modelBased")trawlId = dataWithTheSpecies$haul.idReal[i] #Need to look more into this if uses fisher
       whichALK =NA
       for(indeksALK in 1:length(ALKNew))
       {
@@ -560,6 +559,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
     if(useICESindexArea){
       allRectanlges = extractStatRecAll()[[RFA]]
+      areaThisRFA = length(allRectanlges)
       rectanglesOfInterest = extractStatRecIndexArea(species)
       proportionOfInterest = mean(allRectanlges %in% rectanglesOfInterest)
       areaThisRFA = areaThisRFA *proportionOfInterest
@@ -571,11 +571,11 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
 
     if(sum(!is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish==RFA
            & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species)>0){
+      #Add the mCPUE from this RFA to mCPUEvector and scale with the area. Note we later divide by the total area.
       cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
                             ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
 
       mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
-      totalArea = totalArea + areaThisRFA
 
       if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
         nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras
@@ -586,6 +586,7 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
         nNotFoundWithin = nNotFoundWithin + attributes(cpueThisRFA)$nNotFoundWithin
       }
     }
+    totalArea = totalArea + areaThisRFA
   }
   mCPUEvector = mCPUEvector/totalArea
 
@@ -599,5 +600,4 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   attributes(mCPUEvector)$nWithoutDatras = nWithoutDatras
 
   return(list(mCPUEvector,fit))
-
 }

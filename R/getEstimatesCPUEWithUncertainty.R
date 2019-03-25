@@ -35,13 +35,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision,dat = dat)
-    if(length(ALKNew)==0){
-      print("line 39 CPUErfa, this should not happen")
-#      ALK = borrowALKfromNeighbourRFAs(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,lengthDivision = lengthDivision)
-#      cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
-    }else{
-      cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
-    }
+    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else if(ALKprocedure == "modelBased"){
     ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
     cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
@@ -143,31 +137,31 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
 
       for(RFA in 1:9){
         if(dim(dat$hh[which(dat$hh$Roundfish==RFA & !is.na(dat$hh$haul.id)),])[1]>0){
-          loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in simulation)
+          loc = findLoc(dat=dat,quarter=quarter,year = year,RFA = RFA)#Find the closest nabour (used in bootstrap procedure when only one haul is present in a statistical rectangle)
           if(bootstrapProcedure =="datras"){
-            simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh)
-            simDataHL = simDataHLList$hl_hh
-            simDataCA = simCAdatras(RFA,year,quarter, data = simDataHLList$ca_hh, species = species)
+            simHauls = simTrawlHaulsDatras(RFA,year,quarter, hl_hh = dat$hl_hh, ca_hh = dat$ca_hh)
+            simDataHL = simHauls$hl_hh
+            simDataCA = simCAdatras(RFA,year,quarter, data = simHauls$ca_hh, species = species)
           }else if(bootstrapProcedure =="datrasHLstratifiedCA"){
             nSimHaulsThisRFA = round(mean(dat$hh$Roundfish[!is.na(dat$hh$Roundfish)]==RFA)*nSimHauls)
-            if(nSimHaulsThisRFA<2)stop(paste("Too few hauls in RFA" , RFA))
-            simDataHLList = simTrawlHaulsHLdatras(RFA,year,quarter, data = dat$hl_hh, ca_hh = dat$ca_hh,nSimHauls = nSimHaulsThisRFA)
-            simDataHL = simDataHLList$hl_hh
-            simDataCA = simDataHLList$ca_hh
+            #if(nSimHaulsThisRFA<2)stop(paste("Too few hauls in RFA" , RFA))
+            simHauls = simTrawlHaulsDatras(RFA,year,quarter, hl_hh = dat$hl_hh, ca_hh = dat$ca_hh,nSimHauls = nSimHaulsThisRFA)
+            simDataHL = simHauls$hl_hh
+            simDataCA = simHauls$ca_hh
           }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
-            simHauls = simCaHlSimultaniousyStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
+            simHauls = simHaulsStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
             simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
-            simDataHL = dat$hl_hh[1,]#Define the structure in the data, this line is removed later.
-            simDataHH = dat$hh[1,]#Define the structure in the data, this line is removed later.
+            simDataHL = dat$hl_hh[1,]
+            simDataHH = dat$hh[1,]
             simDataHH$originalIdAtThisLocation = 0; #Removed later
-            for(j in 1:dim(simHauls)[1]){
+            for(j in 1:dim(simHauls)[1]){ #Go trough the simulated hauls and modify them such that they points to the right statistical rectangle etc.
               tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
               tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
               tmpHH = dat$hh[which(dat$hh$haul.id== simHauls$haul.id[j]),]
 
               if(dim(tmpCA)[1]>0){
-                tmpCA$StatRec = simHauls$StatRec[j]
-                tmpCA$lon = simHauls$lon[j]
+                tmpCA$StatRec = simHauls$StatRec[j] #statrec may have changed if less than one haul in the statrec
+                tmpCA$lon = simHauls$lon[j] #Needed for a model based approach
                 tmpCA$lat = simHauls$lat[j]
                 tmpCA$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
                 simDataCA = rbind(simDataCA,tmpCA)
@@ -176,14 +170,14 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
                 tmpHL$StatRec = simHauls$StatRec[j]
                 tmpHL$lon = simHauls$lon[j]
                 tmpHL$lat = simHauls$lat[j]
-                tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+                tmpHL$haul.id = paste(simHauls$haul.id[j],j,sep = "")
                 simDataHL = rbind(simDataHL,tmpHL)
               }
               if(dim(tmpHH)[1]>0){
                 tmpHH$StatRec = simHauls$StatRec[j]
                 tmpHH$lon = simHauls$lon[j]
                 tmpHH$lat = simHauls$lat[j]
-                tmpHH$haul.id = paste(simHauls$haul.id[j],j,sep = "") #Set an unique ID to the haul
+                tmpHH$haul.id = paste(simHauls$haul.id[j],j,sep = "")
                 tmpHH$originalIdAtThisLocation = simHauls$originalIdAtThisLocation[j]
                 simDataHH = rbind(simDataHH,tmpHH)
               }

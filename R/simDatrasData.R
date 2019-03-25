@@ -1,4 +1,4 @@
-#' simTrawlHaulsHLdatras
+#' simTrawlHaulsDatras
 #' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
 #' Keep the number of trawl ahuls within each statistical rectangle fixed, and sample them with replacement from the whole RFA.
 #' @param RFA Roundfish area number.
@@ -7,12 +7,13 @@
 #' @export
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs
 #' @examples
-simTrawlHaulsHLdatras = function(RFA,year, quarter,data,ca_hh,nSimHauls = NULL)
+simTrawlHaulsDatras = function(RFA,year, quarter,hl_hh,ca_hh,nSimHauls = NULL)
 {
+  #TODO: Should clean this to use only hh-data when sampling.
   #Extract the data of interest-------------------------
-    dataOfInterest = data[!is.na(data$Year) & data$Year == year&
-                          !is.na(data$Quarter) & data$Quarter == quarter&
-                          !is.na(data$Roundfish) & data$Roundfish == RFA ,]
+    dataOfInterest = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
+                          !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
+                          !is.na(hl_hh$Roundfish) & hl_hh$Roundfish == RFA ,]
   #-----------------------------------------------------
 
   #Simulate trawl hauls---------------------------------
@@ -132,7 +133,7 @@ simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
 }
 
 
-#' simCaHlSimultaniousyStratified
+#' simHaulsStratified
 #' @description Simulates trawl hauls with only length information used in the bootstrap procedure.
 #' @param RFA Roundfish area number.
 #' @param year The year of interest.
@@ -141,7 +142,7 @@ simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
 #' @return Returns simulations of the dataras-data with length information on a similar format as the data used in the functions for calculating the CPUEs.
 #' The simulated trawl hauls are simulated stratisfied on the statistical rectangles. TODO: choose a procedure if there is only one observation in the statistical recangle, I suggest to include the closest trawl haul no matter which statistical recangles it is assosiated with..
 #' @examples
-simCaHlSimultaniousyStratified = function(RFA,year, quarter,dataHH, loc = NULL)
+simHaulsStratified = function(RFA,year, quarter,dataHH, loc = NULL)
 {
   #Extract the data of interest-------------------------
   dataOfInterest = dataHH[!is.na(dataHH$Year) & dataHH$Year == year&
