@@ -9,7 +9,7 @@ library(RColorBrewer)
 #
 rfa <-
   readOGR(file.path(
-    system.file("shapefiles", package = "TestPackage"),
+    system.file("shapefiles", package = "IBTSindices"),
     "Roundfish_shapefiles"
   ))
 rfa_labelpos <- coordinates(rfa)
@@ -22,11 +22,11 @@ rfa_labelpos[9,1] <- rfa_labelpos[9,1]+0.3 #adjust position for area 3
 rfa_labelpos[2,1] <- rfa_labelpos[2,1] #adjust position for area 9
 rfa_labelpos[2,2] <- rfa_labelpos[2,2]+0.1 #adjust position for area 9
 
-ices_rectangles <- readOGR(file.path(system.file("shapefiles", package = "TestPackage"), "ICES_StatRec_mapto_ICES_Areas"), "StatRec_map_Areas_Full_20170124")
+ices_rectangles <- readOGR(file.path(system.file("shapefiles", package = "IBTSindices"), "ICES_StatRec_mapto_ICES_Areas"), "StatRec_map_Areas_Full_20170124")
 ices_midpoints <- SpatialPoints(as.data.frame(coordinates(ices_rectangles)), proj4string=CRS(proj4string(ices_rectangles)))
 ibts_rectangles <- ices_rectangles[!is.na(unlist(sp::over(ices_midpoints, rfa))),]
 
-ns <- readRDS(file.path(system.file("bathymetry", package = "TestPackage"), "wgs84_raster_north_sea_crop", "ns_halfres.rds"))*-1
+ns <- readRDS(file.path(system.file("bathymetry", package = "IBTSindices"), "wgs84_raster_north_sea_crop", "ns_halfres.rds"))*-1
 data(countriesHigh)
 map <- countriesHigh
 
