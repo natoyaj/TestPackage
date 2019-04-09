@@ -49,11 +49,11 @@ batpal <- brewer.pal(9, "Blues")
 batpal <- c(batpal[1:(length(batpal)-3)], rep(batpal[7],4),rep(batpal[8],4), rep(batpal[9],4))
 
 
-plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labelpos, polygonscol="black", cex.polygons=0.8, rectangles=ibts_rectangles, rectanglecol="lightgray", landmap=map, landcol="lightgrey", landbordercol="darkgrey", landlabels=map_labels, land_labelpoints=map_labelpoints, land_labelcol="black", cex.landlabels=0.6, seacol="white", bat=ns, batcol=batpal, xlim=c(-8,18), ylim=c(49,62.5), xlab="Longitude", ylab="Latitude"){
+plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labelpos, polygonscol="black", cex.polygons=0.8, rectangles=ibts_rectangles, rectanglecol="lightgray", landmap=map, landcol="lightgrey", landbordercol="darkgrey", landlabels=map_labels, land_labelpoints=map_labelpoints, land_labelcol="black", cex.landlabels=0.6, seacol="white", bat=ns, batcol=batpal, xlim=c(-8,18), ylim=c(49,62.5), xlab="Longitude", ylab="Latitude", cex.legend=1){
 
   if (!is.null(bat)){
     ext <- as(extent(xlim[1], xlim[2], ylim[1], ylim[2]), 'SpatialPolygons')
-    plot(crop(bat, ext), col=batcol, xlab=xlab, ylab=ylab, legend.args=list(text="depth (m)"))
+    plot(crop(bat, ext), col=batcol, xlab=xlab, ylab=ylab, legend.args=list(text="depth (m)", cex=cex.legend))
   }
   else{
     basemap(
