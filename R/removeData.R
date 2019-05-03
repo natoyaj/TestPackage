@@ -20,7 +20,7 @@ investigateRemoval = function(species, year, quarter,dat,
 
   #Calculate the mCPUE and possibly more with all data---------------------
    toReturn$WithFullData = CPUEnorthSea(species = species, year = year, quarter = quarter,dat = dat,
-                                         bootstrapProcedure = bootstrapProcedure, B = n, ALKprocedure = ALKprocedure,doBootstrap = FALSE,lengthDivision = lengthDivision)
+                                         bootstrapProcedure = bootstrapProcedure, B = B, ALKprocedure = ALKprocedure,doBootstrap = FALSE,lengthDivision = lengthDivision)
   #--------------------------------------------------------------------------
 
 

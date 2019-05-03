@@ -570,12 +570,15 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
     }
 
     if(sum(!is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish==RFA
-           & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species)>0){
+           & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species & areaThisRFA >0)>0 ){
       #Add the mCPUE from this RFA to mCPUEvector and scale with the area. Note we later divide by the total area.
       cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision)
+                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
 
-      mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
+ #    if(!is.na(sum(cpueThisRFA)) | areaThisRFA >0){
+      if(areaThisRFA >0){
+          mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
+      }
 
       if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
         nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras

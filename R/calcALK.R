@@ -74,7 +74,7 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision,dat = N
     #-----------------------------------------------------
 
     #Extrapolate the ALK to length calsses were we do not have data-----------------------------------
-    whichIsMissing = rep(FALSE, dim(alk)[1])
+    whichIsMissing = rep(FALSE, dim(alk)[1]*2)
     for(i in 1:dim(alk)[1])
     {
       if(sum(alk[i,-1]) == 0)whichIsMissing[i] = TRUE
@@ -206,6 +206,7 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
     alkFictive = alk
     alkFictive[,3:(maxAge+3)] = 0
     ALKborrow = borrowALKfromNeighbourRFAs(RFA= RFA, species= species, year = year, quarter= quarter, dat = dat,ALK = as.data.frame(alkFictive[,-1]), lengthDivision = lengthDivision)
+
     for(id in idHaul){
       idTmp = as.character(id)
       alkThis = as.data.frame(alkFictive)
