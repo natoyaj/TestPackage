@@ -6,14 +6,14 @@
 #' @param quarter The quarter of interest.
 #' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
-#' @param ALKprocedure Either datras, haulbased or modelbased.
+#' @param ALKprocedure Either datras or haulbased
 #' @param doBootstrap A boolean stating if bootstrap should be done. Default is TRUE.
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
 CPUErfa = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
-                               ALKprocedure = "datras",doBootstrap = TRUE, fit = NULL,report = NULL,lengthDivision, useICESindexArea = FALSE){
+                               ALKprocedure = "datras",doBootstrap = TRUE,lengthDivision, useICESindexArea = FALSE){
 
 
   #Extract the data of interest-------------
@@ -26,19 +26,12 @@ CPUErfa = function(RFA, species, year, quarter,dat,
                                   !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
                                   !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
 
-  dataCAforModel = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
-                               !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter,]
-  dataHLforModel = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
-                                     !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter,]
   #------------------------------------------
 
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
     ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision,dat = dat)
     cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
-  }else if(ALKprocedure == "modelBased"){
-    ALKModel = calculateALKModel(RFA = RFA, species = species, year = year, quarter = quarter,hh = dat$hh,data = dataCAforModel, fitModel = fit,report =report)
-    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKModel,procedure = ALKprocedure, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else if(ALKprocedure == "datras"){
     ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA,dat = dat,lengthDivision = lengthDivision)
     cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
@@ -85,7 +78,7 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 #' @return Returns the mCPUE per age class in the whole North Sea
 #' @examples
 CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
-                        B = 10, ALKprocedure = "",doBootstrap = TRUE,useFisher = FALSE,
+                        B = 10, ALKprocedure = "",doBootstrap = TRUE,
                         onlySimulate = FALSE,lengthDivision =1:150,samplesWithinEachIntervall = NULL,nSimHauls = NULL, useICESindexArea = FALSE){
 
   #Defines the matrix with cpue to be returned--------------------
@@ -121,14 +114,6 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
 
   #Simulate data and calculates mCPUE for estimation of unceratinaty------------------------
   if(doBootstrap){
-    if(ALKprocedure=="modelBased" &useFisher){
-      fit = tmp[[2]]
-      rep = sdreport(fit$obj)
-      cov = rep$cov[-which(rep$sd ==0), -which(rep$sd ==0)]
-      mean = rep(0,dim(cov)[1])
-      sim = MASS::mvrnorm(n = B, mean, Sigma = cov)
-    }
-
     for(i in 1:B){
       CA = dat$ca_hh[1,] #This line in data frame is removed later, but introduced for convenience here
       HL = dat$hl_hh[1,]
@@ -217,15 +202,15 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       print("Sampling otoliths...")
       nOtolithsTotal = dim(datTmp$ca_hh)[1]
       if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="datrasHLstratifiedCA"){
-        if(onlySimulate){
+      #  if(onlySimulate){
           datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
                                   hl_hh = datTmp$hl_hh)
-        }else{#TODO, should clean this part. This if-else should not be included, needs some checking before i can remove it...
-          datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
-                                  quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
-                                  hl_hh = datTmp$hl_hh)
-        }
+      #  }else{#TODO, should clean this part. This if-else should not be included, needs some checking before i can remove it...
+      #    datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
+      #                            quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
+      #                            hl_hh = datTmp$hl_hh)
+      #  }
       }else{
         #Sample ages stratified with wrt length, was done in the for-loop above.
       }
@@ -235,25 +220,20 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
 
 
 
-      if(ALKprocedure=="modelBased" & useFisher){
-        report = simModelFisher(species = species, quarter = quarter,rep=rep,fit = fit,sim = sim,i = i)
-        mCPUE[,i+1] = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                        dat = datTmp,ALKprocedure = ALKprocedure,B = B,fit = fit,
-                                        dimCPUE = dim(mCPUE),report = report,useICESindexArea = useICESindexArea)[[1]]
-      }else{
-        mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
-                                dat = datTmp,ALKprocedure = ALKprocedure,B = B,
-                                dimCPUE = dim(mCPUE),lengthDivision = lengthDivision, useICESindexArea = useICESindexArea)
-        if(is.na(sum(mCPUEThisSimulation[[1]]))){
-          print("Something wrong, save the simulated data in the working directory and the program will soon terminate...")
-          saveRDS(datTmp,file = paste("dataResultedInNAcpueDF",lengthDivision[2]-lengthDivision[1],sep = ""))
-        }
-        mCPUE[,i+1] = mCPUEThisSimulation[[1]]
-        nWithDatras = attributes(mCPUEThisSimulation[[1]])$nWithDatras
-        nWithoutDatras = attributes(mCPUEThisSimulation[[1]])$nWithoutDatras
-        nFoundWithin = attributes(mCPUEThisSimulation[[1]])$nFoundWithin
-        nNotFoundWithin = attributes(mCPUEThisSimulation[[1]])$nNotFoundWithin
+
+      mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
+                              dat = datTmp,ALKprocedure = ALKprocedure,B = B,
+                              dimCPUE = dim(mCPUE),lengthDivision = lengthDivision, useICESindexArea = useICESindexArea)
+      if(is.na(sum(mCPUEThisSimulation[[1]]))){
+        print("Something wrong, save the simulated data in the working directory and the program will soon terminate...")
+        saveRDS(datTmp,file = paste("dataResultedInNAcpueDF",lengthDivision[2]-lengthDivision[1],sep = ""))
       }
+      mCPUE[,i+1] = mCPUEThisSimulation[[1]]
+      nWithDatras = attributes(mCPUEThisSimulation[[1]])$nWithDatras
+      nWithoutDatras = attributes(mCPUEThisSimulation[[1]])$nWithoutDatras
+      nFoundWithin = attributes(mCPUEThisSimulation[[1]])$nFoundWithin
+      nNotFoundWithin = attributes(mCPUEThisSimulation[[1]])$nNotFoundWithin
+
     }
   }
   #-----------------------------------------------------------------------------------------

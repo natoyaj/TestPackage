@@ -186,7 +186,6 @@ calcmCPUErfaAreaBasedALK = function(RFA,species,year, quarter, data, ALK, weight
   {
     for(j in 1:numberOfStatRectangles){
       mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]/sum(weightUsed)
-#      mCPUE[i] = mCPUE[i] + mCPUEstatRec[i,j] *weightUsed[j]#NB!!!!!
     }
   }
 
@@ -521,7 +520,7 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,fit = NULL, report = NULL, lengthDivision, useICESindexArea = FALSE)
+calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE, lengthDivision, useICESindexArea = FALSE)
 {
   #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
   nWithDatras = 0
@@ -542,10 +541,6 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   #Read the calcualted area were saithe live in each RFA (between 10 to 200 meters)---
   data('areaRFA') #Stored in the data frame "areaRFA"
   #---------------------------------------------------------------
-
-  if(ALKprocedure =="modelBased" & length(report)==0){
-    fit =  fitModel(species = species, quarter =quarter, year = year, ca_hh = dat$ca_hh,hh = dat$hh)
-  }
 
   mCPUEvector = rep(0,dimCPUE[1])
 
@@ -573,9 +568,8 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
            & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species & areaThisRFA >0)>0 ){
       #Add the mCPUE from this RFA to mCPUEvector and scale with the area. Note we later divide by the total area.
       cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,fit = fit, report =report,lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
+                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
 
- #    if(!is.na(sum(cpueThisRFA)) | areaThisRFA >0){
       if(areaThisRFA >0){
           mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
       }
@@ -602,5 +596,5 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE,f
   attributes(mCPUEvector)$nWithDatras = nWithDatras
   attributes(mCPUEvector)$nWithoutDatras = nWithoutDatras
 
-  return(list(mCPUEvector,fit))
+  return(list(mCPUEvector))
 }
