@@ -1,4 +1,5 @@
 source("../runCompare.R")
+runCompare("resampleO")
 runCompare("areaBasedALK")
 runCompare("haulBasedALK")
 runCompare("bootstrapDatras")
