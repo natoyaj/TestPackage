@@ -20,9 +20,12 @@ plotRemoval = function(year,art,quarter,n,procedure = "haulBased",minAge,maxAge,
   CVsimple = matrix(0,6,maxAge + 1)
   if(is.null(dl)){
     eval(parse(text = paste("original",art,year,"Q",quarter," =  readRDS(paste('",path,art,year,"Q",quarter,"n",n,procedure,"'))",sep = "")))
+  #  eval(parse(text = paste("original",art,year,"Q",quarter,"= readRDS(paste(path, 'Removal",art,"Dl",1,"year",year,"Q",quarter,"n",n,procedure,"999',sep = '')",")",sep = "")))
+  #eval(parse(text = paste("CVsimple[1,] = original",art,year,"Q", quarter,"$mCPUE$sd/original",art,year,"Q", quarter,"$mCPUE$mean",sep = "")))
     eval(parse(text = paste("CVsimple[1,] = original",art,year,"Q", quarter,"$sd/original",art,year,"Q", quarter,"$bootstrapMean",sep = "")))
   }else{
-    eval(parse(text = paste("original",art,year,"Q",quarter,"= readRDS(paste(path, 'Removal",art,"Dl",i,"year",year,"Q",quarter,"n",n,procedure,"999',sep = '')",")",sep = "")))
+  #  eval(parse(text = paste("original",art,year,"Q",quarter,"= readRDS(paste(path, 'Removal",art,"Dl",i,"year",year,"Q",quarter,"n",n,procedure,"999',sep = '')",")",sep = "")))
+    eval(parse(text = paste("original",art,year,"Q",quarter,"= readRDS(paste(path, 'Removal",art,"Dl",dl,"year",year,"Q",quarter,"n",n,procedure,"999',sep = '')",")",sep = "")))
     eval(parse(text = paste("CVsimple[1,] = original",art,year,"Q", quarter,"$mCPUE$sd/original",art,year,"Q", quarter,"$mCPUE$mean",sep = "")))
   }
 
@@ -111,8 +114,8 @@ plotRemoval = function(year,art,quarter,n,procedure = "haulBased",minAge,maxAge,
 #' @examples
 plotRemovalNandO = function(year,art,quarter,procedure = "datras",minAge,maxAge,path,dl = 5){
   dlDiv = c(1,5)
-  Ndiv = c(25,50,75,100,150,200,250,300,350)
-  if(procedure=="haulBased") Ndiv = c(50,75,100,150,200,250,300,350)
+  Ndiv = c(25,50,75,100,200,300,400,500)
+  if(procedure=="haulBased")   Ndiv = c(50,75,100,200,300,400,500)
   for(ss in dlDiv){
     for(N in Ndiv){
       nUse = 0
