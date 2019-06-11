@@ -1,9 +1,9 @@
 library(IBTSindices)
-path = "Papers/manuscript/results/olav/resampling/"
+path = "Papers/manuscript/results/olav/resamplingOtoliths/"
 quarter =1
-n = 300
-#procedure = "haulBased"
-procedure = "datras"
+n = 500
+#procedure = "haulBased"   #use this for resampling of otolihts only
+procedure = "datras"       #use this for resampling of otoliths and hauls
 art = "cod"
 #art = "Saithe"
 
@@ -22,7 +22,7 @@ if(art=="cod"){
 library(RColorBrewer)
 qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
 col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-col_vector = col_vector[-c(4,6,9)] #Exclude yellow and some other similar colors.
+col_vector = col_vector[-c(4,6,6)] #Exclude yellow and some other similar colors.
 
 for(year in 2015:2018){
   #x11()
@@ -40,12 +40,25 @@ for(year in 2015:2018){
 }
 
 
-#Resample both N and O
+#Resample both N and O------------------------------------------------
 
-path = "Papers/manuscript/results/olav/resamplingNandOtoliths/"
-for(year in 2015:2018){
-  jpeg(paste(path,"resampleNandO",art,year,"Q",quarter,"DL5",procedure ,".jpeg", sep = ""),height = 700,width = 1000)
+path = "Papers/manuscript/results/olav/resamplingNandotoliths/"
+for(year in 1997:1999){
+  jpeg(paste(path,"resampleNandO",art,year,"Q",quarter,"DL5",procedure ,".jpeg", sep = ""),height = 700,width = 1100)
   plotRemovalNandO(year,art,quarter,procedure ,minAge,maxAge,path,dl = 5)
+  legend("topright", legend = c("1 fish per 5cm", "5 fish per 5cm"), cex=1.8, col = c("red", "black"),lwd = 3, bty ="n")
   dev.off()
 }
+
+
+
+#calculating number of otoliths removed, sampled and percentage-----------------------------
+
+path = "Papers/manuscript/results/olav/resamplingOtoliths/"
+b =readRDS(paste(path, "RemovalCodDl2year2018Q3n500haulBased1", sep =""))
+mean(attr(b, "nOtolithsTotal"))
+mean(attr(b, "nOtolithsRemoved"))
+c = mean(attr(b, "nOtolithsTotal")-attr(b, "nOtolithsRemoved"))
+c
+(c/mean(attr(b, "nOtolithsTotal")))*100
 

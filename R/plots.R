@@ -83,24 +83,31 @@ plotRemoval = function(year,art,quarter,n,procedure = "haulBased",minAge,maxAge,
   }
 
   if(is.null(dl)){
-    axis(1, at=1:6, labels=c("5cm", "4cm","3cm","2cm","1cm",""))
+    axis(1, at=1:6, labels=c("5cm", "4cm","3cm","2cm","1cm",""), cex.axis=1.5 , cex.sub=1)
     title( xlab="Lenght group width",
-           main = paste(art, " ", year, " Q",quarter, sep = ""))
-    abline(h = CVsimple[2,(minAgePlot:maxAgePlot+1)],col = col_vector[(minAgePlot +1):999])
+           main = paste(art, " ", year, " Q",quarter, sep = ""), cex.main =1.8, cex.lab=1.5, cex.axis=1)
+  #  abline(h = CVsimple[2,(minAgePlot:maxAgePlot+1)],col = col_vector[(minAgePlot +1):999])
 
   }else{
-    axis(1, at=1:6, labels=c("1", "2","3","4","5","current"))
-    title(xlab="Number of ototlihs sampled",
-           main = paste(art, " ", year, " Q",quarter, ", 5cm length groups", sep = ""))
-    abline(h = CVsimple[1,(minAgePlot:maxAgePlot+1)],col = col_vector[(minAgePlot +1):999])
+    axis(1, at=1:6, labels=c("1", "2","3","4","5","current"), cex.axis=1.5 , cex.sub=1)
+    title(xlab="Number of age samples",
+           main = paste(art, " ", year, " Q",quarter, ", 5cm length groups", sep = ""), cex.main =1.8, cex.lab=1.5, cex.axis=1)
+  #  abline(h = CVsimple[1,(minAgePlot:maxAgePlot+1)],col = col_vector[(minAgePlot +1):999])
   }
 
 
+
   if(minAge==0){
-    legend(x=0.1,y=0.7,legend = c(ageGroups[(minAgePlot:maxAgePlot+1)]),
+    ll = c(ageGroups[(minAgePlot:maxAgePlot+1)])
+    ll = as.character(ll)
+    ll[length(ll)] = paste0(ll[length(ll)] , "+")
+    legend(x=0.1,y=0.7,legend = ll, title ="Age",
            col = col_vector[(minAgePlot +1):999],box.lty =0,pch = 15,cex = 1.2)
   }else if(minAge==1){
-    legend(x=0.1,y=0.7,legend = c(ageGroups[minAgePlot:maxAgePlot]),
+    ll = c(ageGroups[(minAgePlot:maxAgePlot)])
+    ll = as.character(ll)
+    ll[length(ll)] = paste0(ll[length(ll)] , "+")
+    legend(x=0.1,y=0.7,legend = ll, title ="Age",
            col = col_vector[(minAgePlot+1):999],box.lty =0,pch = 15,cex = 1.2)
   }
 }
@@ -115,7 +122,7 @@ plotRemoval = function(year,art,quarter,n,procedure = "haulBased",minAge,maxAge,
 plotRemovalNandO = function(year,art,quarter,procedure = "datras",minAge,maxAge,path,dl = 5){
   dlDiv = c(1,5)
   Ndiv = c(25,50,75,100,200,300,400,500)
-  if(procedure=="haulBased")   Ndiv = c(50,75,100,200,300,400,500)
+  if(procedure=="haulBased")   Ndiv = c(25,50,75,100,200,300,400,500)
   for(ss in dlDiv){
     for(N in Ndiv){
       nUse = 0
@@ -152,12 +159,13 @@ plotRemovalNandO = function(year,art,quarter,procedure = "datras",minAge,maxAge,
   }
   for(i in (as.integer(ageGroups)+1)){
     plot(Ndiv,CVsimple5[,i],
-         xlim = c(0,350),
-         ylim = c(0,1.4),
+         xlim = c(0,500),
+         ylim = c(0,2.8),
          ylab = "RSE",
-         main =paste0(art, " year ",year,  " Q", quarter, " age ", i-1, " ",nameInPlot),
-         xlab = "N",
-         cex = 2,cex.lab = 1.5,cex.main = 2,
+         main =paste0("Cod", " year ",year,  " Q", quarter, " age ", i-1, " "),
+        # main =paste0(art, " year ",year,  " Q", quarter, " age ", i-1, " ",nameInPlot),
+        xlab = "Number of hauls",
+        cex = 2,cex.lab = 1.8,cex.main = 2, cex.axis=1.8,
          pch = 19,
          lwd = 3,
          type = 'l')
