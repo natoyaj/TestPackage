@@ -119,6 +119,7 @@ plotRemoval = function(year,art,quarter,n,procedure = "haulBased",minAge,maxAge,
 plotRemovalNandO = function(year,art,quarter,procedure = "datras",minAge,maxAge,path,dl = 5,ylim = c(0,2)){
   dlDiv = c(1,5)
   Ndiv = c(25,50,75,100,200,300,400,500)
+
   for(ss in dlDiv){
     for(N in Ndiv){
       nUse = 0
