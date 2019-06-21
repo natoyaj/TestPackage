@@ -300,7 +300,7 @@ calcmCPUEstatRecAreaBasedALK = function(statRec,species,year, quarter, data, ALK
 #' @export
 #' @return
 #' @examples
-calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,procedure = "", weightStatRec = NULL, useICESindexArea = FALSE)
+calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALK,procedure = "", weightStatRec = NULL, useICESindexArea = FALSE)
 {
 
   #Extract the data of interest-------------------------
@@ -319,7 +319,7 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
   tmp = dataOfInterest[!is.na(dataOfInterest$Roundfish) & dataOfInterest$Roundfish == RFA&
                          !is.na(dataOfInterest$Species) & dataOfInterest$Species == species,]
   if(sum(!is.na(tmp))==0){
-    nAgeClasses = dim(ALKNew[[1]])[2]-2
+    nAgeClasses = dim(ALK[[1]])[2]-2
     mCPUE = rep(0,nAgeClasses)
     return(mCPUE)
   }
@@ -333,7 +333,7 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
     statRects = statRects[which(statRects %in% statRecsOfinterest)]
   }
   numberOfStatRectangles = length(statRects)
-  nAgeClasses = dim(ALKNew[[1]])[2]-2
+  nAgeClasses = dim(ALK[[1]])[2]-2
   mCPUEstatRec = matrix(NA,nAgeClasses,numberOfStatRectangles)
   #---------------------------------------------------------------
 
@@ -341,7 +341,7 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
   if(numberOfStatRectangles==0) return("No observations in RFA")
   for(i in 1:numberOfStatRectangles)
   {
-    cpueStatRec = calcmCPUEStatRecHaulBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALKNew = ALKNew,procedure = procedure)
+    cpueStatRec = calcmCPUEStatRecHaulBasedALK(statRec = statRects[i],species = species,year= year , quarter = quarter, data = dataOfInterest,ALK = ALK,procedure = procedure)
 
     mCPUEstatRec[,i] = as.double(cpueStatRec)
 
@@ -399,7 +399,7 @@ calcmCPUErfaHaulbasedALK = function(RFA,species,year, quarter, data, ALKNew,proc
 #' @export
 #' @return Returns the mCPUE per length class in the given statistical rectangle
 #' @examples
-calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALKNew,procedure = "")
+calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK,procedure = "")
 {
   #Extract the number of hauls in the statistical area
   nHauls = length(unique(data$haul.id[which(data$StatRec == statRec)]))
@@ -421,7 +421,7 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
   #Calculates and returns mCPUE-----
   subfactor = dataWithTheSpecies$SubFactor
 
-  nAgeClasses = dim(ALKNew[[1]])[2]-2
+  nAgeClasses = dim(ALK[[1]])[2]-2
   CPUE = rep(0,nAgeClasses)
 
   if(dim(dataWithTheSpecies)[1]==0)return(CPUE)
@@ -432,44 +432,44 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
     {
       trawlId = dataWithTheSpecies$haul.id[i]
       whichALK =NA
-      for(indeksALK in 1:length(ALKNew))
+      for(indeksALK in 1:length(ALK))
       {
-        if(ALKNew[[indeksALK]]$ID[1]==trawlId)whichALK = indeksALK
+        if(ALK[[indeksALK]]$ID[1]==trawlId)whichALK = indeksALK
       }
-      ALK = ALKNew[[whichALK]]
+      ALKtoUse = ALK[[whichALK]]
 
       lineInAlkToUse = NA
-      if(min(ALK$Length)>dataWithTheSpecies$LngtCm[i])
+      if(min(ALKtoUse$Length)>dataWithTheSpecies$LngtCm[i])
       {
         lineInAlkToUse = 1
-      }else if(max(ALK$Length)<dataWithTheSpecies$LngtCm[i])
+      }else if(max(ALKtoUse$Length)<dataWithTheSpecies$LngtCm[i])
       {
-        lineInAlkToUse = length(ALK$Length)
+        lineInAlkToUse = length(ALKtoUse$Length)
       }else{
-        lineInAlkToUse = max(which(ALK$Length <= dataWithTheSpecies$LngtCm[i]))
+        lineInAlkToUse = max(which(ALKtoUse$Length <= dataWithTheSpecies$LngtCm[i]))
       }
       if(dataWithTheSpecies$DataType[i]=="R")
       {
-        CPUE =  CPUE + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
-        if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
+        CPUE =  CPUE + (dataWithTheSpecies$HLNoAtLngt[i]*60/dataWithTheSpecies$HaulDur[i])*subfactor[i] * ALKtoUse[lineInAlkToUse,-c(1,2)]/sum(ALKtoUse[lineInAlkToUse,-c(1,2)])
+        if(sum(ALKtoUse[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }else if(dataWithTheSpecies$DataType[i]=="C")
       {
-        CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALK[lineInAlkToUse,-c(1,2)]/sum(ALK[lineInAlkToUse,-c(1,2)])
-        if(sum(ALK[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
+        CPUE  =  CPUE + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i] * ALKtoUse[lineInAlkToUse,-c(1,2)]/sum(ALKtoUse[lineInAlkToUse,-c(1,2)])
+        if(sum(ALKtoUse[lineInAlkToUse,-c(1,2)]) ==0)print("ALK er null")
       }
       #Store how many was calculated with datras procedure
-      if ("datrasValue" %in% names(attributes(ALK))){
+      if ("datrasValue" %in% names(attributes(ALKtoUse))){
         if(!is.na(lineInAlkToUse)){
           if(dataWithTheSpecies$DataType[i]=="R")
           {
-            if(attributes(ALK)$datrasValue[lineInAlkToUse]){
+            if(attributes(ALKtoUse)$datrasValue[lineInAlkToUse]){
               nWithDatras = nWithDatras + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }else{
               nWithoutDatras = nWithoutDatras + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }
           }else if(dataWithTheSpecies$DataType[i]=="C")
           {
-            if(attributes(ALK)$datrasValue[lineInAlkToUse]){
+            if(attributes(ALKtoUse)$datrasValue[lineInAlkToUse]){
               nWithDatras = nWithDatras + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
             }else{
               nWithoutDatras = nWithoutDatras + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
@@ -477,18 +477,18 @@ calcmCPUEStatRecHaulBasedALK = function(statRec,species,year, quarter, data, ALK
           }
         }
       }
-      if ("foundWithin" %in% names(attributes(ALK))){
+      if ("foundWithin" %in% names(attributes(ALKtoUse))){
         if(!is.na(lineInAlkToUse)){
           if(dataWithTheSpecies$DataType[i]=="R")
           {
-            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+            if(attributes(ALKtoUse)$foundWithin[lineInAlkToUse]){
               nFoundWithin = nFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }else{
               nNotFoundWithin = nNotFoundWithin + (dataWithTheSpecies$HLNoAtLngt[i])*subfactor[i]
             }
           }else if(dataWithTheSpecies$DataType[i]=="C")
           {
-            if(attributes(ALK)$foundWithin[lineInAlkToUse]){
+            if(attributes(ALKtoUse)$foundWithin[lineInAlkToUse]){
               nFoundWithin = nFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
             }else{
               nNotFoundWithin = nNotFoundWithin + dataWithTheSpecies$HLNoAtLngt[i]*subfactor[i]*dataWithTheSpecies$HaulDur[i]/60
@@ -547,12 +547,12 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE, 
   totalArea = 0
   for(RFA in 1:9){
     areaThisRFA = rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == RFA)]
-    #WARNING! By some reason the rfa 5 and 10 are merged in the  datras data
-    if(RFA ==5){
+
+    if(RFA ==5){#WARNING! By some reason the rfa 5 and 10 are merged in the datras data
       areaThisRFA = areaThisRFA + rfa@data$areas.sqkm[which( as.numeric(as.character(rfa@data$AreaName)) == 10)]
     }
 
-    if(useICESindexArea){
+    if(useICESindexArea){ #Use index areas defined by statistical rectangles instead
       allRectanlges = extractStatRecAll()[[RFA]]
       areaThisRFA = length(allRectanlges)
       rectanglesOfInterest = extractStatRecIndexArea(species)
@@ -560,20 +560,20 @@ calcmCPUEnorthSea = function(species,year, quarter, dat,ALKprocedure,B,dimCPUE, 
       areaThisRFA = areaThisRFA *proportionOfInterest
     }
 
-    if(species== "Pollachius virens"){
-      areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
-    }
+#    if(species== "Pollachius virens"){ #The areas for saithe needs furhter work
+#      areaThisRFA = areaRFA$areaSaithe[RFA] #Extrat the area with depth between 10 to 200 meters in the RFA
+#    }
 
     if(sum(!is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish==RFA
            & !is.na(dat$hl_hh$Species)& dat$hl_hh$Species ==species & areaThisRFA >0)>0 ){
       #Add the mCPUE from this RFA to mCPUEvector and scale with the area. Note we later divide by the total area.
       cpueThisRFA = CPUErfa(RFA = RFA, species = species, year = year, quarter = quarter,dat = dat,
-                            ALKprocedure = ALKprocedure, B = n,doBootstrap = FALSE,lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
+                            ALKprocedure = ALKprocedure, B = n,lengthDivision = lengthDivision,useICESindexArea = useICESindexArea)
 
-      if(areaThisRFA >0){
-          mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
-      }
 
+       mCPUEvector = mCPUEvector + cpueThisRFA[,1] *areaThisRFA
+
+      #Collect how many ages that was calculated with different procedures.
       if(!is.null(attributes(cpueThisRFA)$nWithDatras) & !is.null(attributes(cpueThisRFA)$nWithoutDatras)){
         nWithDatras = nWithDatras + attributes(cpueThisRFA)$nWithDatras
         nWithoutDatras = nWithoutDatras + attributes(cpueThisRFA)$nWithoutDatras
