@@ -1,0 +1,49 @@
+I have identified four sections where I would like us to consider rewriting some. 
+
+I could write suggestions for some or all of them, but unfortunately not before wednesday next week. 
+
+If we agree on whether to include these suggestions, and have the same idea of the main message, it probably doesn't matter a whole lot who writes it.
+
+
+
+Abstract:
+I'd like us to motivate better the research on sampling less otoliths.
+Along the lines commented in blue print in the discussion (Olavs comment ?).
+
+
+
+Introduction:
+Here I also think some more elaborate motivation og the otolith sampling would be nice. 
+A paragraph before "The main contribution of this research is..."
+
+
+
+section 3.3:
+I am a bit concerned about the interpretation of this analysis. 
+
+The argumentation for more trawl stations is not entirely coherent with the preeceding sentence, but more fundamentally it is not clear to me if we can say anything useful about the effect of additional stations (stations > 300). 
+I think the asymptote and rate of convergence is determined by the sample we simulate from and not the population. 
+I can probably be convinced otherwise, but right now I'd feel more comfortable interpreting what happens when we sample less than the current number of stations, 
+and point out that particularly the older ages increases quickly in expected RSE as the number of stations are reduced, which indicates that gains can still be had by adding stations.
+
+
+
+Discussion:
+
+I feel that what we have identified as the main point in the introduction gets a bit buried. In addition I would like us to see if we do a recommendation for ALK approach or bootstrap approach:
+- 
+Recapitulate the different biases in area-based ALK, refer to result in Figure 3 and recommend our variants of ALK and bootstrap as these handles identified biases and we have shown that it makes some difference.
+ 
+I agree with Olav that we can not demonstrate empirically that our suggestion is better, but we could still argue based on how it is design to eliminate these biases.
+
+- Recapitulate the importance of reducing age reading effort, and argue for larger length groups to be considered for sampling manuals. I am not thinking a classic cost-benefit argument, but rather arguing that:
+
+1. Overloaded age-reading staff may introduce bias by the order the read ages if they cannot finish the age reading timely.
+
+2. Freeing up age-reading capacity may allow us to redistribute effort to reading other species.
+
+Figures:
+This should be considered a minor point.
+
+ I don't want to impose additional figure work at this point, but in case we have one laying around I'll mention it anyway. 
+I would be interested in including one example where we take the sampling regimes to some extreme (like very wide length-groups), just to confirm to a sceptically inclined reader that the RSE does actually go up at some point.
