@@ -9,7 +9,7 @@
 #' @examples
 simTrawlHaulsDatras = function(RFA,year, quarter,hl_hh,ca_hh,nSimHauls = NULL)
 {
-  #TODO: Should clean this to use only hh-data when sampling.
+  #TODO: Ideally we should clean this to use only hh-data when sampling.
   #Extract the data of interest-------------------------
     dataOfInterest = hl_hh[!is.na(hl_hh$Year) & hl_hh$Year == year&
                           !is.na(hl_hh$Quarter) & hl_hh$Quarter == quarter&
@@ -19,19 +19,19 @@ simTrawlHaulsDatras = function(RFA,year, quarter,hl_hh,ca_hh,nSimHauls = NULL)
   #Simulate trawl hauls---------------------------------
   haulsID = unique(dataOfInterest$haul.id)
   if(is.null(nSimHauls)){
-    nSim = length(haulsID)
+    nSim = length(haulsID) #Simualte as many hauls as was taken
   }else{
-    nSim = nSimHauls
+    nSim = nSimHauls #Simulate a predefined given number of hauls
   }
   simHauls = sample(haulsID,nSim,replace = T)
 
-  #Define a help variable for keeping the number of trawl hauls within each statistical rectangle fixed----
+  #Define a help variable for selecting statistical rectangle to each simulated haul----
   rectangleID = rep(NA,length(haulsID))
   for(i in 1:length(haulsID))
   {
     rectangleID[i] = as.character(unique(dataOfInterest$StatRec[dataOfInterest$haul.id== haulsID[i]]))
   }
-  if(!is.null(nSimHauls)){#Shuffel and expand the rectangleID to keep the number of trawl hauls within each statistical rectangle approximately fixed when not resampling all hauls.
+  if(!is.null(nSimHauls)){#Shuffel and expand the rectangleID. This is done to not oversample any statisical rectangle
     rectangleID = sample(rectangleID,length(rectangleID),replace = FALSE)
     rectangleID = c(rectangleID, sample(rectangleID,length(rectangleID),replace = FALSE))
     rectangleID = c(rectangleID, sample(rectangleID,length(rectangleID),replace = FALSE))
@@ -44,12 +44,12 @@ simTrawlHaulsDatras = function(RFA,year, quarter,hl_hh,ca_hh,nSimHauls = NULL)
   {
     simDataHL[[i]]= dataOfInterest[dataOfInterest$haul.id==simHauls[i],]
     simDataHL[[i]]$haul.id = paste(simDataHL[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
-    simDataHL[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
+    simDataHL[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle.
 
     if(sum(ca_hh$haul.id==simHauls[i])>0){
       simDataCA[[i]] = ca_hh[ca_hh$haul.id==simHauls[i],]
       simDataCA[[i]]$haul.id = paste(simDataCA[[i]]$haul.id,i) #Needs unique haul.id, which is achived here.
-      simDataCA[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle to keep the number of trawl hauls within each statistical rectangle fixed.
+      simDataCA[[i]]$StatRec = rectangleID[i] #Overwrite the statstical rectangle.
     }
   }
   simCAToBeReturned  =   do.call(rbind.data.frame,simDataCA)
@@ -93,24 +93,26 @@ simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
   for(i in 1:length(lengths)){
     l = lengths[i]
     n = sum(floor(dataOfInterest$LngtCm)==l) #If we are to reduce the number of otoliths we mush change this value.
-    if(n ==1)
+    if(n >1)
     {
+      dTmp = dataOfInterest[floor(dataOfInterest$LngtCm)==l,]
+      dTmp = sample_n(dTmp, size = n,replace = TRUE)
+    }else{ #Only one observed age with this length, sample either that or one close with equal probability
       if(l<max(lengths) & l>min(lengths))
       {
         distDown = l-lengths[i-1]
         distUp = lengths[i+1] -l
-        if(distUp == distDown) distDown = distDown + 0.5 - runif(1)
-
+        if(distUp == distDown) distDown = distDown + 0.5 - runif(1) #Go up or down with equal probablity
         if(distDown<distUp)
         {
           extra = which(floor(dataOfInterest$LngtCm)==lengths[i-1])
-        }else{
+        }else if(distDown>distUp){
           extra = which(floor(dataOfInterest$LngtCm)==lengths[i+1])
         }
       }else if(l==min(lengths)){
-        extra = which(floor(dataOfInterest$LngtCm)==lengths[i-1])
-      }else if(l==max(lengths)){
         extra = which(floor(dataOfInterest$LngtCm)==lengths[i+1])
+      }else if(l==max(lengths)){
+        extra = which(floor(dataOfInterest$LngtCm)==lengths[i-1])
       }
 
       whichToAdd = sample(length(extra),1) #Extract one which is sampled with 0.5 probability
@@ -119,9 +121,6 @@ simCAdatras = function(RFA,year, quarter,data,species = "Gadus morhua")
       dTmp$LngtCm = l
       dTmp = sample_n(dTmp, size = n,replace = TRUE)
 
-    }else{
-      dTmp = dataOfInterest[floor(dataOfInterest$LngtCm)==l,]
-      dTmp = sample_n(dTmp, size = n,replace = TRUE)
     }
     simData[[l]]= dTmp
 

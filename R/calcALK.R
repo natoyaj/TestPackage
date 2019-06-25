@@ -74,7 +74,7 @@ calculateALKDatras = function(RFA,species,year,quarter,ca,lengthDivision,dat = N
     #-----------------------------------------------------
 
     #Extrapolate the ALK to length calsses were we do not have data-----------------------------------
-    whichIsMissing = rep(FALSE, dim(alk)[1]*2)
+    whichIsMissing = rep(FALSE, dim(alk)[1])
     for(i in 1:dim(alk)[1])
     {
       if(sum(alk[i,-1]) == 0)whichIsMissing[i] = TRUE
@@ -331,6 +331,9 @@ calculateALKHaulbased = function(RFA, species, year, quarter,ca,hl,lengthDivisio
           closesId = closestSorted[nesteHal]
           while(!foundAge){
             distInKm = d[sortedShortestDist[nesteHal],which(loc$uniqueId== id)[1]]
+            if(is.na(distInKm)) {
+              distInKm = 9999 #No hauls in the same RFA
+            }
             if(distInKm<maxDistToBorrowStrength){
               closestData = caInterest[caInterest$haul.id == closesId,]
               if(i==dim(alkThis)[1]){

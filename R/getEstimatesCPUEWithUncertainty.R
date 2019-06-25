@@ -7,22 +7,21 @@
 #' @param bootstrapProcedure The bootstrap procedure ("simple", "stratisfied", ...)
 #' @param B The number of simulations in the selected bootstrap procedure
 #' @param ALKprocedure Either datras or haulbased
-#' @param doBootstrap A boolean stating if bootstrap should be done. Default is TRUE.
 #' @export
 #' @return Returns the mCPUE per age class in the given RFA with uncertainty
 #' @examples
 CPUErfa = function(RFA, species, year, quarter,dat,
                                bootstrapProcedure="datras", B = 10,
-                               ALKprocedure = "datras",doBootstrap = TRUE,lengthDivision, useICESindexArea = FALSE){
+                               ALKprocedure = "datras",lengthDivision, useICESindexArea = FALSE){
 
 
   #Extract the data of interest-------------
-  dataToSimulateFromCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
+  dataCA = dat$ca_hh[!is.na(dat$ca_hh$Year) & dat$ca_hh$Year == year&
                                  !is.na(dat$ca_hh$Quarter) & dat$ca_hh$Quarter == quarter&
                                  !is.na(dat$ca_hh$Roundfish) & dat$ca_hh$Roundfish == RFA ,]
 
 
-  dataToSimulateFromHL = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
+  dataHL = dat$hl_hh[!is.na(dat$hl_hh$Year) & dat$hl_hh$Year == year&
                                   !is.na(dat$hl_hh$Quarter) & dat$hl_hh$Quarter == quarter&
                                   !is.na(dat$hl_hh$Roundfish) & dat$hl_hh$Roundfish == RFA ,]
 
@@ -30,11 +29,11 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 
   #Estimate CPUEs----------------------------
   if(ALKprocedure == "haulBased"){
-    ALKNew = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA, hl = dataToSimulateFromHL,lengthDivision = lengthDivision,dat = dat)
-    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALKNew = ALKNew, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
+    ALK = calculateALKHaulbased(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataCA, hl = dataHL,lengthDivision = lengthDivision,dat = dat)
+    cpueEst = calcmCPUErfaHaulbasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataHL,ALK = ALK, weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else if(ALKprocedure == "datras"){
-    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataToSimulateFromCA,dat = dat,lengthDivision = lengthDivision)
-    cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataToSimulateFromHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
+    ALK = calculateALKDatras(RFA = RFA, species = species, year = year, quarter = quarter,ca = dataCA,dat = dat,lengthDivision = lengthDivision)
+    cpueEst = calcmCPUErfaAreaBasedALK(RFA = RFA,species = species, year = year, quarter = quarter, data = dataHL,ALK = ALK,weightStatRec = dat$weightStatRec, useICESindexArea = useICESindexArea)
   }else{
     stop("Unkown ALKprocedure")
   }
@@ -43,8 +42,8 @@ CPUErfa = function(RFA, species, year, quarter,dat,
 
 
   #Investigate if it is observed zero data---
-  tmp = dataToSimulateFromCA[!is.na(dataToSimulateFromCA$Roundfish) & dataToSimulateFromCA$Roundfish == RFA&
-                               !is.na(dataToSimulateFromCA$Species) & dataToSimulateFromCA$Species == species,]
+  tmp = dataCA[!is.na(dataCA$Roundfish) & dataCA$Roundfish == RFA&
+                               !is.na(dataCA$Species) & dataCA$Species == species,]
   if(sum(!is.na(tmp))==0){
     return(data.frame(cpueEst))
   }
@@ -88,7 +87,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
   nOtolithsRemoved = 0
   #---------------------------------------------------------------
 
-  #Help variable for invewstigating how larg proportion og ages is calculated with the DATRAS procedure
+  #Help variable for investigating how larg proportion og ages are calculated with different procedures
   nWithDatras = 0
   nWithoutDatras = 0
   nFoundWithin = 0
@@ -129,17 +128,20 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
             simDataCA = simCAdatras(RFA,year,quarter, data = simHauls$ca_hh, species = species)
           }else if(bootstrapProcedure =="datrasHLstratifiedCA"){
             nSimHaulsThisRFA = round(mean(dat$hh$Roundfish[!is.na(dat$hh$Roundfish)]==RFA)*nSimHauls)
-            #if(nSimHaulsThisRFA<2)stop(paste("Too few hauls in RFA" , RFA))
+            if(nSimHaulsThisRFA<2){
+              nSimHaulsThisRFA = 2
+              warning(paste("In RFA ", RFA , " it is sampled ", nSimHaulsThisRFA , " hauls instead of fewer"))
+            }
             simHauls = simTrawlHaulsDatras(RFA,year,quarter, hl_hh = dat$hl_hh, ca_hh = dat$ca_hh,nSimHauls = nSimHaulsThisRFA)
             simDataHL = simHauls$hl_hh
-            simDataCA = simHauls$ca_hh
+            simDataCA = simHauls$ca_hh #CA data is later sampled with the pseaudo bootstrap procedure
           }else if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="stratifiedHLdatrasCA"){
             simHauls = simHaulsStratified(RFA,year,quarter, dataHH = dat$hh,loc = loc)
-            simDataCA = dat$ca_hh[1,]#Define the structure in the data, this line is removed later.
+            simDataCA = dat$ca_hh[1,]#Define the structure in the data, this row is removed later.
             simDataHL = dat$hl_hh[1,]
             simDataHH = dat$hh[1,]
-            simDataHH$originalIdAtThisLocation = 0; #Removed later
-            for(j in 1:dim(simHauls)[1]){ #Go trough the simulated hauls and modify them such that they points to the right statistical rectangle etc.
+            simDataHH$originalIdAtThisLocation = 0;
+            for(j in 1:dim(simHauls)[1]){ #Go trough the simulated hauls and modify them such that they points to the right statistical rectangle, coordinates, etc.
               tmpCA = dat$ca_hh[which(dat$ca_hh$haul.id== simHauls$haul.id[j]),]
               tmpHL = dat$hl_hh[which(dat$hl_hh$haul.id== simHauls$haul.id[j]),]
               tmpHH = dat$hh[which(dat$hh$haul.id== simHauls$haul.id[j]),]
@@ -176,7 +178,7 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
               #Sample ages with DATRAS-procedure
               simDataCA = simCAdatras(RFA,year,quarter, data = dat$ca_hh, species = species)
             }else{
-              #Sample ages stratified with wrt length and haul, this is done after the for-loop.
+              #Sample ages with the pseeudo bootstrap procedure, this is done after the for-loop.
             }
           }else{
             return("Select a valid bootstrap procedure.")
@@ -202,15 +204,9 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       print("Sampling otoliths...")
       nOtolithsTotal = dim(datTmp$ca_hh)[1]
       if(bootstrapProcedure =="stratifiedHLandCA" | bootstrapProcedure =="datrasHLstratifiedCA"){
-      #  if(onlySimulate){
           datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
                                   quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = samplesWithinEachIntervall,
                                   hl_hh = datTmp$hl_hh)
-      #  }else{#TODO, should clean this part. This if-else should not be included, needs some checking before i can remove it...
-      #    datTmp$ca_hh = sampleCA(ca_hh = datTmp$ca_hh,species,
-      #                            quarter, lengthDivision = lengthDivision,samplesWithinEachIntervall = 999999,
-      #                            hl_hh = datTmp$hl_hh)
-      #  }
       }else{
         #Sample ages stratified with wrt length, was done in the for-loop above.
       }
@@ -218,14 +214,11 @@ CPUEnorthSea = function(species, year, quarter,dat, bootstrapProcedure,
       print(paste("Removed ",nOtolithsRemoved, " out of ", nOtolithsTotal," otoliths.",sep = ""))
       #------------------------------------------
 
-
-
-
       mCPUEThisSimulation = calcmCPUEnorthSea(species= species,year =year, quarter = quarter,
                               dat = datTmp,ALKprocedure = ALKprocedure,B = B,
                               dimCPUE = dim(mCPUE),lengthDivision = lengthDivision, useICESindexArea = useICESindexArea)
       if(is.na(sum(mCPUEThisSimulation[[1]]))){
-        print("Something wrong, save the simulated data in the working directory and the program will soon terminate...")
+        print("Somethings wrong, save the simulated data in the working directory and the program will soon terminate...")
         saveRDS(datTmp,file = paste("dataResultedInNAcpueDF",lengthDivision[2]-lengthDivision[1],sep = ""))
       }
       mCPUE[,i+1] = mCPUEThisSimulation[[1]]
