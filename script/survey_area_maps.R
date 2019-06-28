@@ -95,6 +95,6 @@ plot_on_pdf <- function(filename){
 plot_on_pdf("surveyarea.esp")
 
 oldpar <- par(no.readonly = T)
-par(cex.axis=1.5, cex.lab=1.5)
+par(cex.axis=1.5, cex.lab=1.5, mgp=c(3, 2, 0))
 plot_ibts_map(cex.legend=1.5, bat=NULL)
 par(oldpar)
