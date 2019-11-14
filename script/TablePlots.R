@@ -178,13 +178,20 @@ alkresult[alkresult$Bootstrap=="ICES-IBTS", "bs"] <- "I"
 alkresult[alkresult$Bootstrap=="Modified-ICES", "bs"] <- "mI"
 alkresult$ALKm <- paste(alkresult$ALK, alkresult$bs, sep=", ")
 alkresult$age <- paste("Age", alkresult$age)
+
+# Using Q1 and all years
+
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 stackedPanels(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,2,5,10,15,20,25))
+
+# Using Q3 and all years
+
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
 stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,1,2,5,10,15,20,25))
 
 #
 # Compare expected RSE from the three bootstrap procedures for each age group
+# Using Q3 and all years
 #
 stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "RSE", tickmarks = c(0,.2,.4,.6))
 
@@ -195,6 +202,8 @@ resamplingPrXcm <- read.csv("data/OtolithsOnly_1_per_xcm_haulBased.csv", sep=";"
 resamplingPrXcm$Year <- as.character(resamplingPrXcm$Year)
 resamplingPrXcmQ1 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q1",]
 resamplingPrXcmQ3 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q3",]
+
+# Using Q3 and all years
 stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "mean", "Q025", "Q975", xlab="length group", ylab="mCPUE", tickmarks = c(0,2,5,10,15,20,25))
 
 #some variants to higlight variances
