@@ -100,7 +100,7 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
     xlab <- xVariable
   }
   
-  rows <- sort(unique(unlist(data[,rowGroups])))
+  rows <- sort(unique(unlist(data[,rowGroups])), decreasing = T)
   cols <- sort(unique(unlist(data[,columnGroups])))
   
   if (is.character(linecol)){
@@ -179,13 +179,25 @@ alkresult[alkresult$Bootstrap=="Modified-ICES", "bs"] <- "mI"
 alkresult$ALKm <- paste(alkresult$ALK, alkresult$bs, sep=", ")
 alkresult$age <- paste("Age", alkresult$age)
 
+####
+# Plot 1
 # Using Q1 and all years
-
+# Two one-column plots, age groups as rows, exclude age 0
+# Put point estimates (mCPUE) with confidence intervals on top of each other
+# for: area based with Modified ICES, and haul-based with stratified
+# Put rse estimates on top of each oter
+# for: area based with Modified ICES, areas based with ICES, and haul-based with stratified
+#
+# Place legends outside of plot somewhere reasonable.
+#
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
+alkq1 <- alkq1[alkq1$age != "Age 0",]
 stackedPanels(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,2,5,10,15,20,25))
 
+####
+# Plot 2 - for supplementary
+# As plot 1, but for Q3, retaining age group 0
 # Using Q3 and all years
-
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
 stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,1,2,5,10,15,20,25))
 
@@ -198,18 +210,78 @@ stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable 
 #
 # Compare resampling for haul based ALK
 #
-resamplingPrXcm <- read.csv("data/OtolithsOnly_1_per_xcm_haulBased.csv", sep=";", stringsAsFactors = F, dec=",")
+resamplingPrXcm <- read.csv("data/OtolithsOnly_1_per_xcm_haulBased.csv", sep=";", stringsAsFactors = F, dec=",", na.strings = c("#N/A"))
+resamplingPrXcm$age <- paste("Age", resamplingPrXcm$age)
 resamplingPrXcm$Year <- as.character(resamplingPrXcm$Year)
 resamplingPrXcmQ1 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q1",]
+resamplingPrXcmQ1 <- resamplingPrXcmQ1[resamplingPrXcmQ1$age != "Age 0",]
+
 resamplingPrXcmQ3 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q3",]
 
-# Using Q3 and all years
-stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "mean", "Q025", "Q975", xlab="length group", ylab="mCPUE", tickmarks = c(0,2,5,10,15,20,25))
+####
+# Plot 3
+# Using Q1 and all years
+# change order of x axis
+# make B/W
+#
+stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0)
 
-#some variants to higlight variances
-resamplingPrXcmQ32018 <- resamplingPrXcmQ3[resamplingPrXcmQ3$Year=="2018",]
-stackedPanels(data = resamplingPrXcmQ32018, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "mean", "Q025", "Q975", xlab="length group", ylab="mCPUE", ymin=NULL)
-resamplingPrXcmQ3plusG <- resamplingPrXcmQ3[resamplingPrXcmQ3$age=="6+",]
-stackedPanels(data = resamplingPrXcmQ3plusG, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "mean", "Q025", "Q975", xlab="length group", ylab="mCPUE", tickmarks = c(0,2,5,10,15,20,25), ymin=NULL)
+
+####
+# Plot 4
+# as plot 3, but for q3, and retaining age 0
+# change order of x axis
+# make B/W
+#
+stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0)
 
 
+
+####
+# Plot 5
+# Need to add current sampling (C) to the right of 5 (included now as 7)
+# Remove line connecting points, and add horisontal line for C.
+# Put horisontal under points.
+# Make B/W
+#
+resamplingFixedLengthGroups <- read.csv("OtolithsOnly_Results/OtolithsOnly_y_per_5cm_haulBased.csv", sep=";", stringsAsFactors = F, dec=".", na.strings = c("#N/A", "NA"))
+resamplingFixedLengthGroups$age <- paste("Age", resamplingFixedLengthGroups$age)
+resamplingFixedLengthGroups$Year <- as.character(resamplingFixedLengthGroups$Year)
+resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$Quarter=="Q1",]
+resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$age != "Age 0",]
+resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$Otolith_per5cm == "C", "Otolith_per5cm"] <- 7
+resamplingFixedLengthGroupsQ1$Otolith_per5cm <- as.integer(resamplingFixedLengthGroupsQ1$Otolith_per5cm)
+
+stackedPanels(data = resamplingFixedLengthGroups, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0)
+
+####
+# Plot 6 - supplementary
+# As plot 5, but for Q3, and including Age 0
+#
+
+####
+# Plot 7
+# overlay 1 and 5 for otholith per 5 cm
+# put legeneds outside plot somewhere reasonable. legend: 1 fish per 5 cm, 5 fish per 5 cm
+# make B/W
+resamplingOtolithsAndHauls <- read.csv("OtolithsAndHauls_Results_2015_2018/OtolAndHaul_1_5_per_5cm_areaBased2015_2018.csv", sep=";", stringsAsFactors = F, na.strings=c("NA"))
+resamplingOtolithsAndHauls$cv <- resamplingOtolithsAndHauls$sd / resamplingOtolithsAndHauls$bootstrapMean
+resamplingOtolithsAndHauls$age <- paste("Age", resamplingOtolithsAndHauls$age)
+resamplingOtolithsAndHauls$Year <- as.character(resamplingOtolithsAndHauls$Year)
+resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q1",]
+resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$age != "Age 0",]
+
+resamplingOtolithsAndHaulsQ1o5 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$Otolith_per5cm == 5,]
+stackedPanels(data = resamplingOtolithsAndHaulsQ1o5, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", xlab="Number of hauls", ylab="RSE", ymin=0)
+
+####
+# Plot 8 - supplementary
+# Like plot 7, but for Q3 and including aGE GROUP 0
+
+####
+# Plot 9  - supplementary
+# Like plot 7, but for 1997 - 1999
+
+####
+# Plot 10  - supplementary
+# Like plot 9, but for Q3 and including age group 0
