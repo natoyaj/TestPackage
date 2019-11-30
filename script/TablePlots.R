@@ -15,6 +15,50 @@ makeColorMap <- function(columns, color){
 }
 
 #' @noRd
+panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=F, showY=F, ylabel="", basetheme=NULL, titletext="", pointcol=NULL, linecol=NULL, errorcol=NULL, tickmarks=NULL){
+  
+  panelplot <- ggplot(plotData, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
+  
+  cols <- unique(plotData[,columnGroups])
+  for (col in cols){
+    colData <- plotData[plotData[,columnGroups] == col,]
+    if (!is.null(yVariableUpper) & !is.null(yVariableLower)){
+      panelplot <- panelplot + geom_linerange(data=colData, aes_string(ymin=yVariableLower, ymax=yVariableUpper), color=errorcol[[col]])
+    }  
+    #points and lines
+    if (nrow(colData) == 0){
+      panelplot <- panelplot + geom_blank()
+    }
+    else{
+      panelplot <- panelplot + geom_line(data=colData,color=linecol[[col]]) + geom_point(shape=20, size=2, color=pointcol[[col]])
+    }
+    
+    if (!is.null(title) & col == cols[1]){
+      panelplot <- panelplot + ggtitle(titletext)
+    }
+    
+  }
+
+  panelplot <- panelplot + basetheme()
+  panelplot <- panelplot + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank())
+  if (!is.null(tickmarks)){
+    panelplot <- panelplot + scale_y_continuous(breaks=tickmarks, limits = ylimcol)
+  }
+  if (!showX){
+    panelplot <- panelplot + theme(axis.title.x = element_blank(), axis.text.x=element_blank())
+  }
+  else{
+    panelplot <- panelplot + theme(axis.title.x = element_blank())
+  }
+  
+  if (!showY){
+    panelplot <- panelplot + theme(axis.title.y = element_blank(), axis.text.y=element_blank())
+  }
+  
+  return(panelplot)
+}
+
+#' @noRd
 panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL){
   
   panelplot <- ggplot(plotdata, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
@@ -163,9 +207,145 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
     bottom=xlab
     )
 }
+
+#' Makes Two column plot-table
+#' Same x-axis, and row-categories, but two different y-axis for the different groups.
+#' values for each of the column groups are plotted on top of each other in the column to the right for yvariable1
+#' values for each of the column groups are plotted on top of each other in the column to the left for yvariable2
+overlayedColumnPlot <- function(data, columnGroups, rowGroups, xVariable, yVariable1, yVariable2, yVariable1Lower=NULL, yVariable1Upper=NULL, yVariable2Lower=NULL, yVariable2Upper=NULL, ylab1=NULL, ylab2=NULL, xlab=NULL, xlim=NULL, ymin1=0, ymin2=0, ymax1=NULL, ymax2=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarksY1=NULL, tickmarksY2=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}){
+  if(is.numeric(columnGroups) | is.numeric(rowGroups)){
+    stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
+  }
+  
+  if (!all(c(columnGroups, rowGroups, xVariable, yVariable1, yVariable2) %in% names(data))){
+    stop("Some arguments (columnGroups, rowGroups, xVariable, yVariable1, yvaraible2) not found in data.")
+  }
+  
+  if (any(is.na(data[,c(columnGroups, rowGroups, xVariable)]))){
+    stop("NAs in grouping variables or x variable")
+  }
+  
+  if (is.null(yVariable1Upper) + is.null(yVariable1Lower) == 1){
+    stop("Provide either both yVariableUpper and yVariableLower, or neither of them")
+  }
+  if (is.null(yVariable2Upper) + is.null(yVariable2Lower) == 1){
+    stop("Provide either both yVariableUpper and yVariableLower, or neither of them")
+  }
+  
+  if (is.null(ylab1)){
+    ylab1 <- yVariable1
+  }
+  if (is.null(ylab2)){
+    ylab2 <- yVariable2
+  }
+  
+  if (is.null(xlab)){
+    xlabel <- xVariable
+  }
+  else{
+    xlabel <- xlab
+  }
+  
+  rows <- sort(unique(unlist(data[,rowGroups])), decreasing = T)
+  cols <- sort(unique(unlist(data[,columnGroups])))
+  
+  if (is.character(linecol)){
+    linecol <- makeColorMap(cols, linecol)
+  }
+  if (is.character(pointcol)){
+    pointcol <- makeColorMap(cols, pointcol)
+  }
+  if (is.character(errorcol)){
+    errorcol <- makeColorMap(cols, errorcol)
+  }
+  
+  panels <- list()
+  for (row in rows){
+    
+    #determine ylims for yVariable1 if necessary
+    minvar1 <- yVariable1
+    if (!is.null(yVariable1Lower)){
+      minvar1 <- yVariable1Lower  
+    }
+    miny1 <- ymin1
+    if (is.null(miny1)){
+      miny1 <- min(data[data[,rowGroups] == row,minvar1])
+      miny1 <- miny1 - abs(miny1) * .1
+    }
+    
+    maxvar1 <- yVariable1
+    if (!is.null(yVariable1Upper)){
+      maxvar1 <- yVariable1Upper  
+    }
+    maxy1 <- ymax1
+    if (is.null(maxy1)){
+      maxy1 <- max(data[data[,rowGroups] == row,maxvar1])
+      maxy1 <- maxy1 + abs(maxy1) * .1
+    }
+    ylim1col <- c(miny1, maxy1)
+    
+    
+    #determine ylims for yVariable2 if necessary
+    minvar2 <- yVariable2
+    if (!is.null(yVariable2Lower)){
+      minvar2 <- yVariable2Lower  
+    }
+    miny2 <- ymin2
+    if (is.null(miny2)){
+      miny2 <- min(data[data[,rowGroups] == row,minvar2])
+      miny2 <- miny2 - abs(miny2) * .1
+    }
+    
+    maxvar2 <- yVariable2
+    if (!is.null(yVariable2Upper)){
+      maxvar2 <- yVariable2Upper  
+    }
+    maxy2 <- ymax2
+    if (is.null(maxy2)){
+      maxy2 <- max(data[data[,rowGroups] == row,maxvar2])
+      maxy2 <- maxy2 + abs(maxy2) * .1
+    }
+    ylim2col <- c(miny2, maxy2)
+    
+    #get x-axis and title params
+    xlimrow <- xlim
+    if (is.null(xlimrow)){
+      xlimrow <- c(min(data[,xVariable]), max(data[,xVariable]))
+    }
+    
+    title1 <- NULL
+    if (row == rows[1]){
+      title1 = yVariable1
+    }
+    title2 <- NULL
+    if (row == rows[1]){
+      title2 = yVariable2
+    }
+    
+    plotdata <- data[data[,rowGroups] == row,]
+    #plot yvar1
+    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable1, yVariable1Upper, yVariable1Lower, xlimrow, ylim1col, showX=T, showY=T, ylabel=row, basetheme=basetheme, title=title1, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY1)
+    panels[[paste(row, "yvar1", sep="/")]] <- panel
+    
+    #plot yvar2
+    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable2, yVariable2Upper, yVariable2Lower, xlimrow, ylim2col, showX=T, showY=T, ylabel=NULL, basetheme=basetheme, title=title2, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY2)
+    panels[[paste(row, "yvar2", sep="/")]] <- panel
+    
+    
+  }
+
+  ggarrange(
+    plots=panels,
+    nrow=length(rows),
+    bottom=xlabel
+  )
+  
+}
+
 warning("Change file reference to package location")
 warning("Check which CI to use")
 warning("Check axis labels")
+
 
 #
 # compare the estimated mCPUE from the two ALKs for each age group (showing confidence intervals)
@@ -178,22 +358,26 @@ alkresult[alkresult$Bootstrap=="ICES-IBTS", "bs"] <- "I"
 alkresult[alkresult$Bootstrap=="Modified-ICES", "bs"] <- "mI"
 alkresult$ALKm <- paste(alkresult$ALK, alkresult$bs, sep=", ")
 alkresult$age <- paste("Age", alkresult$age)
+alkresult$RSE <- alkresult$sd / alkresult$mCPUE
+
+
+estimator_colors <- list()
+estimator_colors[["area based, I"]] <- "#92c5de"
+estimator_colors[["area based, mI"]] <- "#0571b0"
+estimator_colors[["haul based, S"]] <- "#ca0020"
 
 ####
 # Plot 1
 # Using Q1 and all years
-# Two one-column plots, age groups as rows, exclude age 0
-# Put point estimates (mCPUE) with confidence intervals on top of each other
-# for: area based with Modified ICES, and haul-based with stratified
-# Put rse estimates on top of each oter
-# for: area based with Modified ICES, areas based with ICES, and haul-based with stratified
 #
 # Place legends outside of plot somewhere reasonable.
 #
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
-stackedPanels(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,2,5,10,15,20,25))
+overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=NULL, pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
 
+
+stop()
 ####
 # Plot 2 - for supplementary
 # As plot 1, but for Q3, retaining age group 0
