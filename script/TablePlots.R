@@ -30,7 +30,7 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
       panelplot <- panelplot + geom_blank()
     }
     else{
-      panelplot <- panelplot + geom_line(data=colData,color=linecol[[col]]) + geom_point(shape=20, size=2, color=pointcol[[col]])
+      panelplot <- panelplot + geom_line(data=colData, aes_string(color=columnGroups)) + geom_point(shape=20, size=2, color=pointcol[[col]]) + scale_color_manual(values = unlist(linecol))
     }
     
     if (!is.null(title) & col == cols[1]){
@@ -325,20 +325,30 @@ overlayedColumnPlot <- function(data, columnGroups, rowGroups, xVariable, yVaria
     plotdata <- data[data[,rowGroups] == row,]
     #plot yvar1
     panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable1, yVariable1Upper, yVariable1Lower, xlimrow, ylim1col, showX=T, showY=T, ylabel=row, basetheme=basetheme, title=title1, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY1)
+    panel <- panel + theme(legend.position="none")
     panels[[paste(row, "yvar1", sep="/")]] <- panel
     
     #plot yvar2
     panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable2, yVariable2Upper, yVariable2Lower, xlimrow, ylim2col, showX=T, showY=T, ylabel=NULL, basetheme=basetheme, title=title2, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY2)
+    panel <- panel + theme(legend.position="none")
     panels[[paste(row, "yvar2", sep="/")]] <- panel
     
-    
   }
-
-  ggarrange(
-    plots=panels,
-    nrow=length(rows),
-    bottom=xlabel
-  )
+  
+  
+  g <- ggplotGrob(panels[[1]] + theme(legend.position="bottom", legend.title = element_blank()))$grobs
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  grid.arrange(
+    ggarrange(
+      plots=panels,
+      nrow=length(rows),
+      left=ylab,
+      bottom=xlab,draw=F
+    ),
+    legend,
+    ncol = 1,
+    heights = unit.c(unit(1, "npc") - lheight, lheight))
   
 }
 
@@ -374,7 +384,7 @@ estimator_colors[["haul based, S"]] <- "#ca0020"
 #
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
-overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=NULL, pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
 
 
 stop()
