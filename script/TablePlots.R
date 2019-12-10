@@ -59,15 +59,17 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
 }
 
 #' @noRd
-panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F){
+panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F, hLine=NULL, hLineCol="grey", hLineType="solid"){
   
   panelplot <- ggplot(plotdata, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
 
+  if (!is.null(hLine)){
+    panelplot <- panelplot + geom_hline(yintercept = hLine, color = hLineCol, linetype=hLineType)
+  }
   #error bars
   if (!is.null(yVariableUpper) & !is.null(yVariableLower)){
     panelplot <- panelplot + geom_linerange(aes_string(ymin=yVariableLower, ymax=yVariableUpper), color=errorcol)
   }
-  
   #points and lines
   if (nrow(plotdata) == 0){
     panelplot <- panelplot + geom_blank()
@@ -123,7 +125,8 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
 #' @param tickmarks numeric() specifies tickmarks for y-axis
 #' @param basetheme ggplot2 - theme function to use for plotting. Default adjusts y-axis label alignments to account for variable width of tick-labels.
 #' @param reverseX logical() whether to reverse X axes
-stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F){
+#' @param hLineCol character() specify any column that should be used for horisontal reference lines
+stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F, hLineCol=NULL){
   
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
@@ -197,9 +200,16 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
       if (row == rows[1]){
         title = col
       }
-      
+
       plotdata <- data[data[,columnGroups] == col & data[,rowGroups] == row,]
-      panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks, reverseX)
+            
+      referenceline <- NULL
+      if (!is.null(hLineCol)){
+        stopifnot(length(unique(unlist(plotdata[,hLineCol])))==1)
+        referenceline <- unlist(plotdata[,hLineCol])[1]
+      }
+
+      panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks, reverseX, hLine = referenceline)
       panels[[paste(row, col, sep="/")]] <- panel
       
     }
@@ -430,29 +440,34 @@ stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age"
 dev.off()
 
 
-
-
 ####
 # Plot 5
-# Need to add current sampling (C) to the right of 5 (included now as 7)
-# Remove line connecting points, and add horisontal line for C.
-# Put horisontal under points.
-# Make B/W
 #
 resamplingFixedLengthGroups <- read.csv("OtolithsOnly_Results/OtolithsOnly_y_per_5cm_haulBased.csv", sep=";", stringsAsFactors = F, dec=".", na.strings = c("#N/A", "NA"))
 resamplingFixedLengthGroups$age <- paste("Age", resamplingFixedLengthGroups$age)
 resamplingFixedLengthGroups$Year <- as.character(resamplingFixedLengthGroups$Year)
-resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$Quarter=="Q1",]
-resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$age != "Age 0",]
-resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$Otolith_per5cm == "C", "Otolith_per5cm"] <- 7
-resamplingFixedLengthGroupsQ1$Otolith_per5cm <- as.integer(resamplingFixedLengthGroupsQ1$Otolith_per5cm)
+reference <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Otolith_per5cm == "C",c("Year","Quarter", "age", "cv")]
+names(reference) <- c("Year","Quarter", "age", "current")
+resamplingFixedLengthGroups <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Otolith_per5cm != "C",]
+resamplingFixedLengthGroups$Otolith_per5cm <- as.integer(resamplingFixedLengthGroups$Otolith_per5cm)
 
-stackedPanels(data = resamplingFixedLengthGroups, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0)
+resamplingFixedLengthGroups <- merge(resamplingFixedLengthGroups, reference)
+resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Quarter=="Q1",]
+resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$age != "Age 0",]
+
+pdf(file = "figures/resamplingConstantLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingFixedLengthGroupsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+dev.off()
 
 ####
 # Plot 6 - supplementary
 # As plot 5, but for Q3, and including Age 0
 #
+
+resamplingFixedLengthGroupsQ3 <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Quarter=="Q3",]
+pdf(file = "figures/suppMatResamplingConstantLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingFixedLengthGroupsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+dev.off()
 
 ####
 # Plot 7
