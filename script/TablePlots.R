@@ -59,7 +59,7 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
 }
 
 #' @noRd
-panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL){
+panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F){
   
   panelplot <- ggplot(plotdata, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
 
@@ -74,6 +74,10 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
   }
   else{
     panelplot <- panelplot + geom_line(color=linecol) + geom_point(shape=20, size=2, color=pointcol)
+  }
+  
+  if (reverseX){
+    panelplot <- panelplot + scale_x_reverse()
   }
   
   panelplot <- panelplot + basetheme()
@@ -118,7 +122,8 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
 #' @param errorcol character() or named list mapping the values in data[,columnGroups] to colors color of error bars
 #' @param tickmarks numeric() specifies tickmarks for y-axis
 #' @param basetheme ggplot2 - theme function to use for plotting. Default adjusts y-axis label alignments to account for variable width of tick-labels.
-stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}){
+#' @param reverseX logical() whether to reverse X axes
+stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F){
   
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
@@ -194,7 +199,7 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
       }
       
       plotdata <- data[data[,columnGroups] == col & data[,rowGroups] == row,]
-      panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks)
+      panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks, reverseX)
       panels[[paste(row, col, sep="/")]] <- panel
       
     }
@@ -387,19 +392,15 @@ pdf(file = "figures/mCpueRseQ1.pdf", width=3.35, onefile = F) #85mm in inches
 overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
-stop()
 ####
 # Plot 2 - for supplementary
 # As plot 1, but for Q3, retaining age group 0
 # Using Q3 and all years
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
-stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "mCPUE", "Q025", "Q975", tickmarks = c(0,1,2,5,10,15,20,25))
+pdf(file = "figures/suppMatMcpueRseQ3.pdf", width=3.35, onefile = F) #85mm in inches
+overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+dev.off()
 
-#
-# Compare expected RSE from the three bootstrap procedures for each age group
-# Using Q3 and all years
-#
-stackedPanels(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable = "RSE", tickmarks = c(0,.2,.4,.6))
 
 #
 # Compare resampling for haul based ALK
@@ -415,19 +416,19 @@ resamplingPrXcmQ3 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q3",]
 ####
 # Plot 3
 # Using Q1 and all years
-# change order of x axis
-# make B/W
 #
-stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0)
-
+pdf(file = "figures/resamplingVariableLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+dev.off()
 
 ####
 # Plot 4
 # as plot 3, but for q3, and retaining age 0
-# change order of x axis
-# make B/W
 #
-stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0)
+pdf(file = "figures/suppMatResamplingVariableLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+dev.off()
+
 
 
 
