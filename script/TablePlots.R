@@ -212,7 +212,7 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
 #' Same x-axis, and row-categories, but two different y-axis for the different groups.
 #' values for each of the column groups are plotted on top of each other in the column to the right for yvariable1
 #' values for each of the column groups are plotted on top of each other in the column to the left for yvariable2
-overlayedColumnPlot <- function(data, columnGroups, rowGroups, xVariable, yVariable1, yVariable2, yVariable1Lower=NULL, yVariable1Upper=NULL, yVariable2Lower=NULL, yVariable2Upper=NULL, ylab1=NULL, ylab2=NULL, xlab=NULL, xlim=NULL, ymin1=0, ymin2=0, ymax1=NULL, ymax2=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarksY1=NULL, tickmarksY2=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}){
+overlayedColumnPlot <- function(data, columnGroups, rowGroups, xVariable, yVariable1, yVariable2, yVariable1Lower=NULL, yVariable1Upper=NULL, yVariable2Lower=NULL, yVariable2Upper=NULL, ylab1=NULL, ylab2=NULL, xlab=NULL, xlim=NULL, ymin1=0, ymin2=0, ymax1=NULL, ymax2=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarksY1=NULL, tickmarksY2=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x=element_text(size=6))}){
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
   }
@@ -380,12 +380,12 @@ estimator_colors[["haul based, S"]] <- "#ca0020"
 # Plot 1
 # Using Q1 and all years
 #
-# Place legends outside of plot somewhere reasonable.
 #
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
+pdf(file = "figures/mCpueRseQ1.pdf", width=3.35, onefile = F) #85mm in inches
 overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
-
+dev.off()
 
 stop()
 ####
