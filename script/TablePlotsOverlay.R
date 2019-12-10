@@ -58,63 +58,17 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
   return(panelplot)
 }
 
-#' @noRd
-panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F, hLine=NULL, hLineCol="grey", hLineType="solid"){
-  
-  panelplot <- ggplot(plotdata, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
-
-  if (!is.null(hLine)){
-    panelplot <- panelplot + geom_hline(yintercept = hLine, color = hLineCol, linetype=hLineType)
-  }
-  #error bars
-  if (!is.null(yVariableUpper) & !is.null(yVariableLower)){
-    panelplot <- panelplot + geom_linerange(aes_string(ymin=yVariableLower, ymax=yVariableUpper), color=errorcol)
-  }
-  #points and lines
-  if (nrow(plotdata) == 0){
-    panelplot <- panelplot + geom_blank()
-  }
-  else{
-    panelplot <- panelplot + geom_line(color=linecol) + geom_point(shape=20, size=2, color=pointcol)
-  }
-  
-  if (reverseX){
-    panelplot <- panelplot + scale_x_reverse()
-  }
-  
-  panelplot <- panelplot + basetheme()
-  panelplot <- panelplot + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank())
-  if (!is.null(tickmarks)){
-    panelplot <- panelplot + scale_y_continuous(breaks=tickmarks, limits = ylimcol)
-  }
-  if (!showX){
-    panelplot <- panelplot + theme(axis.title.x = element_blank(), axis.text.x=element_blank())
-  }
-  else{
-    panelplot <- panelplot + theme(axis.title.x = element_blank())
-  }
-  if (!showY){
-    panelplot <- panelplot + theme(axis.title.y = element_blank(), axis.text.y=element_blank())
-  }
-  if (!is.null(title)){
-    panelplot <- panelplot + ggtitle(title)
-  }
-  
-  return(panelplot)
-}
 
 #' Table plot
 #' @description 
 #'  makes a tabulated plot of estimates grouped by two covariates, one for columns, one for rows. axes of all plots are the same variables.
 #' @details 
-#'  If 'yVariableUpper' and 'yVaraiateLower' is not provided, error bars will not be plotted
 #' @param data data.table() with data, must contain columns identified by parameters 'columnGroups', 'rowGroups', 'xVariable' and 'yVariable'
 #' @param columnGroups character() identifies column in data that identifies the grouping used for columns in the plot
 #' @param rowGRoups character() identifies column in data that identifies the grouping used for rows in the plot
 #' @param xVariable character() identifies column in data containting variable to be used for x-axis
 #' @param yVariable character() identifies column in data containing variable to be used for y-axis
-#' @param yVariableLower character(), optional, identifies column in data containing lower limits for error bars
-#' @param yVariableUpper character(), optional,  identifies column in data containing upper limits for error bars
+#' @param overlayGroups character() identifies column in data specifying the groups to be overlayed
 #' @param ylab character(), optional, label for y-axis, if not provided 'yVariable' will be used.
 #' @param ymin numeric(), optional, lower bounds of y axis, if not NULL y axis will be adopted to data for each column
 #' @param ymax numeric(), optional, upper bounds of y axis, if not provided y axis will be adopted to data for each column
@@ -126,7 +80,7 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
 #' @param basetheme ggplot2 - theme function to use for plotting. Default adjusts y-axis label alignments to account for variable width of tick-labels.
 #' @param reverseX logical() whether to reverse X axes
 #' @param hLineCol character() specify any column that should be used for horisontal reference lines
-stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F, hLineCol=NULL){
+stackedPanelsOverlay <- function(data, columnGroups, rowGroups, xVariable, yVariable, overlayGroups, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F, hLineCol=NULL){
   
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
@@ -140,10 +94,6 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
     stop("NAs in grouping variables or x variable")
   }
 
-  if (is.null(yVariableUpper) + is.null(yVariableLower) == 1){
-    stop("Provide either both yVariableUpper and yVariableLower, or neither of them")
-  }
-  
   if (is.null(ylab)){
     ylab <- yVariable
   }
@@ -154,15 +104,15 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
   
   rows <- sort(unique(unlist(data[,rowGroups])), decreasing = T)
   cols <- sort(unique(unlist(data[,columnGroups])))
-  
+  og <- sort(unique(unlist(data[,overlayGroups])))
   if (is.character(linecol)){
-    linecol <- makeColorMap(cols, linecol)
+    linecol <- makeColorMap(og, linecol)
   }
   if (is.character(pointcol)){
-    pointcol <- makeColorMap(cols, pointcol)
+    pointcol <- makeColorMap(og, pointcol)
   }
   if (is.character(errorcol)){
-    errorcol <- makeColorMap(cols, errorcol)
+    errorcol <- makeColorMap(og, errorcol)
   }
   
   panels <- list()
@@ -170,9 +120,6 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
     
     #determine ylims if necessary
     minvar <- yVariable
-    if (!is.null(yVariableLower)){
-      minvar <- yVariableLower  
-    }
     miny <- ymin
     if (is.null(miny)){
       miny <- min(data[data[,rowGroups] == row,minvar])
@@ -180,9 +127,6 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
     }
     
     maxvar <- yVariable
-    if (!is.null(yVariableUpper)){
-      maxvar <- yVariableUpper  
-    }
     maxy <- ymax
     if (is.null(maxy)){
       maxy <- max(data[data[,rowGroups] == row,maxvar])
@@ -209,18 +153,26 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
         referenceline <- unlist(plotdata[,hLineCol])[1]
       }
 
-      panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks, reverseX, hLine = referenceline)
+      panel <- panelPlotOverlay(plotdata, overlayGroups, xVariable, yVariable, yVariableUpper=NULL, yVariableLower=NULL, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarks)
+      panel <- panel + theme(legend.position="none")
       panels[[paste(row, col, sep="/")]] <- panel
       
     }
   }
   
-  ggarrange(
-    plots=panels,
-    nrow=length(rows),
-    left=ylab,
-    bottom=xlab
-    )
+  g <- ggplotGrob(panels[[1]] + theme(legend.position="bottom", legend.title = element_blank()))$grobs
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  grid.arrange(
+    ggarrange(
+      plots=panels,
+      nrow=length(rows),
+      left=ylab,
+      bottom=xlab,draw=F
+    ),
+    legend,
+    ncol = 1,
+    heights = unit.c(unit(1, "npc") - lheight, lheight))
 }
 
 #' Makes Two column plot-table
@@ -415,21 +367,30 @@ dev.off()
 ####
 # Plot 7
 # overlay 1 and 5 for otholith per 5 cm
-# put legeneds outside plot somewhere reasonable. legend: 1 fish per 5 cm, 5 fish per 5 cm
-# make B/W
+
+resamplingCol <- list()
+resamplingCol[["1"]] <- "grey"
+resamplingCol[["5"]] <- "black"
+
 resamplingOtolithsAndHauls <- read.csv("OtolithsAndHauls_Results_2015_2018/OtolAndHaul_1_5_per_5cm_areaBased2015_2018.csv", sep=";", stringsAsFactors = F, na.strings=c("NA"))
 resamplingOtolithsAndHauls$cv <- resamplingOtolithsAndHauls$sd / resamplingOtolithsAndHauls$bootstrapMean
 resamplingOtolithsAndHauls$age <- paste("Age", resamplingOtolithsAndHauls$age)
 resamplingOtolithsAndHauls$Year <- as.character(resamplingOtolithsAndHauls$Year)
+resamplingOtolithsAndHauls$Otolith_per5cm <- as.character(resamplingOtolithsAndHauls$Otolith_per5cm)
 resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q1",]
 resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$age != "Age 0",]
 
-resamplingOtolithsAndHaulsQ1o5 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$Otolith_per5cm == 5,]
-stackedPanels(data = resamplingOtolithsAndHaulsQ1o5, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", xlab="Number of hauls", ylab="RSE", ymin=0)
-overlayedColumnPlot(data = resamplingOtolithsAndHaulsQ1o5, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+pdf(file = "figures/resamplingAgeAndHaulsQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2))
+dev.off()
+
 ####
 # Plot 8 - supplementary
 # Like plot 7, but for Q3 and including aGE GROUP 0
+resamplingOtolithsAndHaulsQ3 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q3",]
+pdf(file = "figures/suppMatResamplingAgeAndHaulsQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2))
+dev.off()
 
 ####
 # Plot 9  - supplementary
