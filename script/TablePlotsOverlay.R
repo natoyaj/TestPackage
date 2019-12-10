@@ -395,7 +395,24 @@ dev.off()
 ####
 # Plot 9  - supplementary
 # Like plot 7, but for 1997 - 1999
+resamplingOtolithsAndHauls <- read.csv("OtolithsAndHauls_Results_1997_1999/OtolAndHaul_1_5_per_5cm_areaBased1997_1999.csv", sep=";", stringsAsFactors = F, na.strings=c("NA"))
+resamplingOtolithsAndHauls$cv <- resamplingOtolithsAndHauls$sd / resamplingOtolithsAndHauls$bootstrapMean
+resamplingOtolithsAndHauls$age <- paste("Age", resamplingOtolithsAndHauls$age)
+resamplingOtolithsAndHauls$Year <- as.character(resamplingOtolithsAndHauls$Year)
+resamplingOtolithsAndHauls$Otolith_per5cm <- as.character(resamplingOtolithsAndHauls$Otolith_per5cm)
+resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q1",]
+resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$age != "Age 0",]
+
+pdf(file = "figures/suppMatResamplingAgeAndHaulsQ197-99.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+dev.off()
+
 
 ####
 # Plot 10  - supplementary
 # Like plot 9, but for Q3 and including age group 0
+
+resamplingOtolithsAndHaulsQ3 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q3",]
+pdf(file = "figures/suppMatResamplingAgeAndHaulsQ397-99.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+dev.off()
