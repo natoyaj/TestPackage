@@ -30,7 +30,7 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
       panelplot <- panelplot + geom_blank()
     }
     else{
-      panelplot <- panelplot + geom_line(data=colData, aes_string(color=columnGroups)) + geom_point(shape=20, size=2, color=pointcol[[col]]) + scale_color_manual(values = unlist(linecol))
+      panelplot <- panelplot + geom_line(data=colData, aes_string(color=columnGroups)) + scale_color_manual(values = unlist(linecol)) + geom_point(shape=20, size=2, aes_string(color=columnGroups)) + scale_color_manual(values = unlist(pointcol))
     }
     
     if (!is.null(title) & col == cols[1]){
@@ -353,7 +353,7 @@ estimator_colors[["haul-based S"]] <- "#ca0020"
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
 pdf(file = "figures/mCpueRseQ1.pdf", width=3.35, onefile = F) #85mm in inches
-overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
 ####
@@ -362,7 +362,7 @@ dev.off()
 # Using Q3 and all years
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
 pdf(file = "figures/suppMatMcpueRseQ3.pdf", width=3.35, onefile = F) #85mm in inches
-overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
 
