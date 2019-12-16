@@ -291,12 +291,12 @@ overlayedColumnPlot <- function(data, columnGroups, rowGroups, xVariable, yVaria
 
     plotdata <- data[data[,rowGroups] == row,]
     #plot yvar1
-    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable1, yVariable1Upper, yVariable1Lower, xlimrow, ylim1col, showX=(row == rows[length(row)]), showY=T, ylabel=row, basetheme=basetheme, title=title1, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY1)
+    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable1, yVariable1Upper, yVariable1Lower, xlimrow, ylim1col, showX=(row == rows[length(rows)]), showY=T, ylabel=row, basetheme=basetheme, title=title1, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY1)
     panel <- panel + theme(legend.position="none")
     panels[[paste(row, "yvar1", sep="/")]] <- panel
 
     #plot yvar2
-    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable2, yVariable2Upper, yVariable2Lower, xlimrow, ylim2col, showX=(row == rows[length(row)]), showY=T, ylabel=NULL, basetheme=basetheme, title=title2, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY2)
+    panel <- panelPlotOverlay(plotdata, columnGroups, xVariable, yVariable2, yVariable2Upper, yVariable2Lower, xlimrow, ylim2col, showX=(row == rows[length(rows)]), showY=T, ylabel=NULL, basetheme=basetheme, title=title2, pointcol=pointcol, linecol=linecol, errorcol=errorcol, tickmarks=tickmarksY2)
     panel <- panel + theme(legend.position="none")
     panels[[paste(row, "yvar2", sep="/")]] <- panel
 
@@ -349,9 +349,9 @@ alkresult$RSE <- alkresult$sd / alkresult$mCPUE
 
 estimator_colors <- list()
 
-estimator_colors[["area-based, I"]] <- "#000000"   # "#92c5de"
-estimator_colors[["area-based, mI"]] <-"#00BFFF"  #"#0000CD"  #"#0571b0"
-estimator_colors[["haul-based, S"]] <- "#ca0020"
+estimator_colors[["area-based I"]] <- "#000000"   # "#92c5de"
+estimator_colors[["area-based mI"]] <-"#00BFFF"  #"#0000CD"  #"#0571b0"
+estimator_colors[["haul-based S"]] <- "#ca0020"
 
 ####
 # Plot 1
@@ -363,7 +363,7 @@ estimator_colors[["haul-based, S"]] <- "#ca0020"
 alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
 
-pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/mCpueRseQ1.pdf", width=3.35, onefile = F) #85mm in inches (3.35) or 170mm (6.69 inches)
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/mCpueRseQ1a.pdf", width=3.35, onefile = F) #85mm in inches (3.35) or 170mm (6.69 inches)
 overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
