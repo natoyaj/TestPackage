@@ -16,7 +16,7 @@ makeColorMap <- function(columns, color){
 
 #' @noRd
 panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F, hLine=NULL, hLineCol="grey", hLineType="solid"){
-  
+
   panelplot <- ggplot(plotdata, aes_string(x=xVariable, y=yVariable)) + xlim(xlimrow) + ylab(ylabel) + ylim(ylimcol)
 
   if (!is.null(hLine)){
@@ -33,11 +33,11 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
   else{
     panelplot <- panelplot + geom_line(color=linecol) + geom_point(shape=20, size=2, color=pointcol)
   }
-  
+
   if (reverseX){
     panelplot <- panelplot + scale_x_reverse()
   }
-  
+
   panelplot <- panelplot + basetheme()
   panelplot <- panelplot + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank())
   if (!is.null(tickmarks)){
@@ -55,14 +55,14 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
   if (!is.null(title)){
     panelplot <- panelplot + ggtitle(title)
   }
-  
+
   return(panelplot)
 }
 
 #' Table plot
-#' @description 
+#' @description
 #'  makes a tabulated plot of estimates grouped by two covariates, one for columns, one for rows. axes of all plots are the same variables.
-#' @details 
+#' @details
 #'  If 'yVariableUpper' and 'yVaraiateLower' is not provided, error bars will not be plotted
 #' @param data data.table() with data, must contain columns identified by parameters 'columnGroups', 'rowGroups', 'xVariable' and 'yVariable'
 #' @param columnGroups character() identifies column in data that identifies the grouping used for columns in the plot
@@ -83,15 +83,15 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
 #' @param reverseX logical() whether to reverse X axes
 #' @param hLineCol character() specify any column that should be used for horisontal reference lines
 stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F, hLineCol=NULL){
-  
+
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
   }
-  
+
   if (!all(c(columnGroups, rowGroups, xVariable, yVariable) %in% names(data))){
     stop("Some arguments (columnGroups, rowGroups, xVariable, yVariable) not found in data.")
   }
-  
+
   if (any(is.na(data[,c(columnGroups, rowGroups, xVariable)]))){
     stop("NAs in grouping variables or x variable")
   }
@@ -99,18 +99,18 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
   if (is.null(yVariableUpper) + is.null(yVariableLower) == 1){
     stop("Provide either both yVariableUpper and yVariableLower, or neither of them")
   }
-  
+
   if (is.null(ylab)){
     ylab <- yVariable
   }
-  
+
   if (is.null(xlab)){
     xlab <- xVariable
   }
-  
+
   rows <- sort(unique(unlist(data[,rowGroups])), decreasing = T)
   cols <- sort(unique(unlist(data[,columnGroups])))
-  
+
   if (is.character(linecol)){
     linecol <- makeColorMap(cols, linecol)
   }
@@ -120,24 +120,24 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
   if (is.character(errorcol)){
     errorcol <- makeColorMap(cols, errorcol)
   }
-  
+
   panels <- list()
   for (row in rows){
-    
+
     #determine ylims if necessary
     minvar <- yVariable
     if (!is.null(yVariableLower)){
-      minvar <- yVariableLower  
+      minvar <- yVariableLower
     }
     miny <- ymin
     if (is.null(miny)){
       miny <- min(data[data[,rowGroups] == row,minvar])
       miny <- miny - abs(miny) * .1
     }
-    
+
     maxvar <- yVariable
     if (!is.null(yVariableUpper)){
-      maxvar <- yVariableUpper  
+      maxvar <- yVariableUpper
     }
     maxy <- ymax
     if (is.null(maxy)){
@@ -145,20 +145,20 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
       maxy <- maxy + abs(maxy) * .1
     }
     ylimcol <- c(miny, maxy)
-    
+
     for (col in cols){
       xlimrow <- xlim
       if (is.null(xlimrow)){
         xlimrow <- c(min(data[data[,columnGroups] == col,xVariable]), max(data[data[,columnGroups] == col,xVariable]))
       }
-      
+
       title <- NULL
       if (row == rows[1]){
         title = col
       }
 
       plotdata <- data[data[,columnGroups] == col & data[,rowGroups] == row,]
-            
+
       referenceline <- NULL
       if (!is.null(hLineCol)){
         stopifnot(length(unique(unlist(plotdata[,hLineCol])))==1)
@@ -167,10 +167,10 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
 
       panel <- panelPlot(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=(row == rows[length(rows)]), showY=(col == cols[1]), ylabel=row, basetheme=basetheme, title=title, pointcol=pointcol[[col]], linecol=linecol[[col]], errorcol=errorcol[[col]], tickmarks=tickmarks, reverseX, hLine = referenceline)
       panels[[paste(row, col, sep="/")]] <- panel
-      
+
     }
   }
-  
+
   ggarrange(
     plots=panels,
     nrow=length(rows),
@@ -188,7 +188,7 @@ warning("Check axis labels")
 #
 # Compare resampling for haul based ALK
 #
-resamplingPrXcm <- read.csv("data/OtolithsOnly_1_per_xcm_haulBased.csv", sep=";", stringsAsFactors = F, dec=",", na.strings = c("#N/A"))
+resamplingPrXcm <- read.csv("OtolithsOnly_Results/OtolithsOnly_1_per_xcm_haulBased.csv", sep=";", stringsAsFactors = F, dec=".", na.strings = c("#N/A", "NA"))
 resamplingPrXcm$age <- paste("Age", resamplingPrXcm$age)
 resamplingPrXcm$Year <- as.character(resamplingPrXcm$Year)
 resamplingPrXcmQ1 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q1",]
@@ -196,24 +196,24 @@ resamplingPrXcmQ1 <- resamplingPrXcmQ1[resamplingPrXcmQ1$age != "Age 0",]
 
 resamplingPrXcmQ3 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q3",]
 
-####
+#### resample 1 fish per 1cm, 2cm, 3cm, 4cm or 5cm------------------------------------------
 # Plot 3
 # Using Q1 and all years
 #
-pdf(file = "figures/resamplingVariableLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/resamplingVariableLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
 dev.off()
 
 ####
 # Plot 4
 # as plot 3, but for q3, and retaining age 0
 #
-pdf(file = "figures/suppMatResamplingVariableLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_1cm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingVariableLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
 dev.off()
 
 
-####
+#### resample 1, 2, 3, 4 or 5 fish per 5cm length group width----------------------------------------------
 # Plot 5
 #
 resamplingFixedLengthGroups <- read.csv("OtolithsOnly_Results/OtolithsOnly_y_per_5cm_haulBased.csv", sep=";", stringsAsFactors = F, dec=".", na.strings = c("#N/A", "NA"))
@@ -228,8 +228,8 @@ resamplingFixedLengthGroups <- merge(resamplingFixedLengthGroups, reference)
 resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Quarter=="Q1",]
 resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$age != "Age 0",]
 
-pdf(file = "figures/resamplingConstantLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingFixedLengthGroupsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/resamplingConstantLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingFixedLengthGroupsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
 dev.off()
 
 ####
@@ -238,6 +238,6 @@ dev.off()
 #
 
 resamplingFixedLengthGroupsQ3 <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Quarter=="Q3",]
-pdf(file = "figures/suppMatResamplingConstantLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingFixedLengthGroupsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Otoliths per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingConstantLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanels(data = resamplingFixedLengthGroupsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
 dev.off()
