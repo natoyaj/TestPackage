@@ -14,6 +14,48 @@ makeColorMap <- function(columns, color){
   return(colors)
 }
 
+#' generates function for passing to tickmarks
+#' tickfunctions have n number of ticks
+#' lowest tick is 0
+#' highes ttick is rounded of from ymax (digits determine rounding)
+#' mid tick is rounded midpoint
+genTickMarksFunction <- function(n=3, digits=1, slack=0.01){
+  roundf <- function(x){floor(x * (10**digits))/(10**digits)}
+  tickfun <- function(lim){
+    maxl <- lim[2]-slack
+    minl <- 0
+    step <- maxl/(n-1)
+    ticks <- sapply(seq(minl, maxl, step), roundf)
+    return(ticks)
+  }
+}
+
+#' generates function for passing to tickmaks
+#' tickfunctions tries a range of preset scales form 0 to ymax 
+#' and chooses the one that leaves fewer tickmars, exceding n
+genTickMarksTester <- function(n=3, steps=c(.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, 250, 500)){
+  
+  stopifnot(all(steps == sort(steps)))
+  
+  tickfun <- function(lim){
+    maxl <- lim[2]
+    if (is.infinite(maxl) | is.na(maxl)){
+      return(c(0.0))
+    }
+    minl <- 0
+    for (step in rev(steps)){
+      ticks <- seq(minl, maxl, step)
+      
+      if (length(ticks) >= 3){
+        return(ticks)
+      }
+    }
+    stop("Could not make tickmarks")
+  }
+}
+ticks3 <- genTickMarksTester()
+ticks2 <- genTickMarksTester(2)
+
 #' @noRd
 panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=F, showY=F, ylabel="", basetheme=NULL, titletext="", pointcol=NULL, linecol=NULL, errorcol=NULL, tickmarks=NULL){
 
@@ -366,7 +408,7 @@ alkq1 <- alkresult[alkresult$Quarter=="Q1",]
 alkq1 <- alkq1[alkq1$age != "Age 0",]
 
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/mCpueRseQ1a.pdf", width=3.35, onefile = F) #85mm in inches (3.35) or 170mm (6.69 inches)
-overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq1, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = ticks3, tickmarksY2=ticks3, pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
 ####
@@ -375,7 +417,7 @@ dev.off()
 # Using Q3 and all years
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatMcpueRseQ3.pdf", width=3.35, onefile = F) #85mm in inches
-overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = ticks3, tickmarksY2=ticks3, pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
 
@@ -401,7 +443,7 @@ resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHauls[resamplingOtolithsAnd
 resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$age != "Age 0",]
 
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/resamplingAgeAndHaulsQ1.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = ticks2, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
 dev.off()
 
 ####
@@ -409,7 +451,7 @@ dev.off()
 # Like plot 7, but for Q3 and including aGE GROUP 0
 resamplingOtolithsAndHaulsQ3 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q3",]
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingAgeAndHaulsQ3.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = ticks2, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
 dev.off()
 
 ####
@@ -429,7 +471,7 @@ resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHauls[resamplingOtolithsAnd
 resamplingOtolithsAndHaulsQ1 <- resamplingOtolithsAndHaulsQ1[resamplingOtolithsAndHaulsQ1$age != "Age 0",]
 
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingAgeAndHaulsQ197-99.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = ticks2, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
 dev.off()
 
 
@@ -439,5 +481,5 @@ dev.off()
 
 resamplingOtolithsAndHaulsQ3 <- resamplingOtolithsAndHauls[resamplingOtolithsAndHauls$Quarter=="Q3",]
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingAgeAndHaulsQ397-99.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = c(.4,.8,1.2), basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
+stackedPanelsOverlay(data = resamplingOtolithsAndHaulsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "N", yVariable = "cv", overlayGroups="Otolith_per5cm", xlab="Number of hauls", ylab="RSE", ymin=0, pointcol = resamplingCol, linecol = resamplingCol, errorcol = resamplingCol, tickmarks = ticks2, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(angle = 45, hjust = 1, size=6))})
 dev.off()
