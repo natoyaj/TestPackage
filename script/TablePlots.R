@@ -14,6 +14,28 @@ makeColorMap <- function(columns, color){
   return(colors)
 }
 
+#' generates function for passing to tickmaks
+#' tickfunctions tries a range of preset scales form 0 to ymax 
+#' and chooses the one that leaves fewer tickmars, exceding n
+genTickMarksTester <- function(n=3, steps=c(.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, 250, 500)){
+  
+  stopifnot(all(steps == sort(steps)))
+  
+  tickfun <- function(lim){
+    maxl <- lim[2]
+    minl <- 0
+    for (step in rev(steps)){
+      ticks <- seq(minl, maxl, step)
+      
+      if (length(ticks) >= 3){
+        return(ticks)
+      }
+    }
+    stop("Could not make tickmarks")
+  }
+}
+ticks3 <- genTickMarksTester()
+
 #' @noRd
 panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, ylabel, basetheme, showX=F, showY=F, title=NULL, pointcol="white", linecol="black", errorcol="black", tickmarks=NULL, reverseX=F, hLine=NULL, hLineCol="grey", hLineType="solid"){
 
@@ -201,7 +223,7 @@ resamplingPrXcmQ3 <- resamplingPrXcm[resamplingPrXcm$Quarter=="Q3",]
 # Using Q1 and all years
 #
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/resamplingVariableLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+stackedPanels(data = resamplingPrXcmQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = ticks3)
 dev.off()
 
 ####
@@ -209,7 +231,7 @@ dev.off()
 # as plot 3, but for q3, and retaining age 0
 #
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingVariableLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = c(0,.1,.2,.3,.4,.5))
+stackedPanels(data = resamplingPrXcmQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_xcm", yVariable = "cv", xlab="Length group width (cm)", ylab="RSE", ymin=0, reverseX = T, linecol = "black", tickmarks = ticks3)
 dev.off()
 
 
@@ -229,7 +251,7 @@ resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroups[resamplingFixedLeng
 resamplingFixedLengthGroupsQ1 <- resamplingFixedLengthGroupsQ1[resamplingFixedLengthGroupsQ1$age != "Age 0",]
 
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/resamplingConstantLengthGroupQ1.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingFixedLengthGroupsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+stackedPanels(data = resamplingFixedLengthGroupsQ1, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = ticks3)
 dev.off()
 
 ####
@@ -239,5 +261,5 @@ dev.off()
 
 resamplingFixedLengthGroupsQ3 <- resamplingFixedLengthGroups[resamplingFixedLengthGroups$Quarter=="Q3",]
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatResamplingConstantLengthGroupQ3.pdf", width=3.35, onefile = F) #85mm in inches
-stackedPanels(data = resamplingFixedLengthGroupsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = c(0,.1,.2,.3,.4,.5,.6,.7,.8))
+stackedPanels(data = resamplingFixedLengthGroupsQ3, columnGroups = "Year", rowGroups = "age", xVariable = "Otolith_per5cm", yVariable = "cv", xlab="Fish sampled per 5cm", ylab="RSE", ymin=0, hLineCol="current", linecol="black", tickmarks = ticks3)
 dev.off()
