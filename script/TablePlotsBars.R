@@ -15,18 +15,18 @@ makeColorMap <- function(columns, color){
 }
 
 #' generates function for passing to tickmaks
-#' tickfunctions tries a range of preset scales form 0 to ymax 
+#' tickfunctions tries a range of preset scales form 0 to ymax
 #' and chooses the one that leaves fewer tickmars, exceding n
 genTickMarksTester <- function(n=3, steps=c(.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, 250, 500)){
-  
+
   stopifnot(all(steps == sort(steps)))
-  
+
   tickfun <- function(lim){
     maxl <- lim[2]
     minl <- 0
     for (step in rev(steps)){
       ticks <- seq(minl, maxl, step)
-      
+
       if (length(ticks) >= 3){
         return(ticks)
       }
@@ -46,9 +46,9 @@ panelPlot  <- function(plotdata, xVariable, yVariable, ylimcol, ylabel, basethem
     panelplot <- panelplot + geom_blank()
   }
   else{
-    panelplot <- panelplot + geom_bar(color=barcol, stat = "identity")
+    panelplot <- panelplot + geom_bar(fill = barcol, color="black", stat = "identity")
   }
-  
+
   panelplot <- panelplot + basetheme()
   panelplot <- panelplot + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank())
   if (!is.null(tickmarks)){
@@ -111,11 +111,11 @@ stackedPanelsBars <- function(data, columnGroups, rowGroups, xVariable, yVariabl
 
   rows <- sort(unique(unlist(data[,rowGroups])), decreasing = T)
   cols <- sort(unique(unlist(data[,columnGroups])))
-  
+
   if (is.character(barcol)){
     barcol <- makeColorMap(cols, barcol)
   }
-  
+
 
   panels <- list()
   for (row in rows){
@@ -163,7 +163,11 @@ countAtAge <- read.csv("Hauls_With_Age/Hauls_with_Age_data.csv", sep=";", string
 countAtAge$Year <- as.character(countAtAge$Year)
 countAtAge$Age <- paste("Age", as.character(countAtAge$Age))
 countAtAgeQ1 <- countAtAge[countAtAge$Quarter == 1,]
-stackedPanelsBars(data = countAtAgeQ1, columnGroups = "Year", rowGroups = "Age", xVariable = "Haul", yVariable = "Count", xlab="Haul", ylab="Count", ymin=0, barcol = "black", tickmarks = ticks3)
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/NumberAtAgeInHaulQ1.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsBars(data = countAtAgeQ1, columnGroups = "Year", rowGroups = "Age", xVariable = "Haul", yVariable = "Count", xlab="Haul", ylab="Number of Cod", ymin=0, barcol = "grey", tickmarks = ticks3)
+dev.off()
 
 countAtAgeQ3 <- countAtAge[countAtAge$Quarter == 3,]
-stackedPanelsBars(data = countAtAgeQ3, columnGroups = "Year", rowGroups = "Age", xVariable = "Haul", yVariable = "Count", xlab="Haul", ylab="Count", ymin=0, barcol = "black", tickmarks = ticks3)
+pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatNumberAtAgeInHaulQ3.pdf", width=3.35, onefile = F) #85mm in inches
+stackedPanelsBars(data = countAtAgeQ3, columnGroups = "Year", rowGroups = "Age", xVariable = "Haul", yVariable = "Count", xlab="Haul", ylab="Number of Cod", ymin=0, barcol = "grey", tickmarks = ticks3)
+dev.off()
