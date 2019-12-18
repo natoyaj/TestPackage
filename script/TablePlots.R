@@ -82,7 +82,7 @@ panelPlot  <- function(plotdata, xVariable, yVariable, yVariableUpper, yVariable
 #' @param basetheme ggplot2 - theme function to use for plotting. Default adjusts y-axis label alignments to account for variable width of tick-labels.
 #' @param reverseX logical() whether to reverse X axes
 #' @param hLineCol character() specify any column that should be used for horisontal reference lines
-stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5), axis.text.y = element_text(angle = 90, hjust = 1, size=6))}, reverseX=F, hLineCol=NULL){
+stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, yVariableLower=NULL, yVariableUpper=NULL, ylab=NULL, xlab=NULL, xlim=NULL, ymin=0, ymax=NULL, pointcol="black", linecol="#cb181d", errorcol="#cb181d", tickmarks=NULL, basetheme=function(x){ggplot2::theme_classic() + theme(plot.title = element_text(hjust = 0.5,size=10), axis.title.y = element_text(size=8),  axis.title.x = element_text(size=8), axis.text.y = element_text(angle = 90, hjust = 1, size=6), axis.text.x = element_text(size=6))}, reverseX=F, hLineCol=NULL){
 
   if(is.numeric(columnGroups) | is.numeric(rowGroups)){
     stop("ColumnGroups and rowGroups can not be numeric variables. Covert with as.character()")
