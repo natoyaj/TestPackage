@@ -15,18 +15,18 @@ makeColorMap <- function(columns, color){
 }
 
 #' generates function for passing to tickmaks
-#' tickfunctions tries a range of preset scales form 0 to ymax 
+#' tickfunctions tries a range of preset scales form 0 to ymax
 #' and chooses the one that leaves fewer tickmars, exceding n
 genTickMarksTester <- function(n=3, steps=c(.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, 250, 500)){
-  
+
   stopifnot(all(steps == sort(steps)))
-  
+
   tickfun <- function(lim){
     maxl <- lim[2]
     minl <- 0
     for (step in rev(steps)){
       ticks <- seq(minl, maxl, step)
-      
+
       if (length(ticks) >= 3){
         return(ticks)
       }
@@ -196,8 +196,8 @@ stackedPanels <- function(data, columnGroups, rowGroups, xVariable, yVariable, y
   ggarrange(
     plots=panels,
     nrow=length(rows),
-    left=ylab,
-    bottom=xlab
+    left=textGrob(ylab, gp=gpar(fontsize=9), rot = 90),
+    bottom=textGrob(xlab, gp=gpar(fontsize=9))
     )
 }
 
