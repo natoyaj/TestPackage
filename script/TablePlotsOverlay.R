@@ -14,6 +14,51 @@ makeColorMap <- function(columns, color){
   return(colors)
 }
 
+#' generates function for passing to tickmarks
+#' tickfunctions have n number of ticks
+#' lowest tick is 0
+#' highes ttick is rounded of from ymax (digits determine rounding)
+#' mid tick is rounded midpoint
+genTickMarksFunction <- function(n=3, digits=1, slack=0.01){
+  roundf <- function(x){floor(x * (10**digits))/(10**digits)}
+  tickfun <- function(lim){
+    if (is.infinite(lim[2]) | is.na(lim[2])){
+      return(c(0.0))
+    }
+    maxl <- lim[2]-slack
+    minl <- 0
+    step <- maxl/(n-1)
+    ticks <- sapply(seq(minl, maxl, step), roundf)
+    return(ticks)
+  }
+}
+
+#' generates function for passing to tickmaks
+#' tickfunctions tries a range of preset scales form 0 to ymax
+#' and chooses the one that leaves fewer tickmars, exceding n
+genTickMarksTester <- function(n=3, steps=c(.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100, 250, 500)){
+
+  stopifnot(all(steps == sort(steps)))
+
+  tickfun <- function(lim){
+    maxl <- lim[2]
+    if (is.infinite(maxl) | is.na(maxl)){
+      return(c(0.0))
+    }
+    minl <- 0
+    for (step in rev(steps)){
+      ticks <- seq(minl, maxl, step)
+
+      if (length(ticks) >= 3){
+        return(ticks)
+      }
+    }
+    stop("Could not make tickmarks")
+  }
+}
+ticks3 <- genTickMarksTester()
+ticks2 <- genTickMarksFunction(2,2)
+
 #' @noRd
 panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVariableUpper, yVariableLower, xlimrow, ylimcol, showX=F, showY=F, ylabel="", basetheme=NULL, titletext="", pointcol=NULL, linecol=NULL, errorcol=NULL, tickmarks=NULL){
 
@@ -30,7 +75,7 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
       panelplot <- panelplot + geom_blank()
     }
     else{
-      panelplot <- panelplot + geom_line(data=colData, aes_string(color=columnGroups)) + scale_color_manual(values = unlist(linecol)) + geom_point(shape=20, size=2, aes_string(color=columnGroups)) + scale_color_manual(values = unlist(pointcol))
+      panelplot <- panelplot + geom_line(data=colData, aes_string(color=columnGroups))  + geom_point(data=colData, shape=20, size=2, color=pointcol[[col]])
     }
 
     if (!is.null(title) & col == cols[1]){
@@ -38,6 +83,8 @@ panelPlotOverlay <- function(plotData, columnGroups, xVariable, yVariable, yVari
     }
 
   }
+
+  panelplot <- panelplot + scale_color_manual(values = unlist(linecol))
 
   panelplot <- panelplot + basetheme()
   panelplot <- panelplot + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank())
@@ -373,7 +420,7 @@ dev.off()
 # Using Q3 and all years
 alkq3 <- alkresult[alkresult$Quarter=="Q3",]
 pdf(file = "ices/figures/ALK_Bootstrap_Plots_Edvin/suppMatMcpueRseQ3.pdf", width=3.35, onefile = F) #85mm in inches
-overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = c(0,2,5,10,15,20,25), tickmarksY2=c(0,.25,.5,.75,1,1.25,1.5), pointcol = "black", linecol = estimator_colors, errorcol = estimator_colors)
+overlayedColumnPlot(data = alkq3, columnGroups = "ALKm", rowGroups = "age", xVariable = "Year", yVariable1 = "mCPUE", yVariable2 = "RSE", yVariable1Lower = "Q025", yVariable1Upper = "Q975", tickmarksY1 = ticks3, tickmarksY2=ticks3, pointcol = estimator_colors, linecol = estimator_colors, errorcol = estimator_colors)
 dev.off()
 
 
