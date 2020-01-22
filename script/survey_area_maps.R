@@ -83,7 +83,7 @@ plot_ibts_map <- function(polygons = rfa, labelcol="AreaName", labelpos=rfa_labe
 }
 
 plot_on_pdf <- function(filename){
-  pdf(filename, width=8, height=4)
+  pdf(filename, width=3.35*2, height=3.35)
   old.par <- par(no.readonly = T)
   par(mfrow=c(1,2), mar=c(5.1, 4.1, 4.1, 4.1))
   plot_ibts_map(bat = NULL, land_labelpoints = NULL)
@@ -92,7 +92,24 @@ plot_on_pdf <- function(filename){
   par(old.par)
   dev.off()
 }
-plot_on_pdf("surveyarea.esp")
+#plot_on_pdf("surveyarea.pdf")
+
+# could not figure out how to make R set meta information correct.
+# The right number of pixels are exported, but resolution is set to 72 dpi, so it displays too wide in viewers.
+# may edit this in imaging program after export:
+# E.g, with Gimp: Image > Scale Image
+plot_on_tiff <- function(filename){
+  tiff(filename, width=17, height=7.1, res = 1200, units="cm")
+  old.par <- par(no.readonly = T)
+  par(mfrow=c(1,2), mar=c(5.1, 4.1, 1, 3.1))
+  plot_ibts_map(bat = NULL, land_labelpoints = NULL)
+  par(mar=c(5.1, 1.1, 1, 7.1))
+  plot_ibts_map(rectangles = NULL, ylab="", labelcol = NULL)
+  par(old.par)
+  dev.off()
+}
+plot_on_tiff("surveyarea_1200dpi_two_column.tiff")
+
 
 oldpar <- par(no.readonly = T)
 par(cex.axis=1.5, cex.lab=1.5, mgp=c(3, 2, 0))
